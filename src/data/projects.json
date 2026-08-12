@@ -1,0 +1,475 @@
+[
+  {
+    "id": "project-routempo",
+    "type": "website",
+    "title": "Routempo",
+    "description": "A timezone-aware routine planner for planning repeatable rhythms, recording outcomes, and learning from real behavior.",
+    "technologies": [
+      "TypeScript",
+      "React",
+      "Productivity",
+      "Behavior tracking"
+    ],
+    "liveUrl": "https://routempo.netlify.app",
+    "githubUrl": "https://github.com/montasim/Routempo",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/routempo.png"
+  },
+  {
+    "id": "project-foliofarer",
+    "type": "website",
+    "title": "Foliofarer",
+    "description": "An interactive 3D developer portfolio with an accessible career Atlas, local Passport progress, and adaptive WebGL rendering.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "React Three Fiber",
+      "Three.js",
+      "Playwright"
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/montasim/foliofarer",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/foliofarer.png"
+  },
+  {
+    "id": "project-vidquery",
+    "type": "extension",
+    "title": "VidQuery - YouTube Q&A Extension",
+    "description": "A Chromium extension that adds Gemini-powered Q&A to YouTube using visible video metadata, transcripts, and the user's own API key.",
+    "technologies": [
+      "TypeScript",
+      "Chrome Manifest V3",
+      "Gemini API",
+      "YouTube"
+    ],
+    "liveUrl": "https://vidquery.netlify.app",
+    "githubUrl": "https://github.com/montasim/VidQuery",
+    "releaseUrl": "https://github.com/montasim/VidQuery/releases/latest",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/vidquery.png"
+  },
+  {
+    "id": "project-thoughtline",
+    "type": "extension",
+    "title": "Thoughtline - LinkedIn Writing Assistant",
+    "description": "A user-controlled Chrome side-panel extension for understanding LinkedIn conversations and shaping replies and posts in your own voice.",
+    "technologies": [
+      "WXT",
+      "React 19",
+      "TypeScript",
+      "Chrome Manifest V3",
+      "Gemini API",
+      "Groq API"
+    ],
+    "liveUrl": "https://thoughtline.netlify.app",
+    "githubUrl": "https://github.com/montasim/Thoughtline",
+    "releaseUrl": "https://github.com/montasim/Thoughtline/releases/latest",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/thoughtline.png"
+  },
+  {
+    "id": "project-mulalens",
+    "type": "extension",
+    "title": "MulaLens - Workplace Context Extension",
+    "description": "A Chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",
+    "technologies": [
+      "TypeScript",
+      "Chrome Extensions API",
+      "Gemini API",
+      "AI summaries"
+    ],
+    "liveUrl": "https://mulalens.netlify.app",
+    "githubUrl": "https://github.com/montasim/MulaLens",
+    "releaseUrl": "https://github.com/montasim/MulaLens/releases/latest",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/mulalens.png"
+  },
+  {
+    "id": "project-skillfoliox",
+    "type": "skill",
+    "title": "Skillfoliox - Agent Skill Catalog",
+    "description": "A curated portfolio of reusable SKILL.md capabilities for Claude Code, OpenAI Codex, Cursor, and other AI coding agents.",
+    "technologies": [
+      "TanStack Start",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Agent Skills"
+    ],
+    "liveUrl": "https://skillfoliox.netlify.app",
+    "githubUrl": "https://github.com/montasim/Skillfoliox",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/skillfoliox.png"
+  },
+  {
+    "id": "project-ship-agent-skill",
+    "type": "skill",
+    "title": "ship-agent-skill",
+    "description": "An end-to-end Codex and Claude Code skill for validating, packaging, publishing, releasing, and verifying portable Agent Skills.",
+    "technologies": ["Agent Skills", "JavaScript", "npm", "GitHub Releases"],
+    "liveUrl": "https://www.npmjs.com/package/ship-agent-skill",
+    "githubUrl": "https://github.com/montasim/ship-agent-skill",
+    "npmUrl": "https://www.npmjs.com/package/ship-agent-skill",
+    "emoji": ""
+  },
+  {
+    "id": "project-verify-project-release",
+    "type": "skill",
+    "title": "verify-project-release",
+    "description": "A read-only Codex and Claude Code skill for verifying GitHub releases, npm packages, tags, CI, install commands, and catalog metadata.",
+    "technologies": ["Agent Skills", "JavaScript", "npm", "CI"],
+    "liveUrl": "https://www.npmjs.com/package/verify-project-release",
+    "githubUrl": "https://github.com/montasim/verify-project-release",
+    "npmUrl": "https://www.npmjs.com/package/verify-project-release",
+    "emoji": ""
+  },
+  {
+    "id": "project-write-project-readme",
+    "type": "skill",
+    "title": "write-project-readme",
+    "description": "An evidence-based project README authoring skill for Codex and Claude Code.",
+    "technologies": ["Agent Skills", "JavaScript", "Documentation", "npm"],
+    "liveUrl": "https://www.npmjs.com/package/write-project-readme",
+    "githubUrl": "https://github.com/montasim/write-project-readme",
+    "npmUrl": "https://www.npmjs.com/package/write-project-readme",
+    "emoji": ""
+  },
+  {
+    "id": "project-craft-github-release",
+    "type": "skill",
+    "title": "craft-github-release",
+    "description": "An agent skill that turns verified repository evidence into trustworthy GitHub release notes and releases.",
+    "technologies": [
+      "Agent Skills",
+      "JavaScript",
+      "GitHub Releases",
+      "Semantic versioning"
+    ],
+    "liveUrl": "https://www.npmjs.com/package/craft-github-release",
+    "githubUrl": "https://github.com/montasim/craft-github-release",
+    "npmUrl": "https://www.npmjs.com/package/craft-github-release",
+    "emoji": ""
+  },
+  {
+    "id": "project-sync-project-metadata",
+    "type": "skill",
+    "title": "sync-project-metadata",
+    "description": "An agent skill that audits and synchronizes project metadata across manifests, documentation, releases, and catalogs.",
+    "technologies": ["Agent Skills", "JavaScript", "Automation", "npm"],
+    "liveUrl": "https://www.npmjs.com/package/sync-project-metadata",
+    "githubUrl": "https://github.com/montasim/sync-project-metadata",
+    "npmUrl": "https://www.npmjs.com/package/sync-project-metadata",
+    "emoji": ""
+  },
+  {
+    "id": "project-prepare-netlify-deployment",
+    "type": "skill",
+    "title": "prepare-netlify-deployment",
+    "description": "A Codex and Claude Code skill for auditing and preparing reliable Netlify deployments across static, SPA, SSR, and hybrid web apps.",
+    "technologies": ["Agent Skills", "Python", "Netlify", "Deployment"],
+    "liveUrl": "https://www.npmjs.com/package/prepare-netlify-deployment",
+    "githubUrl": "https://github.com/montasim/prepare-netlify-deployment",
+    "npmUrl": "https://www.npmjs.com/package/prepare-netlify-deployment",
+    "emoji": ""
+  },
+  {
+    "id": "project-audit-frontend-consistency",
+    "type": "skill",
+    "title": "audit-frontend-consistency",
+    "description": "An agent skill for auditing typography, spacing, color, responsive behavior, states, motion, and accessibility consistency.",
+    "technologies": [
+      "Agent Skills",
+      "JavaScript",
+      "Accessibility",
+      "Design systems"
+    ],
+    "liveUrl": "https://www.npmjs.com/package/audit-frontend-consistency",
+    "githubUrl": "https://github.com/montasim/audit-frontend-consistency",
+    "npmUrl": "https://www.npmjs.com/package/audit-frontend-consistency",
+    "emoji": ""
+  },
+  {
+    "id": "project-prepare-github-project",
+    "type": "skill",
+    "title": "prepare-github-project",
+    "description": "An agent skill for auditing and preparing professional GitHub repositories, metadata, topics, community files, security, and CI.",
+    "technologies": ["Agent Skills", "JavaScript", "GitHub", "CI"],
+    "liveUrl": "https://www.npmjs.com/package/prepare-github-project",
+    "githubUrl": "https://github.com/montasim/prepare-github-project",
+    "npmUrl": "https://www.npmjs.com/package/prepare-github-project",
+    "emoji": ""
+  },
+  {
+    "id": "project-publish-skill-to-skillfolio",
+    "type": "skill",
+    "title": "publish-skill-to-skillfolio",
+    "description": "An agent skill for adding verified Codex and Claude Code skills to Skillfolio catalogs with schema, README, sitemap, and build validation.",
+    "technologies": [
+      "Agent Skills",
+      "JavaScript",
+      "Catalog management",
+      "Sitemaps"
+    ],
+    "liveUrl": "https://www.npmjs.com/package/publish-skill-to-skillfolio",
+    "githubUrl": "https://github.com/montasim/publish-skill-to-skillfolio",
+    "npmUrl": "https://www.npmjs.com/package/publish-skill-to-skillfolio",
+    "emoji": ""
+  },
+  {
+    "id": "project-ensure-social-preview",
+    "type": "skill",
+    "title": "ensure-social-preview",
+    "description": "An agent skill to audit, create, repair, and verify large-image social previews for web apps and websites.",
+    "technologies": ["Agent Skills", "JavaScript", "Open Graph", "SEO"],
+    "liveUrl": "https://www.npmjs.com/package/ensure-social-preview",
+    "githubUrl": "https://github.com/montasim/ensure-social-preview",
+    "npmUrl": "https://www.npmjs.com/package/ensure-social-preview",
+    "emoji": ""
+  },
+  {
+    "id": "project-bangladesh-location-registry",
+    "type": "dataset",
+    "title": "Bangladesh Location Registry",
+    "description": "A versioned, provenance-rich Bangladesh location registry with census, postal, facility, ward, and infrastructure data from government-published sources.",
+    "technologies": [
+      "JSON",
+      "JSONL",
+      "SQLite",
+      "Government data",
+      "Data provenance"
+    ],
+    "liveUrl": "https://address-bd.netlify.app",
+    "githubUrl": "https://github.com/montasim/bangladesh-location-registry",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/bangladesh-location-registry.png"
+  },
+  {
+    "id": "project-educanvas",
+    "type": "template",
+    "title": "EduCanvas",
+    "description": "A theme-driven educational website and content-management starter built with Next.js.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "CMS",
+      "Education"
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/montasim/EduCanvas",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/educanvas.png"
+  },
+  {
+    "id": "project-content-types-lite",
+    "type": "package",
+    "title": "content-types-lite",
+    "description": "Tiny, type-safe HTTP media type constants and utilities for parsing, formatting, matching, and validation.",
+    "technologies": ["TypeScript", "ESM", "CommonJS", "Zero dependency"],
+    "liveUrl": "https://content-types-lite.netlify.app",
+    "githubUrl": "https://github.com/montasim/content-types-lite",
+    "npmUrl": "https://www.npmjs.com/package/content-types-lite",
+    "emoji": "",
+    "imageUrl": "assets/projects/content-types-lite.png"
+  },
+  {
+    "id": "project-http-status-lite",
+    "type": "package",
+    "title": "http-status-lite",
+    "description": "Tiny, standards-backed, type-safe HTTP status codes for Node.js and browsers.",
+    "technologies": [
+      "TypeScript",
+      "Node.js",
+      "RFC 9110",
+      "IANA",
+      "Zero dependency"
+    ],
+    "liveUrl": "https://http-status-lite.netlify.app",
+    "githubUrl": "https://github.com/montasim/http-status-lite",
+    "npmUrl": "https://www.npmjs.com/package/http-status-lite",
+    "emoji": "",
+    "imageUrl": "assets/projects/http-status-lite.png"
+  },
+  {
+    "id": "project-mime-types-lite",
+    "type": "package",
+    "title": "mime-types-lite",
+    "description": "Tiny, zero-dependency, type-safe MIME constants and helpers for HTTP APIs, uploads, and file extensions.",
+    "technologies": ["TypeScript", "ESM", "CommonJS", "Zero dependency"],
+    "liveUrl": "https://mime-types-lite.netlify.app",
+    "githubUrl": "https://github.com/montasim/mime-types-lite",
+    "npmUrl": "https://www.npmjs.com/package/mime-types-lite",
+    "emoji": "",
+    "imageUrl": "assets/projects/mime-types-lite.png"
+  },
+  {
+    "id": "project-client-parser",
+    "type": "package",
+    "title": "client-parser",
+    "description": "A tiny, type-safe client classifier with User-Agent, Client Hints, and HTTP header support.",
+    "technologies": [
+      "TypeScript",
+      "User-Agent",
+      "Client Hints",
+      "Zero dependency"
+    ],
+    "liveUrl": "https://client-parser.netlify.app",
+    "githubUrl": "https://github.com/montasim/client-parser",
+    "npmUrl": "https://www.npmjs.com/package/client-parser",
+    "emoji": "",
+    "imageUrl": "assets/projects/client-parser.png"
+  },
+  {
+    "id": "project-b4joinacompany",
+    "type": "website",
+    "title": "b4joinacompany",
+    "description": "An evidence-labeled company research and decision-support platform for job seekers in Bangladesh.",
+    "technologies": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "MongoDB",
+      "Gemini API",
+      "Better Auth"
+    ],
+    "liveUrl": "https://b4joinacompany.netlify.app",
+    "githubUrl": "https://github.com/montasim/b4joinacompany",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/b4joinacompany.png"
+  },
+  {
+    "id": "project-book-heaven",
+    "type": "website",
+    "title": "Book Heaven",
+    "description": "A Next.js book-management and admin dashboard interface built with shadcn/ui.",
+    "technologies": ["Next.js", "TypeScript", "shadcn/ui", "Tailwind CSS"],
+    "liveUrl": "https://bookheavenbeta.vercel.app",
+    "githubUrl": "https://github.com/montasim/book-heaven",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/book-heaven.png"
+  },
+  {
+    "id": "project-markdown-typing-svg",
+    "type": "tool",
+    "title": "Markdown Typing SVG",
+    "description": "A generator and cacheable API for customizable animated typing SVGs used in GitHub profiles, README files, and websites.",
+    "technologies": ["Next.js", "TypeScript", "SVG", "API"],
+    "liveUrl": "https://markdown-typing-svg.netlify.app",
+    "githubUrl": "https://github.com/montasim/markdown-typing-svg",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/markdown-typing-svg.png"
+  },
+  {
+    "id": "project-shrnkly",
+    "type": "website",
+    "title": "Shrnkly",
+    "description": "A multilingual application for shortening URLs, sharing text, generating QR codes, and viewing usage analytics.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "MongoDB",
+      "Prisma",
+      "Redis",
+      "i18n"
+    ],
+    "liveUrl": "https://shrnkly.netlify.app",
+    "githubUrl": "https://github.com/montasim/shrnkly-url-shortener",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/shrnkly.png"
+  },
+  {
+    "id": "project-github-readme-counter",
+    "type": "api",
+    "title": "GitHub README Counter",
+    "description": "An Express service that increments a file-backed counter and returns the current value as a customizable SVG image.",
+    "technologies": ["Node.js", "Express", "SVG", "API"],
+    "liveUrl": "https://github-readme-counter.onrender.com/count.svg",
+    "githubUrl": "https://github.com/montasim/github-readme-counter",
+    "npmUrl": "",
+    "emoji": ""
+  },
+  {
+    "id": "project-ramadan-clock",
+    "type": "website",
+    "title": "Ramadan Clock",
+    "description": "District-aware Sehri and Iftar schedules for Bangladesh with PDF exports and protected timetable management.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "Tailwind CSS"
+    ],
+    "liveUrl": "https://fasttimes.netlify.app",
+    "githubUrl": "https://github.com/montasim/ramadan-clock",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/ramadan-clock.png"
+  },
+  {
+    "id": "project-devtools",
+    "type": "tool",
+    "title": "DevTools",
+    "description": "A comprehensive suite of 30+ free browser tools for formatting, validating, generating, and transforming data.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "CodeMirror",
+      "TanStack Query",
+      "PostgreSQL"
+    ],
+    "liveUrl": "https://devtoolsn.vercel.app",
+    "githubUrl": "https://github.com/montasim/devtools",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/devtools.png"
+  },
+  {
+    "id": "project-postcraft",
+    "type": "website",
+    "title": "PostCraft",
+    "description": "An AI-powered social media manager for generating, previewing, scoring, and publishing posts with Gemini and custom brand guardrails.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "Gemini API",
+      "Inngest",
+      "MongoDB"
+    ],
+    "liveUrl": "https://aipostcraft.vercel.app",
+    "githubUrl": "https://github.com/montasim/PostCraft",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/postcraft.png"
+  },
+  {
+    "id": "project-tin-audit-checker",
+    "type": "dataset",
+    "title": "TIN Audit Checker - Bangladesh",
+    "description": "A client-side lookup for checking whether a Bangladesh TIN was selected for NBR Risk-Based Audit (AY 2023-24) across 72,342 returns.",
+    "technologies": [
+      "Next.js",
+      "TypeScript",
+      "Bangladesh tax data",
+      "Privacy-first"
+    ],
+    "liveUrl": "https://tin-audit-checker.netlify.app",
+    "githubUrl": "https://github.com/montasim/tin-audit-checker",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/tin-audit-checker.png"
+  }
+]

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f8f7f3"/>
+  <rect x="56" y="56" width="1088" height="518" rx="28" fill="#fff" stroke="#d9d7d0"/>
+  <circle cx="110" cy="112" r="22" fill="#191919"/>
+  <text x="110" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">M</text>
+  <text x="145" y="121" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#191919">Montasim</text>
+  <text x="104" y="267" font-family="Arial, sans-serif" font-size="58" font-weight="700" letter-spacing="-2" fill="#111">Mohammad Montasim</text>
+  <text x="104" y="330" font-family="Arial, sans-serif" font-size="58" font-weight="700" letter-spacing="-2" fill="#111">Al Mamun Shuvo</text>
+  <text x="106" y="390" font-family="Arial, sans-serif" font-size="27" fill="#616161">Senior Software Engineer | Real-Time &amp; AI-Driven SaaS</text>
+  <line x1="106" y1="452" x2="1094" y2="452" stroke="#d9d7d0"/>
+  <text x="106" y="510" font-family="Arial, sans-serif" font-size="21" fill="#616161">Deterministic systems. Production reliability. Measurable outcomes.</text>
+</svg>

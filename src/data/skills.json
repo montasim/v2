@@ -1,0 +1,72 @@
+[
+  {
+    "id": "skills-frontend",
+    "category": "Frontend",
+    "items": [
+      "React.js",
+      "Next.js",
+      "TypeScript",
+      "JavaScript",
+      "HTML5",
+      "CSS",
+      "Tailwind CSS",
+      "Redux.js",
+      "Bootstrap",
+      "jQuery",
+      "Responsive Web Design",
+      "Konva.js"
+    ]
+  },
+  {
+    "id": "skills-backend-apis",
+    "category": "Backend & APIs",
+    "items": ["Node.js", "Express.js", "Socket.io", "REST APIs", "PHP"]
+  },
+  {
+    "id": "skills-databases",
+    "category": "Databases & ORM",
+    "items": ["PostgreSQL", "MongoDB", "Prisma", "PhpMyAdmin"]
+  },
+  {
+    "id": "skills-cloud-devops",
+    "category": "Cloud & DevOps",
+    "items": [
+      "Microsoft Azure",
+      "Docker",
+      "GitHub Actions",
+      "CI/CD",
+      "Git",
+      "IT Operations"
+    ]
+  },
+  {
+    "id": "skills-testing-quality",
+    "category": "Testing & Quality",
+    "items": ["Jest", "React Testing Library", "Lighthouse"]
+  },
+  {
+    "id": "skills-design-collaboration",
+    "category": "Design & Collaboration",
+    "items": ["Figma", "Scrum", "Agile Methodologies"]
+  },
+  {
+    "id": "skills-office-productivity",
+    "category": "Office Productivity",
+    "items": [
+      "Microsoft Word",
+      "Microsoft Excel",
+      "Microsoft PowerPoint",
+      "Microsoft Office"
+    ]
+  },
+  {
+    "id": "skills-realtime-vision",
+    "category": "Real-Time & Computer Vision",
+    "items": ["WebRTC", "Opentok", "MediaPipe"]
+  },
+  {
+    "id": "skills-architecture-security",
+    "category": "Architecture & Security",
+    "items": ["System Design", "Microservices", "SSO"]
+  }
+]

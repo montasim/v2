@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Syed Mahedi Hasen",
+    "role": "Software Engineer @MyMedicalHub",
+    "date": "May 11, 2026",
+    "relationship": "reported to Montasim directly",
+    "text": "Montasim Bhai consistently helped me understand complex business requirements and translate them into practical technical solutions. Whenever I faced challenges with the codebase or problem-solving, he was always approachable, supportive, and clear in his guidance. His ability to break down problems and mentor team members made a significant impact on my learning and growth. What stood out most was his leadership mindset: he not only focused on delivering outcomes but also ensured the team understood the reasoning behind decisions and implementations."
+  },
+  {
+    "name": "Md. Sazzad Hossain",
+    "role": "Software Engineer | Next.js 16 & React 19 Architecture | Full-Stack & Real-Time Systems",
+    "date": "June 5, 2025",
+    "relationship": "worked on the same team",
+    "text": "Montasim's expertise in frontend technologies, particularly in Next.js and TypeScript, was consistently evident throughout the project. He played a pivotal role in developing the robust video-calling application. His understanding of real-time interaction technologies like OpenTok and WebRTC was crucial in enabling seamless video communication. Beyond his strong technical skills, Montasim demonstrated a keen eye for creating responsive, maintainable UIs. He is adept at working in an Agile environment and possesses a problem-solving mindset, which is invaluable in overcoming challenges."
+  },
+  {
+    "name": "Md. Rifaet Ullah",
+    "role": "Software Engineer | Django | AI | Machine Learning | Microservice",
+    "date": "May 26, 2025",
+    "relationship": "worked together but on different teams",
+    "text": "Montasim is the rare engineer who effortlessly bridges the gap between research and production. He integrated our AI-driven analysis pipeline into a seamless user experience, building components that showcased annotated pictures and metric visualizations in real time. His passion for clean code and deep understanding of Agile processes drove our team to hit every milestone ahead of schedule."
+  },
+  {
+    "name": "Tabbi Quadir",
+    "role": "Proud contributor in accelerating digital transformation in Bangladesh",
+    "date": "May 25, 2025",
+    "relationship": "managed Montasim directly",
+    "text": "I was consistently impressed by his technical abilities and commitment to delivering high-quality work. He demonstrated strong problem-solving skills and took a proactive approach to addressing challenges. Montasim is a collaborative team player who communicates effectively and contributes positively to team dynamics. He is a quick learner, always eager to take on new responsibilities and expand his knowledge."
+  },
+  {
+    "name": "Shahriar Iqbal",
+    "role": "Software QA Engineer | Postman | JMeter | Agile | JIRA | Azure DevOps",
+    "date": "July 1, 2024",
+    "relationship": "worked together but on different teams",
+    "text": "Mohammad possesses a deep knowledge of React, JavaScript, and Node.js, and his ability to translate complex requirements into elegant, user-friendly interfaces is genuinely remarkable. He consistently delivers high-quality code that meets and often exceeds expectations. His attention to detail and commitment to writing clean, maintainable code have been instrumental in the success of our projects. He is always willing to collaborate, share his knowledge, and offer valuable insights."
+  },
+  {
+    "name": "Md. Rashedul Islam",
+    "role": "C#, ASP.NET Core, SQL Server, React, Microservices",
+    "date": "November 28, 2023",
+    "relationship": "worked together but on different teams",
+    "text": "Shuvo played a pivotal role in the success of our projects, particularly his significant contributions to the Telemedicine project. His expertise in React.js, Node.js, and CSS frameworks was instrumental in designing and implementing user-friendly interfaces. His efforts led to a 25% reduction in the average time for patients to receive a diagnosis. I highly recommend him as a software engineer who excels in technical capabilities and brings a strong work ethic and a collaborative spirit to the team."
+  },
+  {
+    "name": "Imam Mahadi Hasan",
+    "role": "Lead UI/UX Designer | Illustrator | Graphic Designer | AI Product Designer",
+    "date": "September 22, 2023",
+    "relationship": "collaborated on design and development",
+    "text": "Montasim is a top-notch front-end developer with a specialization in the MERN stack. His ability to seamlessly translate design concepts into interactive and user-friendly web applications is truly commendable. I was consistently impressed by his attention to detail and commitment to delivering pixel-perfect user interfaces. What sets Montasim apart is his excellent communication and collaboration skills."
+  },
+  {
+    "name": "Shoriful Islam",
+    "role": "3X Entrepreneur | CEO | Investor | Mentor | AI | Healthcare",
+    "date": "September 22, 2023",
+    "relationship": "managed Montasim directly",
+    "text": "Montasim's contributions to our team have been invaluable. He played a pivotal role in designing and implementing user interfaces for our complex healthcare platform. His work not only showcased a keen eye for design but also a deep understanding of the technical aspects involved. His meticulous attention to detail has been critical in our quest for excellence. I wholeheartedly recommend him to anyone seeking a skilled and reliable frontend developer."
+  },
+  {
+    "name": "Sakkhar Saha",
+    "role": "Certified Scrum Master® | Technical Project Manager | Agile Methodology",
+    "date": "December 1, 2022",
+    "relationship": "managed Montasim directly",
+    "text": "Mohammad Montasim is an excellent resource and a master of Frontend Web Development. He has been an absolute gem in our company. He makes sure all the deadlines are met with the highest standards. He is hardworking and dedicated, completing his assigned tasks in a given time frame."
+  },
+  {
+    "name": "Md. Azharul Sharif",
+    "role": ".NET Core | Angular | SQL | Lead Software Engineer",
+    "date": "October 31, 2022",
+    "relationship": "managed Montasim directly",
+    "text": "His essential skills, dedication and good humor consistently impressed me. He is an innovator who always thinks to improve the product's quality. He is a talented, hard-working young man and a delight to work with."
+  },
+  {
+    "name": "Rana Hamid",
+    "role": "Lead .NET Developer | Dynamics 365 Specialist | Prime Minister Gold Medalist",
+    "date": "October 28, 2022",
+    "relationship": "worked together but on different teams",
+    "text": "I found Shuvo very knowledgeable. He never hesitated to go the extra mile to educate himself where necessary. Shuvo has a winning attitude that embraces all challenges and encourages collaboration. His communication skills, both written and verbal, are excellent. I enjoyed the energy, enthusiasm, and creativity he brought to his work."
+  },
+  {
+    "name": "Abu Saleh Musa Miah",
+    "role": "World's Top 2% Scientist, IEEE Senior Member, Post-Doctoral Researcher at University of Aizu",
+    "date": "October 7, 2022",
+    "relationship": "Montasim's teacher and thesis supervisor",
+    "text": "We worked together on a range of tough projects, such as Driver drowsiness detection, Hand pose detection and many others. All of the projects he completed successfully. The success was greatly attributed to his excellent leadership. He is always positive even during stressful moments, supportive of his colleagues, transparent and honest. I regard him as a truly capable senior software engineer."
+  },
+  {
+    "name": "Abid Hasan",
+    "role": "Software Engineer || Next.js, Nest.js, Node.js, JavaScript, Typescript",
+    "date": "June 8, 2022",
+    "relationship": "studied together",
+    "text": "Montasim displayed great talents in programming and creative works. It's not just his technical skills that impress me, however. Montasim was a joy to work with because of his amazingly positive attitude and hardworking mentality."
+  },
+  {
+    "name": "Md. Mahmudul Haque Joy",
+    "role": "Assistant Programmer",
+    "date": "January 31, 2021",
+    "relationship": "Montasim's teacher",
+    "text": "Hardworking, fast learner & technical geek."
+  }
+]

@@ -1,0 +1,1823 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio prototype for senior software engineer Montasim Shuvo."
+    />
+    <title>Montasim Shuvo: Senior Software Engineer</title>
+    <link rel="icon" href="../../public/favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              ink: {
+                50: "#f6f6f3",
+                100: "#ecece7",
+                200: "#d8d8d0",
+                400: "#92938b",
+                500: "#686a63",
+                700: "#41423e",
+                900: "#20211f",
+                950: "#151614",
+              },
+              amber: { 300: "#d8aa63", 400: "#c69043", 950: "#32210d" },
+            },
+            fontFamily: {
+              sans: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      }
+    </script>
+    <script>
+      let savedTheme = null
+      try {
+        savedTheme = localStorage.getItem("portfolio-theme")
+      } catch {}
+      const systemDark = matchMedia("(prefers-color-scheme: dark)").matches
+      document.documentElement.classList.toggle(
+        "dark",
+        savedTheme ? savedTheme === "dark" : systemDark
+      )
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      .dark {
+        color-scheme: dark;
+      }
+      body {
+        text-rendering: optimizeLegibility;
+      }
+      ::selection {
+        background: #d8aa63;
+        color: #151614;
+      }
+      .focus-ring:focus-visible {
+        outline: 3px solid #c69043;
+        outline-offset: 3px;
+      }
+      .filter-button[aria-pressed="true"] {
+        border-color: #151614;
+        background: #151614;
+        color: #f6f6f3;
+      }
+      .dark .filter-button[aria-pressed="true"] {
+        border-color: #f6f6f3;
+        background: #f6f6f3;
+        color: #151614;
+      }
+      [data-filter-item][hidden] {
+        display: none !important;
+      }
+      .skill-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        border: 1px solid #d8d8d0;
+        border-radius: 0.375rem;
+        background: white;
+        padding: 0.375rem 0.625rem;
+        color: #686a63;
+      }
+      .dark .skill-chip {
+        border-color: rgb(255 255 255 / 0.15);
+        background: #20211f;
+        color: #92938b;
+      }
+      .role-timeline {
+        position: relative;
+      }
+      .role-timeline::before {
+        content: "";
+        position: absolute;
+        top: 0.5rem;
+        bottom: 0.75rem;
+        left: 0.4375rem;
+        width: 1px;
+        background: #d8d8d0;
+      }
+      .role-timeline > li {
+        position: relative;
+        padding-left: 2rem;
+      }
+      .role-timeline > li::before {
+        content: "";
+        position: absolute;
+        top: 0.375rem;
+        left: 0.1875rem;
+        width: 0.5625rem;
+        height: 0.5625rem;
+        border-radius: 999px;
+        background: #151614;
+      }
+      .dark .role-timeline::before {
+        background: rgb(255 255 255 / 0.15);
+      }
+      .dark .role-timeline > li::before {
+        background: #f6f6f3;
+      }
+      .recommendation-carousel {
+        scrollbar-width: none;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x mandatory;
+      }
+      .recommendation-carousel::-webkit-scrollbar {
+        display: none;
+      }
+      .recommendation-slide {
+        flex: 0 0 80%;
+        scroll-snap-align: start;
+      }
+      .contribution-months {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: repeat(var(--contribution-weeks), 10px);
+        gap: 3px;
+      }
+      .contribution-cells {
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(7, 10px);
+        gap: 3px;
+      }
+      .contribution-cell {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        background: #d8d8d0;
+      }
+      .contribution-level-1 {
+        background: #6ee7b7;
+      }
+      .contribution-level-2 {
+        background: #10b981;
+      }
+      .contribution-level-3 {
+        background: #047857;
+      }
+      .contribution-level-4 {
+        background: #064e3b;
+      }
+      .dark .contribution-cell {
+        background: rgb(255 255 255 / 0.1);
+      }
+      .dark .contribution-level-1 {
+        background: #064e3b;
+      }
+      .dark .contribution-level-2 {
+        background: #047857;
+      }
+      .dark .contribution-level-3 {
+        background: #10b981;
+      }
+      .dark .contribution-level-4 {
+        background: #6ee7b7;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-ink-50 text-ink-950 dark:bg-ink-950 dark:text-ink-50 min-h-[100dvh] antialiased"
+  >
+    <a
+      href="#main"
+      class="focus-ring bg-ink-950 text-ink-50 dark:bg-ink-50 dark:text-ink-950 fixed top-4 left-4 z-[60] -translate-y-24 rounded-md px-4 py-2 text-sm font-semibold transition-transform focus:translate-y-0"
+      >Skip to content</a
+    >
+
+    <header
+      class="border-ink-200/80 bg-ink-50/95 dark:bg-ink-950/95 sticky top-0 z-40 border-b backdrop-blur-sm dark:border-white/10"
+    >
+      <nav
+        class="mx-auto flex h-14 max-w-[61.6rem] items-center justify-between px-4"
+        aria-label="Primary navigation"
+      >
+        <a
+          href="#top"
+          class="focus-ring flex items-center gap-2 rounded-md"
+          aria-label="Montasim, home"
+        >
+          <img
+            src="../../public/images/logo.png"
+            alt=""
+            class="size-7 rounded-sm"
+          />
+          <span class="font-semibold tracking-tight">Montasim</span>
+        </a>
+        <div class="hidden items-center gap-1 sm:flex">
+          <a
+            href="#about"
+            class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 rounded-md px-2.5 py-1.5 text-sm dark:hover:bg-white/10"
+            >About</a
+          >
+          <a
+            href="#experience"
+            class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 rounded-md px-2.5 py-1.5 text-sm dark:hover:bg-white/10"
+            >Experience</a
+          >
+          <a
+            href="#projects"
+            class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 rounded-md px-2.5 py-1.5 text-sm dark:hover:bg-white/10"
+            >Projects</a
+          >
+          <a
+            href="#skills"
+            class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 rounded-md px-2.5 py-1.5 text-sm dark:hover:bg-white/10"
+            >Skills</a
+          >
+          <a
+            href="#contact"
+            class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 rounded-md px-2.5 py-1.5 text-sm dark:hover:bg-white/10"
+            >Contact</a
+          >
+          <button
+            data-theme-toggle
+            class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 ml-1 grid size-9 place-items-center rounded-md dark:hover:bg-white/10"
+            aria-label="Switch color theme"
+          >
+            <i class="ph ph-moon" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="flex items-center gap-1 sm:hidden">
+          <button
+            data-theme-toggle
+            class="focus-ring text-ink-500 hover:bg-ink-100 dark:text-ink-400 grid size-9 place-items-center rounded-md dark:hover:bg-white/10"
+            aria-label="Switch color theme"
+          >
+            <i class="ph ph-moon" aria-hidden="true"></i>
+          </button>
+          <button
+            data-mobile-toggle
+            class="focus-ring border-ink-200 grid size-9 place-items-center rounded-md border dark:border-white/15"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <i class="ph ph-list" aria-hidden="true"></i>
+          </button>
+        </div>
+      </nav>
+      <div
+        id="mobile-menu"
+        data-mobile-menu
+        class="border-ink-200 hidden border-t px-4 py-2 sm:hidden dark:border-white/10"
+      >
+        <div class="mx-auto grid max-w-[61.6rem] gap-1">
+          <a href="#about" class="focus-ring rounded-md px-3 py-2 text-sm"
+            >About</a
+          >
+          <a href="#experience" class="focus-ring rounded-md px-3 py-2 text-sm"
+            >Experience</a
+          >
+          <a href="#projects" class="focus-ring rounded-md px-3 py-2 text-sm"
+            >Projects</a
+          >
+          <a href="#skills" class="focus-ring rounded-md px-3 py-2 text-sm"
+            >Skills</a
+          >
+          <a href="#contact" class="focus-ring rounded-md px-3 py-2 text-sm"
+            >Contact</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <nav
+      class="fixed bottom-0 z-30 hidden flex-col items-center gap-2 xl:flex"
+      style="left: max(1.5rem, calc(50% - 46.2rem))"
+      aria-label="Social links"
+    >
+      <a
+        href="https://linkedin.com/in/montasim"
+        aria-label="LinkedIn profile"
+        title="LinkedIn"
+        class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-10 place-items-center rounded-md text-[25.5px] dark:hover:bg-white/10"
+        ><i class="ph ph-linkedin-logo" aria-hidden="true"></i
+      ></a>
+      <a
+        href="https://github.com/montasim"
+        aria-label="GitHub profile"
+        title="GitHub"
+        class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-10 place-items-center rounded-md text-[25.5px] dark:hover:bg-white/10"
+        ><i class="ph ph-github-logo" aria-hidden="true"></i
+      ></a>
+      <a
+        href="https://www.supportkori.com/montasim"
+        aria-label="Support Montasim on SupportKori"
+        title="SupportKori"
+        class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-10 place-items-center rounded-md text-[25.5px] dark:hover:bg-white/10"
+        ><i class="ph ph-coffee" aria-hidden="true"></i
+      ></a>
+      <span
+        class="bg-ink-200 mt-2 h-20 w-px dark:bg-white/15"
+        aria-hidden="true"
+      ></span>
+    </nav>
+
+    <div
+      class="fixed bottom-0 z-30 hidden flex-col items-center gap-4 xl:flex"
+      style="right: max(1.5rem, calc(50% - 46.2rem))"
+    >
+      <a
+        href="mailto:montasimmamun@gmail.com"
+        class="focus-ring text-ink-500 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 rounded-sm text-sm tracking-wide"
+        style="writing-mode: vertical-rl; transform: rotate(180deg)"
+        >montasimmamun@gmail.com</a
+      >
+      <span
+        class="bg-ink-200 h-20 w-px dark:bg-white/15"
+        aria-hidden="true"
+      ></span>
+    </div>
+
+    <main id="main" class="mx-auto max-w-[61.6rem] px-4">
+      <section
+        id="top"
+        class="scroll-mt-14 py-12 md:py-16"
+        aria-labelledby="profile-name"
+      >
+        <div
+          class="flex flex-col items-center justify-between gap-6 sm:flex-row-reverse sm:items-start sm:gap-10"
+        >
+          <div class="relative h-40 w-36 shrink-0 sm:h-44 sm:w-40">
+            <span
+              class="border-ink-400 dark:border-ink-500 pointer-events-none absolute inset-0 translate-x-3 translate-y-3 rounded-xl border-2"
+              aria-hidden="true"
+            ></span>
+            <img
+              src="../../public/images/avatar.jpg"
+              alt="Montasim Shuvo"
+              class="ring-ink-950/10 relative z-10 h-full w-full rounded-xl object-cover object-top ring-2 dark:ring-white/15"
+            />
+          </div>
+          <div class="text-center sm:text-left">
+            <h1
+              id="profile-name"
+              class="text-2xl font-bold tracking-tight sm:text-3xl"
+            >
+              Mohammad Montasim Al Mamun Shuvo
+            </h1>
+            <p
+              class="text-ink-500 dark:text-ink-400 mt-2 max-w-xl text-sm leading-relaxed"
+            >
+              Senior Software Engineer | React, Next.js, Node.js, TypeScript |
+              Real-Time &amp; AI-Driven SaaS
+            </p>
+            <p
+              class="text-ink-500 dark:text-ink-400 mt-2 max-w-xl text-sm leading-relaxed"
+            >
+              Building deterministic, high-performance web platforms for
+              real-time and AI-driven applications.
+            </p>
+            <p
+              class="text-ink-500 dark:text-ink-400 mt-3 flex items-center justify-center gap-1.5 text-sm sm:justify-start"
+            >
+              <i class="ph ph-map-pin" aria-hidden="true"></i>Dhaka, Bangladesh
+            </p>
+            <div
+              class="mt-5 flex flex-wrap items-center justify-center gap-1 sm:justify-start"
+            >
+              <a
+                href="https://linkedin.com/in/montasim"
+                aria-label="LinkedIn profile"
+                title="LinkedIn"
+                class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-9 place-items-center rounded-md text-[25.5px] xl:hidden dark:hover:bg-white/10"
+                ><i class="ph ph-linkedin-logo" aria-hidden="true"></i
+              ></a>
+              <a
+                href="https://github.com/montasim"
+                aria-label="GitHub profile"
+                title="GitHub"
+                class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-9 place-items-center rounded-md text-[25.5px] xl:hidden dark:hover:bg-white/10"
+                ><i class="ph ph-github-logo" aria-hidden="true"></i
+              ></a>
+              <a
+                href="https://www.supportkori.com/montasim"
+                aria-label="Support Montasim on SupportKori"
+                title="SupportKori"
+                class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-9 place-items-center rounded-md text-[25.5px] xl:hidden dark:hover:bg-white/10"
+                ><i class="ph ph-coffee" aria-hidden="true"></i
+              ></a>
+              <a
+                href="mailto:montasimmamun@gmail.com"
+                aria-label="Send email"
+                title="Email"
+                class="focus-ring text-ink-500 hover:bg-ink-100 hover:text-ink-950 dark:text-ink-400 dark:hover:text-ink-50 grid size-9 place-items-center rounded-md text-[25.5px] xl:hidden dark:hover:bg-white/10"
+                ><i class="ph ph-envelope-simple" aria-hidden="true"></i
+              ></a>
+              <span
+                class="bg-ink-200 mx-2 h-5 w-px xl:hidden dark:bg-white/15"
+                aria-hidden="true"
+              ></span>
+              <a
+                href="../../public/documents/resume.pdf"
+                download
+                class="skill-chip focus-ring hover:bg-ink-100 hover:text-ink-950 dark:hover:text-ink-50 text-sm dark:hover:bg-white/10"
+                ><i class="ph ph-download-simple" aria-hidden="true"></i
+                >Download resume</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="about"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="about-heading"
+      >
+        <div class="border-ink-200 mb-7 border-b pb-3 dark:border-white/10">
+          <h2 id="about-heading" class="text-2xl font-semibold tracking-tight">
+            About
+          </h2>
+        </div>
+        <div
+          class="text-ink-500 dark:text-ink-400 space-y-4 text-sm leading-relaxed"
+        >
+          <p>
+            Most software looks great in the demo. I build the kind that
+            survives production.
+          </p>
+          <p>
+            I'm a
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >Senior Software Engineer</strong
+            >
+            with
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >3+ years</strong
+            >
+            building real-time, AI-driven, multi-tenant SaaS platforms across
+            the full stack: React, Next.js, Node.js, and TypeScript. Promoted
+            twice at the same company, I now own frontend architecture across a
+            multi-service platform, lead PR reviews, and mentor the engineers
+            behind me.
+          </p>
+          <p>
+            Key highlights: cut cloud infrastructure costs
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >70%</strong
+            >
+            by migrating Azure VMs to App Service with automated CI/CD. Boosted
+            application performance
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >40%</strong
+            >
+            and hit
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >Lighthouse 90+</strong
+            >
+            by replacing legacy libraries with custom components. Built a
+            real-time
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >computer vision</strong
+            >
+            pipeline (MediaPipe) sustaining
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >60 FPS</strong
+            >
+            at
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >99.9% reliability</strong
+            >, and designed a deterministic
+            <strong class="text-ink-700 dark:text-ink-200 font-semibold"
+              >finite-state-machine</strong
+            >
+            engine that eliminated race conditions during live AI analysis.
+          </p>
+          <p>
+            Here's what makes my work different: most engineers build for the
+            happy path. I build for the moment it all goes wrong, with
+            predictable state transitions, resilient lifecycles, and async
+            workflows that don't leak, stall, or surprise you. Reliability isn't
+            something I bolt on at the end; it's the architecture I start with.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="experience"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="experience-heading"
+      >
+        <div
+          class="border-ink-200 mb-7 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6 dark:border-white/10"
+        >
+          <h2
+            id="experience-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Experience
+          </h2>
+          <a
+            href="experience.html"
+            class="focus-ring mt-4 inline-flex items-center gap-1.5 rounded-md text-sm font-medium hover:underline sm:mt-0 sm:shrink-0"
+            >View complete experience
+            <i class="ph ph-arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <div class="grid gap-4" aria-label="Selected employment history">
+          <article
+            class="border-ink-200 dark:bg-ink-900 rounded-xl border bg-white p-4 sm:p-5 dark:border-white/10"
+            aria-labelledby="overview-mmh-heading"
+          >
+            <header class="flex items-start gap-3">
+              <img
+                src="../../public/images/organizations/mymedicalhub.png"
+                alt=""
+                class="size-12 shrink-0 rounded-md object-cover"
+              />
+              <div>
+                <h3 id="overview-mmh-heading" class="font-semibold">
+                  MyMedicalHub International Ltd.
+                </h3>
+                <p class="text-ink-500 dark:text-ink-400 mt-1 text-sm">
+                  Sep 2022 - Present&nbsp;&nbsp;·&nbsp;&nbsp;Mohakhali, Dhaka,
+                  Bangladesh
+                </p>
+              </div>
+            </header>
+            <ol
+              class="role-timeline mt-5 ml-5 space-y-5"
+              aria-label="Roles at MyMedicalHub International Ltd."
+            >
+              <li>
+                <h4 class="text-sm font-semibold">Senior Software Engineer</h4>
+                <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                  Oct 2025 - Present
+                </p>
+                <p
+                  class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+                >
+                  Architected an FSM-based biometric engine replacing unstable
+                  React hooks with deterministic state transitions for
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >99.9% reliability</strong
+                  >
+                  during AI analysis. Optimized AI pipelines to support
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >60 FPS</strong
+                  >
+                  pose estimation and real-time rep counting via adaptive frame
+                  rate logic. Led a full rewrite of the medical assessment
+                  chatbot with Redux Toolkit and refactored
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >54+ modules</strong
+                  >
+                  into Presentational/Container pattern.
+                </p>
+                <ul
+                  class="mt-3 flex flex-wrap gap-2"
+                  aria-label="Technologies used as Senior Software Engineer"
+                >
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    React.js
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    TypeScript
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Redux Toolkit
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    MediaPipe
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Microsoft Azure
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <h4 class="text-sm font-semibold">Software Engineer</h4>
+                <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                  Oct 2023 - Sep 2025
+                </p>
+                <p
+                  class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+                >
+                  Boosted application performance by
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >40%</strong
+                  >
+                  by stripping legacy UI libraries and optimizing React
+                  rendering cycles. Achieved
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >70% infrastructure cost reduction</strong
+                  >
+                  by migrating Azure VMs to App Service and automating CI/CD
+                  pipelines. Deployed a HIPAA-compliant SSO system with
+                  multi-role access, OAuth integration, and strict CSP headers.
+                </p>
+                <ul
+                  class="mt-3 flex flex-wrap gap-2"
+                  aria-label="Technologies used as Software Engineer"
+                >
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    React.js
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Node.js
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Microsoft Azure
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Docker
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    CI/CD
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <h4 class="text-sm font-semibold">Junior Software Engineer</h4>
+                <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                  Sep 2022 - Sep 2023
+                </p>
+                <p
+                  class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+                >
+                  Reduced patient diagnosis time by
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >25%</strong
+                  >
+                  and achieved
+                  <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                    >95% accuracy</strong
+                  >
+                  by integrating real-time AI analysis and custom algorithms.
+                  Integrated a WebRTC video pipeline stabilizing remote
+                  consultations and reducing call latency. Developed a JWT-based
+                  REST API client layer with built-in XSS and CSRF protection.
+                </p>
+                <ul
+                  class="mt-3 flex flex-wrap gap-2"
+                  aria-label="Technologies used as Junior Software Engineer"
+                >
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    React.js
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    WebRTC
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Node.js
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    Express.js
+                  </li>
+                  <li
+                    class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+                  >
+                    PostgreSQL
+                  </li>
+                </ul>
+              </li>
+            </ol>
+          </article>
+
+          <article
+            class="border-ink-200 dark:bg-ink-900 rounded-xl border bg-white p-4 sm:p-5 dark:border-white/10"
+            aria-labelledby="overview-multiversal-heading"
+          >
+            <header class="flex items-start gap-3">
+              <img
+                src="../../public/images/organizations/multiversal.jpg"
+                alt=""
+                class="mt-0.5 size-9 shrink-0 rounded-md object-cover"
+              />
+              <div>
+                <h3
+                  id="overview-multiversal-heading"
+                  class="text-sm font-semibold"
+                >
+                  Junior Frontend Developer
+                </h3>
+                <p class="text-ink-500 dark:text-ink-400 mt-1 text-sm">
+                  Multiversal Software Ltd.&nbsp;&nbsp;·&nbsp;&nbsp;Aug 2022 -
+                  Oct 2022&nbsp;&nbsp;·&nbsp;&nbsp;Uttara, Dhaka, Bangladesh
+                </p>
+              </div>
+            </header>
+            <p
+              class="text-ink-500 dark:text-ink-400 mt-4 text-sm leading-relaxed"
+            >
+              Built and maintained
+              <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                >UI components</strong
+              >
+              for a telemedicine platform using React.js, JavaScript, HTML5, and
+              CSS3, improving user experience across devices. Debugged and
+              optimized frontend code,
+              <strong class="text-ink-950 dark:text-ink-50 font-semibold"
+                >reducing page load time</strong
+              >
+              and enhancing performance stability.
+            </p>
+            <ul
+              class="mt-3 flex flex-wrap gap-2"
+              aria-label="Technologies used as Junior Frontend Developer"
+            >
+              <li
+                class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+              >
+                React.js
+              </li>
+              <li
+                class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+              >
+                JavaScript
+              </li>
+              <li
+                class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+              >
+                HTML5
+              </li>
+              <li
+                class="border-ink-200 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/15"
+              >
+                CSS3
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="projects"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="projects-heading"
+      >
+        <div
+          class="border-ink-200 mb-7 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6 dark:border-white/10"
+        >
+          <h2
+            id="projects-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Selected projects
+          </h2>
+          <a
+            href="projects.html"
+            class="focus-ring mt-4 inline-flex items-center gap-1.5 rounded-md text-sm font-medium hover:underline sm:mt-0 sm:shrink-0"
+            >View all projects
+            <i class="ph ph-arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <div class="grid gap-6">
+          <article
+            class="group border-ink-200 hover:border-ink-400 dark:bg-ink-900 grid overflow-hidden rounded-xl border bg-white transition-colors lg:grid-cols-[1.08fr_0.92fr] dark:border-white/10 dark:hover:border-white/25"
+          >
+            <div
+              class="border-ink-200 bg-ink-100/70 dark:bg-ink-950/60 border-b p-3 sm:p-4 lg:border-r lg:border-b-0 dark:border-white/10"
+            >
+              <a
+                href="https://b4joinacompany.netlify.app"
+                class="focus-ring block overflow-hidden rounded-lg"
+                aria-label="Open b4joinacompany live site"
+                ><img
+                  src="assets/b4joinacompany.png"
+                  alt="b4joinacompany company research interface"
+                  loading="lazy"
+                  width="1600"
+                  height="1000"
+                  class="border-ink-200 aspect-[16/10] w-full rounded-lg border object-cover object-top transition-transform duration-300 group-hover:scale-[1.015] dark:border-white/10"
+              /></a>
+            </div>
+            <div class="flex min-w-0 flex-col p-5 sm:p-6">
+              <p
+                class="text-ink-500 dark:text-ink-400 flex items-center gap-1.5 text-xs font-medium"
+              >
+                <i class="ph ph-browser" aria-hidden="true"></i>Web application
+              </p>
+              <h3
+                class="mt-2 text-lg leading-snug font-semibold tracking-tight"
+              >
+                b4joinacompany - Company Research for Job Seekers
+              </h3>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-3 text-sm leading-relaxed"
+              >
+                Company research for job seekers with source-linked evidence,
+                comparisons, verification questions, and cited AI answers.
+              </p>
+              <ul
+                class="mt-4 flex flex-wrap gap-2"
+                aria-label="Technologies used for b4joinacompany"
+              >
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Next.js 16
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  React 19
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  TypeScript
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Tailwind CSS
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  MongoDB
+                </li>
+                <li
+                  class="text-ink-500 dark:text-ink-400 px-1 py-1 text-xs font-medium"
+                >
+                  +4 more
+                </li>
+              </ul>
+              <div class="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
+                <a
+                  href="https://b4joinacompany.netlify.app"
+                  class="focus-ring text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+                  >Live site
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a
+                ><a
+                  href="https://github.com/montasim/b4joinacompany"
+                  class="focus-ring text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+                  >Source <i class="ph ph-github-logo" aria-hidden="true"></i
+                ></a>
+              </div>
+            </div>
+          </article>
+          <article
+            class="group border-ink-200 hover:border-ink-400 dark:bg-ink-900 grid overflow-hidden rounded-xl border bg-white transition-colors lg:grid-cols-[1.08fr_0.92fr] dark:border-white/10 dark:hover:border-white/25"
+          >
+            <div
+              class="border-ink-200 bg-ink-100/70 dark:bg-ink-950/60 border-b p-3 sm:p-4 lg:border-r lg:border-b-0 dark:border-white/10"
+            >
+              <a
+                href="https://devtoolsn.vercel.app"
+                class="focus-ring block overflow-hidden rounded-lg"
+                aria-label="Open DevTools live site"
+                ><img
+                  src="assets/devtools.png"
+                  alt="DevTools browser utility interface"
+                  loading="lazy"
+                  width="1600"
+                  height="1000"
+                  class="border-ink-200 aspect-[16/10] w-full rounded-lg border object-cover object-top transition-transform duration-300 group-hover:scale-[1.015] dark:border-white/10"
+              /></a>
+            </div>
+            <div class="flex min-w-0 flex-col p-5 sm:p-6">
+              <p
+                class="text-ink-500 dark:text-ink-400 flex items-center gap-1.5 text-xs font-medium"
+              >
+                <i class="ph ph-browser" aria-hidden="true"></i>Web application
+              </p>
+              <h3
+                class="mt-2 text-lg leading-snug font-semibold tracking-tight"
+              >
+                DevTools - Developer Tools Suite
+              </h3>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-3 text-sm leading-relaxed"
+              >
+                A privacy-first collection of more than 40 browser tools with
+                optional accounts, saved state, and secure sharing.
+              </p>
+              <ul
+                class="mt-4 flex flex-wrap gap-2"
+                aria-label="Technologies used for DevTools"
+              >
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Next.js 16
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  React.js
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  TypeScript
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Tailwind CSS
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  PostgreSQL
+                </li>
+                <li
+                  class="text-ink-500 dark:text-ink-400 px-1 py-1 text-xs font-medium"
+                >
+                  +4 more
+                </li>
+              </ul>
+              <div class="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
+                <a
+                  href="https://devtoolsn.vercel.app"
+                  class="focus-ring text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+                  >Live site
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a
+                ><a
+                  href="https://github.com/montasim/devtools"
+                  class="focus-ring text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+                  >Source <i class="ph ph-github-logo" aria-hidden="true"></i
+                ></a>
+              </div>
+            </div>
+          </article>
+          <article
+            class="group border-ink-200 hover:border-ink-400 dark:bg-ink-900 grid overflow-hidden rounded-xl border bg-white transition-colors lg:grid-cols-[1.08fr_0.92fr] dark:border-white/10 dark:hover:border-white/25"
+          >
+            <div
+              class="border-ink-200 bg-ink-100/70 dark:bg-ink-950/60 border-b p-3 sm:p-4 lg:border-r lg:border-b-0 dark:border-white/10"
+            >
+              <a
+                href="https://aipostcraft.vercel.app"
+                class="focus-ring block overflow-hidden rounded-lg"
+                aria-label="Open PostCraft live site"
+                ><img
+                  src="assets/postcraft.png"
+                  alt="PostCraft social media manager interface"
+                  loading="lazy"
+                  width="1600"
+                  height="1000"
+                  class="border-ink-200 aspect-[16/10] w-full rounded-lg border object-cover object-top transition-transform duration-300 group-hover:scale-[1.015] dark:border-white/10"
+              /></a>
+            </div>
+            <div class="flex min-w-0 flex-col p-5 sm:p-6">
+              <p
+                class="text-ink-500 dark:text-ink-400 flex items-center gap-1.5 text-xs font-medium"
+              >
+                <i class="ph ph-browser" aria-hidden="true"></i>Web application
+              </p>
+              <h3
+                class="mt-2 text-lg leading-snug font-semibold tracking-tight"
+              >
+                PostCraft - AI-Powered Social Media Manager
+              </h3>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-3 text-sm leading-relaxed"
+              >
+                AI-assisted social publishing with brand guardrails, scoring,
+                scheduling, and background job processing.
+              </p>
+              <ul
+                class="mt-4 flex flex-wrap gap-2"
+                aria-label="Technologies used for PostCraft"
+              >
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Next.js
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  TypeScript
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Tailwind CSS
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Redux.js
+                </li>
+                <li
+                  class="border-ink-200 bg-ink-50 text-ink-500 dark:text-ink-400 rounded-md border px-2 py-1 text-xs dark:border-white/10 dark:bg-white/5"
+                >
+                  Gemini API
+                </li>
+                <li
+                  class="text-ink-500 dark:text-ink-400 px-1 py-1 text-xs font-medium"
+                >
+                  +4 more
+                </li>
+              </ul>
+              <div class="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
+                <a
+                  href="https://aipostcraft.vercel.app"
+                  class="focus-ring text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+                  >Live site
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i></a
+                ><a
+                  href="https://github.com/montasim/PostCraft"
+                  class="focus-ring text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+                  >Source <i class="ph ph-github-logo" aria-hidden="true"></i
+                ></a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="skills"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="skills-heading"
+      >
+        <div
+          class="border-ink-200 mb-7 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6 dark:border-white/10"
+        >
+          <h2 id="skills-heading" class="text-2xl font-semibold tracking-tight">
+            Skills
+          </h2>
+          <a
+            href="skills.html"
+            class="focus-ring mt-4 inline-flex items-center gap-1.5 rounded-md text-sm font-medium hover:underline sm:mt-0 sm:shrink-0"
+            >See all skills <i class="ph ph-arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <dl class="grid gap-y-7 text-sm">
+          <div>
+            <dt class="flex items-center gap-2 font-semibold">
+              <i class="ph ph-code" aria-hidden="true"></i>Frontend
+            </dt>
+            <dd class="mt-3">
+              <ul
+                class="flex flex-wrap gap-2"
+                aria-label="Selected frontend skills"
+              >
+                <li class="skill-chip">
+                  <i class="ph ph-atom" aria-hidden="true"></i>React.js
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-circle-dashed" aria-hidden="true"></i>Next.js
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-file-ts" aria-hidden="true"></i>TypeScript
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-wind" aria-hidden="true"></i>Tailwind CSS
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-tree-structure" aria-hidden="true"></i
+                  >Redux.js
+                </li>
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt class="flex items-center gap-2 font-semibold">
+              <i class="ph ph-hard-drives" aria-hidden="true"></i>Backend and
+              data
+            </dt>
+            <dd class="mt-3">
+              <ul
+                class="flex flex-wrap gap-2"
+                aria-label="Selected backend and data skills"
+              >
+                <li class="skill-chip">
+                  <i class="ph ph-hexagon" aria-hidden="true"></i>Node.js
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-api" aria-hidden="true"></i>REST APIs
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-database" aria-hidden="true"></i>PostgreSQL
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-leaf" aria-hidden="true"></i>MongoDB
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-database" aria-hidden="true"></i>Prisma
+                </li>
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt class="flex items-center gap-2 font-semibold">
+              <i class="ph ph-video-camera" aria-hidden="true"></i>Real-time and
+              AI
+            </dt>
+            <dd class="mt-3">
+              <ul
+                class="flex flex-wrap gap-2"
+                aria-label="Selected real-time and AI skills"
+              >
+                <li class="skill-chip">
+                  <i class="ph ph-video-camera" aria-hidden="true"></i>WebRTC
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-hand" aria-hidden="true"></i>MediaPipe
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-plugs-connected" aria-hidden="true"></i
+                  >Socket.io
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-sparkle" aria-hidden="true"></i>Gemini API
+                </li>
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt class="flex items-center gap-2 font-semibold">
+              <i class="ph ph-cloud" aria-hidden="true"></i>Cloud and quality
+            </dt>
+            <dd class="mt-3">
+              <ul
+                class="flex flex-wrap gap-2"
+                aria-label="Selected cloud and quality skills"
+              >
+                <li class="skill-chip">
+                  <i class="ph ph-cloud" aria-hidden="true"></i>Azure
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-cube" aria-hidden="true"></i>Docker
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-github-logo" aria-hidden="true"></i>GitHub
+                  Actions
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-arrows-clockwise" aria-hidden="true"></i>CI/CD
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-flask" aria-hidden="true"></i>Jest
+                </li>
+                <li class="skill-chip">
+                  <i class="ph ph-lightning" aria-hidden="true"></i>Vitest
+                </li>
+              </ul>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section
+        id="background"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="background-heading"
+      >
+        <div class="border-ink-200 mb-7 border-b pb-3 dark:border-white/10">
+          <h2
+            id="background-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Background
+          </h2>
+        </div>
+        <div
+          class="border-ink-200 dark:bg-ink-900 grid overflow-hidden rounded-xl border bg-white md:grid-cols-5 dark:border-white/10"
+        >
+          <div class="p-5 sm:p-6 md:col-span-3">
+            <h3 class="flex items-center gap-2 text-sm font-semibold">
+              <i class="ph ph-graduation-cap" aria-hidden="true"></i>Education
+            </h3>
+            <div class="mt-5 flex items-start gap-4">
+              <img
+                src="../../public/images/organizations/baust.png"
+                alt="BAUST"
+                class="border-ink-200 bg-ink-50 dark:bg-ink-950 size-14 shrink-0 rounded-lg border object-contain p-1 dark:border-white/10"
+              />
+              <div class="min-w-0">
+                <p class="leading-snug font-semibold">
+                  BSc in Computer Science and Engineering
+                </p>
+                <p
+                  class="text-ink-500 dark:text-ink-400 mt-1.5 max-w-sm text-sm leading-relaxed"
+                >
+                  Bangladesh Army University of Science and Technology
+                </p>
+                <p
+                  class="text-ink-500 dark:text-ink-400 mt-3 flex items-center gap-1.5 text-xs font-medium"
+                >
+                  <i class="ph ph-calendar-blank" aria-hidden="true"></i>2016 -
+                  2021
+                </p>
+              </div>
+            </div>
+            <a
+              href="education.html"
+              class="focus-ring group text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 mt-6 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+              >View all education
+              <i
+                class="ph ph-arrow-right transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              ></i
+            ></a>
+          </div>
+
+          <div
+            class="border-ink-200 bg-ink-100/45 dark:bg-ink-950/35 border-t p-5 sm:p-6 md:col-span-2 md:border-t-0 md:border-l dark:border-white/10"
+          >
+            <h3 class="flex items-center gap-2 text-sm font-semibold">
+              <i class="ph ph-certificate" aria-hidden="true"></i>Selected
+              credentials
+            </h3>
+            <ul class="mt-2 text-sm">
+              <li>
+                <a
+                  href="https://www.coursera.org/account/accomplishments/professional-cert/8TE9CLHKPLL4"
+                  class="focus-ring group -mx-3 flex items-center justify-between gap-4 rounded-lg px-3 py-3 transition-colors hover:bg-white active:translate-y-px dark:hover:bg-white/5"
+                  ><span
+                    ><span class="font-medium">Meta Front-End Developer</span
+                    ><span
+                      class="text-ink-500 dark:text-ink-400 mt-0.5 block text-xs"
+                      >2024</span
+                    ></span
+                  ><i
+                    class="ph ph-arrow-up-right text-ink-400 dark:text-ink-500 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    aria-hidden="true"
+                  ></i
+                ></a>
+              </li>
+              <li>
+                <a
+                  href="https://www.coursera.org/account/accomplishments/specialization/KUUKAHJMJ4W5"
+                  class="focus-ring group -mx-3 flex items-center justify-between gap-4 rounded-lg px-3 py-3 transition-colors hover:bg-white active:translate-y-px dark:hover:bg-white/5"
+                  ><span
+                    ><span class="font-medium">Meta React Native</span
+                    ><span
+                      class="text-ink-500 dark:text-ink-400 mt-0.5 block text-xs"
+                      >2024</span
+                    ></span
+                  ><i
+                    class="ph ph-arrow-up-right text-ink-400 dark:text-ink-500 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    aria-hidden="true"
+                  ></i
+                ></a>
+              </li>
+              <li>
+                <a
+                  href="https://www.coursera.org/account/accomplishments/professional-cert/AXDASTEQWFAT"
+                  class="focus-ring group -mx-3 flex items-center justify-between gap-4 rounded-lg px-3 py-3 transition-colors hover:bg-white active:translate-y-px dark:hover:bg-white/5"
+                  ><span
+                    ><span class="font-medium">Google Project Management</span
+                    ><span
+                      class="text-ink-500 dark:text-ink-400 mt-0.5 block text-xs"
+                      >2024</span
+                    ></span
+                  ><i
+                    class="ph ph-arrow-up-right text-ink-400 dark:text-ink-500 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    aria-hidden="true"
+                  ></i
+                ></a>
+              </li>
+            </ul>
+            <a
+              href="certifications.html"
+              class="focus-ring group text-ink-700 hover:text-ink-950 dark:text-ink-200 dark:hover:text-ink-50 mt-3 inline-flex items-center gap-1.5 rounded-sm text-sm font-medium hover:underline active:translate-y-px"
+              >View all certifications
+              <i
+                class="ph ph-arrow-right transition-transform group-hover:translate-x-0.5"
+                aria-hidden="true"
+              ></i
+            ></a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="contributions"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="contributions-heading"
+      >
+        <div class="border-ink-200 mb-7 border-b pb-3 dark:border-white/10">
+          <h2
+            id="contributions-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Contributions
+          </h2>
+        </div>
+        <div data-contributions-root>
+          <p
+            data-contributions-loading
+            class="text-ink-500 dark:text-ink-400 text-sm"
+            role="status"
+          >
+            Loading GitHub contributions…
+          </p>
+          <div data-contributions-content hidden>
+            <div class="overflow-x-auto pb-2">
+              <div class="inline-block min-w-fit">
+                <div
+                  data-contribution-months
+                  class="contribution-months text-ink-500 dark:text-ink-400 mb-1 text-[10px]"
+                  aria-hidden="true"
+                ></div>
+                <div
+                  data-contribution-cells
+                  class="contribution-cells"
+                  role="img"
+                  aria-label="GitHub contribution activity for the last year"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="text-ink-500 dark:text-ink-400 mt-3 flex flex-wrap items-center justify-between gap-3 text-xs"
+            >
+              <a
+                data-contribution-total
+                href="https://github.com/montasim"
+                class="focus-ring hover:text-ink-950 dark:hover:text-ink-50 rounded-sm transition-colors hover:underline"
+              ></a>
+              <div
+                class="flex items-center gap-1"
+                aria-label="Contribution activity intensity"
+              >
+                <span>Less</span>
+                <span class="contribution-cell" aria-hidden="true"></span>
+                <span
+                  class="contribution-cell contribution-level-1"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  class="contribution-cell contribution-level-2"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  class="contribution-cell contribution-level-3"
+                  aria-hidden="true"
+                ></span>
+                <span
+                  class="contribution-cell contribution-level-4"
+                  aria-hidden="true"
+                ></span>
+                <span>More</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="volunteering"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="volunteering-heading"
+      >
+        <div class="border-ink-200 mb-7 border-b pb-3 dark:border-white/10">
+          <h2
+            id="volunteering-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Volunteering
+          </h2>
+        </div>
+        <div class="space-y-5">
+          <article class="flex items-start gap-3">
+            <img
+              src="../../public/images/organizations/carmichael-college.png"
+              alt="Carmichael College, Rangpur"
+              class="border-ink-200 dark:bg-ink-900 size-12 shrink-0 rounded-lg border bg-white object-contain p-1 dark:border-white/10"
+            />
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-semibold">Event Organizer</h3>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-0.5 flex flex-wrap items-center gap-x-2 text-sm"
+              >
+                <span>Carmichael College, Rangpur</span
+                ><span class="text-ink-400 dark:text-ink-500">·</span
+                ><span>2014 - 2016</span
+                ><span class="text-ink-400 dark:text-ink-500">·</span
+                ><span>Rangpur, Bangladesh</span>
+              </p>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+              >
+                Crafted and executed events that enriched the college experience
+                for students and staff. Orchestrated Iftar Mahfil events during
+                Ramadan, organized educational tours promoting camaraderie and
+                personal development, led a dedicated team of volunteers, and
+                meticulously managed event budgets ensuring optimal resource
+                utilization.
+              </p>
+            </div>
+          </article>
+          <article class="flex items-start gap-3">
+            <img
+              src="../../public/images/organizations/rangpur-zilla-school.png"
+              alt="Rangpur Zilla School"
+              class="border-ink-200 dark:bg-ink-900 size-12 shrink-0 rounded-lg border bg-white object-contain p-1 dark:border-white/10"
+            />
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-semibold">Event Organizer</h3>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-0.5 flex flex-wrap items-center gap-x-2 text-sm"
+              >
+                <span>Rangpur Zilla School</span
+                ><span class="text-ink-400 dark:text-ink-500">·</span
+                ><span>2011 - 2013</span
+                ><span class="text-ink-400 dark:text-ink-500">·</span
+                ><span>Rangpur, Bangladesh</span>
+              </p>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+              >
+                Organized vibrant and memorable events bringing the school
+                community together. Planned annual iftar parties promoting unity
+                and cultural exchange, executed engaging class parties fostering
+                social cohesion, managed event budgets with fiscal
+                responsibility, and collaborated with volunteer teams for
+                seamless execution.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="organizations"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="organizations-heading"
+      >
+        <div class="border-ink-200 mb-7 border-b pb-3 dark:border-white/10">
+          <h2
+            id="organizations-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Organizations
+          </h2>
+        </div>
+        <div class="space-y-5">
+          <article class="flex items-start gap-3">
+            <img
+              src="../../public/images/organizations/bncc.jpg"
+              alt="Bangladesh National Cadet Corps"
+              class="border-ink-200 dark:bg-ink-900 size-12 shrink-0 rounded-lg border bg-white object-contain p-1 dark:border-white/10"
+            />
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-semibold">
+                Bangladesh National Cadet Corps (BNCC)
+              </h3>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-0.5 flex flex-wrap items-center gap-x-2 text-sm"
+              >
+                <span>Ex. Cadet</span
+                ><span class="text-ink-400 dark:text-ink-500">·</span
+                ><span>2011 – 2014</span>
+              </p>
+              <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                Associated with Rangpur Zilla School
+              </p>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+              >
+                Recognized as Second Best Cadet in 2 Mohastan Batalian.
+                Participated in Central Training Exercise 2012, Annual Training
+                Exercise, and Primary Training Exercise. Shortlisted for Sri
+                Lanka Tour, reflecting competence and potential. Developed
+                leadership, teamwork, and discipline through military-style
+                training.
+              </p>
+            </div>
+          </article>
+          <article class="flex items-start gap-3">
+            <img
+              src="../../public/images/organizations/baust.png"
+              alt="BAUST Career Club"
+              class="border-ink-200 dark:bg-ink-900 size-12 shrink-0 rounded-lg border bg-white object-contain p-1 dark:border-white/10"
+            />
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-semibold">BAUST Career Club</h3>
+              <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-sm">
+                Member
+              </p>
+              <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                Associated with Bangladesh Army University of Science and
+                Technology (BAUST)
+              </p>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+              >
+                Participated in career development programs, workshops, and
+                professional networking events. Collaborated with peers in
+                organizing career-oriented activities and student engagement
+                initiatives. Developed communication, leadership, and teamwork
+                skills through active organizational involvement.
+              </p>
+            </div>
+          </article>
+          <article class="flex items-start gap-3">
+            <img
+              src="../../public/images/organizations/baust.png"
+              alt="BAUST Programming Club"
+              class="border-ink-200 dark:bg-ink-900 size-12 shrink-0 rounded-lg border bg-white object-contain p-1 dark:border-white/10"
+            />
+            <div class="min-w-0 flex-1">
+              <h3 class="text-sm font-semibold">BAUST Programming Club</h3>
+              <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-sm">
+                Member
+              </p>
+              <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                Associated with Bangladesh Army University of Science and
+                Technology (BAUST)
+              </p>
+              <p
+                class="text-ink-500 dark:text-ink-400 mt-2 text-sm leading-relaxed"
+              >
+                Participated in programming contests, coding practice sessions,
+                and technical workshops. Strengthened problem-solving and
+                analytical thinking skills through competitive programming
+                activities. Explored software development concepts, algorithms,
+                and data structures through collaborative learning.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="recommendations"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="recommendations-heading"
+      >
+        <div
+          class="border-ink-200 mb-7 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6 dark:border-white/10"
+        >
+          <h2
+            id="recommendations-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Recommendations
+          </h2>
+          <a
+            href="recommendations.html"
+            class="focus-ring mt-4 inline-flex items-center gap-1.5 rounded-md text-sm font-medium hover:underline sm:mt-0 sm:shrink-0"
+            >See all recommendations
+            <i class="ph ph-arrow-right" aria-hidden="true"></i
+          ></a>
+        </div>
+        <div data-recommendation-carousel class="relative">
+          <button
+            type="button"
+            data-carousel-prev
+            hidden
+            class="focus-ring border-ink-200 hover:bg-ink-100 dark:bg-ink-900/95 dark:hover:bg-ink-700 absolute top-1/2 left-2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border bg-white/95 shadow-sm dark:border-white/15"
+            aria-label="Previous recommendation"
+            aria-controls="recommendation-track"
+          >
+            <i class="ph ph-arrow-left" aria-hidden="true"></i>
+          </button>
+          <div
+            id="recommendation-track"
+            data-carousel-track
+            class="recommendation-carousel flex gap-4 overflow-x-auto scroll-smooth pb-1"
+            tabindex="0"
+            aria-label="Featured recommendations"
+          >
+            <figure
+              class="recommendation-slide border-ink-200 dark:bg-ink-900 rounded-xl border bg-white p-4 sm:p-5 dark:border-white/10"
+            >
+              <div
+                class="text-ink-400 dark:text-ink-500 flex items-center justify-between text-sm"
+                aria-hidden="true"
+              >
+                <i class="ph ph-quotes"></i><span>#1</span>
+              </div>
+              <blockquote
+                class="text-ink-500 dark:text-ink-400 mt-3 text-sm leading-relaxed"
+              >
+                Montasim Bhai consistently helped me understand complex business
+                requirements and translate them into practical technical
+                solutions. Whenever I faced challenges with the codebase or
+                problem-solving, he was always approachable, supportive, and
+                clear in his guidance. His ability to break down problems and
+                mentor team members made a significant impact on my learning and
+                growth. What stood out most was his leadership mindset. He not
+                only focused on delivering outcomes but also ensured the team
+                understood the reasoning behind decisions and implementations.
+              </blockquote>
+              <figcaption
+                class="mt-4 sm:flex sm:items-end sm:justify-between sm:gap-6"
+              >
+                <div>
+                  <p class="text-sm font-semibold">Syed Mahedi Hasen</p>
+                  <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                    Software Engineer @MyMedicalHub
+                  </p>
+                  <p class="text-ink-400 dark:text-ink-500 mt-1 text-xs">
+                    May 11, 2026 · reported to Montasim directly
+                  </p>
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/montasim/details/recommendations/"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="focus-ring mt-3 inline-flex shrink-0 items-center gap-1.5 rounded-sm text-xs font-medium hover:underline sm:mt-0"
+                  >View on LinkedIn
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i
+                ></a>
+              </figcaption>
+            </figure>
+            <figure
+              class="recommendation-slide border-ink-200 dark:bg-ink-900 rounded-xl border bg-white p-4 sm:p-5 dark:border-white/10"
+            >
+              <div
+                class="text-ink-400 dark:text-ink-500 flex items-center justify-between text-sm"
+                aria-hidden="true"
+              >
+                <i class="ph ph-quotes"></i><span>#2</span>
+              </div>
+              <blockquote
+                class="text-ink-500 dark:text-ink-400 mt-3 text-sm leading-relaxed"
+              >
+                Montasim's expertise in frontend technologies, particularly in
+                Next.js and TypeScript, was consistently evident throughout the
+                project. He played a pivotal role in developing the robust
+                video-calling application. His understanding of real-time
+                interaction technologies like OpenTok and WebRTC was crucial in
+                enabling seamless video communication. Beyond his strong
+                technical skills, Montasim demonstrated a keen eye for creating
+                responsive, maintainable UIs. He is adept at working in an Agile
+                environment and possesses a problem-solving mindset, which is
+                invaluable in overcoming challenges.
+              </blockquote>
+              <figcaption
+                class="mt-4 sm:flex sm:items-end sm:justify-between sm:gap-6"
+              >
+                <div>
+                  <p class="text-sm font-semibold">Md. Sazzad Hossain</p>
+                  <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                    Software Engineer | Next.js 16 &amp; React 19 Architecture |
+                    Full-Stack &amp; Real-Time Systems
+                  </p>
+                  <p class="text-ink-400 dark:text-ink-500 mt-1 text-xs">
+                    June 5, 2025 · worked on the same team
+                  </p>
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/montasim/details/recommendations/"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="focus-ring mt-3 inline-flex shrink-0 items-center gap-1.5 rounded-sm text-xs font-medium hover:underline sm:mt-0"
+                  >View on LinkedIn
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i
+                ></a>
+              </figcaption>
+            </figure>
+            <figure
+              class="recommendation-slide border-ink-200 dark:bg-ink-900 rounded-xl border bg-white p-4 sm:p-5 dark:border-white/10"
+            >
+              <div
+                class="text-ink-400 dark:text-ink-500 flex items-center justify-between text-sm"
+                aria-hidden="true"
+              >
+                <i class="ph ph-quotes"></i><span>#3</span>
+              </div>
+              <blockquote
+                class="text-ink-500 dark:text-ink-400 mt-3 text-sm leading-relaxed"
+              >
+                Montasim is the rare engineer who effortlessly bridges the gap
+                between research and production. He integrated our AI-driven
+                analysis pipeline into a seamless user experience, building
+                components that showcased annotated pictures and metric
+                visualizations in real time. His passion for clean code and deep
+                understanding of Agile processes drove our team to hit every
+                milestone ahead of schedule.
+              </blockquote>
+              <figcaption
+                class="mt-4 sm:flex sm:items-end sm:justify-between sm:gap-6"
+              >
+                <div>
+                  <p class="text-sm font-semibold">Md. Rifaet Ullah</p>
+                  <p class="text-ink-500 dark:text-ink-400 mt-0.5 text-xs">
+                    Software Engineer | Django | AI | Machine Learning |
+                    Microservice
+                  </p>
+                  <p class="text-ink-400 dark:text-ink-500 mt-1 text-xs">
+                    May 26, 2025 · worked together but on different teams
+                  </p>
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/montasim/details/recommendations/"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="focus-ring mt-3 inline-flex shrink-0 items-center gap-1.5 rounded-sm text-xs font-medium hover:underline sm:mt-0"
+                  >View on LinkedIn
+                  <i class="ph ph-arrow-up-right" aria-hidden="true"></i
+                ></a>
+              </figcaption>
+            </figure>
+          </div>
+          <button
+            type="button"
+            data-carousel-next
+            hidden
+            class="focus-ring border-ink-200 hover:bg-ink-100 dark:bg-ink-900/95 dark:hover:bg-ink-700 absolute top-1/2 right-2 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full border bg-white/95 shadow-sm dark:border-white/15"
+            aria-label="Next recommendation"
+            aria-controls="recommendation-track"
+          >
+            <i class="ph ph-arrow-right" aria-hidden="true"></i>
+          </button>
+          <p data-carousel-status class="sr-only" aria-live="polite">
+            Recommendation 1 of 3
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="contact"
+        class="scroll-mt-14 py-10"
+        aria-labelledby="contact-heading"
+      >
+        <div class="border-ink-200 mb-7 border-b pb-3 dark:border-white/10">
+          <h2
+            id="contact-heading"
+            class="text-2xl font-semibold tracking-tight"
+          >
+            Get in touch
+          </h2>
+        </div>
+        <div
+          class="grid gap-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-10"
+        >
+          <p
+            class="text-ink-500 dark:text-ink-400 max-w-xl text-sm leading-relaxed"
+          >
+            If you have a role or product challenge that could be a fit, send me
+            an email.
+          </p>
+          <a
+            href="mailto:montasimmamun@gmail.com"
+            aria-label="Email Montasim at montasimmamun@gmail.com"
+            class="focus-ring group text-ink-700 dark:text-ink-200 inline-flex w-fit max-w-full items-center gap-3 rounded-md py-1 text-sm font-semibold active:translate-y-px"
+          >
+            <span
+              class="border-ink-200 group-hover:border-ink-400 group-hover:bg-ink-100 dark:bg-ink-900 grid size-9 shrink-0 place-items-center rounded-md border bg-white text-base transition-colors dark:border-white/15 dark:group-hover:border-white/30 dark:group-hover:bg-white/10"
+              aria-hidden="true"
+              ><i class="ph ph-envelope-simple"></i
+            ></span>
+            <span
+              class="border-ink-300 group-hover:border-ink-700 dark:border-ink-600 dark:group-hover:border-ink-200 border-b pb-0.5 break-all transition-colors"
+              >montasimmamun@gmail.com</span
+            >
+            <i
+              class="ph ph-arrow-up-right text-ink-400 dark:text-ink-500 shrink-0 text-base transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              aria-hidden="true"
+            ></i>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mx-auto max-w-[61.6rem] px-4 py-10">
+      <div
+        class="border-ink-200 text-ink-500 dark:text-ink-400 border-t pt-8 text-center text-xs dark:border-white/10"
+      >
+        © 2026 Mohammad Montasim Al Mamun Shuvo
+      </div>
+    </footer>
+
+    <script src="assets/contributions-data.js"></script>
+    <script src="assets/site.js"></script>
+  </body>
+</html>
