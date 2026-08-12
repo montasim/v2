@@ -1,28 +1,17 @@
-import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
+import { z } from "zod"
 import { ArrowUpRightIcon } from "@phosphor-icons/react"
 
-import { Button } from "@/components/ui/button"
+import { RecommendationDetails } from "@/components/portfolio/recommendations"
+import { CatalogPage } from "@/components/shared/catalog-page"
+import { ExternalAction } from "@/components/shared/navigation-action"
+import { descriptions } from "@/lib/content/descriptions"
 import {
   linkedInRecommendationsUrl,
-  RecommendationDetails,
-} from "@/components/portfolio/recommendations"
-import { FilterBar } from "@/components/shared/filter-bar"
-import { FooterActions, PageIntro } from "@/components/shared/page-intro"
-import { PageShell } from "@/components/shared/page-shell"
-import { ResultsGrid } from "@/components/shared/results-grid"
-import { descriptions, recommendations } from "@/lib/content"
+  recommendationCatalog,
+} from "@/lib/content/recommendations"
+import { catalogFilterNavigation } from "@/lib/content/shared"
 import { createMeta } from "@/lib/site"
-
-const years = [
-  "all",
-  ...Array.from(
-    new Set(recommendations.map((item) => item.date.split(", ").at(-1) ?? ""))
-  )
-    .filter(Boolean)
-    .sort()
-    .reverse(),
-]
 
 export const Route = createFileRoute("/recommendations")({
   head: () =>
@@ -31,48 +20,41 @@ export const Route = createFileRoute("/recommendations")({
       descriptions.recommendations,
       "/recommendations"
     ),
+  validateSearch: z.object({
+    filter: recommendationCatalog.filterSchema.catch("all").default("all"),
+  }),
   component: Page,
 })
 
 function Page() {
-  const [filter, setFilter] = React.useState("all")
-  const visible = recommendations.filter(
-    (item) => filter === "all" || item.date.endsWith(filter)
-  )
+  const { filter } = Route.useSearch()
+  const navigate = Route.useNavigate()
 
   return (
-    <PageShell padded>
-      <PageIntro
-        title="Recommendations"
-        description={descriptions.recommendations}
-      />
-      <Button
-        asChild
-        variant="link"
-        className="mt-4 h-auto p-0 font-medium text-foreground"
-      >
-        <a href={linkedInRecommendationsUrl} target="_blank" rel="noreferrer">
+    <CatalogPage
+      title="Recommendations"
+      description={descriptions.recommendations}
+      filter={filter}
+      filters={recommendationCatalog.filters}
+      records={recommendationCatalog.records}
+      matches={recommendationCatalog.matches}
+      onFilterChange={(nextFilter) =>
+        navigate(catalogFilterNavigation(nextFilter))
+      }
+      resultLabel="recommendations"
+      introAction={
+        <ExternalAction
+          href={linkedInRecommendationsUrl}
+          variant="link"
+          className="mt-4 h-auto p-0 font-medium text-foreground"
+        >
           View recommendations on LinkedIn
           <ArrowUpRightIcon />
-        </a>
-      </Button>
-      <FilterBar
-        value={filter}
-        onValueChange={setFilter}
-        items={years.map((year) => ({
-          value: year,
-          label: year === "all" ? "All years" : year,
-        }))}
-      />
-      <ResultsGrid aria-label="Recommendation list">
-        {visible.map((item) => (
-          <RecommendationDetails
-            key={`${item.name}-${item.date}`}
-            item={item}
-          />
-        ))}
-      </ResultsGrid>
-      <FooterActions />
-    </PageShell>
+        </ExternalAction>
+      }
+      renderRecord={(item) => (
+        <RecommendationDetails key={`${item.name}-${item.date}`} item={item} />
+      )}
+    />
   )
 }

@@ -1,6 +1,7 @@
 [
   {
     "id": "education-baust",
+    "type": "bsc",
     "institution": "Bangladesh Army University of Science and Technology (BAUST)",
     "institutionUrl": "https://baust.edu.bd",
     "logo": "B",
@@ -12,6 +13,7 @@
   },
   {
     "id": "education-carmichael-college",
+    "type": "hsc",
     "institution": "Carmichael College",
     "institutionUrl": "https://ccr.gov.bd/",
     "logo": "C",
@@ -23,6 +25,7 @@
   },
   {
     "id": "education-rangpur-zilla-school",
+    "type": "ssc",
     "institution": "Rangpur Zilla School",
     "institutionUrl": "http://www.rangpurzillaschool.edu.bd/",
     "logo": "R",

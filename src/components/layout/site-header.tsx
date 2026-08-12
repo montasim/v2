@@ -1,6 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router"
 import { ListIcon, MoonIcon, SunIcon } from "@phosphor-icons/react"
-import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { SiteContainer } from "@/components/shared/site-container"
 import {
@@ -11,14 +10,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useTheme } from "@/components/theme-provider"
+import { useLandingNavigation } from "@/components/layout/use-landing-navigation"
 import { cn } from "@/lib/utils"
-
-const landingNavigation = [
-  { label: "About", sectionId: "about" },
-  { label: "Experience", sectionId: "experience" },
-  { label: "Projects", sectionId: "projects" },
-  { label: "Skills", sectionId: "skills" },
-] as const
 
 function Brand() {
   return (
@@ -57,46 +50,7 @@ export function SiteHeader() {
   const hash = useRouterState({
     select: (state) => state.location.hash,
   })
-  const [activeSection, setActiveSection] = useState<string>("about")
-
-  useEffect(() => {
-    if (pathname !== "/" || !hash) return
-
-    const sectionId = hash.replace(/^#/, "")
-    const section = document.getElementById(sectionId)
-    if (!section) return
-
-    setActiveSection(sectionId)
-    section.scrollIntoView({
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-      block: "start",
-    })
-  }, [hash, pathname])
-
-  useEffect(() => {
-    if (pathname !== "/") return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleSection = entries.find((entry) => entry.isIntersecting)
-        if (visibleSection?.target.id) {
-          setActiveSection(visibleSection.target.id)
-        }
-      },
-      { rootMargin: "-56px 0px -68% 0px", threshold: 0.01 }
-    )
-
-    for (const item of landingNavigation) {
-      const section = document.getElementById(item.sectionId)
-      if (section) observer.observe(section)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [pathname])
+  const { activeSection, items } = useLandingNavigation(pathname, hash)
 
   const themeButton = (
     <Button
@@ -114,7 +68,7 @@ export function SiteHeader() {
         <nav aria-label="Primary navigation">
           <Brand />
           <div className="hidden items-center gap-1 lg:flex">
-            {landingNavigation.map((item) => {
+            {items.map((item) => {
               const isActive =
                 pathname === "/" && activeSection === item.sectionId
               return (
@@ -152,7 +106,7 @@ export function SiteHeader() {
                   <Brand />
                 </SheetTitle>
                 <nav className="grid gap-1" aria-label="Mobile navigation">
-                  {landingNavigation.map((item) => {
+                  {items.map((item) => {
                     const isActive =
                       pathname === "/" && activeSection === item.sectionId
                     return (

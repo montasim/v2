@@ -6,8 +6,11 @@ import {
   LinkedinLogoIcon,
   MapPinIcon,
 } from "@phosphor-icons/react"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {
+  ExternalAction,
+  MailAction,
+} from "@/components/shared/navigation-action"
 import { PageSection } from "@/components/shared/page-section"
 import { PageShell } from "@/components/shared/page-shell"
 import { RichText } from "@/components/shared/rich-text"
@@ -18,28 +21,17 @@ import { ExperienceList } from "@/components/portfolio/experience-list"
 import { ProjectCard } from "@/components/portfolio/project-card"
 import { RecommendationCarousel } from "@/components/portfolio/recommendations"
 import { SkillGroups } from "@/components/portfolio/skill-groups"
-import {
-  organizations,
-  profile,
-  projects,
-  socialUrl,
-  volunteering,
-} from "@/lib/content"
+import { affiliationCatalog } from "@/lib/content/affiliations"
+import { profileCatalog } from "@/lib/content/profile"
+import { projectCatalog } from "@/lib/content/projects"
 import { createMeta, site } from "@/lib/site"
 
 export const Route = createFileRoute("/")({
   head: () => createMeta(site.fullName, site.description),
   component: OverviewPage,
 })
-const selectedProjects = [
-  "project-b4joinacompany",
-  "project-devtools",
-  "project-postcraft",
-]
-  .map((id) => projects.find((project) => project.id === id))
-  .filter(Boolean)
-
 function OverviewPage() {
+  const { profile } = profileCatalog
   return (
     <PageShell>
       <section
@@ -55,7 +47,7 @@ function OverviewPage() {
             <Avatar className="relative h-full w-full rounded-xl border bg-card ring-2 ring-foreground/10">
               <AvatarFallback className="rounded-xl">MS</AvatarFallback>
               <img
-                src="/images/avatar.webp"
+                src={profile.avatarUrl}
                 alt={profile.name}
                 width="224"
                 height="246"
@@ -88,37 +80,37 @@ function OverviewPage() {
               {profile.tagline}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
-              <Button asChild variant="outline">
-                <a href={profile.resumeUrl} target="_blank" rel="noreferrer">
-                  <DownloadSimpleIcon />
-                  Download resume
-                </a>
-              </Button>
-              <Button asChild variant="ghost" size="icon" className="xl:hidden">
-                <a
-                  href={socialUrl("linkedin")}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="LinkedIn profile"
-                >
-                  <LinkedinLogoIcon />
-                </a>
-              </Button>
-              <Button asChild variant="ghost" size="icon" className="xl:hidden">
-                <a
-                  href={socialUrl("github")}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="GitHub profile"
-                >
-                  <GithubLogoIcon />
-                </a>
-              </Button>
-              <Button asChild variant="ghost" size="icon" className="xl:hidden">
-                <a href={`mailto:${profile.email}`} aria-label="Send email">
-                  <EnvelopeSimpleIcon />
-                </a>
-              </Button>
+              <ExternalAction href={profile.resumeUrl} variant="outline">
+                <DownloadSimpleIcon />
+                Download resume
+              </ExternalAction>
+              <ExternalAction
+                href={profileCatalog.socialUrl("linkedin")}
+                variant="ghost"
+                size="icon"
+                className="xl:hidden"
+              >
+                <span className="sr-only">LinkedIn profile</span>
+                <LinkedinLogoIcon />
+              </ExternalAction>
+              <ExternalAction
+                href={profileCatalog.socialUrl("github")}
+                variant="ghost"
+                size="icon"
+                className="xl:hidden"
+              >
+                <span className="sr-only">GitHub profile</span>
+                <GithubLogoIcon />
+              </ExternalAction>
+              <MailAction
+                email={profile.email}
+                variant="ghost"
+                size="icon"
+                className="xl:hidden"
+              >
+                <span className="sr-only">Send email</span>
+                <EnvelopeSimpleIcon />
+              </MailAction>
             </div>
           </div>
         </div>
@@ -149,10 +141,9 @@ function OverviewPage() {
         label="View all projects"
       >
         <div className="grid gap-5">
-          {selectedProjects.map(
-            (project) =>
-              project && <ProjectCard key={project.id} project={project} />
-          )}
+          {projectCatalog.featured.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
         </div>
       </PageSection>
       <PageSection
@@ -175,10 +166,10 @@ function OverviewPage() {
         <ContributionCalendar />
       </PageSection>
       <PageSection headingId="volunteering-heading" title="Volunteering">
-        <AffiliationList items={volunteering} />
+        <AffiliationList items={affiliationCatalog.volunteering} />
       </PageSection>
       <PageSection headingId="organizations-heading" title="Organizations">
-        <AffiliationList items={organizations} />
+        <AffiliationList items={affiliationCatalog.organizations} />
       </PageSection>
       <PageSection
         headingId="recommendations-heading"

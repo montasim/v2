@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { ExperienceList } from "@/components/portfolio/experience-list"
-import { FooterActions, PageIntro } from "@/components/shared/page-intro"
-import { PageShell } from "@/components/shared/page-shell"
+import { DetailPage } from "@/components/shared/detail-page"
 import { createMeta } from "@/lib/site"
-import { descriptions } from "@/lib/content"
+import { descriptions } from "@/lib/content/descriptions"
 
 export const Route = createFileRoute("/experience")({
   head: () => createMeta("Experience", descriptions.experience, "/experience"),
@@ -11,12 +10,10 @@ export const Route = createFileRoute("/experience")({
 })
 function Page() {
   return (
-    <PageShell padded>
-      <PageIntro title="Experience" description={descriptions.experience} />
+    <DetailPage title="Experience" description={descriptions.experience}>
       <section className="mt-10" aria-label="Professional experience">
         <ExperienceList card />
       </section>
-      <FooterActions />
-    </PageShell>
+    </DetailPage>
   )
 }

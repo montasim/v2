@@ -1,46 +1,38 @@
-import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
-import { FilterBar } from "@/components/shared/filter-bar"
-import { FooterActions, PageIntro } from "@/components/shared/page-intro"
-import { PageShell } from "@/components/shared/page-shell"
-import { ResultsGrid } from "@/components/shared/results-grid"
+import { z } from "zod"
+import { CatalogPage } from "@/components/shared/catalog-page"
 import { ProjectCard } from "@/components/portfolio/project-card"
-import { descriptions, projects } from "@/lib/content"
+import { descriptions } from "@/lib/content/descriptions"
+import { projectCatalog } from "@/lib/content/projects"
+import { catalogFilterNavigation } from "@/lib/content/shared"
 import { createMeta } from "@/lib/site"
 
-const categories = [
-  { value: "all", label: "All work" },
-  { value: "website", label: "Web apps" },
-  { value: "extension", label: "Extensions" },
-  { value: "package", label: "npm packages" },
-  { value: "skill", label: "AI skills" },
-  { value: "dataset", label: "Datasets" },
-  { value: "tool", label: "Developer tools" },
-  { value: "api", label: "APIs" },
-  { value: "template", label: "Templates" },
-]
 export const Route = createFileRoute("/projects")({
   head: () => createMeta("Projects", descriptions.projects, "/projects"),
+  validateSearch: z.object({
+    filter: projectCatalog.filterSchema.catch("all").default("all"),
+  }),
   component: Page,
 })
 function Page() {
-  const [filter, setFilter] = React.useState("all")
-  const visible = projects.filter(
-    (project) => filter === "all" || project.type === filter
-  )
+  const { filter } = Route.useSearch()
+  const navigate = Route.useNavigate()
+
   return (
-    <PageShell padded>
-      <PageIntro title="Projects" description={descriptions.projects} />
-      <FilterBar value={filter} onValueChange={setFilter} items={categories} />
-      <p className="sr-only" aria-live="polite">
-        {visible.length} {visible.length === 1 ? "project" : "projects"} shown
-      </p>
-      <ResultsGrid aria-label="Project catalog">
-        {visible.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </ResultsGrid>
-      <FooterActions />
-    </PageShell>
+    <CatalogPage
+      title="Projects"
+      description={descriptions.projects}
+      filter={filter}
+      filters={projectCatalog.filters}
+      records={projectCatalog.records}
+      matches={projectCatalog.matches}
+      onFilterChange={(nextFilter) =>
+        navigate(catalogFilterNavigation(nextFilter))
+      }
+      resultLabel="projects"
+      renderRecord={(project) => (
+        <ProjectCard key={project.id} project={project} />
+      )}
+    />
   )
 }

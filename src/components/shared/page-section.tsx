@@ -1,6 +1,8 @@
 import type { ComponentProps, ReactNode } from "react"
 
-import { SectionHeading } from "@/components/shared/section-heading"
+import { ArrowRightIcon } from "@phosphor-icons/react"
+import { InternalAction } from "@/components/shared/navigation-action"
+import type { InternalPath } from "@/components/shared/navigation-action"
 import { cn } from "@/lib/utils"
 
 export function PageSection({
@@ -14,7 +16,7 @@ export function PageSection({
 }: Omit<ComponentProps<"section">, "title"> & {
   headingId: string
   title: string
-  to?: string
+  to?: InternalPath
   label?: string
   children: ReactNode
 }) {
@@ -24,7 +26,24 @@ export function PageSection({
       aria-labelledby={headingId}
       {...props}
     >
-      <SectionHeading id={headingId} title={title} to={to} label={label} />
+      <div className="mb-6 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
+        <h2
+          id={headingId}
+          className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+        >
+          {title}
+        </h2>
+        {to && label ? (
+          <InternalAction
+            to={to}
+            variant="link"
+            className="group/action mt-4 h-auto p-0 font-medium text-emphasis-foreground sm:mt-0 sm:shrink-0"
+          >
+            {label}
+            <ArrowRightIcon className="group-hover/action:translate-x-0.5" />
+          </InternalAction>
+        ) : null}
+      </div>
       {children}
     </section>
   )

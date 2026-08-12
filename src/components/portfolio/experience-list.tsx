@@ -2,16 +2,8 @@ import { Card, cardInsetClassName } from "@/components/ui/card"
 import { BadgeList } from "@/components/shared/badge-list"
 import { EntityAvatar } from "@/components/shared/entity-avatar"
 import { RichText } from "@/components/shared/rich-text"
-import { experience } from "@/lib/content"
-
-const companyGroups = Array.from(
-  new Set(experience.map((item) => item.company))
-).map((company) => ({
-  company,
-  roles: experience.filter((item) => item.company === company),
-}))
-
-type Experience = (typeof experience)[number]
+import { experienceCatalog } from "@/lib/content/experience"
+import type { Experience } from "@/lib/content/experience"
 
 function RoleDetails({
   role,
@@ -154,7 +146,9 @@ export function ExperienceList({
   card?: boolean
 }) {
   if (card) {
-    const groups = limit ? companyGroups.slice(0, limit) : companyGroups
+    const groups = limit
+      ? experienceCatalog.companies.slice(0, limit)
+      : experienceCatalog.companies
 
     return (
       <div className="grid gap-5">
@@ -165,7 +159,9 @@ export function ExperienceList({
     )
   }
 
-  const roles = limit ? experience.slice(0, limit) : experience
+  const roles = limit
+    ? experienceCatalog.records.slice(0, limit)
+    : experienceCatalog.records
 
   return (
     <div className="grid gap-5">

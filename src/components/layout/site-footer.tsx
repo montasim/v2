@@ -1,8 +1,9 @@
-import profile from "@/data/profile.json"
 import { Separator } from "@/components/ui/separator"
 import { SiteContainer } from "@/components/shared/site-container"
+import { profileCatalog } from "@/lib/content/profile"
 
 export function SiteFooter() {
+  const { profile } = profileCatalog
   return (
     <SiteContainer asChild className="py-10">
       <footer>

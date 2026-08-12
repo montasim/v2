@@ -1,4 +1,6 @@
-import { contributions, socialUrl } from "@/lib/content"
+import { contributionCatalog as contributions } from "@/lib/content/contributions"
+import { profileCatalog } from "@/lib/content/profile"
+import { ExternalLink } from "@/components/shared/navigation-action"
 
 const monthNames = [
   "Jan",
@@ -108,14 +110,12 @@ export function ContributionCalendar() {
         </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-        <a
-          href={socialUrl("github")}
-          target="_blank"
-          rel="noreferrer"
+        <ExternalLink
+          href={profileCatalog.socialUrl("github")}
           className="rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground hover:underline hover:opacity-80 motion-reduce:transition-none"
         >
           {total} GitHub contributions in the last year
-        </a>
+        </ExternalLink>
         <div
           className="flex items-center gap-1"
           aria-label="Contribution activity intensity"

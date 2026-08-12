@@ -4,85 +4,53 @@ import {
   DownloadSimpleIcon,
 } from "@phosphor-icons/react"
 
-import { Button } from "@/components/ui/button"
+import {
+  DownloadAction,
+  ExternalAction,
+  ExternalLink,
+} from "@/components/shared/navigation-action"
 import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { EntityAvatar } from "@/components/shared/entity-avatar"
-import type { certifications } from "@/lib/content"
-
-type Certification = (typeof certifications)[number]
-
-type CertificationMeta = {
-  platform: string
-  platformIcon: string
-  image?: string
-  download?: string
-  description: string
-}
-
-const certificationMeta: Record<string, CertificationMeta> = {
-  "certification-meta-front-end-developer": {
-    platform: "Coursera",
-    platformIcon: "/images/certifications/platforms/coursera.svg",
-    image: "/images/certifications/meta-front-end.png",
-    download: "/images/certifications/meta-front-end.png",
-    description: "Professional specialization in modern frontend engineering.",
-  },
-  "certification-meta-react-native": {
-    platform: "Coursera",
-    platformIcon: "/images/certifications/platforms/coursera.svg",
-    image: "/images/certifications/meta-react-native.png",
-    download: "/images/certifications/meta-react-native.png",
-    description: "Specialization",
-  },
-  "certification-google-project-management": {
-    platform: "Coursera",
-    platformIcon: "/images/certifications/platforms/coursera.svg",
-    image: "/images/certifications/google-project-management.png",
-    download: "/images/certifications/google-project-management.png",
-    description: "Professional specialization",
-  },
-  "certification-postman-api-testing": {
-    platform: "Udemy",
-    platformIcon: "/images/certifications/platforms/udemy.svg",
-    image: "/images/certifications/postman-api-testing.jpg",
-    download: "/documents/certifications/postman-api-testing.pdf",
-    description: "Course certificate",
-  },
-  "certification-complete-web-development-course": {
-    platform: "Programming Hero",
-    platformIcon: "/images/certifications/platforms/programming-hero.ico",
-    description: "Course completed",
-  },
-}
+import type { Certification } from "@/lib/content/certifications"
 
 const actionClassName =
   "h-auto whitespace-nowrap p-0 font-medium text-foreground"
 
-export function CertificationCard({ item }: { item: Certification }) {
-  const meta = certificationMeta[item.id]
+const completionDateFormatter = new Intl.DateTimeFormat("en", {
+  day: "numeric",
+  month: "short",
+  timeZone: "UTC",
+  year: "numeric",
+})
 
+export function CertificationCard({
+  item,
+  featured = false,
+}: {
+  item: Certification
+  featured?: boolean
+}) {
   return (
     <Card
       asChild
       className="interactive-surface group grid min-w-0 overflow-hidden sm:grid-cols-[1.15fr_0.85fr]"
     >
       <article>
-        {meta.image ? (
-          <a
+        {item.image ? (
+          <ExternalLink
             href={item.url}
-            target="_blank"
-            rel="noreferrer"
             className="block aspect-[13/10] bg-muted p-3 sm:aspect-auto sm:p-5"
             aria-label={`View ${item.title} credential`}
           >
             <img
-              src={meta.image}
+              src={item.image}
               width="520"
               height="420"
               alt={`${item.title} certificate preview`}
               className="h-full w-full object-contain transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] motion-reduce:transition-none"
             />
-          </a>
+          </ExternalLink>
         ) : (
           <div className="grid aspect-[13/10] place-items-center bg-muted p-8 text-center sm:aspect-auto sm:min-h-80">
             <div>
@@ -103,41 +71,57 @@ export function CertificationCard({ item }: { item: Certification }) {
           <div className="flex items-center justify-between gap-4 text-muted-foreground">
             <span className="inline-flex items-center gap-2 text-sm">
               <EntityAvatar
-                src={meta.platformIcon}
-                fallback={meta.platform.slice(0, 1)}
+                src={item.platformIcon}
+                fallback={item.platform.slice(0, 1)}
                 className="size-8 bg-card"
                 imageClassName="p-2"
               />
-              {meta.platform}
+              {item.platform}
             </span>
-            <span className="text-xs">{item.year}</span>
+            <span className="flex items-center gap-2">
+              {featured && (
+                <Badge variant="secondary" className="font-medium">
+                  Career highlight
+                </Badge>
+              )}
+              <time
+                dateTime={item.completedAt ?? item.year}
+                className="text-xs tabular-nums"
+              >
+                {item.completedAt
+                  ? completionDateFormatter.format(
+                      new Date(`${item.completedAt}T00:00:00Z`)
+                    )
+                  : item.year}
+              </time>
+            </span>
           </div>
           <h2 className="mt-5 text-lg leading-snug font-semibold tracking-tight text-foreground">
             {item.title}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {meta.description}
+            {item.issuer} · {item.description}
           </p>
 
           {item.url ? (
             <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-7">
-              <Button
-                asChild
+              <ExternalAction
+                href={item.url}
                 variant="link"
                 className={`${actionClassName} group/action`}
               >
-                <a href={item.url} target="_blank" rel="noreferrer">
-                  View credential
-                  <ArrowUpRightIcon className="group-hover/action:translate-x-0.5 group-hover/action:-translate-y-0.5" />
-                </a>
-              </Button>
-              {meta.download && (
-                <Button asChild variant="link" className={actionClassName}>
-                  <a href={meta.download} download>
-                    <DownloadSimpleIcon />
-                    Download
-                  </a>
-                </Button>
+                View credential
+                <ArrowUpRightIcon className="group-hover/action:translate-x-0.5 group-hover/action:-translate-y-0.5" />
+              </ExternalAction>
+              {item.download && (
+                <DownloadAction
+                  href={item.download}
+                  variant="link"
+                  className={actionClassName}
+                >
+                  <DownloadSimpleIcon />
+                  Download
+                </DownloadAction>
               )}
             </div>
           ) : (

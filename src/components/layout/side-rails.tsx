@@ -2,57 +2,54 @@ import {
   CoffeeIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
+  WhatsappLogoIcon,
 } from "@phosphor-icons/react"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { profile, socialUrl } from "@/lib/content"
+import { ExternalAction } from "@/components/shared/navigation-action"
+import { profileCatalog } from "@/lib/content/profile"
 
 const iconLinks = [
   {
-    href: socialUrl("linkedin"),
+    href: profileCatalog.socialUrl("linkedin"),
     label: "LinkedIn profile",
-    title: "LinkedIn",
     icon: LinkedinLogoIcon,
   },
   {
-    href: socialUrl("github"),
+    href: profileCatalog.socialUrl("github"),
     label: "GitHub profile",
-    title: "GitHub",
     icon: GithubLogoIcon,
+  },
+  {
+    href: profileCatalog.socialUrl("whatsapp"),
+    label: "Chat on WhatsApp",
+    icon: WhatsappLogoIcon,
   },
   {
     href: "https://www.supportkori.com/montasim",
     label: "Support Montasim on SupportKori",
-    title: "SupportKori",
     icon: CoffeeIcon,
   },
 ]
 
 export function SideRails() {
+  const { profile } = profileCatalog
   return (
     <>
       <nav
         className="fixed bottom-0 left-[max(1.5rem,calc(50%-46.2rem))] z-30 hidden flex-col items-center gap-2 xl:flex"
         aria-label="Social links"
       >
-        {iconLinks.map(({ href, label, title, icon: Icon }) => (
-          <Button
+        {iconLinks.map(({ href, label, icon: Icon }) => (
+          <ExternalAction
             key={label}
-            asChild
+            href={href}
             variant="ghost"
             size="icon"
             className="size-10 text-2xl text-muted-foreground"
           >
-            <a
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={label}
-              title={title}
-            >
-              <Icon className="size-[25.5px]" />
-            </a>
-          </Button>
+            <span className="sr-only">{label}</span>
+            <Icon className="size-[25.5px]" />
+          </ExternalAction>
         ))}
         <Separator orientation="vertical" className="mt-2 h-20" />
       </nav>

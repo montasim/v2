@@ -45,7 +45,7 @@ import {
 } from "@phosphor-icons/react"
 import type { Icon } from "@phosphor-icons/react"
 import { Badge } from "@/components/ui/badge"
-import { skills } from "@/lib/content"
+import { skillCatalog } from "@/lib/content/skills"
 
 const groupIcons: Record<string, Icon> = {
   "skills-frontend": CodeIcon,
@@ -109,7 +109,9 @@ const skillIcons: Record<string, Icon> = {
 }
 
 export function SkillGroups({ limit }: { limit?: number }) {
-  const groups = limit ? skills.slice(0, limit) : skills
+  const groups = limit
+    ? skillCatalog.records.slice(0, limit)
+    : skillCatalog.records
 
   return (
     <div className="grid gap-y-6 text-sm">

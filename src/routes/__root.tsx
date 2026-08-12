@@ -42,7 +42,11 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html
+      lang="en"
+      className="scroll-smooth motion-reduce:scroll-auto"
+      suppressHydrationWarning
+    >
       <head>
         <HeadContent />
       </head>

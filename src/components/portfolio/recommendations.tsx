@@ -9,23 +9,34 @@ import {
 } from "@phosphor-icons/react"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
+import type { CarouselApi } from "@/components/ui/carousel"
 import { Card, cardInsetClassName } from "@/components/ui/card"
-import type { recommendations } from "@/lib/content"
-import { recommendations as recommendationData } from "@/lib/content"
-
-type Recommendation = (typeof recommendations)[number]
-
-const linkedInRecommendationsUrl =
-  "https://www.linkedin.com/in/montasim/details/recommendations/"
+import { ExternalAction } from "@/components/shared/navigation-action"
+import type { Recommendation } from "@/lib/content/recommendations"
+import {
+  linkedInRecommendationsUrl,
+  recommendationCatalog,
+} from "@/lib/content/recommendations"
 
 export function RecommendationDetails({ item }: { item: Recommendation }) {
   return (
     <Card asChild className={cardInsetClassName}>
       <article>
         <header>
-          <h2 className="leading-snug font-semibold text-emphasis-foreground">
-            {item.name}
-          </h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="leading-snug font-semibold text-emphasis-foreground">
+              {item.name}
+            </h2>
+            <Badge variant="secondary" className="font-medium">
+              {item.hiringSignal}
+            </Badge>
+          </div>
           <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground sm:text-sm">
             <span className="inline-flex items-center gap-1.5">
               <UsersThreeIcon aria-hidden="true" />
@@ -56,34 +67,29 @@ export function RecommendationDetails({ item }: { item: Recommendation }) {
 function FeaturedRecommendation({
   item,
   index,
-  copy,
-  duplicate = false,
 }: {
   item: Recommendation
   index: number
-  copy?: number
-  duplicate?: boolean
 }) {
   return (
     <Card
       asChild
-      className={`shrink-0 basis-4/5 ${cardInsetClassName} ${duplicate ? "motion-reduce:hidden" : ""}`}
+      className={`${cardInsetClassName} flex h-full w-full flex-col`}
     >
-      <figure
-        aria-hidden={duplicate || undefined}
-        data-recommendation-copy={index === 0 ? copy : undefined}
-      >
-        <div
-          className="flex items-center justify-between text-sm text-muted-foreground"
-          aria-hidden="true"
-        >
+      <figure>
+        <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
           <QuotesIcon />
-          <span>#{index + 1}</span>
+          <span className="flex items-center gap-2">
+            <Badge variant="secondary" className="font-medium">
+              {item.hiringSignal}
+            </Badge>
+            <span aria-label={`Recommendation ${index + 1}`}>#{index + 1}</span>
+          </span>
         </div>
-        <blockquote className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
           {item.text}
         </blockquote>
-        <figcaption className="mt-4 sm:flex sm:items-end sm:justify-between sm:gap-6">
+        <figcaption className="mt-auto pt-4 sm:flex sm:items-end sm:justify-between sm:gap-6">
           <div>
             <p className="text-sm font-semibold text-emphasis-foreground">
               {item.name}
@@ -93,22 +99,15 @@ function FeaturedRecommendation({
               {item.date} · {item.relationship}
             </p>
           </div>
-          <Button
-            asChild
+          <ExternalAction
+            href={linkedInRecommendationsUrl}
             variant="link"
             size="sm"
             className="mt-3 h-auto shrink-0 p-0 text-xs font-medium text-emphasis-foreground sm:mt-0"
           >
-            <a
-              href={linkedInRecommendationsUrl}
-              target="_blank"
-              rel="noreferrer"
-              tabIndex={duplicate ? -1 : undefined}
-            >
-              View on LinkedIn
-              <ArrowUpRightIcon />
-            </a>
-          </Button>
+            View on LinkedIn
+            <ArrowUpRightIcon />
+          </ExternalAction>
         </figcaption>
       </figure>
     </Card>
@@ -116,159 +115,89 @@ function FeaturedRecommendation({
 }
 
 export function RecommendationCarousel() {
-  const trackRef = React.useRef<HTMLDivElement>(null)
-  const pausedRef = React.useRef(false)
-  const pauseUntilRef = React.useRef(0)
-  const segmentWidthRef = React.useRef(0)
+  const [api, setApi] = React.useState<CarouselApi>()
+  const [paused, setPaused] = React.useState(false)
+  const [canScrollPrevious, setCanScrollPrevious] = React.useState(false)
+  const [canScrollNext, setCanScrollNext] = React.useState(false)
 
   React.useEffect(() => {
-    const track = trackRef.current
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
-    if (!track || reduceMotion.matches) return
-
-    let animationFrame = 0
-    let autoPosition = 0
-    let previousTime = performance.now()
-    let wasPaused = true
-
-    function measureAndPosition() {
-      const firstCopy = track?.querySelector<HTMLElement>(
-        '[data-recommendation-copy="0"]'
-      )
-      const secondCopy = track?.querySelector<HTMLElement>(
-        '[data-recommendation-copy="1"]'
-      )
-      if (!track || !firstCopy || !secondCopy) return
-
-      const previousWidth = segmentWidthRef.current
-      const nextWidth = secondCopy.offsetLeft - firstCopy.offsetLeft
-      if (nextWidth <= 0) return
-
-      const progress = previousWidth
-        ? ((track.scrollLeft - previousWidth) % previousWidth) / previousWidth
-        : 0
-      segmentWidthRef.current = nextWidth
-      track.scrollLeft = nextWidth + Math.max(0, progress) * nextWidth
-      autoPosition = track.scrollLeft
+    if (!api) return
+    const updateControls = () => {
+      setCanScrollPrevious(api.canScrollPrev())
+      setCanScrollNext(api.canScrollNext())
     }
-
-    function wrappedPosition(position: number) {
-      const segmentWidth = segmentWidthRef.current
-      if (!segmentWidth) return position
-
-      if (position >= segmentWidth * 2) {
-        return position - segmentWidth
-      }
-      if (position < segmentWidth) return position + segmentWidth
-      return position
-    }
-
-    function animate(time: number) {
-      const paused =
-        track &&
-        (pausedRef.current ||
-          time < pauseUntilRef.current ||
-          document.visibilityState !== "visible")
-
-      if (track && !paused) {
-        if (wasPaused) autoPosition = track.scrollLeft
-        const elapsed = Math.min(time - previousTime, 50)
-        autoPosition = wrappedPosition(autoPosition - (elapsed / 1000) * 23.12)
-        track.scrollLeft = autoPosition
-      }
-      wasPaused = Boolean(paused)
-      previousTime = time
-      animationFrame = requestAnimationFrame(animate)
-    }
-
-    measureAndPosition()
-    const resizeObserver = new ResizeObserver(measureAndPosition)
-    resizeObserver.observe(track)
-    animationFrame = requestAnimationFrame(animate)
-
+    updateControls()
+    api.on("select", updateControls)
+    api.on("reInit", updateControls)
     return () => {
-      cancelAnimationFrame(animationFrame)
-      resizeObserver.disconnect()
+      api.off("select", updateControls)
+      api.off("reInit", updateControls)
     }
-  }, [])
+  }, [api])
 
-  function move(direction: -1 | 1) {
-    const track = trackRef.current
-    if (!track) return
-
-    pauseUntilRef.current = performance.now() + 900
-    track.scrollBy({
-      left: track.clientWidth * 0.8 * direction,
-      behavior: "smooth",
-    })
-  }
+  React.useEffect(() => {
+    if (!api || paused) return
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    if (reduceMotion.matches) return
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") api.scrollPrev()
+    }, 7000)
+    return () => window.clearInterval(timer)
+  }, [api, paused])
 
   return (
-    <div className="relative">
-      <Button
-        type="button"
-        variant="outline"
-        size="icon"
-        onClick={() => move(1)}
-        className="absolute top-1/2 left-2 z-10 size-10 -translate-y-1/2 rounded-full bg-card/95 shadow-sm"
-        aria-label="Move recommendations left"
-        aria-controls="recommendation-track"
-      >
-        <ArrowLeftIcon />
-      </Button>
-      <div
-        ref={trackRef}
-        id="recommendation-track"
-        className="flex [scrollbar-width:none] gap-4 overflow-x-auto pb-1 [overscroll-behavior-inline:contain] [&::-webkit-scrollbar]:hidden"
-        tabIndex={0}
-        aria-label="Recommendations"
-        onFocus={() => {
-          pausedRef.current = true
-        }}
-        onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) {
-            pausedRef.current = false
-          }
-        }}
-        onPointerDown={() => {
-          pausedRef.current = true
-        }}
-        onPointerUp={() => {
-          pausedRef.current = false
-          pauseUntilRef.current = performance.now() + 900
-        }}
-        onPointerCancel={() => {
-          pausedRef.current = false
-        }}
-      >
-        {[0, 1, 2].flatMap((copy) =>
-          recommendationData.map((item, index) => (
-            <FeaturedRecommendation
-              key={`${copy}-${item.name}-${item.date}`}
-              item={item}
-              index={index}
-              copy={copy}
-              duplicate={copy !== 1}
-            />
-          ))
-        )}
+    <Carousel
+      setApi={setApi}
+      options={{ align: "start", loop: true }}
+      aria-label="Recommendations"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false)
+      }}
+      onPointerDown={() => setPaused(true)}
+      onPointerUp={() => setPaused(false)}
+    >
+      <div className="absolute top-1/2 left-2 z-10 -translate-y-1/2">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={() => api?.scrollNext()}
+          className="size-10 rounded-full bg-card/95 shadow-sm"
+          aria-label="Move recommendations left"
+          disabled={!canScrollPrevious}
+        >
+          <ArrowLeftIcon />
+        </Button>
       </div>
-      <Button
-        type="button"
-        variant="outline"
-        size="icon"
-        onClick={() => move(-1)}
-        className="absolute top-1/2 right-2 z-10 size-10 -translate-y-1/2 rounded-full bg-card/95 shadow-sm"
-        aria-label="Move recommendations right"
-        aria-controls="recommendation-track"
-      >
-        <ArrowRightIcon />
-      </Button>
+      <CarouselContent className="-ml-4 pb-1">
+        {recommendationCatalog.featured.map((item, index) => (
+          <CarouselItem
+            key={`${item.name}-${item.date}`}
+            className="flex basis-4/5 pl-4"
+          >
+            <FeaturedRecommendation item={item} index={index} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <div className="absolute top-1/2 right-2 z-10 -translate-y-1/2">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={() => api?.scrollPrev()}
+          className="size-10 rounded-full bg-card/95 shadow-sm"
+          aria-label="Move recommendations right"
+          disabled={!canScrollNext}
+        >
+          <ArrowRightIcon />
+        </Button>
+      </div>
       <p className="sr-only" aria-live="polite">
-        {recommendationData.length} recommendations
+        {recommendationCatalog.featured.length} featured recommendations
       </p>
-    </div>
+    </Carousel>
   )
 }
-
-export { linkedInRecommendationsUrl }

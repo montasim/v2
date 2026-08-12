@@ -1,8 +1,6 @@
 import { EntityAvatar } from "@/components/shared/entity-avatar"
-import type { organizations, volunteering } from "@/lib/content"
+import type { Organization, Volunteering } from "@/lib/content/affiliations"
 
-type Organization = (typeof organizations)[number]
-type Volunteering = (typeof volunteering)[number]
 type Affiliation = Organization | Volunteering
 
 function isVolunteering(item: Affiliation): item is Volunteering {

@@ -17,14 +17,11 @@ export const site = siteSchema.parse({
   ogImage: "/images/social-preview.png",
 })
 
-export const navigation = [
-  { label: "About", to: "/" },
-  { label: "Experience", to: "/experience" },
-  { label: "Projects", to: "/projects" },
-  { label: "Skills", to: "/skills" },
-  { label: "Education", to: "/education" },
-  { label: "Certifications", to: "/certifications" },
-  { label: "Recommendations", to: "/recommendations" },
+export const landingNavigation = [
+  { label: "About", sectionId: "about" },
+  { label: "Experience", sectionId: "experience" },
+  { label: "Projects", sectionId: "projects" },
+  { label: "Skills", sectionId: "skills" },
 ] as const
 
 export function createMeta(title: string, description: string, path = "/") {

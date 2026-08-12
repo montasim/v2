@@ -21,8 +21,8 @@ The result is designed for two audiences:
 - Eight typed routes with route-specific titles, descriptions, canonical links, Open Graph tags, and Twitter card metadata
 - Responsive desktop navigation and an accessible shadcn `Sheet` menu on small screens
 - System-aware light and dark themes with a persistent manual toggle
-- Filterable project, education, certification, and recommendation catalogs
-- Reusable experience timelines, project cards, skill groups, page introductions, section headings, and footer actions
+- Shareable, validated URL filters for project, education, certification, and recommendation catalogs
+- Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
 - Zod validation for every JSON content catalog during application startup
 - Structured Pino request logs with authorization and cookie redaction
 - Optimized WebP interface assets plus a 1200 by 630 PNG social preview
@@ -32,7 +32,7 @@ The result is designed for two audiences:
 
 | Route              | Purpose                              |
 | ------------------ | ------------------------------------ |
-| `/`                | Portfolio overview and contact path  |
+| `/`                | Portfolio overview                   |
 | `/experience`      | Complete role and company history    |
 | `/projects`        | Filterable project catalog           |
 | `/skills`          | Complete skills catalog              |
@@ -41,7 +41,7 @@ The result is designed for two audiences:
 | `/recommendations` | Expandable colleague recommendations |
 | `/resume`          | Web resume and PDF download          |
 
-The original approved static pages remain in [`prototype/`](prototype/) for visual comparison. They are reference artifacts, not application entry points.
+The original approved static pages remain in [`prototypes/`](prototypes/) for visual comparison. They are reference artifacts, not application entry points.
 
 ## Local development
 
@@ -76,15 +76,16 @@ pnpm preview
 
 ```mermaid
 flowchart LR
-    A[JSON catalogs] --> B[Zod validation]
-    B --> C[Route and portfolio components]
-    C --> D[TanStack Start SSR]
-    D --> E[Accessible responsive pages]
+    A[Domain JSON catalogs] --> B[Domain-local Zod validation]
+    B --> C[Catalog projections]
+    C --> D[Reusable page modules]
+    D --> E[TanStack Start SSR]
+    E --> H[Accessible responsive pages]
     F[Incoming request] --> G[Pino request logger]
-    G --> D
+    G --> E
 ```
 
-Route files own page composition and metadata. Portfolio components own repeated presentation patterns. The shared content module validates imported JSON before exposing typed values, so malformed content fails during development and builds instead of reaching visitors silently.
+Route files own metadata and domain-specific record rendering. Domain-local catalog modules validate JSON, normalize classifications, and expose featured records and filters. Reusable catalog and detail-page modules own repeated page workflows, while navigation actions centralize internal, external, download, and email behavior. Malformed content fails during development and builds instead of reaching visitors silently.
 
 The server entry wraps TanStack Start's default handler to record the request method, path, response status, and elapsed time. It redacts authorization and cookie fields from structured logs.
 
@@ -95,16 +96,17 @@ src/
 ├── components/
 │   ├── layout/       # Application shell, navigation, footer, side rails
 │   ├── portfolio/    # Experience, project, and skill patterns
-│   ├── shared/       # Page introductions, filters, headings, rich text
+│   ├── shared/       # Catalog pages, detail pages, actions, sections
 │   └── ui/           # Owned shadcn components
 ├── data/             # JSON content catalogs
-├── lib/              # Validation, metadata, assets, logging, utilities
+├── lib/
+│   └── content/      # Domain-local validation and catalog projections
 ├── routes/           # TanStack Router file-based routes
 ├── router.tsx        # Router configuration
 ├── server.ts         # SSR entry and Pino request logging
 └── styles.css        # Tailwind imports and shadcn theme tokens
 public/               # Images, PDFs, manifest, robots, and sitemap
-prototype/            # Approved static reference implementation
+prototypes/           # Approved static reference implementation
 ```
 
 ## Technology
@@ -192,11 +194,10 @@ Do not present `pnpm preview` as the production server.
 
 - This is a portfolio application backed by version-controlled JSON, not a content management system.
 - Content changes require a rebuild and redeployment.
-- Filters run in the browser after the initial server-rendered page loads.
+- Catalog filters are validated during routing and render correctly during SSR.
 - External project, credential, institution, and social links can change independently of this repository.
-- The contact action opens the visitor's email client; there is no form submission or personal-data store.
 - The canonical production domain is configured but the v2 deployment has not been verified from this repository.
-- The current home-route JavaScript bundle triggers Vite's 500 KB warning, although its compressed transfer size is approximately 160 KB. Further catalog splitting is a future optimization.
+- The landing route remains the largest client bundle because it presents every overview catalog; route-level code splitting keeps detail pages isolated.
 
 ## Support and security
 

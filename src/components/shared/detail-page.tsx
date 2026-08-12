@@ -1,0 +1,91 @@
+import type { ReactNode } from "react"
+import { Link } from "@tanstack/react-router"
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  DownloadSimpleIcon,
+} from "@phosphor-icons/react"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import {
+  DownloadAction,
+  InternalAction,
+} from "@/components/shared/navigation-action"
+import { PageShell } from "@/components/shared/page-shell"
+import { profileCatalog } from "@/lib/content/profile"
+
+export function DetailPage({
+  title,
+  description,
+  introAction,
+  children,
+}: {
+  title: string
+  description: string
+  introAction?: ReactNode
+  children: ReactNode
+}) {
+  const actionClassName =
+    "group/action h-auto gap-2 rounded-md bg-background px-4 py-2.5 font-medium text-foreground"
+
+  return (
+    <PageShell padded>
+      <header className="max-w-2xl">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link to="/">Overview</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <h1 className="mt-4 text-3xl font-bold tracking-tight">{title}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+        {introAction}
+      </header>
+      {children}
+      <footer className="mt-12 flex flex-wrap gap-3">
+        <InternalAction
+          to="/"
+          variant="outline"
+          size="lg"
+          className={actionClassName}
+        >
+          <ArrowLeftIcon className="group-hover/action:-translate-x-0.5" />
+          Back to overview
+        </InternalAction>
+        <DownloadAction
+          href={profileCatalog.profile.resumeDownloadUrl}
+          variant="outline"
+          size="lg"
+          className={actionClassName}
+        >
+          <DownloadSimpleIcon />
+          Download resume
+        </DownloadAction>
+        <InternalAction
+          to="/resume"
+          variant="outline"
+          size="lg"
+          className={`${actionClassName} sm:ml-auto`}
+        >
+          View resume
+          <ArrowRightIcon className="group-hover/action:translate-x-0.5" />
+        </InternalAction>
+      </footer>
+    </PageShell>
+  )
+}

@@ -2,9 +2,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { describe, expect, it } from "vitest"
 
 import { BadgeList } from "@/components/shared/badge-list"
+import {
+  DownloadAction,
+  ExternalAction,
+} from "@/components/shared/navigation-action"
 import { PageSection } from "@/components/shared/page-section"
 import { PageShell } from "@/components/shared/page-shell"
-import { ResultsGrid } from "@/components/shared/results-grid"
 import { Card } from "@/components/ui/card"
 
 describe("shared component interfaces", () => {
@@ -47,16 +50,27 @@ describe("shared component interfaces", () => {
     expect(markup).toContain('id="sample-heading"')
   })
 
-  it("applies the shared page and result spacing", () => {
-    const page = renderToStaticMarkup(
-      <PageShell padded>
-        <ResultsGrid aria-label="Results">
-          <article>Result</article>
-        </ResultsGrid>
-      </PageShell>
+  it("applies shared page spacing while preserving main semantics", () => {
+    const page = renderToStaticMarkup(<PageShell padded>Content</PageShell>)
+
+    expect(page).toMatch(/^<main/)
+    expect(page).toContain("py-12 sm:py-16")
+  })
+
+  it("centralizes external and download navigation semantics", () => {
+    const external = renderToStaticMarkup(
+      <ExternalAction href="https://example.com" variant="link">
+        External
+      </ExternalAction>
+    )
+    const download = renderToStaticMarkup(
+      <DownloadAction href="/file.pdf" variant="link">
+        Download
+      </DownloadAction>
     )
 
-    expect(page).toContain("py-12 sm:py-16")
-    expect(page).toContain("mt-6 grid gap-5")
+    expect(external).toContain('target="_blank"')
+    expect(external).toContain('rel="noreferrer"')
+    expect(download).toContain('download=""')
   })
 })
