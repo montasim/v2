@@ -12,7 +12,7 @@ export function SiteContainer({
 
   return (
     <Comp
-      className={cn("mx-auto w-full max-w-[64.68rem] px-4 sm:px-6", className)}
+      className={cn("mx-auto w-full max-w-[74rem] px-4 sm:px-6", className)}
       {...props}
     />
   )

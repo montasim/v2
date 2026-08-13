@@ -67,24 +67,24 @@ export function DetailPage({
           <ArrowLeftIcon className="group-hover/action:-translate-x-0.5" />
           Back to overview
         </InternalAction>
-        <DownloadAction
-          href={profileCatalog.profile.resumeDownloadUrl}
-          variant="outline"
-          size="lg"
-          className={actionClassName}
-        >
-          <DownloadSimpleIcon />
-          Download resume
-        </DownloadAction>
         <InternalAction
           to="/resume"
           variant="outline"
           size="lg"
-          className={`${actionClassName} sm:ml-auto`}
+          className={actionClassName}
         >
           View resume
           <ArrowRightIcon className="group-hover/action:translate-x-0.5" />
         </InternalAction>
+        <DownloadAction
+          href={profileCatalog.profile.resumeDownloadUrl}
+          variant="outline"
+          size="lg"
+          className={`${actionClassName} sm:ml-auto`}
+        >
+          <DownloadSimpleIcon />
+          Download resume
+        </DownloadAction>
       </footer>
     </PageShell>
   )

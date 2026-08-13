@@ -18,7 +18,7 @@ export const Route = createFileRoute("/resume")({
 })
 function Page() {
   return (
-    <PageShell padded className="max-w-[74rem]">
+    <PageShell padded>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

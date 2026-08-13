@@ -7,7 +7,7 @@ const ThemeContext = React.createContext<{
   toggleTheme: () => void
 } | null>(null)
 
-const themeScript = `try{const s=localStorage.getItem("portfolio-theme");const t=s==="dark"||s==="light"?s:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.classList.toggle("dark",t==="dark");document.documentElement.style.colorScheme=t}catch{}`
+const themeScript = `try{const s=localStorage.getItem("portfolio-theme");const t=s==="dark"||s==="light"?s:"light";document.documentElement.classList.toggle("dark",t==="dark");document.documentElement.style.colorScheme=t}catch{}`
 
 export function ThemeProvider({ children }: React.PropsWithChildren) {
   const [theme, setTheme] = React.useState<Theme>("light")

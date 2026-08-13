@@ -26,7 +26,7 @@ export function BadgeList({
       ))}
       {remaining > 0 ? (
         <li>
-          <Badge variant="ghost">+{remaining} more</Badge>
+          <Badge className={badgeClassName}>+{remaining} more</Badge>
         </li>
       ) : null}
     </ul>

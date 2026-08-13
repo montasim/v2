@@ -181,7 +181,7 @@ function ExperienceTimeline() {
                 items={role.technologies}
                 label={`Technologies used as ${role.role}`}
                 className="mt-4"
-                badgeClassName="bg-background"
+                badgeClassName="bg-background dark:bg-transparent"
               />
             </div>
           </article>
@@ -289,7 +289,7 @@ function SelectedWork() {
                 label={`Technologies used for ${project.title}`}
                 limit={3}
                 className="mt-4"
-                badgeClassName="bg-background"
+                badgeClassName="bg-background dark:bg-transparent"
               />
               {projectUrl ? (
                 <ExternalAction
