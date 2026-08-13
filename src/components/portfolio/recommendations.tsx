@@ -115,8 +115,10 @@ function FeaturedRecommendation({
 }
 
 export function RecommendationCarousel() {
+  const carouselRef = React.useRef<HTMLDivElement>(null)
   const [api, setApi] = React.useState<CarouselApi>()
   const [paused, setPaused] = React.useState(false)
+  const [inViewport, setInViewport] = React.useState(false)
   const [canScrollPrevious, setCanScrollPrevious] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
 
@@ -136,17 +138,30 @@ export function RecommendationCarousel() {
   }, [api])
 
   React.useEffect(() => {
-    if (!api || paused) return
+    const element = carouselRef.current
+    if (!element || !("IntersectionObserver" in window)) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInViewport(entry.isIntersecting),
+      { threshold: 0.01 }
+    )
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+
+  React.useEffect(() => {
+    if (!api || paused || !inViewport) return
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
     if (reduceMotion.matches) return
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") api.scrollPrev()
     }, 7000)
     return () => window.clearInterval(timer)
-  }, [api, paused])
+  }, [api, inViewport, paused])
 
   return (
     <Carousel
+      ref={carouselRef}
       setApi={setApi}
       options={{ align: "start", loop: true }}
       aria-label="Recommendations"

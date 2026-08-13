@@ -14,6 +14,8 @@ const carouselApi = vi.hoisted(() => ({
   scrollNext: vi.fn(),
 }))
 
+let intersectionCallback: IntersectionObserverCallback
+
 vi.mock("@/components/ui/carousel", () => ({
   Carousel: ({
     setApi,
@@ -34,6 +36,17 @@ describe("RecommendationCarousel movement", () => {
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: vi.fn(() => ({ matches: false })),
+    })
+    Object.defineProperty(window, "IntersectionObserver", {
+      configurable: true,
+      value: class MockIntersectionObserver {
+        constructor(callback: IntersectionObserverCallback) {
+          intersectionCallback = callback
+        }
+
+        observe = vi.fn()
+        disconnect = vi.fn()
+      },
     })
   })
 
@@ -70,8 +83,29 @@ describe("RecommendationCarousel movement", () => {
     render(<RecommendationCarousel />)
     await act(async () => {})
 
+    act(() =>
+      intersectionCallback(
+        [{ isIntersecting: true } as IntersectionObserverEntry],
+        {} as IntersectionObserver
+      )
+    )
     act(() => vi.advanceTimersByTime(7000))
 
     expect(carouselApi.scrollPrev).toHaveBeenCalledOnce()
+  })
+
+  it("does not auto-advance while the carousel is outside the viewport", async () => {
+    render(<RecommendationCarousel />)
+    await act(async () => {})
+
+    act(() =>
+      intersectionCallback(
+        [{ isIntersecting: false } as IntersectionObserverEntry],
+        {} as IntersectionObserver
+      )
+    )
+    act(() => vi.advanceTimersByTime(7000))
+
+    expect(carouselApi.scrollPrev).not.toHaveBeenCalled()
   })
 })
