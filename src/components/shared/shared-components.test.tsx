@@ -48,6 +48,7 @@ describe("shared component interfaces", () => {
 
     expect(markup).toContain('aria-labelledby="sample-heading"')
     expect(markup).toContain('id="sample-heading"')
+    expect(markup).toContain("motion-reveal")
   })
 
   it("applies shared page spacing while preserving main semantics", () => {

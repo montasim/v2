@@ -63,7 +63,7 @@ export function SiteHeader() {
     </Button>
   )
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
+    <header className="site-header-enter sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
           <Brand />

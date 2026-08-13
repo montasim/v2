@@ -36,7 +36,7 @@ export function SideRails() {
   return (
     <>
       <nav
-        className="fixed bottom-0 left-[max(1.5rem,calc(50%-46.2rem))] z-30 hidden flex-col items-center gap-2 xl:flex"
+        className="side-rail side-rail-left fixed bottom-0 left-[max(1.5rem,calc(50%-46.2rem))] z-30 hidden flex-col items-center gap-2 xl:flex"
         aria-label="Social links"
       >
         {iconLinks.map(({ href, label, icon: Icon }) => (
@@ -53,7 +53,7 @@ export function SideRails() {
         ))}
         <Separator orientation="vertical" className="mt-2 h-20" />
       </nav>
-      <div className="fixed right-[max(1.5rem,calc(50%-46.2rem))] bottom-0 z-30 hidden flex-col items-center gap-4 xl:flex">
+      <div className="side-rail side-rail-right fixed right-[max(1.5rem,calc(50%-46.2rem))] bottom-0 z-30 hidden flex-col items-center gap-4 xl:flex">
         <a
           href={`mailto:${profile.email}`}
           className="rotate-180 rounded-sm text-sm tracking-wide text-muted-foreground transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] [writing-mode:vertical-rl] hover:text-foreground hover:opacity-80 motion-reduce:transition-none"

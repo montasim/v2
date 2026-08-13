@@ -33,13 +33,13 @@ export const Route = createFileRoute("/")({
 function OverviewPage() {
   const { profile } = profileCatalog
   return (
-    <PageShell>
+    <PageShell className="overview-page">
       <section
-        className="scroll-mt-14 py-14 sm:py-16 lg:py-20"
+        className="overview-hero scroll-mt-14 py-14 sm:py-16 lg:py-20"
         aria-labelledby="profile-name"
       >
         <div className="grid items-center gap-10 sm:grid-cols-[minmax(0,1fr)_12.5rem] sm:gap-12 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-20">
-          <div className="group/portrait relative mx-auto aspect-[10/11] w-[10.45rem] shrink-0 sm:order-2 sm:w-[95%]">
+          <div className="hero-portrait group/portrait relative mx-auto aspect-[10/11] w-[10.45rem] shrink-0 sm:order-2 sm:w-[95%]">
             <span
               className="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 rounded-xl border-2 border-muted-foreground/80"
               aria-hidden="true"
@@ -59,7 +59,7 @@ function OverviewPage() {
               />
             </Avatar>
           </div>
-          <div className="min-w-0 text-center sm:order-1 sm:text-left">
+          <div className="hero-copy min-w-0 text-center sm:order-1 sm:text-left">
             <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-emphasis-foreground sm:justify-start">
               <span>Senior Software Engineer</span>
               <span className="text-border" aria-hidden="true">
