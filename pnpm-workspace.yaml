@@ -3,5 +3,6 @@ packages: []
 allowBuilds:
   esbuild: true
   lightningcss: true
+  sharp: true
   unrs-resolver: true
   msw: false

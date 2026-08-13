@@ -186,7 +186,15 @@ Update the canonical URL in [`src/lib/site.ts`](src/lib/site.ts), `public/robots
 
 ## Deployment
 
-The repository does not currently include a provider-specific deployment adapter or verified v2 deployment. Select the TanStack Start adapter for the target runtime, configure that platform to run `pnpm build`, and verify server-side rendering, static assets, canonical URLs, and the social preview in the deployed environment.
+The repository includes the official Netlify TanStack Start adapter and a
+[`netlify.toml`](netlify.toml) configuration. Import the repository into Netlify;
+the platform will install dependencies with pnpm, run `pnpm build`, publish the
+client assets from `dist/client`, and deploy SSR through the generated Netlify
+Function.
+
+The deployment configuration pins the project's supported Node.js and pnpm
+versions. Verify server-side rendering, static assets, canonical URLs, and the
+social preview after the first deployment.
 
 Do not present `pnpm preview` as the production server.
 
