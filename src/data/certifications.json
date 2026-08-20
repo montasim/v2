@@ -1,5 +1,18 @@
 [
   {
+    "id": "certification-claude-101",
+    "platform": "Anthropic Academy",
+    "platformIcon": "/images/certifications/platforms/anthropic.svg",
+    "issuer": "Anthropic Education",
+    "image": "/images/certifications/claude-101.jpg",
+    "download": null,
+    "year": "2026",
+    "completedAt": "2026-05-16",
+    "title": "Claude 101",
+    "description": "Course certificate",
+    "url": "https://verify.skilljar.com/c/r4jtg8jgebd4"
+  },
+  {
     "id": "certification-postman-api-testing",
     "platform": "Udemy",
     "platformIcon": "/images/certifications/platforms/udemy.svg",

@@ -24,7 +24,7 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
   matches: (record: TRecord, filter: TFilter) => boolean
   onFilterChange: (filter: TFilter) => void
   resultLabel: string
-  renderRecord: (record: TRecord) => ReactNode
+  renderRecord: (record: TRecord, index: number) => ReactNode
   introAction?: ReactNode
 }) {
   const visible = records.filter((record) => matches(record, filter))

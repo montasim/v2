@@ -35,6 +35,7 @@ export type CertificationFilter = "all" | number
 // with the strongest signals for senior frontend/full-stack hiring, then expands
 // into testing, cloud, accessibility, delivery, data, and supporting foundations.
 const hiringPriority = [
+  "certification-claude-101",
   "certification-meta-front-end-developer",
   "certification-microsoft-azure-fundamentals",
   "certification-postman-api-testing",

@@ -80,6 +80,7 @@ describe("portfolio content", () => {
     expect(
       certificationCatalog.records.slice(0, 10).map((record) => record.id)
     ).toEqual([
+      "certification-claude-101",
       "certification-meta-front-end-developer",
       "certification-microsoft-azure-fundamentals",
       "certification-postman-api-testing",
@@ -89,12 +90,11 @@ describe("portfolio content", () => {
       "certification-agile-atlassian-jira",
       "certification-google-project-management",
       "certification-foundations-ux-design",
-      "certification-google-business-intelligence",
     ])
     expect(certificationCatalog.featured.map((record) => record.id)).toEqual([
+      "certification-claude-101",
       "certification-meta-front-end-developer",
       "certification-microsoft-azure-fundamentals",
-      "certification-postman-api-testing",
     ])
     expect(
       recommendationCatalog.records.every(
@@ -106,13 +106,14 @@ describe("portfolio content", () => {
     ).toEqual([
       "Shoriful Islam",
       "Tabbi Quadir",
+      "Md. Tamim Tanvir, MBA",
+      "Shahriar Iqbal",
+      "Mahmudul Ahsan",
       "Syed Mahedi Hasen",
       "Md. Sazzad Hossain",
       "Md. Rifaet Ullah",
-      "Md. Rashedul Islam",
-      "Shahriar Iqbal",
-      "Imam Mahadi Hasan",
     ])
+    expect(recommendationCatalog.records).toHaveLength(16)
     expect(recommendationCatalog.featured).toHaveLength(5)
     expect(
       recommendationCatalog.records.every((record) => record.hiringSignal)

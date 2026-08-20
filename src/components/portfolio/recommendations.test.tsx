@@ -3,7 +3,11 @@
 import * as React from "react"
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { RecommendationCarousel } from "@/components/portfolio/recommendations"
+import {
+  RecommendationCarousel,
+  RecommendationDetails,
+} from "@/components/portfolio/recommendations"
+import { recommendationCatalog } from "@/lib/content/recommendations"
 
 const carouselApi = vi.hoisted(() => ({
   canScrollPrev: vi.fn(() => true),
@@ -77,6 +81,39 @@ describe("RecommendationCarousel movement", () => {
       expect(button.className).not.toContain("-translate-y-1/2")
       expect(button.parentElement?.className).toContain("-translate-y-1/2")
     }
+  })
+
+  it("renders recommendation spacing as paragraphs", async () => {
+    const { container } = render(<RecommendationCarousel />)
+    await act(async () => {})
+
+    const firstQuote = container.querySelector("blockquote")
+    expect(firstQuote?.querySelectorAll("p").length).toBeGreaterThan(1)
+  })
+
+  it("keeps the badge and recommendation number grouped on the right", async () => {
+    render(<RecommendationCarousel />)
+    await act(async () => {})
+
+    const number = screen.getByLabelText("Recommendation 1")
+    expect(number.parentElement?.className).toContain("flex")
+    expect(number.parentElement?.parentElement?.className).toContain(
+      "justify-between"
+    )
+  })
+
+  it("places the detail-card badge and number on the right", () => {
+    const firstRecommendation = recommendationCatalog.records[0]
+
+    render(<RecommendationDetails item={firstRecommendation} index={0} />)
+
+    const number = screen.getByLabelText("Recommendation 1")
+    expect(number.parentElement?.textContent).toBe(
+      `${firstRecommendation.hiringSignal}#1`
+    )
+    expect(number.parentElement?.parentElement?.className).toContain(
+      "justify-between"
+    )
   })
 
   it("automatically advances cards to the right after seven seconds", async () => {

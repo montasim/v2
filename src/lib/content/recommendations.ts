@@ -8,34 +8,27 @@ const recommendationSchema = z.object({
   role: z.string().min(1),
   relationship: z.string().min(1),
   date: z.string().min(1),
-  year: z.string().regex(/^\d{4}$/),
   text: z.string().min(1),
 })
 
 export type RecommendationFilter = "all" | number
 
-const hiringPriority = [
+const displayPriority = [
   "Shoriful Islam",
   "Tabbi Quadir",
-  "Syed Mahedi Hasen",
-  "Md. Sazzad Hossain",
-  "Md. Rifaet Ullah",
-  "Md. Rashedul Islam",
+  "Md. Tamim Tanvir, MBA",
   "Shahriar Iqbal",
-  "Imam Mahadi Hasan",
-  "Sakkhar Saha",
-  "Md. Azharul Sharif",
-  "Abu Saleh Musa Miah",
-  "Rana Hamid",
-  "Abid Hasan",
-  "Md. Mahmudul Haque Joy",
+  "Mahmudul Ahsan",
+  "Syed Mahedi Hasen",
 ] as const
 
-const hiringRank = new Map<string, number>(
-  hiringPriority.map((name, index) => [name, index])
+const displayRank = new Map<string, number>(
+  displayPriority.map((name, index) => [name, index])
 )
 
 const hiringSignals: Record<string, string> = {
+  "Md. Tamim Tanvir, MBA": "Design systems & UX",
+  "Mahmudul Ahsan": "Leadership & mentoring",
   "Shoriful Islam": "Executive endorsement",
   "Tabbi Quadir": "Manager endorsement",
   "Syed Mahedi Hasen": "Leadership & mentoring",
@@ -44,7 +37,7 @@ const hiringSignals: Record<string, string> = {
   "Md. Rashedul Islam": "Measured product impact",
   "Shahriar Iqbal": "Engineering quality",
   "Imam Mahadi Hasan": "Design collaboration",
-  "Sakkhar Saha": "Reliable delivery",
+  "Sakkhar Saha CSM®, SFPC™, SFC™": "Reliable delivery",
   "Md. Azharul Sharif": "Product improvement",
   "Abu Saleh Musa Miah": "Technical leadership",
   "Rana Hamid": "Collaboration & growth",
@@ -57,15 +50,14 @@ const records = z
   .parse(recommendationsJson)
   .map((record) => ({
     ...record,
+    year: record.date.slice(-4),
     hiringSignal: hiringSignals[record.name] ?? "Professional endorsement",
   }))
   .sort((left, right) => {
-    const leftRank = hiringRank.get(left.name) ?? Number.MAX_SAFE_INTEGER
-    const rightRank = hiringRank.get(right.name) ?? Number.MAX_SAFE_INTEGER
+    const leftRank = displayRank.get(left.name) ?? Number.MAX_SAFE_INTEGER
+    const rightRank = displayRank.get(right.name) ?? Number.MAX_SAFE_INTEGER
 
-    if (leftRank !== rightRank) return leftRank - rightRank
-
-    return right.date.localeCompare(left.date)
+    return leftRank - rightRank
   })
 
 export type Recommendation = (typeof records)[number]

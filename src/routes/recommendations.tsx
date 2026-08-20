@@ -52,8 +52,12 @@ function Page() {
           <ArrowUpRightIcon />
         </ExternalAction>
       }
-      renderRecord={(item) => (
-        <RecommendationDetails key={`${item.name}-${item.date}`} item={item} />
+      renderRecord={(item, index) => (
+        <RecommendationDetails
+          key={`${item.name}-${item.date}`}
+          item={item}
+          index={index}
+        />
       )}
     />
   )

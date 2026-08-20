@@ -24,18 +24,56 @@ import {
   recommendationCatalog,
 } from "@/lib/content/recommendations"
 
-export function RecommendationDetails({ item }: { item: Recommendation }) {
+function RecommendationParagraphs({
+  text,
+  quoted = false,
+}: {
+  text: string
+  quoted?: boolean
+}) {
+  const paragraphs = text.split("\n\n")
+
+  return paragraphs.map((paragraph, paragraphIndex) => {
+    const lines = paragraph.split("\n")
+
+    return (
+      <p key={paragraphIndex}>
+        {quoted && paragraphIndex === 0 ? "“" : null}
+        {lines.map((line, lineIndex) => (
+          <React.Fragment key={lineIndex}>
+            {lineIndex > 0 ? <br /> : null}
+            {line}
+          </React.Fragment>
+        ))}
+        {quoted && paragraphIndex === paragraphs.length - 1 ? "”" : null}
+      </p>
+    )
+  })
+}
+
+export function RecommendationDetails({
+  item,
+  index,
+}: {
+  item: Recommendation
+  index: number
+}) {
   return (
     <Card asChild className={cardInsetClassName}>
       <article>
         <header>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-start justify-between gap-4">
             <h2 className="leading-snug font-semibold text-emphasis-foreground">
               {item.name}
             </h2>
-            <Badge variant="secondary" className="font-medium">
-              {item.hiringSignal}
-            </Badge>
+            <span className="flex shrink-0 items-center gap-2 text-sm text-muted-foreground">
+              <Badge variant="secondary" className="font-medium">
+                {item.hiringSignal}
+              </Badge>
+              <span aria-label={`Recommendation ${index + 1}`}>
+                #{index + 1}
+              </span>
+            </span>
           </div>
           <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground sm:text-sm">
             <span className="inline-flex items-center gap-1.5">
@@ -55,8 +93,8 @@ export function RecommendationDetails({ item }: { item: Recommendation }) {
               {item.role}
             </p>
           </div>
-          <blockquote className="border-l-2 border-muted-foreground pl-4 text-sm leading-relaxed text-muted-foreground">
-            “{item.text}”
+          <blockquote className="space-y-4 border-l-2 border-muted-foreground pl-4 text-sm leading-relaxed text-muted-foreground">
+            <RecommendationParagraphs text={item.text} quoted />
           </blockquote>
         </div>
       </article>
@@ -86,8 +124,8 @@ function FeaturedRecommendation({
             <span aria-label={`Recommendation ${index + 1}`}>#{index + 1}</span>
           </span>
         </div>
-        <blockquote className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-          {item.text}
+        <blockquote className="mt-3 flex-1 space-y-4 text-sm leading-relaxed text-muted-foreground">
+          <RecommendationParagraphs text={item.text} />
         </blockquote>
         <figcaption className="mt-auto pt-4 sm:flex sm:items-end sm:justify-between sm:gap-6">
           <div>
