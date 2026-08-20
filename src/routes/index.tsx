@@ -88,7 +88,7 @@ function OverviewPage() {
                 href={profileCatalog.socialUrl("linkedin")}
                 variant="ghost"
                 size="icon"
-                className="xl:hidden"
+                className="size-9 sm:size-8 xl:hidden [&_svg]:size-[18px] sm:[&_svg]:size-4"
               >
                 <span className="sr-only">LinkedIn profile</span>
                 <LinkedinLogoIcon />
@@ -97,7 +97,7 @@ function OverviewPage() {
                 href={profileCatalog.socialUrl("github")}
                 variant="ghost"
                 size="icon"
-                className="xl:hidden"
+                className="size-9 sm:size-8 xl:hidden [&_svg]:size-[18px] sm:[&_svg]:size-4"
               >
                 <span className="sr-only">GitHub profile</span>
                 <GithubLogoIcon />
@@ -106,7 +106,7 @@ function OverviewPage() {
                 email={profile.email}
                 variant="ghost"
                 size="icon"
-                className="xl:hidden"
+                className="size-9 sm:size-8 xl:hidden [&_svg]:size-[18px] sm:[&_svg]:size-4"
               >
                 <span className="sr-only">Send email</span>
                 <EnvelopeSimpleIcon />
