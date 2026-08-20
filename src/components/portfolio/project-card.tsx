@@ -74,8 +74,8 @@ export function ProjectCard({
             {project.description}
           </p>
           <BadgeList
-            items={project.technologies}
-            label={`Technologies used for ${project.title}`}
+            items={project.topics}
+            label={`GitHub topics for ${project.title}`}
             limit={5}
             className="mt-4"
             badgeClassName="bg-background dark:bg-transparent"
