@@ -10,6 +10,7 @@ const profileSchema = z.object({
   avatarUrl: z.string().startsWith("/"),
   resumeUrl: z.url(),
   resumeDownloadUrl: z.string().startsWith("/"),
+  supportUrl: z.url(),
   about: z.string().min(1),
   socialLinks: z.array(
     z.object({

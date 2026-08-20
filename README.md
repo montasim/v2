@@ -21,6 +21,8 @@ The result is designed for two audiences:
 - Eight typed routes with route-specific titles, descriptions, canonical links, Open Graph tags, and Twitter card metadata
 - Responsive desktop navigation and an accessible shadcn `Sheet` menu on small screens
 - System-aware light and dark themes with a persistent manual toggle
+- Portfolio-grounded streaming AI assistant with Gemini primary and Groq fallback providers
+- Guided role and project inquiry workflows with editable answer review and Resend delivery
 - Shareable, validated URL filters for project, education, certification, and recommendation catalogs
 - Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
 - Zod validation for every JSON content catalog during application startup
@@ -50,7 +52,7 @@ The original approved static pages remain in [`prototypes/`](prototypes/) for vi
 - Node.js 22.12 or newer
 - pnpm 11 or newer
 
-No database, third-party account, environment file, or external service is required.
+No database is required. The portfolio pages run without external services. The assistant and inquiry delivery require provider credentials.
 
 ### Install and run
 
@@ -62,6 +64,18 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+Copy [`.env.example`](.env.example) to `.env.local` and add the services you want to enable:
+
+```dotenv
+GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
+GROQ_API_KEY=your_groq_key
+RESEND_API_KEY=your_resend_key
+FROM_EMAIL="Portfolio <portfolio@your-domain.com>"
+EMAIL_TO=your_inbox@example.com
+```
+
+Gemini `gemini-3.5-flash` is the primary assistant model. Groq `openai/gpt-oss-120b` is attempted once only when Gemini fails before visible text. Both are isolated behind the same application port, so changing a provider does not affect the UI or route contract. Resend requires a verified sender domain outside its testing restrictions.
 
 ### Production build preview
 
@@ -83,6 +97,12 @@ flowchart LR
     E --> H[Accessible responsive pages]
     F[Incoming request] --> G[Pino request logger]
     G --> E
+    I[Assistant panel] --> J[Chat API]
+    J --> K[Provider adapter]
+    K --> L[Gemini]
+    K --> M[Groq fallback]
+    I --> N[Inquiry server function]
+    N --> O[Resend adapter]
 ```
 
 Route files own metadata and domain-specific record rendering. Domain-local catalog modules validate JSON, normalize classifications, and expose featured records and filters. Reusable catalog and detail-page modules own repeated page workflows, while navigation actions centralize internal, external, download, and email behavior. Malformed content fails during development and builds instead of reaching visitors silently.
@@ -99,6 +119,7 @@ src/
 │   ├── shared/       # Catalog pages, detail pages, actions, sections
 │   └── ui/           # Owned shadcn components
 ├── data/             # JSON content catalogs
+├── features/chat/    # Assistant domain, ports, adapters, server orchestration, UI
 ├── lib/
 │   └── content/      # Domain-local validation and catalog projections
 ├── routes/           # TanStack Router file-based routes
@@ -114,6 +135,8 @@ prototypes/           # Approved static reference implementation
 | Area        | Technology                                            |
 | ----------- | ----------------------------------------------------- |
 | Application | TanStack Start, TanStack Router, React 19, TypeScript |
+| AI          | AI SDK, Google Gemini, Groq                           |
+| Email       | Resend                                                |
 | Build       | Vite 8                                                |
 | Interface   | Tailwind CSS 4, shadcn/ui, Radix UI, Phosphor Icons   |
 | Validation  | Zod 4                                                 |
@@ -196,12 +219,16 @@ The deployment configuration pins the project's supported Node.js and pnpm
 versions. Verify server-side rendering, static assets, canonical URLs, and the
 social preview after the first deployment.
 
+Configure all five assistant and inquiry environment variables in the Netlify site before deployment. Provider keys remain server-only and must never use a public Vite prefix.
+
 Do not present `pnpm preview` as the production server.
 
 ## Status and limitations
 
 - This is a portfolio application backed by version-controlled JSON, not a content management system.
 - Content changes require a rebuild and redeployment.
+- AI answers are limited to text-only portfolio questions, 500 characters per question, 12 retained messages, and the evidence available in the version-controlled catalogs.
+- Inquiry contact details are sent through the separate Resend workflow and are never inserted into AI prompts or conversation history.
 - Catalog filters are validated during routing and render correctly during SSR.
 - External project, credential, institution, and social links can change independently of this repository.
 - The canonical production domain is configured but the v2 deployment has not been verified from this repository.
@@ -211,7 +238,7 @@ Do not present `pnpm preview` as the production server.
 
 For portfolio questions, use the email action in the application. Reproducible implementation problems should be reported through the repository's issue tracker after the project is published.
 
-This application has no authentication, database, or write API. Do not add secrets to JSON catalogs or files under `public/`; everything there is shipped to visitors. Report security concerns privately to the maintainer rather than disclosing sensitive details publicly.
+This application has no authentication or database. Its chat and inquiry endpoints validate bounded inputs server-side, reject cross-site chat requests, and return sanitized provider errors. Do not add secrets to JSON catalogs, browser code, or files under `public/`; everything there is shipped to visitors. Report security concerns privately to the maintainer rather than disclosing sensitive details publicly.
 
 ## Contributing
 

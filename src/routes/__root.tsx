@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/layout/site-header"
 import { SideRails } from "@/components/layout/side-rails"
 import { PageShell } from "@/components/shared/page-shell"
 import { ThemeProvider } from "@/components/theme-provider"
+import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 import { createMeta, site } from "@/lib/site"
 
 export const Route = createRootRoute({
@@ -60,6 +61,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           </a>
           <SiteHeader />
           <SideRails />
+          <PortfolioAssistant />
           {children}
           <SiteFooter />
         </ThemeProvider>

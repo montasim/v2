@@ -181,6 +181,16 @@
   }
 }
 
+@keyframes chat-launcher-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.375rem);
+  }
+}
+
 @layer utilities {
   .interactive-surface {
     transition:
@@ -264,6 +274,14 @@
 
   .side-rail {
     animation: fade-up 300ms var(--ease-reference) 700ms both;
+  }
+
+  .chat-launcher-enter {
+    animation: fade-up 300ms var(--ease-reference) 700ms both;
+  }
+
+  .chat-launcher-float {
+    animation: chat-launcher-float 3s ease-in-out 1s infinite;
   }
 }
 

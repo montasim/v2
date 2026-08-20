@@ -1,0 +1,876 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Interactive UX prototype for Montasim's portfolio assistant and contact workflow."
+    />
+    <title>Portfolio assistant prototype</title>
+    <script>
+      tailwind = {
+        config: {
+          darkMode: "class",
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],
+              },
+              boxShadow: {
+                panel: "0 24px 80px rgba(21, 22, 20, 0.16)",
+              },
+            },
+          },
+        },
+      }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+    <style type="text/tailwindcss">
+      :root {
+        color-scheme: light;
+        --page: 246 246 243;
+        --surface: 255 255 255;
+        --surface-soft: 236 236 231;
+        --surface-strong: 216 216 208;
+        --text: 21 22 20;
+        --text-muted: 104 106 99;
+        --border: 216 216 208;
+        --accent: 21 22 20;
+        --accent-hover: 52 53 49;
+        --accent-soft: 236 236 231;
+        --accent-contrast: 246 246 243;
+        --ring: 198 144 67;
+        --danger: 185 28 28;
+        --danger-soft: 254 242 242;
+        --success: 21 128 61;
+        --success-soft: 240 253 244;
+      }
+
+      .dark {
+        color-scheme: dark;
+        --page: 9 9 11;
+        --surface: 24 24 27;
+        --surface-soft: 39 39 42;
+        --surface-strong: 63 63 70;
+        --text: 250 250 250;
+        --text-muted: 161 161 170;
+        --border: 63 63 70;
+        --accent: 228 228 231;
+        --accent-hover: 250 250 250;
+        --accent-soft: 39 39 42;
+        --accent-contrast: 39 39 42;
+        --ring: 216 170 99;
+        --danger: 252 165 165;
+        --danger-soft: 69 10 10;
+        --success: 134 239 172;
+        --success-soft: 20 83 45;
+      }
+
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--border)) transparent;
+      }
+
+      body {
+        background: rgb(var(--page));
+        color: rgb(var(--text));
+      }
+
+      button,
+      textarea,
+      input {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button:active:not(:disabled) {
+        transform: translateY(1px);
+      }
+
+      .focus-ring:focus-visible {
+        outline: 3px solid rgb(var(--ring) / 0.35);
+        outline-offset: 2px;
+      }
+
+      .rounded-2xl {
+        border-radius: 0.75rem !important;
+      }
+
+      .rounded-xl {
+        border-radius: 0.5rem !important;
+      }
+
+      .rounded-lg {
+        border-radius: 0.375rem !important;
+      }
+
+      .panel-enter {
+        animation: panel-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .message-enter {
+        animation: message-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgb(var(--surface-soft)) 20%,
+          rgb(var(--surface-strong)) 50%,
+          rgb(var(--surface-soft)) 80%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.2s ease-in-out infinite;
+      }
+
+      @keyframes panel-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes message-in {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes shimmer {
+        to {
+          background-position: -200% 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-[100dvh] overflow-x-hidden font-sans antialiased">
+    <div id="pageContent" class="min-h-[100dvh]">
+      <header class="sticky top-0 border-b border-[rgb(var(--border))] bg-[rgb(var(--page)/0.95)] backdrop-blur-sm">
+        <nav class="mx-auto flex h-14 w-full max-w-[74rem] items-center justify-between px-4 sm:px-6" aria-label="Primary navigation">
+          <a href="#" class="focus-ring flex items-center gap-2 rounded-md font-semibold tracking-tight hover:opacity-75">
+            <img src="../../public/images/logo.webp" alt="" width="28" height="28" class="size-7 rounded-sm" />
+            <span>Montasim</span>
+          </a>
+          <div class="flex items-center gap-1">
+            <a href="#about" class="focus-ring hidden rounded-md px-2.5 py-1.5 text-sm text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))] lg:block">About</a>
+            <a href="#experience" class="focus-ring hidden rounded-md px-2.5 py-1.5 text-sm text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))] lg:block">Experience</a>
+            <a href="#projects" class="focus-ring hidden rounded-md px-2.5 py-1.5 text-sm text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))] lg:block">Projects</a>
+            <a href="#skills" class="focus-ring hidden rounded-md px-2.5 py-1.5 text-sm text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))] lg:block">Skills</a>
+            <span class="mx-1 hidden h-4 border-l border-[rgb(var(--border))] lg:block" aria-hidden="true"></span>
+            <button id="themeButton" type="button" class="focus-ring flex size-8 items-center justify-center rounded-lg text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]" aria-label="Switch color theme" title="Switch color theme">
+              <iconify-icon id="themeIcon" icon="ph:moon" width="17" aria-hidden="true"></iconify-icon>
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <main class="mx-auto w-full max-w-[74rem] px-4 pb-32 sm:px-6">
+        <section class="py-14 sm:py-16 lg:py-20">
+          <div class="grid items-center gap-10 sm:grid-cols-[minmax(0,1fr)_12.5rem] sm:gap-12 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-20">
+            <div class="relative mx-auto aspect-[10/11] w-[10.45rem] shrink-0 sm:order-2 sm:w-[95%]">
+              <span class="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 rounded-xl border-2 border-[rgb(var(--text-muted)/0.8)]" aria-hidden="true"></span>
+              <div class="relative h-full w-full overflow-hidden rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--surface))] ring-2 ring-[rgb(var(--text)/0.1)]">
+                <img src="../../public/images/avatar.webp" alt="Mohammad Montasim Al Mamun Shuvo" width="224" height="246" class="absolute inset-0 h-full w-full object-cover object-top grayscale" />
+              </div>
+            </div>
+            <div class="min-w-0 text-center sm:order-1 sm:text-left">
+              <p class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-[rgb(var(--text))] sm:justify-start">
+                <span>Senior Software Engineer</span><span class="text-[rgb(var(--border))]" aria-hidden="true">/</span>
+                <span class="inline-flex items-center gap-1.5 font-normal text-[rgb(var(--text-muted))]"><iconify-icon icon="ph:map-pin" width="14" aria-hidden="true"></iconify-icon>Dhaka, Bangladesh</span>
+              </p>
+              <h1 class="mx-auto mt-3 text-[clamp(0.875rem,4.5vw,1.875rem)] font-bold tracking-tight whitespace-nowrap sm:mx-0">Mohammad Montasim Al Mamun Shuvo</h1>
+              <p class="mx-auto mt-5 max-w-[56ch] text-base leading-7 text-[rgb(var(--text-muted))] sm:mx-0">Building deterministic, high-performance web platforms for real-time and AI-driven applications.</p>
+              <div class="mt-7 flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
+                <a href="../../public/documents/resume.pdf" class="focus-ring inline-flex h-8 items-center gap-1.5 rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-2.5 text-sm text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]"><iconify-icon icon="ph:download-simple" width="16" aria-hidden="true"></iconify-icon>Download resume</a>
+                <a href="https://linkedin.com/in/montasim" class="focus-ring flex size-8 items-center justify-center rounded-lg text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]" aria-label="LinkedIn profile"><iconify-icon icon="ph:linkedin-logo" width="18" aria-hidden="true"></iconify-icon></a>
+                <a href="https://github.com/montasim" class="focus-ring flex size-8 items-center justify-center rounded-lg text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]" aria-label="GitHub profile"><iconify-icon icon="ph:github-logo" width="18" aria-hidden="true"></iconify-icon></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="about" class="py-10 sm:py-12">
+          <div class="mb-6 border-b border-[rgb(var(--border))] pb-4"><h2 class="text-2xl font-semibold tracking-tight text-[rgb(var(--text))]">About</h2></div>
+          <p class="max-w-3xl text-sm leading-relaxed text-[rgb(var(--text-muted))]">Most software looks great in the demo. Montasim builds the kind that survives production, with predictable state, resilient lifecycles, and dependable asynchronous workflows.</p>
+        </section>
+      </main>
+    </div>
+
+    <div id="mobileScrim" class="fixed inset-0 hidden bg-[rgb(var(--text)/0.15)] backdrop-blur-[2px] sm:hidden" aria-hidden="true"></div>
+
+    <section
+      id="chatPanel"
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="chatTitle"
+      aria-describedby="chatDescription"
+      class="panel-enter fixed inset-0 hidden min-h-[100dvh] flex-col overflow-hidden bg-[rgb(var(--surface))] sm:inset-auto sm:bottom-2 sm:right-6 sm:h-[min(720px,calc(100dvh-1rem))] sm:min-h-0 sm:w-[440px] sm:rounded-2xl sm:border sm:border-[rgb(var(--border))] sm:shadow-panel"
+    >
+      <header class="flex min-h-16 shrink-0 items-center gap-3 border-b border-[rgb(var(--border))] px-4">
+        <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[rgb(var(--accent))] text-[rgb(var(--accent-contrast))]" aria-hidden="true">
+          <iconify-icon icon="ph:chat-circle-dots" width="19"></iconify-icon>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h2 id="chatTitle" class="truncate text-sm font-semibold">Ask about Montasim</h2>
+          <p id="chatDescription" class="truncate text-xs text-[rgb(var(--text-muted))]">AI assistant using this portfolio</p>
+        </div>
+        <button id="closeChatButton" type="button" class="focus-ring flex size-10 items-center justify-center rounded-lg text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]" aria-label="Close assistant" title="Close assistant">
+          <iconify-icon icon="ph:x" width="20" aria-hidden="true"></iconify-icon>
+        </button>
+      </header>
+
+      <div id="statusRegion" class="sr-only" role="status" aria-live="polite"></div>
+      <div id="globalBackRegion" class="hidden shrink-0 px-4 pt-4">
+        <button id="globalBackButton" type="button" class="focus-ring inline-flex min-h-8 items-center gap-1.5 rounded-lg pr-2 text-xs font-medium text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]">
+          <iconify-icon icon="ph:arrow-left" width="15" aria-hidden="true"></iconify-icon>
+          Back to assistant
+        </button>
+      </div>
+      <div id="chatBody" class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5" tabindex="0"></div>
+      <div id="composerRegion" class="shrink-0 border-t border-[rgb(var(--border))] bg-[rgb(var(--surface))] p-3"></div>
+    </section>
+
+    <button id="chatLauncher" data-open-chat type="button" class="focus-ring fixed bottom-4 right-4 inline-flex min-h-12 items-center gap-2 whitespace-nowrap rounded-xl bg-[rgb(var(--accent))] px-4 text-sm font-semibold text-[rgb(var(--accent-contrast))] shadow-lg shadow-neutral-950/15 hover:bg-[rgb(var(--accent-hover))] sm:bottom-6 sm:right-6" aria-haspopup="dialog" aria-expanded="false" aria-controls="chatPanel">
+      <iconify-icon icon="ph:chat-circle" width="20" aria-hidden="true"></iconify-icon>
+      Ask about Montasim
+    </button>
+
+    <template id="initialTemplate">
+      <div class="message-enter">
+        <div class="rounded-2xl bg-[rgb(var(--surface-soft))] p-4">
+          <h3 class="text-lg font-semibold tracking-tight">What would you like to know?</h3>
+          <p class="mt-2 text-sm leading-6 text-[rgb(var(--text-muted))]">Ask a question, choose a common topic, or send Montasim a focused inquiry.</p>
+        </div>
+
+        <div class="mt-4">
+          <h3 class="text-sm font-semibold">Explore his background</h3>
+          <div class="mt-3 grid gap-2 sm:grid-cols-2">
+            <button data-suggestion="What makes Montasim a strong senior engineer?" class="suggestion focus-ring flex min-h-14 items-start gap-3 rounded-xl border border-[rgb(var(--border))] p-3 text-left hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))]">
+              <iconify-icon icon="ph:user-focus" width="19" class="mt-0.5 shrink-0 text-[rgb(var(--accent))]" aria-hidden="true"></iconify-icon>
+              <span><span class="block text-sm font-medium">Why hire him?</span><span class="mt-1 block text-xs text-[rgb(var(--text-muted))]">Strengths and working style</span></span>
+            </button>
+            <button data-suggestion="Which projects best show Montasim's impact?" class="suggestion focus-ring flex min-h-14 items-start gap-3 rounded-xl border border-[rgb(var(--border))] p-3 text-left hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))]">
+              <iconify-icon icon="ph:briefcase" width="19" class="mt-0.5 shrink-0 text-[rgb(var(--accent))]" aria-hidden="true"></iconify-icon>
+              <span><span class="block text-sm font-medium">Project impact</span><span class="mt-1 block text-xs text-[rgb(var(--text-muted))]">Relevant shipped work</span></span>
+            </button>
+            <button data-suggestion="What is Montasim's strongest technical expertise?" class="suggestion focus-ring flex min-h-14 items-start gap-3 rounded-xl border border-[rgb(var(--border))] p-3 text-left hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] sm:col-span-2">
+              <iconify-icon icon="ph:brackets-curly" width="19" class="mt-0.5 shrink-0 text-[rgb(var(--accent))]" aria-hidden="true"></iconify-icon>
+              <span><span class="block text-sm font-medium">Technical expertise</span><span class="mt-1 block text-xs text-[rgb(var(--text-muted))]">Stack, architecture, and specialties</span></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-5 border-t border-[rgb(var(--border))] pt-4">
+          <h3 class="text-sm font-semibold">Contact Montasim</h3>
+          <p class="mt-1 text-xs leading-5 text-[rgb(var(--text-muted))]">Send the details he needs to reply.</p>
+          <div class="mt-3 grid gap-2">
+            <button data-flow="hire" class="flow-trigger focus-ring flex min-h-11 items-center gap-3 rounded-xl bg-[rgb(var(--accent))] px-4 text-left text-[rgb(var(--accent-contrast))] hover:bg-[rgb(var(--accent-hover))]">
+              <iconify-icon icon="ph:briefcase" width="19" aria-hidden="true"></iconify-icon>
+              <span class="flex-1 text-sm font-semibold">Discuss a role</span>
+              <iconify-icon icon="ph:arrow-right" width="18" aria-hidden="true"></iconify-icon>
+            </button>
+            <button data-flow="project" class="flow-trigger focus-ring flex min-h-11 items-center gap-3 rounded-xl border border-[rgb(var(--border))] px-4 text-left hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))]">
+              <iconify-icon icon="ph:squares-four" width="19" class="text-[rgb(var(--accent))]" aria-hidden="true"></iconify-icon>
+              <span class="flex-1 text-sm font-semibold">Discuss a project</span>
+              <iconify-icon icon="ph:arrow-right" width="18" aria-hidden="true"></iconify-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <script>
+      const state = {
+        open: false,
+        mode: "initial",
+        messages: [],
+        loading: false,
+        lastQuestion: "",
+        flowType: null,
+        flowStep: 0,
+        editReturnStep: null,
+        lead: {},
+        submission: "idle",
+      }
+
+      const chatPanel = document.getElementById("chatPanel")
+      const chatBody = document.getElementById("chatBody")
+      const composerRegion = document.getElementById("composerRegion")
+      const launcher = document.getElementById("chatLauncher")
+      const scrim = document.getElementById("mobileScrim")
+      const statusRegion = document.getElementById("statusRegion")
+      const globalBackRegion = document.getElementById("globalBackRegion")
+      const pageContent = document.getElementById("pageContent")
+      let lastFocusedElement = null
+      let responseTimer = null
+
+      const flowConfig = {
+        hire: [
+          {
+            key: "role",
+            title: "What role are you hiring for?",
+            help: "Choose the closest match.",
+            type: "options",
+            options: ["Senior Frontend Engineer", "Senior Full-Stack Engineer", "Technical Lead", "Another role"],
+          },
+          {
+            key: "arrangement",
+            title: "What is the work arrangement?",
+            help: "This helps Montasim confirm fit and availability.",
+            type: "options",
+            options: ["Remote", "Hybrid", "On-site", "Flexible"],
+          },
+          { key: "name", title: "Who should Montasim reply to?", help: "Enter your name or the hiring manager's name.", type: "text", label: "Name", placeholder: "Your name" },
+          { key: "email", title: "Where should he reply?", help: "Used only for this inquiry. It is not added to AI chat history.", type: "email", label: "Work email", placeholder: "you@company.com" },
+        ],
+        project: [
+          {
+            key: "projectType",
+            title: "What are you planning?",
+            help: "Choose the closest project type.",
+            type: "options",
+            options: ["Web application", "SaaS platform", "Frontend architecture", "Something else"],
+          },
+          {
+            key: "timeline",
+            title: "When would you like to start?",
+            help: "An estimate is enough.",
+            type: "options",
+            options: ["As soon as possible", "Within 1-3 months", "Within 3-6 months", "Flexible"],
+          },
+          { key: "name", title: "Who should Montasim reply to?", help: "Enter your name.", type: "text", label: "Name", placeholder: "Your name" },
+          { key: "email", title: "Where should he reply?", help: "Used only for this inquiry. It is not added to AI chat history.", type: "email", label: "Email", placeholder: "you@company.com" },
+        ],
+      }
+
+      const reviewLabels = {
+        role: "Role",
+        arrangement: "Work arrangement",
+        projectType: "Project type",
+        timeline: "Timeline",
+        name: "Name",
+        email: "Email",
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;")
+      }
+
+      function announce(message) {
+        statusRegion.textContent = ""
+        window.setTimeout(() => {
+          statusRegion.textContent = message
+        }, 20)
+      }
+
+      function setHeader(title, description) {
+        document.getElementById("chatTitle").textContent = title
+        document.getElementById("chatDescription").textContent = description
+      }
+
+      function syncDialogMode() {
+        if (!state.open) return
+        const isMobile = window.innerWidth < 640
+        chatPanel.setAttribute("aria-modal", String(isMobile))
+        pageContent.inert = isMobile
+        pageContent.toggleAttribute("aria-hidden", isMobile)
+        document.body.style.overflow = isMobile ? "hidden" : ""
+      }
+
+      function openChat() {
+        if (state.open) return
+        state.open = true
+        lastFocusedElement = document.activeElement
+        chatPanel.classList.remove("hidden")
+        chatPanel.classList.add("flex")
+        scrim.classList.remove("hidden")
+        launcher.classList.add("hidden")
+        launcher.setAttribute("aria-expanded", "true")
+        syncDialogMode()
+        render()
+        document.getElementById("closeChatButton").focus()
+        announce("Portfolio assistant opened")
+      }
+
+      function closeChat() {
+        if (!state.open) return
+        state.open = false
+        chatPanel.classList.add("hidden")
+        chatPanel.classList.remove("flex")
+        scrim.classList.add("hidden")
+        launcher.classList.remove("hidden")
+        launcher.setAttribute("aria-expanded", "false")
+        pageContent.inert = false
+        pageContent.removeAttribute("aria-hidden")
+        document.body.style.overflow = ""
+        lastFocusedElement?.focus()
+        announce("Portfolio assistant closed")
+      }
+
+      function resetConversation() {
+        window.clearTimeout(responseTimer)
+        Object.assign(state, {
+          mode: "initial",
+          messages: [],
+          loading: false,
+          lastQuestion: "",
+          flowType: null,
+          flowStep: 0,
+          editReturnStep: null,
+          lead: {},
+          submission: "idle",
+        })
+        setHeader("Ask about Montasim", "AI assistant using this portfolio")
+        render()
+        announce("New conversation started")
+      }
+
+      function render() {
+        if (state.mode === "initial") renderInitial()
+        if (state.mode === "chat") renderChat()
+        if (state.mode === "flow") renderFlow()
+        if (state.mode === "success") renderSuccess()
+        if (state.mode === "submitError") renderSubmitError()
+      }
+
+      function renderInitial() {
+        globalBackRegion.classList.add("hidden")
+        setHeader("Ask about Montasim", "AI assistant using this portfolio")
+        chatBody.replaceChildren(document.getElementById("initialTemplate").content.cloneNode(true))
+        renderComposer("Ask about skills, projects, or experience")
+
+        chatBody.querySelectorAll("[data-suggestion]").forEach((button) => {
+          button.addEventListener("click", () => sendQuestion(button.dataset.suggestion))
+        })
+        chatBody.querySelectorAll("[data-flow]").forEach((button) => {
+          button.addEventListener("click", () => startFlow(button.dataset.flow))
+        })
+      }
+
+      function getAnswer(question) {
+        const normalized = question.toLowerCase()
+        if (normalized.includes("project") || normalized.includes("impact")) {
+          return {
+            content: "His strongest examples combine product judgment with technical depth. He has built healthcare workflows, real-time interfaces, developer tools, and AI-assisted products with a focus on reliability and measurable delivery.",
+            source: "Projects and experience",
+            actions: [{ label: "Discuss a project", flow: "project" }],
+          }
+        }
+        if (normalized.includes("stack") || normalized.includes("technical") || normalized.includes("expertise")) {
+          return {
+            content: "Montasim works most deeply with React, Next.js, TypeScript, frontend architecture, and cloud-backed product systems. His differentiator is turning complex state and workflow requirements into predictable user experiences.",
+            source: "Skills and work history",
+            actions: [],
+          }
+        }
+        if (normalized.includes("hire") || normalized.includes("strong") || normalized.includes("senior")) {
+          return {
+            content: "He is a strong fit when a team needs senior frontend judgment, ownership across product boundaries, and dependable delivery. His work shows particular strength in complex workflows, performance, and maintainable architecture.",
+            source: "Experience and recommendations",
+            actions: [{ label: "Discuss a role", flow: "hire" }],
+          }
+        }
+        if (normalized.includes("available") || normalized.includes("contact") || normalized.includes("reach")) {
+          return {
+            content: "The best next step is a short inquiry. Choose the role or project path and Montasim will have the context needed to reply.",
+            source: "Contact preferences",
+            actions: [
+              { label: "Discuss a role", flow: "hire" },
+              { label: "Discuss a project", flow: "project" },
+            ],
+          }
+        }
+        return {
+          content: "Montasim is a senior software engineer focused on React, Next.js, TypeScript, and dependable product systems. Ask about a specific project, technical skill, role fit, or contact option for a more useful answer.",
+          source: "Portfolio profile",
+          actions: [],
+        }
+      }
+
+      function sendQuestion(question) {
+        const cleanQuestion = question.trim()
+        if (!cleanQuestion || state.loading) return
+        state.mode = "chat"
+        state.loading = true
+        state.lastQuestion = cleanQuestion
+        state.messages.push({ role: "user", content: cleanQuestion })
+        setHeader("Ask about Montasim", "AI assistant using this portfolio")
+        renderChat()
+        announce("Question sent. Preparing an answer.")
+
+        responseTimer = window.setTimeout(() => {
+          state.loading = false
+          if (cleanQuestion.toLowerCase().includes("error")) {
+            state.messages.push({ role: "error", content: "The answer could not be loaded. Your question is still here." })
+          } else {
+            state.messages.push({ role: "assistant", ...getAnswer(cleanQuestion) })
+          }
+          renderChat()
+          announce(state.messages.at(-1).role === "error" ? "Answer failed to load" : "Answer ready")
+        }, 900)
+      }
+
+      function renderChat() {
+        globalBackRegion.classList.remove("hidden")
+        setHeader("Ask about Montasim", "AI assistant using this portfolio")
+        const messages = state.messages
+          .map((message) => {
+            if (message.role === "user") {
+              return `<div class="message-enter flex justify-end"><div class="max-w-[84%] rounded-2xl rounded-br-md bg-[rgb(var(--accent))] px-4 py-3 text-sm leading-6 text-[rgb(var(--accent-contrast))]">${escapeHtml(message.content)}</div></div>`
+            }
+            if (message.role === "error") {
+              return `<div class="message-enter rounded-2xl border border-red-300 bg-[rgb(var(--danger-soft))] p-4 text-sm text-[rgb(var(--danger))]" role="alert"><div class="flex gap-3"><iconify-icon icon="ph:warning-circle" width="19" class="mt-0.5 shrink-0" aria-hidden="true"></iconify-icon><div><p class="font-semibold">Could not load the answer</p><p class="mt-1 leading-6">${escapeHtml(message.content)}</p><button id="retryAnswer" class="focus-ring mt-3 rounded-lg border border-current px-3 py-2 text-xs font-semibold hover:bg-red-100 dark:hover:bg-red-950">Try again</button></div></div></div>`
+            }
+            const actions = (message.actions || [])
+              .map((action) => `<button data-flow="${action.flow}" class="focus-ring mt-3 inline-flex min-h-10 items-center gap-2 whitespace-nowrap rounded-lg border border-[rgb(var(--border))] px-3 text-xs font-semibold hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))]">${escapeHtml(action.label)}<iconify-icon icon="ph:arrow-right" width="15" aria-hidden="true"></iconify-icon></button>`)
+              .join(" ")
+            return `<div class="message-enter group"><div class="max-w-[92%] rounded-2xl rounded-bl-md bg-[rgb(var(--surface-soft))] px-4 py-3 text-sm leading-6"><p>${escapeHtml(message.content)}</p>${actions}<div class="mt-3 flex items-center justify-between border-t border-[rgb(var(--border))] pt-2"><span class="text-[11px] text-[rgb(var(--text-muted))]">Source: ${escapeHtml(message.source)}</span><button data-copy="${escapeHtml(message.content)}" class="focus-ring flex size-8 items-center justify-center rounded-lg text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface))] hover:text-[rgb(var(--text))]" aria-label="Copy answer" title="Copy answer"><iconify-icon icon="ph:copy" width="15" aria-hidden="true"></iconify-icon></button></div></div></div>`
+          })
+          .join("")
+
+        const loading = state.loading
+          ? `<div class="message-enter max-w-[88%] rounded-2xl rounded-bl-md bg-[rgb(var(--surface-soft))] p-4" aria-label="Loading answer"><div class="skeleton h-3 w-4/5 rounded"></div><div class="skeleton mt-2 h-3 w-full rounded"></div><div class="skeleton mt-2 h-3 w-2/3 rounded"></div></div>`
+          : ""
+
+        chatBody.innerHTML = `<div class="space-y-4">${messages}${loading}</div>`
+        renderComposer("Ask a follow-up question")
+        chatBody.scrollTop = chatBody.scrollHeight
+
+        chatBody.querySelectorAll("[data-flow]").forEach((button) => button.addEventListener("click", () => startFlow(button.dataset.flow)))
+        chatBody.querySelectorAll("[data-copy]").forEach((button) => {
+          button.addEventListener("click", async () => {
+            await navigator.clipboard?.writeText(button.dataset.copy)
+            announce("Answer copied")
+          })
+        })
+        document.getElementById("retryAnswer")?.addEventListener("click", () => {
+          state.messages = state.messages.filter((message) => message.role !== "error")
+          sendQuestion(state.lastQuestion)
+        })
+      }
+
+      function renderComposer(placeholder) {
+        const disabled = state.loading ? "disabled" : ""
+        composerRegion.innerHTML = `
+          <form id="composerForm" novalidate>
+            <div class="flex items-center justify-between gap-3 px-1">
+              <label for="messageInput" class="text-xs font-semibold">Message</label>
+              <span class="text-[11px] text-[rgb(var(--text-muted))]">Enter to send</span>
+            </div>
+            <div class="mt-2 flex items-end gap-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--page))] p-1.5 focus-within:border-[rgb(var(--accent))] focus-within:ring-2 focus-within:ring-[rgb(var(--accent)/0.18)]">
+              <textarea id="messageInput" rows="1" maxlength="500" ${disabled} placeholder="${escapeHtml(placeholder)}" class="min-h-9 max-h-28 flex-1 resize-none bg-transparent px-2 py-2 text-base leading-5 text-[rgb(var(--text))] placeholder:text-[rgb(var(--text-muted))] focus:outline-none sm:text-sm"></textarea>
+              <button id="sendButton" type="submit" ${disabled} class="focus-ring flex size-9 shrink-0 items-center justify-center rounded-lg bg-[rgb(var(--accent))] text-[rgb(var(--accent-contrast))] hover:bg-[rgb(var(--accent-hover))] disabled:cursor-not-allowed disabled:opacity-45" aria-label="Send message" title="Send message">
+                <iconify-icon icon="ph:arrow-up" width="18" aria-hidden="true"></iconify-icon>
+              </button>
+            </div>
+          </form>`
+
+        const form = document.getElementById("composerForm")
+        const input = document.getElementById("messageInput")
+        form.addEventListener("submit", (event) => {
+          event.preventDefault()
+          sendQuestion(input.value)
+        })
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault()
+            form.requestSubmit()
+          }
+        })
+        input.addEventListener("input", () => {
+          input.style.height = "auto"
+          input.style.height = `${Math.min(input.scrollHeight, 112)}px`
+        })
+      }
+
+      function startFlow(type) {
+        window.clearTimeout(responseTimer)
+        state.mode = "flow"
+        state.loading = false
+        state.flowType = type
+        state.flowStep = 0
+        state.editReturnStep = null
+        state.lead = {}
+        state.submission = "idle"
+        renderFlow()
+        announce(`${type === "hire" ? "Role" : "Project"} inquiry started`)
+      }
+
+      function renderFlow(errorMessage = "") {
+        globalBackRegion.classList.remove("hidden")
+        const steps = flowConfig[state.flowType]
+        const step = steps[state.flowStep]
+        const isEditing = state.editReturnStep !== null
+        const progressStep = isEditing ? state.editReturnStep : state.flowStep
+        const progress = ((progressStep + 1) / steps.length) * 100
+        const title = state.flowType === "hire" ? "Discuss a role" : "Discuss a project"
+        setHeader(title, isEditing ? `Editing ${reviewLabels[step.key]}` : `Question ${state.flowStep + 1} of ${steps.length}`)
+
+        const answerInput = step.type === "options"
+          ? `<fieldset><legend class="sr-only">${escapeHtml(step.title)}</legend><div class="grid gap-2">${step.options.map((option) => `<button type="button" data-option="${escapeHtml(option)}" class="flow-option focus-ring flex min-h-12 items-center justify-between gap-3 rounded-xl border border-[rgb(var(--border))] px-4 text-left text-sm font-medium hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))]"><span>${escapeHtml(option)}</span><iconify-icon icon="ph:arrow-right" width="17" class="text-[rgb(var(--text-muted))]" aria-hidden="true"></iconify-icon></button>`).join("")}</div></fieldset>`
+          : `<form id="flowForm" novalidate><label for="flowInput" class="text-sm font-semibold">${escapeHtml(step.label)}</label><input id="flowInput" name="${escapeHtml(step.key)}" type="${step.type}" autocomplete="${step.type === "email" ? "email" : "name"}" value="${escapeHtml(state.lead[step.key] || "")}" placeholder="${escapeHtml(step.placeholder)}" class="focus-ring mt-2 min-h-12 w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--page))] px-3 text-base text-[rgb(var(--text))] placeholder:text-[rgb(var(--text-muted))] focus:border-[rgb(var(--accent))] focus:outline-none sm:text-sm" aria-describedby="flowHelp flowError" /><p id="flowError" class="mt-2 min-h-5 text-xs font-medium text-[rgb(var(--danger))]" role="alert">${escapeHtml(errorMessage)}</p><button type="submit" class="focus-ring mt-3 flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[rgb(var(--accent))] px-4 text-sm font-semibold text-[rgb(var(--accent-contrast))] hover:bg-[rgb(var(--accent-hover))]">${isEditing ? "Save change" : state.flowStep === steps.length - 1 ? "Send inquiry" : "Continue"}<iconify-icon icon="ph:arrow-right" width="17" aria-hidden="true"></iconify-icon></button></form>`
+
+        const answered = isEditing ? "" : steps
+          .slice(0, state.flowStep)
+          .map((answeredStep, index) => `<div class="flex items-center justify-between gap-4"><div class="min-w-0"><span class="block text-xs text-[rgb(var(--text-muted))]">${escapeHtml(reviewLabels[answeredStep.key])}</span><span class="mt-1 block truncate text-xs font-medium">${escapeHtml(state.lead[answeredStep.key])}</span></div><button type="button" data-edit-step="${index}" class="focus-ring inline-flex min-h-8 shrink-0 items-center gap-1 rounded-lg px-2 text-xs font-semibold text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]" aria-label="Change ${escapeHtml(reviewLabels[answeredStep.key])}"><iconify-icon icon="ph:pencil-simple" width="14" aria-hidden="true"></iconify-icon>Change</button></div>`)
+          .join("")
+
+        chatBody.innerHTML = `
+          <div class="message-enter">
+            <div class="flex items-center justify-between text-xs"><span class="font-semibold">${escapeHtml(title)}</span><span class="text-[rgb(var(--text-muted))]">${progressStep + 1} of ${steps.length}</span></div>
+            <div class="mt-2 h-1 overflow-hidden rounded-full bg-[rgb(var(--surface-strong))]" aria-hidden="true"><div class="h-full rounded-full bg-[rgb(var(--accent))] transition-transform" style="width:${progress}%"></div></div>
+            ${isEditing ? `<div class="mt-4 flex items-center gap-2 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--page))] px-3 py-2 text-xs text-[rgb(var(--text-muted))]"><iconify-icon icon="ph:pencil-simple" width="15" aria-hidden="true"></iconify-icon>Editing an earlier answer</div>` : ""}
+            <div class="mt-5 rounded-2xl bg-[rgb(var(--surface-soft))] p-5">
+              <h3 class="text-xl font-semibold leading-7 tracking-tight">${escapeHtml(step.title)}</h3>
+              <p id="flowHelp" class="mt-2 text-sm leading-6 text-[rgb(var(--text-muted))]">${escapeHtml(step.help)}</p>
+            </div>
+            <div class="mt-5">${answerInput}</div>
+            ${answered ? `<details class="mt-6 rounded-xl border border-[rgb(var(--border))] px-4 py-3"><summary class="focus-ring cursor-pointer rounded text-xs font-semibold">Review earlier answers</summary><div class="mt-3 space-y-2 border-t border-[rgb(var(--border))] pt-3">${answered}</div></details>` : ""}
+          </div>`
+        composerRegion.innerHTML = `
+          <div class="flex items-center justify-between gap-3">
+            <button id="flowBack" type="button" ${!isEditing && state.flowStep === 0 ? "disabled" : ""} class="focus-ring inline-flex min-h-10 items-center gap-1 whitespace-nowrap rounded-lg px-3 text-xs font-semibold hover:bg-[rgb(var(--surface-soft))] disabled:invisible"><iconify-icon icon="ph:caret-left" width="16" aria-hidden="true"></iconify-icon>${isEditing ? "Cancel edit" : "Back"}</button>
+            <button id="cancelFlow" type="button" class="focus-ring min-h-10 whitespace-nowrap rounded-lg px-3 text-xs font-semibold text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]">Cancel inquiry</button>
+          </div>`
+
+        chatBody.querySelectorAll("[data-option]").forEach((button) => {
+          button.addEventListener("click", () => saveFlowAnswer(button.dataset.option))
+        })
+        chatBody.querySelectorAll("[data-edit-step]").forEach((button) => {
+          button.addEventListener("click", () => beginFlowEdit(Number(button.dataset.editStep)))
+        })
+        const form = document.getElementById("flowForm")
+        form?.addEventListener("submit", (event) => {
+          event.preventDefault()
+          const value = document.getElementById("flowInput").value.trim()
+          if (!value) return renderFlow(`${step.label} is required.`)
+          if (step.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return renderFlow("Enter a valid email address.")
+          saveFlowAnswer(value)
+        })
+        document.getElementById("flowBack").addEventListener("click", isEditing ? cancelFlowEdit : previousFlowStep)
+        document.getElementById("cancelFlow").addEventListener("click", cancelFlow)
+        document.getElementById("flowInput")?.focus()
+      }
+
+      function saveFlowAnswer(value) {
+        const steps = flowConfig[state.flowType]
+        const step = steps[state.flowStep]
+        state.lead[step.key] = value
+        if (state.editReturnStep !== null) {
+          const returnStep = state.editReturnStep
+          state.editReturnStep = null
+          state.flowStep = returnStep
+          renderFlow()
+          announce(`${reviewLabels[step.key]} updated`)
+          return
+        }
+        if (state.flowStep < steps.length - 1) {
+          state.flowStep += 1
+          renderFlow()
+          announce(`Question ${state.flowStep + 1} of ${steps.length}`)
+          return
+        }
+        submitInquiry()
+      }
+
+      function beginFlowEdit(stepIndex) {
+        if (stepIndex < 0 || stepIndex >= state.flowStep) return
+        state.editReturnStep = state.flowStep
+        state.flowStep = stepIndex
+        renderFlow()
+        announce(`Editing ${reviewLabels[flowConfig[state.flowType][stepIndex].key]}`)
+      }
+
+      function cancelFlowEdit() {
+        if (state.editReturnStep === null) return
+        state.flowStep = state.editReturnStep
+        state.editReturnStep = null
+        renderFlow()
+        announce(`Returned to question ${state.flowStep + 1}`)
+      }
+
+      function previousFlowStep() {
+        if (state.flowStep === 0) return
+        state.editReturnStep = null
+        state.flowStep -= 1
+        renderFlow()
+        announce(`Returned to question ${state.flowStep + 1}`)
+      }
+
+      function cancelFlow() {
+        state.mode = state.messages.length ? "chat" : "initial"
+        state.flowType = null
+        state.flowStep = 0
+        state.editReturnStep = null
+        state.lead = {}
+        render()
+        announce("Inquiry cancelled. No details were sent.")
+      }
+
+      function returnToAssistant() {
+        window.clearTimeout(responseTimer)
+        state.mode = "initial"
+        state.loading = false
+        state.flowType = null
+        state.flowStep = 0
+        state.editReturnStep = null
+        state.lead = {}
+        state.submission = "idle"
+        renderInitial()
+        announce("Returned to the assistant home")
+      }
+
+      function submitInquiry() {
+        state.submission = "loading"
+        setHeader(state.flowType === "hire" ? "Discuss a role" : "Discuss a project", "Sending inquiry")
+        chatBody.innerHTML = `<div class="message-enter flex min-h-full items-center justify-center py-12"><div class="w-full max-w-xs text-center"><div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-[rgb(var(--accent-soft))] text-[rgb(var(--accent))]"><iconify-icon icon="ph:paper-plane-tilt" width="22" aria-hidden="true"></iconify-icon></div><h3 class="mt-4 text-lg font-semibold">Sending your inquiry</h3><p class="mt-2 text-sm leading-6 text-[rgb(var(--text-muted))]">Please keep this window open for a moment.</p><div class="mt-5 space-y-2" aria-label="Submitting"><div class="skeleton mx-auto h-3 w-4/5 rounded"></div><div class="skeleton mx-auto h-3 w-3/5 rounded"></div></div></div></div>`
+        composerRegion.innerHTML = ""
+        announce("Sending inquiry")
+        responseTimer = window.setTimeout(() => {
+          if (state.lead.email.toLowerCase() === "fail@example.com") {
+            state.mode = "submitError"
+          } else {
+            state.mode = "success"
+          }
+          render()
+        }, 1100)
+      }
+
+      function renderSuccess() {
+        globalBackRegion.classList.remove("hidden")
+        const title = state.flowType === "hire" ? "Role inquiry sent" : "Project inquiry sent"
+        setHeader(title, "Confirmation")
+        const contextKey = state.flowType === "hire" ? "role" : "projectType"
+        chatBody.innerHTML = `
+          <div class="message-enter flex min-h-full items-center py-8">
+            <div class="w-full">
+              <div class="flex size-12 items-center justify-center rounded-xl bg-[rgb(var(--success-soft))] text-[rgb(var(--success))]"><iconify-icon icon="ph:check" width="24" aria-hidden="true"></iconify-icon></div>
+              <h3 class="mt-5 text-2xl font-semibold tracking-tight">Your inquiry was sent.</h3>
+              <p class="mt-2 text-sm leading-6 text-[rgb(var(--text-muted))]">Montasim will reply to <strong class="font-semibold text-[rgb(var(--text))]">${escapeHtml(state.lead.email)}</strong>. A copy of your inquiry would normally be emailed to you.</p>
+              <div class="mt-6 rounded-2xl bg-[rgb(var(--surface-soft))] p-4">
+                <div class="flex justify-between gap-4 text-sm"><span class="text-[rgb(var(--text-muted))]">Inquiry</span><span class="text-right font-medium">${escapeHtml(state.lead[contextKey])}</span></div>
+                <div class="mt-3 flex justify-between gap-4 text-sm"><span class="text-[rgb(var(--text-muted))]">Name</span><span class="text-right font-medium">${escapeHtml(state.lead.name)}</span></div>
+              </div>
+              <button id="continueChat" type="button" class="focus-ring mt-6 flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[rgb(var(--accent))] px-4 text-sm font-semibold text-[rgb(var(--accent-contrast))] hover:bg-[rgb(var(--accent-hover))]">Continue asking questions<iconify-icon icon="ph:arrow-right" width="17" aria-hidden="true"></iconify-icon></button>
+              <button id="anotherInquiry" type="button" class="focus-ring mt-2 min-h-11 w-full rounded-xl text-sm font-semibold text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]">Start another inquiry</button>
+            </div>
+          </div>`
+        composerRegion.innerHTML = `<p class="px-2 py-1 text-center text-[11px] leading-4 text-[rgb(var(--text-muted))]">Contact details stay separate from AI conversation history.</p>`
+        document.getElementById("continueChat").addEventListener("click", continueAfterInquiry)
+        document.getElementById("anotherInquiry").addEventListener("click", resetConversation)
+        announce("Inquiry sent successfully")
+      }
+
+      function renderSubmitError() {
+        globalBackRegion.classList.remove("hidden")
+        setHeader("Could not send inquiry", "Your answers are still saved")
+        chatBody.innerHTML = `
+          <div class="message-enter flex min-h-full items-center py-8">
+            <div class="w-full">
+              <div class="flex size-12 items-center justify-center rounded-xl bg-[rgb(var(--danger-soft))] text-[rgb(var(--danger))]"><iconify-icon icon="ph:warning-circle" width="24" aria-hidden="true"></iconify-icon></div>
+              <h3 class="mt-5 text-2xl font-semibold tracking-tight">Your inquiry was not sent.</h3>
+              <p class="mt-2 text-sm leading-6 text-[rgb(var(--text-muted))]">The connection failed. Your answers are still here, so you can retry without starting over.</p>
+              <button id="retrySubmit" type="button" class="focus-ring mt-6 flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[rgb(var(--accent))] px-4 text-sm font-semibold text-[rgb(var(--accent-contrast))] hover:bg-[rgb(var(--accent-hover))]"><iconify-icon icon="ph:arrow-clockwise" width="17" aria-hidden="true"></iconify-icon>Try again</button>
+              <button id="editEmail" type="button" class="focus-ring mt-2 min-h-11 w-full rounded-xl text-sm font-semibold text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]">Change email</button>
+              <a href="mailto:montasimmamun@gmail.com" class="focus-ring mt-2 flex min-h-11 w-full items-center justify-center rounded-xl text-sm font-semibold text-[rgb(var(--text-muted))] hover:bg-[rgb(var(--surface-soft))] hover:text-[rgb(var(--text))]">Email directly</a>
+            </div>
+          </div>`
+        composerRegion.innerHTML = ""
+        document.getElementById("retrySubmit").addEventListener("click", submitInquiry)
+        document.getElementById("editEmail").addEventListener("click", () => {
+          state.mode = "flow"
+          state.flowStep = flowConfig[state.flowType].length - 1
+          state.editReturnStep = null
+          renderFlow()
+        })
+        announce("Inquiry failed to send. Answers are still saved.")
+      }
+
+      function continueAfterInquiry() {
+        const type = state.flowType
+        state.mode = "chat"
+        state.messages.push({
+          role: "assistant",
+          content: `Your ${type === "hire" ? "role" : "project"} inquiry is sent. Your contact details remain separate from this conversation. What else would you like to know?`,
+          source: "Inquiry confirmation",
+          actions: [],
+        })
+        state.flowType = null
+        state.flowStep = 0
+        state.editReturnStep = null
+        state.lead = {}
+        renderChat()
+        document.getElementById("messageInput")?.focus()
+      }
+
+      document.querySelectorAll("[data-open-chat]").forEach((button) => button.addEventListener("click", openChat))
+      document.getElementById("closeChatButton").addEventListener("click", closeChat)
+      document.getElementById("globalBackButton").addEventListener("click", returnToAssistant)
+      scrim.addEventListener("click", closeChat)
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && state.open) {
+          event.preventDefault()
+          closeChat()
+          return
+        }
+        if (event.key === "Tab" && state.open && window.innerWidth < 640) {
+          const focusable = [...chatPanel.querySelectorAll('button:not([disabled]), a[href], textarea:not([disabled]), input:not([disabled]), [tabindex="0"]')].filter((element) => !element.classList.contains("invisible"))
+          if (!focusable.length) return
+          const first = focusable[0]
+          const last = focusable.at(-1)
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault()
+            last.focus()
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault()
+            first.focus()
+          }
+        }
+      })
+
+      window.addEventListener("resize", syncDialogMode)
+
+      const themeButton = document.getElementById("themeButton")
+      const themeIcon = document.getElementById("themeIcon")
+      function setTheme(isDark) {
+        document.documentElement.classList.toggle("dark", isDark)
+        document.documentElement.style.colorScheme = isDark ? "dark" : "light"
+        localStorage.setItem("portfolio-theme", isDark ? "dark" : "light")
+        themeIcon.setAttribute("icon", isDark ? "ph:sun" : "ph:moon")
+        themeButton.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme")
+      }
+      setTheme(localStorage.getItem("portfolio-theme") === "dark")
+      themeButton.addEventListener("click", () => setTheme(!document.documentElement.classList.contains("dark")))
+
+      renderInitial()
+      window.setTimeout(openChat, 250)
+    </script>
+  </body>
+</html>
