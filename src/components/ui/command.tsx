@@ -1,22 +1,33 @@
 import * as React from "react"
 import { Command } from "cmdk"
+import { Dialog as DialogPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
 export function CommandDialog({
   className,
+  open,
+  onOpenChange,
   ...props
-}: React.ComponentProps<typeof Command.Dialog>) {
+}: React.ComponentProps<typeof Command> & {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
   return (
-    <Command.Dialog
-      data-slot="command-dialog"
-      label="Portfolio command menu"
-      className={cn(
-        "fixed top-[10%] left-1/2 z-[61] w-[calc(100%-1.5rem)] max-w-2xl -translate-x-1/2 overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-2xl motion-reduce:animate-none sm:w-[calc(100%-3rem)]",
-        className
-      )}
-      {...props}
-    />
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} modal={false}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Content aria-label="Portfolio command menu">
+          <Command
+            data-slot="command-dialog"
+            className={cn(
+              "fixed top-[10%] left-1/2 z-[61] w-[calc(100%-1.5rem)] max-w-2xl -translate-x-1/2 overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-2xl motion-reduce:animate-none sm:w-[calc(100%-3rem)]",
+              className
+            )}
+            {...props}
+          />
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   )
 }
 

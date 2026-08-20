@@ -66,6 +66,14 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("dialog")).toBeNull()
   })
 
+  it("keeps the document scrollbar available while open", () => {
+    render(<CommandPalette />)
+
+    openCommandMenu()
+
+    expect(document.body.hasAttribute("data-scroll-locked")).toBe(false)
+  })
+
   it("uses a comfortably sized desktop command surface", () => {
     render(<CommandPalette />)
     openCommandMenu()

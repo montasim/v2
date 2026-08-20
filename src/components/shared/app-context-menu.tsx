@@ -45,7 +45,7 @@ export function AppContextMenu({ children }: { children: ReactNode }) {
   }
 
   return (
-    <ContextMenu onOpenChange={handleOpenChange}>
+    <ContextMenu modal={false} onOpenChange={handleOpenChange}>
       <ContextMenuTrigger className="min-h-[100dvh] select-text">
         {children}
       </ContextMenuTrigger>

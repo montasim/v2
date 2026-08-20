@@ -56,6 +56,18 @@ describe("AppContextMenu", () => {
     }
   })
 
+  it("keeps the document scrollbar available while open", () => {
+    render(
+      <AppContextMenu>
+        <main>Portfolio content</main>
+      </AppContextMenu>
+    )
+
+    fireEvent.contextMenu(screen.getByText("Portfolio content"))
+
+    expect(document.body.hasAttribute("data-scroll-locked")).toBe(false)
+  })
+
   it("navigates homepage sections using their URL hashes", () => {
     render(
       <AppContextMenu>
