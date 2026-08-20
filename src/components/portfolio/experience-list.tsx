@@ -141,14 +141,20 @@ function ExperienceRow({ role }: { role: Experience }) {
 export function ExperienceList({
   limit,
   card = false,
+  records = experienceCatalog.records,
 }: {
   limit?: number
   card?: boolean
+  records?: readonly Experience[]
 }) {
   if (card) {
-    const groups = limit
-      ? experienceCatalog.companies.slice(0, limit)
-      : experienceCatalog.companies
+    const companies = Array.from(
+      new Set(records.map((role) => role.company))
+    ).map((company) => ({
+      company,
+      roles: records.filter((role) => role.company === company),
+    }))
+    const groups = limit ? companies.slice(0, limit) : companies
 
     return (
       <div className="grid gap-5">
@@ -159,9 +165,7 @@ export function ExperienceList({
     )
   }
 
-  const roles = limit
-    ? experienceCatalog.records.slice(0, limit)
-    : experienceCatalog.records
+  const roles = limit ? records.slice(0, limit) : records
 
   return (
     <div className="grid gap-5">

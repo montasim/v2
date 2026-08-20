@@ -18,11 +18,5 @@ const experienceSchema = z.object({
 export type Experience = z.infer<typeof experienceSchema>
 
 const records = z.array(experienceSchema).parse(experienceJson)
-const companies = Array.from(
-  new Set(records.map((record) => record.company))
-).map((company) => ({
-  company,
-  roles: records.filter((record) => record.company === company),
-}))
 
-export const experienceCatalog = { records, companies } as const
+export const experienceCatalog = { records } as const
