@@ -1,0 +1,419 @@
+<!-- PROTOTYPE: Three private portfolio analytics concepts, switchable with ?variant=A/B/C. Sample data only; no persistence. -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Private portfolio conversion analytics prototype." />
+    <title>Portfolio signals - analytics prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              ink: {
+                50: "#f6f6f3",
+                100: "#ecece7",
+                200: "#d8d8d0",
+                400: "#92938b",
+                500: "#686a63",
+                700: "#41423e",
+                900: "#20211f",
+                950: "#151614",
+              },
+              amber: { 300: "#d8aa63", 400: "#c69043", 950: "#32210d" },
+            },
+            fontFamily: {
+              sans: ["Geist", "ui-sans-serif", "system-ui", "sans-serif"],
+              mono: ["Geist Mono", "ui-monospace", "SFMono-Regular", "monospace"],
+            },
+          },
+        },
+      }
+    </script>
+    <script>
+      const queryTheme = new URLSearchParams(location.search).get("theme")
+      const storedTheme = localStorage.getItem("portfolio-analytics-theme")
+      const prefersDark = matchMedia("(prefers-color-scheme: dark)").matches
+      document.documentElement.classList.toggle(
+        "dark",
+        queryTheme ? queryTheme === "dark" : storedTheme ? storedTheme === "dark" : prefersDark,
+      )
+    </script>
+    <style>
+      :root { color-scheme: light; }
+      .dark { color-scheme: dark; }
+      body { text-rendering: optimizeLegibility; }
+      ::selection { background: #d8aa63; color: #151614; }
+      .focus-ring:focus-visible { outline: 3px solid #c69043; outline-offset: 3px; }
+      .variant-view[hidden] { display: none; }
+      .variant-button[aria-current="true"] { background: #20211f; color: #f6f6f3; }
+      .dark .variant-button[aria-current="true"] { background: #f6f6f3; color: #151614; }
+      .range-button[aria-pressed="true"] { background: #20211f; color: #f6f6f3; }
+      .dark .range-button[aria-pressed="true"] { background: #f6f6f3; color: #151614; }
+      .signal-bar { transform-origin: left; animation: reveal-bar 550ms cubic-bezier(.16,1,.3,1) both; }
+      @keyframes reveal-bar { from { transform: scaleX(.12); opacity: .35; } to { transform: scaleX(1); opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body class="min-h-[100dvh] bg-ink-50 font-sans text-ink-900 antialiased dark:bg-ink-950 dark:text-ink-50">
+    <header class="border-b border-ink-200 bg-white/90 dark:border-white/10 dark:bg-ink-950/95">
+      <div class="mx-auto flex min-h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+        <a href="./index.html" class="focus-ring inline-flex items-center gap-3 rounded-md text-sm font-semibold">
+          <span class="grid size-8 place-items-center rounded-lg bg-ink-900 text-ink-50 dark:bg-ink-50 dark:text-ink-950">
+            <i class="ph ph-chart-line-up text-lg" aria-hidden="true"></i>
+          </span>
+          <span>Portfolio signals</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <span class="hidden items-center gap-2 text-xs text-ink-500 sm:inline-flex dark:text-ink-400">
+            <i class="ph ph-lock-key" aria-hidden="true"></i>
+            Private dashboard
+          </span>
+          <button id="theme-toggle" type="button" class="focus-ring grid size-9 place-items-center rounded-lg border border-ink-200 bg-white text-ink-700 transition hover:border-ink-400 active:translate-y-px dark:border-white/15 dark:bg-ink-900 dark:text-ink-100" aria-label="Toggle color theme">
+            <i class="ph ph-moon text-lg dark:hidden" aria-hidden="true"></i>
+            <i class="ph ph-sun hidden text-lg dark:block" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="border-b border-ink-200 bg-white dark:border-white/10 dark:bg-ink-950">
+        <div class="mx-auto grid max-w-[1440px] gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-end lg:px-10 lg:py-10">
+          <div>
+            <div class="mb-4 flex flex-wrap items-center gap-2">
+              <span class="rounded-md border border-amber-400/60 bg-amber-300/15 px-2 py-1 text-xs font-semibold text-amber-950 dark:text-amber-300">Sample data</span>
+              <span class="text-xs text-ink-500 dark:text-ink-400">Updated 20 Aug 2026, 10:30</span>
+            </div>
+            <h1 class="max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">See what moves a recruiter from interest to inquiry.</h1>
+            <p class="mt-3 max-w-2xl text-sm leading-6 text-ink-500 sm:text-base dark:text-ink-400">Aggregate portfolio actions into useful signals without identifying the people behind them.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2" aria-label="Date range">
+            <button class="range-button focus-ring rounded-md border border-ink-200 px-3 py-2 text-xs font-semibold dark:border-white/15" data-range="7" aria-pressed="false">7 days</button>
+            <button class="range-button focus-ring rounded-md border border-ink-200 px-3 py-2 text-xs font-semibold dark:border-white/15" data-range="30" aria-pressed="true">30 days</button>
+            <button class="range-button focus-ring rounded-md border border-ink-200 px-3 py-2 text-xs font-semibold dark:border-white/15" data-range="90" aria-pressed="false">90 days</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Variant A: executive brief -->
+      <section id="variant-A" class="variant-view mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
+        <div class="grid gap-8 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,.55fr)]">
+          <div class="min-w-0">
+            <div class="border-b border-ink-200 pb-7 dark:border-white/10">
+              <p class="mb-2 text-sm font-semibold text-ink-500 dark:text-ink-400">What the sample suggests</p>
+              <h2 class="max-w-4xl text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">Recruiters validate technical depth before they start a conversation.</h2>
+              <p class="mt-4 max-w-3xl text-base leading-7 text-ink-500 dark:text-ink-400">Project source clicks and senior-engineer assistant questions are the strongest precursors to a completed inquiry.</p>
+            </div>
+
+            <div class="grid border-b border-ink-200 py-7 sm:grid-cols-2 lg:grid-cols-4 dark:border-white/10">
+              <div class="border-b border-ink-200 py-4 sm:border-b-0 sm:border-r sm:px-5 sm:first:pl-0 dark:border-white/10">
+                <p class="text-xs font-medium text-ink-500 dark:text-ink-400">Project opens</p>
+                <p class="mt-2 font-mono text-3xl font-medium" data-metric="projectOpens">126</p>
+                <p class="mt-1 text-xs text-ink-500 dark:text-ink-400">Across <span data-metric="engagedSessions">84</span> sessions</p>
+              </div>
+              <div class="border-b border-ink-200 py-4 sm:border-b-0 lg:border-r lg:px-5 dark:border-white/10">
+                <p class="text-xs font-medium text-ink-500 dark:text-ink-400">Source clicks</p>
+                <p class="mt-2 font-mono text-3xl font-medium" data-metric="sourceClicks">41</p>
+                <p class="mt-1 text-xs text-ink-500 dark:text-ink-400"><span data-metric="sourceRate">32.5%</span> of project opens</p>
+              </div>
+              <div class="border-b border-ink-200 py-4 sm:border-b-0 sm:border-r sm:px-5 dark:border-white/10">
+                <p class="text-xs font-medium text-ink-500 dark:text-ink-400">Resume downloads</p>
+                <p class="mt-2 font-mono text-3xl font-medium" data-metric="resumeDownloads">19</p>
+                <p class="mt-1 text-xs text-ink-500 dark:text-ink-400"><span data-metric="resumeRate">22.6%</span> of sessions</p>
+              </div>
+              <div class="py-4 sm:px-5 sm:last:pr-0">
+                <p class="text-xs font-medium text-ink-500 dark:text-ink-400">Completed inquiries</p>
+                <p class="mt-2 font-mono text-3xl font-medium" data-metric="inquiryCompletions">7</p>
+                <p class="mt-1 text-xs text-ink-500 dark:text-ink-400"><span data-metric="completionRate">58.3%</span> start-to-finish</p>
+              </div>
+            </div>
+
+            <div class="grid gap-10 py-8 lg:grid-cols-[.8fr_1.2fr]">
+              <div>
+                <div class="flex items-center justify-between gap-4">
+                  <h3 class="text-lg font-semibold">Conversion path</h3>
+                  <span class="text-xs text-ink-500 dark:text-ink-400">Unique sessions</span>
+                </div>
+                <ol class="mt-6 space-y-5">
+                  <li class="grid grid-cols-[1fr_auto] items-end gap-4">
+                    <div><p class="text-sm font-medium">Engaged portfolio visit</p><div class="signal-bar mt-2 h-1.5 bg-ink-900 dark:bg-ink-50" style="width:100%"></div></div><span class="font-mono text-sm" data-metric="engagedSessions">84</span>
+                  </li>
+                  <li class="grid grid-cols-[1fr_auto] items-end gap-4">
+                    <div><p class="text-sm font-medium">High-intent action</p><div class="signal-bar mt-2 h-1.5 bg-ink-700 dark:bg-ink-200" style="width:57%"></div></div><span class="font-mono text-sm" data-metric="highIntentSessions">48</span>
+                  </li>
+                  <li class="grid grid-cols-[1fr_auto] items-end gap-4">
+                    <div><p class="text-sm font-medium">Inquiry started</p><div class="signal-bar mt-2 h-1.5 bg-amber-400" style="width:14%"></div></div><span class="font-mono text-sm" data-metric="inquiryStarts">12</span>
+                  </li>
+                  <li class="grid grid-cols-[1fr_auto] items-end gap-4">
+                    <div><p class="text-sm font-medium">Inquiry completed</p><div class="signal-bar mt-2 h-1.5 bg-amber-400" style="width:8%"></div></div><span class="font-mono text-sm" data-metric="inquiryCompletions">7</span>
+                  </li>
+                </ol>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between gap-4">
+                  <h3 class="text-lg font-semibold">Projects earning deeper attention</h3>
+                  <span class="text-xs text-ink-500 dark:text-ink-400">Opens / source clicks</span>
+                </div>
+                <div class="mt-4 overflow-hidden rounded-xl border border-ink-200 bg-white dark:border-white/10 dark:bg-ink-900">
+                  <div class="grid grid-cols-[1fr_auto] gap-4 p-5">
+                    <div><p class="font-semibold">Thoughtline</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">AI-assisted reading workflow</p></div><p class="font-mono text-sm">38 / 16</p>
+                  </div>
+                  <div class="grid grid-cols-[1fr_auto] gap-4 border-t border-ink-200 p-5 dark:border-white/10">
+                    <div><p class="font-semibold">MyMedicalHub</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Healthcare platform impact</p></div><p class="font-mono text-sm">31 / 12</p>
+                  </div>
+                  <div class="grid grid-cols-[1fr_auto] gap-4 border-t border-ink-200 p-5 dark:border-white/10">
+                    <div><p class="font-semibold">PostCraft</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Generative AI product</p></div><p class="font-mono text-sm">24 / 7</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="rounded-xl border border-ink-200 bg-white p-6 dark:border-white/10 dark:bg-ink-900 lg:p-7">
+            <div class="flex items-center gap-3">
+              <span class="grid size-10 place-items-center rounded-lg bg-amber-300/20 text-amber-950 dark:text-amber-300"><i class="ph ph-sparkle text-xl" aria-hidden="true"></i></span>
+              <div><h2 class="font-semibold">Interest brief</h2><p class="text-xs text-ink-500 dark:text-ink-400">Generated from aggregate signals</p></div>
+            </div>
+            <p class="mt-6 text-xl font-semibold leading-8">Lead with production systems work, then make the resume easier to reach from project details.</p>
+            <div class="mt-7 border-t border-ink-200 pt-6 dark:border-white/10">
+              <h3 class="text-sm font-semibold">Assistant topics</h3>
+              <ol class="mt-4 space-y-4 text-sm">
+                  <li class="flex items-start justify-between gap-4"><span>Senior engineering depth</span><span class="font-mono" data-metric="topTopicCount">29</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Recent work experience</span><span class="font-mono">21</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Technical expertise</span><span class="font-mono">17</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Hiring and availability</span><span class="font-mono">11</span></li>
+              </ol>
+            </div>
+            <div class="mt-7 rounded-lg bg-ink-100 p-4 text-sm leading-6 text-ink-700 dark:bg-ink-950 dark:text-ink-300">
+              <div class="mb-2 flex items-center gap-2 font-semibold text-ink-900 dark:text-ink-50"><i class="ph ph-shield-check" aria-hidden="true"></i>Privacy boundary</div>
+              No names, emails, message bodies, IP addresses, or cross-site identifiers appear in this view.
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Variant B: recruiter journey -->
+      <section id="variant-B" class="variant-view mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-12" hidden>
+        <div class="grid gap-8 lg:grid-cols-[230px_minmax(0,1fr)]">
+          <aside class="lg:sticky lg:top-6 lg:self-start">
+            <h2 class="text-sm font-semibold">Recruiter journey</h2>
+            <p class="mt-2 text-sm leading-6 text-ink-500 dark:text-ink-400">Follow aggregate actions from first interest to completed inquiry.</p>
+            <nav class="mt-6 grid grid-cols-2 gap-2 lg:grid-cols-1" aria-label="Journey sections">
+              <a class="focus-ring rounded-lg bg-ink-900 px-3 py-2.5 text-sm font-medium text-ink-50 dark:bg-ink-50 dark:text-ink-950" href="#journey">Journey</a>
+              <a class="focus-ring rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-ink-100 dark:hover:bg-ink-900" href="#entry-points">Entry points</a>
+              <a class="focus-ring rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-ink-100 dark:hover:bg-ink-900" href="#drop-off">Drop-off</a>
+              <a class="focus-ring rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-ink-100 dark:hover:bg-ink-900" href="#privacy">Privacy</a>
+            </nav>
+          </aside>
+
+          <div class="min-w-0">
+            <div id="journey" class="rounded-xl border border-ink-200 bg-white p-5 dark:border-white/10 dark:bg-ink-900 sm:p-7">
+              <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div><h2 class="text-2xl font-semibold tracking-tight">The path to a serious conversation</h2><p class="mt-2 text-sm text-ink-500 dark:text-ink-400">Each column shows what people do next, not who they are.</p></div>
+                <span class="self-start rounded-md bg-amber-300/20 px-2.5 py-1.5 text-xs font-semibold text-amber-950 dark:text-amber-300">Sample data</span>
+              </div>
+              <div class="mt-8 grid gap-3 xl:grid-cols-4">
+                <article class="rounded-xl bg-ink-100 p-5 dark:bg-ink-950">
+                  <i class="ph ph-eye text-xl" aria-hidden="true"></i><p class="mt-8 text-sm font-semibold">Explore</p><p class="mt-1 font-mono text-3xl" data-metric="projectOpens">126</p><p class="mt-3 text-xs leading-5 text-ink-500 dark:text-ink-400">Project opens reveal which work earns attention.</p>
+                </article>
+                <article class="rounded-xl bg-ink-100 p-5 dark:bg-ink-950">
+                  <i class="ph ph-github-logo text-xl" aria-hidden="true"></i><p class="mt-8 text-sm font-semibold">Validate</p><p class="mt-1 font-mono text-3xl" data-metric="sourceClicks">41</p><p class="mt-3 text-xs leading-5 text-ink-500 dark:text-ink-400">Source clicks indicate technical due diligence.</p>
+                </article>
+                <article class="rounded-xl bg-ink-100 p-5 dark:bg-ink-950">
+                  <i class="ph ph-file-arrow-down text-xl" aria-hidden="true"></i><p class="mt-8 text-sm font-semibold">Shortlist</p><p class="mt-1 font-mono text-3xl" data-metric="resumeDownloads">19</p><p class="mt-3 text-xs leading-5 text-ink-500 dark:text-ink-400">Resume downloads show portable hiring interest.</p>
+                </article>
+                <article class="rounded-xl bg-amber-300/20 p-5">
+                  <i class="ph ph-paper-plane-tilt text-xl text-amber-950 dark:text-amber-300" aria-hidden="true"></i><p class="mt-8 text-sm font-semibold">Contact</p><p class="mt-1 font-mono text-3xl" data-metric="inquiryCompletions">7</p><p class="mt-3 text-xs leading-5 text-ink-700 dark:text-ink-300">Completed inquiries are the final conversion.</p>
+                </article>
+              </div>
+            </div>
+
+            <div id="entry-points" class="mt-8 grid gap-8 xl:grid-cols-[1.15fr_.85fr]">
+              <section>
+                <h2 class="text-xl font-semibold">Where interest begins</h2>
+                <div class="mt-4 rounded-xl border border-ink-200 bg-white p-5 dark:border-white/10 dark:bg-ink-900 sm:p-6">
+                  <div class="grid gap-5 sm:grid-cols-[120px_1fr_auto] sm:items-center"><span class="text-sm font-medium">LinkedIn</span><div class="signal-bar h-2 bg-ink-900 dark:bg-ink-50" style="width:100%"></div><span class="font-mono text-sm">34</span></div>
+                  <div class="mt-6 grid gap-5 sm:grid-cols-[120px_1fr_auto] sm:items-center"><span class="text-sm font-medium">Direct</span><div class="signal-bar h-2 bg-ink-700 dark:bg-ink-200" style="width:62%"></div><span class="font-mono text-sm">21</span></div>
+                  <div class="mt-6 grid gap-5 sm:grid-cols-[120px_1fr_auto] sm:items-center"><span class="text-sm font-medium">GitHub</span><div class="signal-bar h-2 bg-ink-500 dark:bg-ink-400" style="width:47%"></div><span class="font-mono text-sm">16</span></div>
+                  <div class="mt-6 grid gap-5 sm:grid-cols-[120px_1fr_auto] sm:items-center"><span class="text-sm font-medium">Search</span><div class="signal-bar h-2 bg-amber-400" style="width:38%"></div><span class="font-mono text-sm">13</span></div>
+                </div>
+              </section>
+              <section id="drop-off">
+                <h2 class="text-xl font-semibold">Most useful friction</h2>
+                <div class="mt-4 rounded-xl border border-ink-200 bg-white p-6 dark:border-white/10 dark:bg-ink-900">
+                  <p class="text-5xl font-semibold tracking-tight" data-metric="inquiryDropOff">5</p>
+                  <p class="mt-3 text-sm leading-6 text-ink-500 dark:text-ink-400">people started an inquiry but did not complete it.</p>
+                  <p class="mt-6 border-t border-ink-200 pt-5 text-sm leading-6 dark:border-white/10">The largest drop occurs before contact details. Test clearer time expectations and a shorter first step.</p>
+                </div>
+              </section>
+            </div>
+
+            <section id="privacy" class="mt-8 border-t border-ink-200 pt-7 dark:border-white/10">
+              <div class="grid gap-6 sm:grid-cols-[auto_1fr] sm:items-start">
+                <span class="grid size-12 place-items-center rounded-xl border border-ink-200 bg-white dark:border-white/10 dark:bg-ink-900"><i class="ph ph-fingerprint-simple-slash text-2xl" aria-hidden="true"></i></span>
+                <div><h2 class="text-xl font-semibold">Useful without surveillance</h2><p class="mt-2 max-w-3xl text-sm leading-6 text-ink-500 dark:text-ink-400">Keep event name, page, project slug, assistant topic category, referrer category, timestamp, and anonymous session ID. Discard raw IP addresses and never store assistant message text in analytics.</p></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- Variant C: signal ledger -->
+      <section id="variant-C" class="variant-view mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-12" hidden>
+        <div class="grid gap-6 border-b border-ink-200 pb-7 lg:grid-cols-[1fr_auto] lg:items-end dark:border-white/10">
+          <div><h2 class="text-3xl font-semibold tracking-tight">Signal ledger</h2><p class="mt-2 max-w-2xl text-sm leading-6 text-ink-500 dark:text-ink-400">A compact audit of collected events, conversion evidence, and privacy controls.</p></div>
+          <div class="flex items-center gap-2 text-xs text-ink-500 dark:text-ink-400"><i class="ph ph-database" aria-hidden="true"></i><span>Sample aggregate dataset</span></div>
+        </div>
+
+        <div class="grid gap-8 py-8 xl:grid-cols-[minmax(0,1fr)_340px]">
+          <div class="min-w-0">
+            <section class="grid gap-px overflow-hidden rounded-xl border border-ink-200 bg-ink-200 dark:border-white/10 dark:bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+              <div class="bg-white p-5 dark:bg-ink-900"><p class="text-xs text-ink-500 dark:text-ink-400">High-intent actions</p><p class="mt-2 font-mono text-3xl" data-metric="highIntentActions">79</p><p class="mt-2 text-xs text-ink-500 dark:text-ink-400">Source, resume, or inquiry</p></div>
+              <div class="bg-white p-5 dark:bg-ink-900"><p class="text-xs text-ink-500 dark:text-ink-400">Inquiry start rate</p><p class="mt-2 font-mono text-3xl" data-metric="inquiryStartRate">14.3%</p><p class="mt-2 text-xs text-ink-500 dark:text-ink-400"><span data-metric="inquiryStarts">12</span> of <span data-metric="engagedSessions">84</span> engaged sessions</p></div>
+              <div class="bg-white p-5 dark:bg-ink-900"><p class="text-xs text-ink-500 dark:text-ink-400">Completion rate</p><p class="mt-2 font-mono text-3xl" data-metric="completionRate">58.3%</p><p class="mt-2 text-xs text-ink-500 dark:text-ink-400"><span data-metric="inquiryCompletions">7</span> of <span data-metric="inquiryStarts">12</span> inquiry starts</p></div>
+            </section>
+
+            <section class="mt-8">
+              <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><h2 class="text-xl font-semibold">Event coverage</h2><p class="text-xs text-ink-500 dark:text-ink-400">What is measured and why</p></div>
+              <div class="mt-4 overflow-x-auto rounded-xl border border-ink-200 bg-white dark:border-white/10 dark:bg-ink-900">
+                <table class="w-full min-w-[760px] border-collapse text-left text-sm">
+                  <thead class="bg-ink-100 text-xs text-ink-500 dark:bg-ink-950 dark:text-ink-400"><tr><th class="px-5 py-3 font-medium">Event</th><th class="px-5 py-3 font-medium">Count</th><th class="px-5 py-3 font-medium">Decision signal</th><th class="px-5 py-3 font-medium">Stored properties</th></tr></thead>
+                  <tbody>
+                    <tr class="border-t border-ink-200 dark:border-white/10"><td class="px-5 py-4 font-mono text-xs">project_open</td><td class="px-5 py-4 font-mono" data-metric="projectOpens">126</td><td class="px-5 py-4">Work that earns attention</td><td class="px-5 py-4 text-ink-500 dark:text-ink-400">project_slug, source</td></tr>
+                    <tr class="border-t border-ink-200 dark:border-white/10"><td class="px-5 py-4 font-mono text-xs">source_click</td><td class="px-5 py-4 font-mono" data-metric="sourceClicks">41</td><td class="px-5 py-4">Technical validation</td><td class="px-5 py-4 text-ink-500 dark:text-ink-400">project_slug, destination</td></tr>
+                    <tr class="border-t border-ink-200 dark:border-white/10"><td class="px-5 py-4 font-mono text-xs">resume_download</td><td class="px-5 py-4 font-mono" data-metric="resumeDownloads">19</td><td class="px-5 py-4">Shortlist intent</td><td class="px-5 py-4 text-ink-500 dark:text-ink-400">page, referrer_group</td></tr>
+                    <tr class="border-t border-ink-200 dark:border-white/10"><td class="px-5 py-4 font-mono text-xs">assistant_topic</td><td class="px-5 py-4 font-mono" data-metric="assistantTopics">78</td><td class="px-5 py-4">Questions recruiters care about</td><td class="px-5 py-4 text-ink-500 dark:text-ink-400">topic_category only</td></tr>
+                    <tr class="border-t border-ink-200 dark:border-white/10"><td class="px-5 py-4 font-mono text-xs">inquiry_started</td><td class="px-5 py-4 font-mono" data-metric="inquiryStarts">12</td><td class="px-5 py-4">Contact intent</td><td class="px-5 py-4 text-ink-500 dark:text-ink-400">inquiry_type, source</td></tr>
+                    <tr class="border-t border-ink-200 dark:border-white/10"><td class="px-5 py-4 font-mono text-xs">inquiry_completed</td><td class="px-5 py-4 font-mono" data-metric="inquiryCompletions">7</td><td class="px-5 py-4">Portfolio conversion</td><td class="px-5 py-4 text-ink-500 dark:text-ink-400">inquiry_type, source</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="mt-8">
+              <h2 class="text-xl font-semibold">Recent aggregate signals</h2>
+              <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                <article class="rounded-xl border border-ink-200 bg-white p-5 dark:border-white/10 dark:bg-ink-900"><div class="flex items-center justify-between gap-4"><i class="ph ph-download-simple text-lg" aria-hidden="true"></i><span class="font-mono text-xs text-ink-500 dark:text-ink-400">10:28</span></div><p class="mt-5 font-semibold">Resume downloaded</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">After viewing MyMedicalHub experience</p></article>
+                <article class="rounded-xl border border-ink-200 bg-white p-5 dark:border-white/10 dark:bg-ink-900"><div class="flex items-center justify-between gap-4"><i class="ph ph-github-logo text-lg" aria-hidden="true"></i><span class="font-mono text-xs text-ink-500 dark:text-ink-400">10:17</span></div><p class="mt-5 font-semibold">Source opened</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Thoughtline from LinkedIn traffic</p></article>
+                <article class="rounded-xl border border-ink-200 bg-white p-5 dark:border-white/10 dark:bg-ink-900"><div class="flex items-center justify-between gap-4"><i class="ph ph-chats-circle text-lg" aria-hidden="true"></i><span class="font-mono text-xs text-ink-500 dark:text-ink-400">09:42</span></div><p class="mt-5 font-semibold">Assistant topic asked</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">Senior engineering depth</p></article>
+                <article class="rounded-xl border border-amber-400/60 bg-amber-300/10 p-5"><div class="flex items-center justify-between gap-4"><i class="ph ph-paper-plane-tilt text-lg" aria-hidden="true"></i><span class="font-mono text-xs text-ink-500 dark:text-ink-400">09:38</span></div><p class="mt-5 font-semibold">Role inquiry completed</p><p class="mt-1 text-sm text-ink-500 dark:text-ink-400">From a direct portfolio visit</p></article>
+              </div>
+            </section>
+          </div>
+
+          <aside class="space-y-6">
+            <section class="rounded-xl border border-ink-200 bg-white p-6 dark:border-white/10 dark:bg-ink-900">
+              <h2 class="font-semibold">Collection boundary</h2>
+              <ul class="mt-5 space-y-4 text-sm">
+                <li class="flex gap-3"><i class="ph ph-check mt-0.5 text-amber-400" aria-hidden="true"></i><span>Anonymous session ID rotates after 24 hours</span></li>
+                <li class="flex gap-3"><i class="ph ph-check mt-0.5 text-amber-400" aria-hidden="true"></i><span>Assistant questions become topic categories</span></li>
+                <li class="flex gap-3"><i class="ph ph-check mt-0.5 text-amber-400" aria-hidden="true"></i><span>Referrers are reduced to channel groups</span></li>
+                <li class="flex gap-3"><i class="ph ph-check mt-0.5 text-amber-400" aria-hidden="true"></i><span>Raw IP addresses are discarded</span></li>
+              </ul>
+              <div class="mt-6 border-t border-ink-200 pt-5 dark:border-white/10"><p class="text-xs font-semibold text-ink-500 dark:text-ink-400">Never collected</p><p class="mt-2 text-sm leading-6">Names, email addresses, assistant message text, fingerprints, or cross-site history.</p></div>
+            </section>
+            <section class="rounded-xl bg-ink-900 p-6 text-ink-50 dark:bg-ink-50 dark:text-ink-950">
+              <i class="ph ph-lightbulb text-xl text-amber-300 dark:text-amber-400" aria-hidden="true"></i>
+              <h2 class="mt-6 text-xl font-semibold">The clearest next test</h2>
+              <p class="mt-3 text-sm leading-6 text-ink-200 dark:text-ink-700">Add a resume link inside project details. Compare download rate for 30 days without changing other calls to action.</p>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-ink-200 bg-white pb-24 dark:border-white/10 dark:bg-ink-950">
+      <div class="mx-auto flex max-w-[1440px] flex-col gap-3 px-4 py-6 text-xs text-ink-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10 dark:text-ink-400">
+        <p>Prototype only. All figures are sample data.</p>
+        <p>No analytics are collected by this file.</p>
+      </div>
+    </footer>
+
+    <div class="fixed bottom-4 left-1/2 z-20 -translate-x-1/2">
+      <div class="flex items-center gap-1 rounded-xl border border-ink-200 bg-white p-1 shadow-[0_12px_35px_rgba(32,33,31,.14)] dark:border-white/15 dark:bg-ink-900 dark:shadow-[0_12px_35px_rgba(0,0,0,.35)]" aria-label="Prototype variants">
+        <button id="previous-variant" type="button" class="focus-ring grid size-9 place-items-center rounded-lg hover:bg-ink-100 active:translate-y-px dark:hover:bg-ink-700" aria-label="Previous variant"><i class="ph ph-arrow-left" aria-hidden="true"></i></button>
+        <div class="flex items-center gap-1">
+          <button class="variant-button focus-ring rounded-lg px-3 py-2 text-xs font-semibold" data-variant="A" aria-current="true">A <span class="hidden sm:inline">Brief</span></button>
+          <button class="variant-button focus-ring rounded-lg px-3 py-2 text-xs font-semibold" data-variant="B" aria-current="false">B <span class="hidden sm:inline">Journey</span></button>
+          <button class="variant-button focus-ring rounded-lg px-3 py-2 text-xs font-semibold" data-variant="C" aria-current="false">C <span class="hidden sm:inline">Ledger</span></button>
+        </div>
+        <button id="next-variant" type="button" class="focus-ring grid size-9 place-items-center rounded-lg hover:bg-ink-100 active:translate-y-px dark:hover:bg-ink-700" aria-label="Next variant"><i class="ph ph-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+    <script>
+      const variants = ["A", "B", "C"]
+      const sampleRanges = {
+        7: { projectOpens: 31, sourceClicks: 12, sourceRate: "38.7%", resumeDownloads: 5, resumeRate: "22.7%", engagedSessions: 22, highIntentSessions: 15, highIntentActions: 23, assistantTopics: 19, topTopicCount: 8, inquiryStarts: 4, inquiryStartRate: "18.2%", inquiryCompletions: 2, completionRate: "50.0%", inquiryDropOff: 2 },
+        30: { projectOpens: 126, sourceClicks: 41, sourceRate: "32.5%", resumeDownloads: 19, resumeRate: "22.6%", engagedSessions: 84, highIntentSessions: 48, highIntentActions: 79, assistantTopics: 78, topTopicCount: 29, inquiryStarts: 12, inquiryStartRate: "14.3%", inquiryCompletions: 7, completionRate: "58.3%", inquiryDropOff: 5 },
+        90: { projectOpens: 347, sourceClicks: 109, sourceRate: "31.4%", resumeDownloads: 52, resumeRate: "24.1%", engagedSessions: 216, highIntentSessions: 121, highIntentActions: 208, assistantTopics: 211, topTopicCount: 74, inquiryStarts: 29, inquiryStartRate: "13.4%", inquiryCompletions: 18, completionRate: "62.1%", inquiryDropOff: 11 },
+      }
+
+      function activeVariant() {
+        const value = new URLSearchParams(location.search).get("variant")?.toUpperCase()
+        return variants.includes(value) ? value : "A"
+      }
+
+      function showVariant(nextVariant, updateHistory = true) {
+        variants.forEach((variant) => {
+          document.getElementById(`variant-${variant}`).hidden = variant !== nextVariant
+          document.querySelector(`[data-variant="${variant}"]`).setAttribute("aria-current", String(variant === nextVariant))
+        })
+        if (updateHistory) {
+          const url = new URL(location.href)
+          url.searchParams.set("variant", nextVariant)
+          history.replaceState({}, "", url)
+        }
+        document.title = `Portfolio signals: ${nextVariant} - analytics prototype`
+        scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })
+      }
+
+      function stepVariant(direction) {
+        const currentIndex = variants.indexOf(activeVariant())
+        showVariant(variants[(currentIndex + direction + variants.length) % variants.length])
+      }
+
+      document.querySelectorAll("[data-variant]").forEach((button) => button.addEventListener("click", () => showVariant(button.dataset.variant)))
+      document.getElementById("previous-variant").addEventListener("click", () => stepVariant(-1))
+      document.getElementById("next-variant").addEventListener("click", () => stepVariant(1))
+
+      document.addEventListener("keydown", (event) => {
+        const target = event.target
+        if (target.matches("input, textarea, [contenteditable='true']")) return
+        if (event.key === "ArrowLeft") stepVariant(-1)
+        if (event.key === "ArrowRight") stepVariant(1)
+      })
+
+      document.querySelectorAll("[data-range]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const range = button.dataset.range
+          document.querySelectorAll("[data-range]").forEach((item) => item.setAttribute("aria-pressed", String(item === button)))
+          Object.entries(sampleRanges[range]).forEach(([key, value]) => {
+            document.querySelectorAll(`[data-metric="${key}"]`).forEach((node) => { node.textContent = value })
+          })
+          const url = new URL(location.href)
+          url.searchParams.set("range", `${range}d`)
+          history.replaceState({}, "", url)
+        })
+      })
+
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark")
+        localStorage.setItem("portfolio-analytics-theme", isDark ? "dark" : "light")
+      })
+
+      const initialRange = new URLSearchParams(location.search).get("range")?.replace("d", "")
+      const initialRangeButton = document.querySelector(`[data-range="${initialRange}"]`)
+      if (initialRangeButton) initialRangeButton.click()
+      showVariant(activeVariant(), false)
+    </script>
+  </body>
+</html>
