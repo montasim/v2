@@ -1,5 +1,17 @@
 import { useEffect, useState } from "react"
-import { landingNavigation } from "@/lib/site"
+import { landingNavigation, landingSectionIds } from "@/lib/site"
+
+function replaceHash(sectionId: string) {
+  if (window.location.hash === `#${sectionId}`) return
+
+  const url = new URL(window.location.href)
+  url.hash = sectionId
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${url.pathname}${url.search}${url.hash}`
+  )
+}
 
 export function useLandingNavigation(pathname: string, hash: string) {
   const [activeSection, setActiveSection] = useState(
@@ -21,13 +33,17 @@ export function useLandingNavigation(pathname: string, hash: string) {
             (left, right) =>
               left.boundingClientRect.top - right.boundingClientRect.top
           )
-        if (visible[0]?.target.id) setActiveSection(visible[0].target.id)
+        const sectionId = visible[0]?.target.id
+        if (sectionId) {
+          setActiveSection(sectionId)
+          replaceHash(sectionId)
+        }
       },
       { rootMargin: "-56px 0px -68% 0px", threshold: 0.01 }
     )
 
-    for (const item of landingNavigation) {
-      const section = document.getElementById(item.sectionId)
+    for (const sectionId of landingSectionIds) {
+      const section = document.getElementById(sectionId)
       if (section) observer.observe(section)
     }
 

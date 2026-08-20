@@ -129,7 +129,7 @@ function OverviewPage() {
         headingId="experience-heading"
         title="Experience"
         to="/experience"
-        label="View complete experience"
+        label="View all experience"
       >
         <ExperienceList limit={2} card />
       </PageSection>
@@ -151,11 +151,15 @@ function OverviewPage() {
         headingId="skills-heading"
         title="Skills"
         to="/skills"
-        label="See all skills"
+        label="View all skills"
       >
         <SkillGroups limit={5} />
       </PageSection>
-      <PageSection headingId="background-heading" title="Background">
+      <PageSection
+        id="background"
+        headingId="background-heading"
+        title="Background"
+      >
         <BackgroundSummary />
       </PageSection>
       <PageSection
@@ -165,17 +169,26 @@ function OverviewPage() {
       >
         <ContributionCalendar />
       </PageSection>
-      <PageSection headingId="volunteering-heading" title="Volunteering">
+      <PageSection
+        id="volunteering"
+        headingId="volunteering-heading"
+        title="Volunteering"
+      >
         <AffiliationList items={affiliationCatalog.volunteering} />
       </PageSection>
-      <PageSection headingId="organizations-heading" title="Organizations">
+      <PageSection
+        id="organizations"
+        headingId="organizations-heading"
+        title="Organizations"
+      >
         <AffiliationList items={affiliationCatalog.organizations} />
       </PageSection>
       <PageSection
+        id="recommendations"
         headingId="recommendations-heading"
         title="Recommendations"
         to="/recommendations"
-        label="See all recommendations"
+        label="View all recommendations"
       >
         <RecommendationCarousel />
       </PageSection>

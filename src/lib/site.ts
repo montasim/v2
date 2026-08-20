@@ -24,6 +24,18 @@ export const landingNavigation = [
   { label: "Skills", sectionId: "skills" },
 ] as const
 
+export const landingSectionIds = [
+  "about",
+  "experience",
+  "projects",
+  "skills",
+  "background",
+  "contributions",
+  "volunteering",
+  "organizations",
+  "recommendations",
+] as const
+
 export function createMeta(title: string, description: string, path = "/") {
   const canonical = new URL(path, site.url).toString()
   const image = new URL(site.ogImage, site.url).toString()
