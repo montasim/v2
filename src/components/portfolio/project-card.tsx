@@ -33,10 +33,11 @@ export function ProjectCard({
       asChild
       className={`interactive-surface group grid overflow-hidden ${compact ? "sm:grid-cols-[15rem_1fr]" : "lg:grid-cols-[1.08fr_0.92fr]"}`}
     >
-      <article>
-        <div
-          className={`relative overflow-hidden border-b bg-muted p-3 sm:p-4 ${compact ? "min-h-36 sm:border-r sm:border-b-0" : "min-h-64 lg:border-r lg:border-b-0"}`}
-        >
+      <article
+        id={project.id}
+        className="scroll-mt-20 target:ring-2 target:ring-primary/40"
+      >
+        <div className="relative min-h-64 overflow-hidden border-b bg-muted p-3 sm:p-4 lg:border-r lg:border-b-0">
           {image ? (
             <ExternalLink
               href={primaryUrl || undefined}

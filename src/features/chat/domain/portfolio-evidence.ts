@@ -5,10 +5,13 @@ import { profileCatalog } from "@/lib/content/profile"
 import { projectCatalog } from "@/lib/content/projects"
 import { recommendationCatalog } from "@/lib/content/recommendations"
 import { skillCatalog } from "@/lib/content/skills"
+import { selectPortfolioCitations } from "@/features/chat/domain/portfolio-citations"
+import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
 
 export interface PortfolioEvidence {
   source: string
   context: string
+  citations: readonly PortfolioCitation[]
 }
 
 const expertiseTerms = [
@@ -74,9 +77,11 @@ export function selectPortfolioEvidence(question: string): PortfolioEvidence {
     sources.push("Education", "Certifications")
   }
 
+  const source = joinSources(sources)
   return {
-    source: joinSources(sources),
+    source,
     context: sections.join("\n\n").slice(0, 18_000),
+    citations: selectPortfolioCitations(question, source),
   }
 }
 

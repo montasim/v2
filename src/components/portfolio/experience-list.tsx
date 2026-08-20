@@ -51,7 +51,10 @@ function CompanyCard({
   if (roles.length === 1) {
     return (
       <Card asChild className={cardInsetClassName}>
-        <article>
+        <article
+          id={first.id}
+          className="scroll-mt-20 target:ring-2 target:ring-primary/40"
+        >
           <header className="flex items-start gap-3">
             <EntityAvatar
               src={first.logoUrl}
@@ -96,7 +99,11 @@ function CompanyCard({
           aria-label={`Roles at ${company}`}
         >
           {roles.map((role) => (
-            <li key={role.id} className="relative pl-8">
+            <li
+              key={role.id}
+              id={role.id}
+              className="relative scroll-mt-20 rounded-md pl-8 target:bg-muted/70 target:ring-2 target:ring-primary/40"
+            >
               <span
                 className="absolute top-1.5 -left-1 size-[0.5625rem] rounded-full bg-foreground"
                 aria-hidden="true"
@@ -116,7 +123,10 @@ function CompanyCard({
 
 function ExperienceRow({ role }: { role: Experience }) {
   return (
-    <article className="grid gap-4 border-b py-7 last:border-b-0 sm:grid-cols-[11rem_minmax(0,1fr)]">
+    <article
+      id={role.id}
+      className="grid scroll-mt-20 gap-4 border-b py-7 last:border-b-0 target:bg-muted/70 target:ring-2 target:ring-primary/40 sm:grid-cols-[11rem_minmax(0,1fr)]"
+    >
       <div>
         <p className="text-sm font-medium">{role.period}</p>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">

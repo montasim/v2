@@ -29,6 +29,8 @@ import { Dialog } from "radix-ui"
 import { Button } from "@/components/ui/button"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
 import type { PortfolioUIMessage } from "@/features/chat/domain/chat"
+import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
+import { selectPortfolioCitations } from "@/features/chat/domain/portfolio-citations"
 import { getContactGuidance } from "@/features/chat/domain/contact-intent"
 import type { ContactIntent } from "@/features/chat/domain/contact-intent"
 import {
@@ -157,7 +159,10 @@ export function PortfolioAssistant() {
       {
         id: `${idPrefix}-answer-${sequence}`,
         role: "assistant",
-        metadata: { source },
+        metadata: {
+          source,
+          citations: selectPortfolioCitations(question, source),
+        },
         parts: [{ type: "text", text: answer }],
       },
     ])
@@ -248,7 +253,12 @@ export function PortfolioAssistant() {
             />
           )}
           {mode === "chat" && (
-            <ChatView chat={chat} ask={ask} startInquiry={startInquiry} />
+            <ChatView
+              chat={chat}
+              ask={ask}
+              startInquiry={startInquiry}
+              onCitationNavigate={() => setOpen(false)}
+            />
           )}
           {mode === "inquiry" && (
             <InquiryFlow
@@ -389,10 +399,12 @@ function ChatView({
   chat,
   ask,
   startInquiry,
+  onCitationNavigate,
 }: {
   chat: ReturnType<typeof useChat<PortfolioUIMessage>>
   ask: (question: string) => void
   startInquiry: (type: InquiryType) => void
+  onCitationNavigate: () => void
 }) {
   const feedRef = React.useRef<HTMLDivElement>(null)
   const latestMessageRef = React.useRef<HTMLElement>(null)
@@ -475,6 +487,13 @@ function ChatView({
               ) : (
                 <MessageParagraphs text={text} />
               )}
+              {message.role === "assistant" &&
+              message.metadata?.citations?.length ? (
+                <MessageCitations
+                  citations={message.metadata.citations}
+                  onNavigate={onCitationNavigate}
+                />
+              ) : null}
               {contactGuidance && (
                 <MessageContactAction
                   intent={contactGuidance.intent}
@@ -540,6 +559,35 @@ function ChatView({
         disabled={chat.status === "submitted" || chat.status === "streaming"}
       />
     </div>
+  )
+}
+
+function MessageCitations({
+  citations,
+  onNavigate,
+}: {
+  citations: readonly PortfolioCitation[]
+  onNavigate: () => void
+}) {
+  return (
+    <nav className="mt-4 border-t pt-3" aria-label="Supporting evidence">
+      <p className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+        Supporting evidence
+      </p>
+      <div className="mt-2 flex flex-wrap gap-2">
+        {citations.map((citation) => (
+          <a
+            key={citation.href}
+            href={citation.href}
+            onClick={onNavigate}
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {citation.label}
+            <ArrowRightIcon className="size-3.5" aria-hidden="true" />
+          </a>
+        ))}
+      </div>
+    </nav>
   )
 }
 

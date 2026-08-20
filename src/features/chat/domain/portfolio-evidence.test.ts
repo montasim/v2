@@ -14,6 +14,9 @@ describe("portfolio evidence", () => {
     expect(evidence.source).toContain("Projects")
     expect(evidence.context).toContain("PROJECTS")
     expect(evidence.context.length).toBeLessThanOrEqual(18_000)
+    expect(
+      evidence.citations.some((citation) => citation.kind === "project")
+    ).toBe(true)
   })
 
   it("selects hiring evidence for senior-role questions", () => {

@@ -21,7 +21,10 @@ const chatState = vi.hoisted(
       id: string
       role: "user" | "assistant"
       parts: Array<{ type: "text"; text: string }>
-      metadata?: { source?: string }
+      metadata?: {
+        source?: string
+        citations?: Array<{ label: string; href: string }>
+      }
     }>
   } => ({
     status: "ready",
@@ -205,6 +208,32 @@ describe("PortfolioAssistant chat navigation", () => {
     expect(screen.queryByRole("button", { name: "Unsafe action" })).toBeNull()
   })
 
+  it("renders links to supporting portfolio evidence", () => {
+    chatState.messages = [
+      {
+        id: "cited-answer",
+        role: "assistant",
+        metadata: {
+          source: "Projects",
+          citations: [
+            {
+              label: "Open PostCraft",
+              href: "/projects#project-postcraft",
+            },
+          ],
+        },
+        parts: [{ type: "text", text: "PostCraft is a shipped AI product." }],
+      },
+    ]
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+
+    const citation = screen.getByRole("link", { name: /Open PostCraft/ })
+    expect(citation.getAttribute("href")).toBe("/projects#project-postcraft")
+    expect(screen.getByText("Supporting evidence")).not.toBeNull()
+  })
+
   it.each([
     ["Why hire him?", "Experience and recommendations"],
     ["Project impact", "Experience and projects"],
@@ -221,7 +250,10 @@ describe("PortfolioAssistant chat navigation", () => {
       messages: unknown[]
     ) => Array<{
       role: string
-      metadata?: { source?: string }
+      metadata?: {
+        source?: string
+        citations?: Array<{ label: string; href: string }>
+      }
       parts: Array<{ text: string }>
     }>
     const messages = update([])
@@ -229,6 +261,7 @@ describe("PortfolioAssistant chat navigation", () => {
     expect(messages[0]?.role).toBe("user")
     expect(messages[1]?.role).toBe("assistant")
     expect(messages[1]?.metadata?.source).toBe(source)
+    expect(messages[1]?.metadata?.citations?.length).toBeGreaterThan(0)
     expect(messages[1]?.parts[0]?.text.length).toBeGreaterThan(300)
   })
 

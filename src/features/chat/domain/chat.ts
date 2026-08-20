@@ -1,6 +1,7 @@
 import { safeValidateUIMessages } from "ai"
 import type { UIMessage } from "ai"
 import { z } from "zod"
+import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
 
 export const MAX_CHAT_MESSAGES = 12
 export const MAX_CHAT_MESSAGE_CHARACTERS = 500
@@ -10,6 +11,7 @@ export type ChatProviderName = "gemini" | "groq"
 
 export interface PortfolioMessageMetadata {
   source?: string
+  citations?: readonly PortfolioCitation[]
   provider?: ChatProviderName
   model?: string
   usedFallback?: boolean

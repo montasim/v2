@@ -62,6 +62,7 @@ describe("createPortfolioAssistantResponse", () => {
     expect(body).toContain("A grounded answer.")
     expect(body).toContain('"usedFallback":true')
     expect(body).toContain('"provider":"groq"')
+    expect(body).toContain('"citations"')
   })
 
   it("does not call fallback after the primary emits visible text", async () => {

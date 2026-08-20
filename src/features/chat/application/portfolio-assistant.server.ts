@@ -32,6 +32,7 @@ export async function createPortfolioAssistantResponse(
           const providerStream = await provider.stream(request)
           await pipeProviderStream(controller, providerStream, {
             source: evidence.source,
+            citations: evidence.citations,
             provider: provider.provider,
             model: provider.modelId,
             usedFallback: index > 0,
