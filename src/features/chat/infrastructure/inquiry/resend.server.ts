@@ -14,14 +14,12 @@ export class ResendInquiryDelivery implements InquiryDelivery {
     }
 
     const resend = new Resend(apiKey)
-    const details = formatDetails(inquiry)
     const result = await resend.emails.send({
       from,
       to: owner,
       replyTo: inquiry.email,
-      subject:
-        inquiry.type === "hire" ? "New role inquiry" : "New project inquiry",
-      text: details,
+      subject: formatOwnerSubject(inquiry),
+      text: formatOwnerNotification(inquiry),
     })
     if (result.error) throw new Error("Inquiry delivery failed.")
 
@@ -66,22 +64,36 @@ export function formatAcknowledgement(inquiry: InquirySubmission) {
   ].join("\n\n")
 }
 
-function formatDetails(inquiry: InquirySubmission) {
-  const lines = [
-    `Inquiry: ${inquiry.type === "hire" ? "Role" : "Project"}`,
-    `Name: ${inquiry.name}`,
-    `Email: ${inquiry.email}`,
-  ]
-  if (inquiry.type === "hire") {
-    lines.push(
-      `Role: ${inquiry.role}`,
-      `Work arrangement: ${inquiry.arrangement}`
-    )
-  } else {
-    lines.push(
-      `Project type: ${inquiry.projectType}`,
-      `Timeline: ${inquiry.timeline}`
-    )
-  }
-  return lines.join("\n")
+export function formatOwnerSubject(inquiry: InquirySubmission) {
+  return inquiry.type === "hire"
+    ? `${inquiry.name} wants to discuss a ${inquiry.role} role`
+    : `${inquiry.name} wants to discuss ${describeProject(inquiry.projectType)}`
+}
+
+export function formatOwnerNotification(inquiry: InquirySubmission) {
+  const summary =
+    inquiry.type === "hire"
+      ? `${inquiry.name} is interested in discussing a ${inquiry.role} opportunity with you. They indicated that the role would be ${inquiry.arrangement.toLowerCase()}.`
+      : `${inquiry.name} would like to discuss ${describeProject(inquiry.projectType)} with you. Their preferred timeline is ${inquiry.timeline.toLowerCase()}.`
+  const details =
+    inquiry.type === "hire"
+      ? [`Role: ${inquiry.role}`, `Work arrangement: ${inquiry.arrangement}`]
+      : [
+          `Project type: ${inquiry.projectType}`,
+          `Preferred timeline: ${inquiry.timeline}`,
+        ]
+
+  return [
+    "Hi Montasim,",
+    summary,
+    `You can reply directly to this email to continue the conversation with ${inquiry.name}. Their email address is ${inquiry.email}.`,
+    `Inquiry details\nName: ${inquiry.name}\n${details.join("\n")}`,
+    "This inquiry was submitted through your portfolio.",
+  ].join("\n\n")
+}
+
+function describeProject(projectType: string) {
+  return projectType === "Something else"
+    ? "a custom project"
+    : `a ${projectType} project`
 }

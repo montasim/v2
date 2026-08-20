@@ -22,7 +22,7 @@ The result is designed for two audiences:
 - Responsive desktop navigation and an accessible shadcn `Sheet` menu on small screens
 - System-aware light and dark themes with a persistent manual toggle
 - Portfolio-grounded streaming AI assistant with Gemini primary and Groq fallback providers
-- Guided role and project inquiry workflows with editable answer review and Resend delivery
+- Guided role and project inquiry workflows with editable answer review, Google Sheets storage, and Resend delivery
 - Shareable, validated URL filters for project, education, certification, and recommendation catalogs
 - Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
 - Zod validation for every JSON content catalog during application startup
@@ -52,7 +52,7 @@ The original approved static pages remain in [`prototypes/`](prototypes/) for vi
 - Node.js 22.12 or newer
 - pnpm 11 or newer
 
-No database is required. The portfolio pages run without external services. The assistant and inquiry delivery require provider credentials.
+No conventional database is required. The portfolio pages run without external services. The assistant and inquiry workflow require provider credentials; completed inquiries are appended to Google Sheets and delivered by email.
 
 ### Install and run
 
@@ -73,9 +73,15 @@ GROQ_API_KEY=your_groq_key
 RESEND_API_KEY=your_resend_key
 FROM_EMAIL="Portfolio <portfolio@your-domain.com>"
 EMAIL_TO=your_inbox@example.com
+GOOGLE_SERVICE_ACCOUNT_EMAIL=portfolio-writer@your-project.iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"
+GOOGLE_SHEET_ID=your_spreadsheet_id
+# Optional; these defaults keep inquiry types in separate tabs
+GOOGLE_ROLE_INQUIRIES_RANGE="'Role Inquiries'!A:H"
+GOOGLE_PROJECT_INQUIRIES_RANGE="'Project Inquiries'!A:H"
 ```
 
-Gemini `gemini-3.5-flash` is the primary assistant model. Groq `openai/gpt-oss-120b` is attempted once only when Gemini fails before visible text. Both are isolated behind the same application port, so changing a provider does not affect the UI or route contract. Resend requires a verified sender domain outside its testing restrictions.
+Gemini `gemini-3.5-flash` is the primary assistant model. Groq `openai/gpt-oss-120b` is attempted once only when Gemini fails before visible text. Both are isolated behind the same application port, so changing a provider does not affect the UI or route contract. Resend requires a verified sender domain outside its testing restrictions. Share the target spreadsheet with the service-account email as an editor. New submissions go to `Role Inquiries` or `Project Inquiries`; both tabs use the columns timestamp, intent, name, email, role, work arrangement, project type, and timeline.
 
 ### Production build preview
 
@@ -103,6 +109,7 @@ flowchart LR
     K --> M[Groq fallback]
     I --> N[Inquiry server function]
     N --> O[Resend adapter]
+    N --> P[Google Sheets adapter]
 ```
 
 Route files own metadata and domain-specific record rendering. Domain-local catalog modules validate JSON, normalize classifications, and expose featured records and filters. Reusable catalog and detail-page modules own repeated page workflows, while navigation actions centralize internal, external, download, and email behavior. Malformed content fails during development and builds instead of reaching visitors silently.
@@ -132,18 +139,19 @@ prototypes/           # Approved static reference implementation
 
 ## Technology
 
-| Area        | Technology                                            |
-| ----------- | ----------------------------------------------------- |
-| Application | TanStack Start, TanStack Router, React 19, TypeScript |
-| AI          | AI SDK, Google Gemini, Groq                           |
-| Email       | Resend                                                |
-| Build       | Vite 8                                                |
-| Interface   | Tailwind CSS 4, shadcn/ui, Radix UI, Phosphor Icons   |
-| Validation  | Zod 4                                                 |
-| Logging     | Pino 10                                               |
-| Content     | Local JSON files                                      |
-| Testing     | Vitest                                                |
-| Quality     | ESLint, Prettier, TypeScript, Lighthouse              |
+| Area         | Technology                                            |
+| ------------ | ----------------------------------------------------- |
+| Application  | TanStack Start, TanStack Router, React 19, TypeScript |
+| AI           | AI SDK, Google Gemini, Groq                           |
+| Email        | Resend                                                |
+| Inquiry data | Google Sheets API                                     |
+| Build        | Vite 8                                                |
+| Interface    | Tailwind CSS 4, shadcn/ui, Radix UI, Phosphor Icons   |
+| Validation   | Zod 4                                                 |
+| Logging      | Pino 10                                               |
+| Content      | Local JSON files                                      |
+| Testing      | Vitest                                                |
+| Quality      | ESLint, Prettier, TypeScript, Lighthouse              |
 
 ## Updating content
 
@@ -219,7 +227,7 @@ The deployment configuration pins the project's supported Node.js and pnpm
 versions. Verify server-side rendering, static assets, canonical URLs, and the
 social preview after the first deployment.
 
-Configure all five assistant and inquiry environment variables in the Netlify site before deployment. Provider keys remain server-only and must never use a public Vite prefix.
+Configure all eight required assistant and inquiry environment variables in the Netlify site before deployment. The two inquiry-range variables are optional. Provider and service-account credentials remain server-only and must never use a public Vite prefix.
 
 Do not present `pnpm preview` as the production server.
 
@@ -228,7 +236,7 @@ Do not present `pnpm preview` as the production server.
 - This is a portfolio application backed by version-controlled JSON, not a content management system.
 - Content changes require a rebuild and redeployment.
 - AI answers are limited to text-only portfolio questions, 500 characters per question, 12 retained messages, and the evidence available in the version-controlled catalogs.
-- Inquiry contact details are sent through the separate Resend workflow and are never inserted into AI prompts or conversation history.
+- Structured inquiry details are stored in Google Sheets and sent through the separate Resend workflow. They are never inserted into AI prompts or conversation history.
 - Catalog filters are validated during routing and render correctly during SSR.
 - External project, credential, institution, and social links can change independently of this repository.
 - The canonical production domain is configured but the v2 deployment has not been verified from this repository.
@@ -238,7 +246,7 @@ Do not present `pnpm preview` as the production server.
 
 For portfolio questions, use the email action in the application. Reproducible implementation problems should be reported through the repository's issue tracker after the project is published.
 
-This application has no authentication or database. Its chat and inquiry endpoints validate bounded inputs server-side, reject cross-site chat requests, and return sanitized provider errors. Do not add secrets to JSON catalogs, browser code, or files under `public/`; everything there is shipped to visitors. Report security concerns privately to the maintainer rather than disclosing sensitive details publicly.
+This application has no authentication or general-purpose database; Google Sheets stores only submitted inquiry fields. Its chat and inquiry endpoints validate bounded inputs server-side, reject cross-site chat requests, and return sanitized provider errors. Do not add secrets to JSON catalogs, browser code, or files under `public/`; everything there is shipped to visitors. Report security concerns privately to the maintainer rather than disclosing sensitive details publicly.
 
 ## Contributing
 

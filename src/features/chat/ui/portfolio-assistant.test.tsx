@@ -14,21 +14,27 @@ import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 const sendMessage = vi.hoisted(() => vi.fn())
 const setMessages = vi.hoisted(() => vi.fn())
 const submitInquiry = vi.hoisted(() => vi.fn())
-const chatState = vi.hoisted(() => ({
-  messages: [] as Array<{
-    id: string
-    role: "user" | "assistant"
-    parts: Array<{ type: "text"; text: string }>
-    metadata?: { source?: string }
-  }>,
-}))
+const chatState = vi.hoisted(
+  (): {
+    status: "submitted" | "streaming" | "ready" | "error"
+    messages: Array<{
+      id: string
+      role: "user" | "assistant"
+      parts: Array<{ type: "text"; text: string }>
+      metadata?: { source?: string }
+    }>
+  } => ({
+    status: "ready",
+    messages: [],
+  })
+)
 
 vi.mock("@ai-sdk/react", () => ({
   useChat: () => ({
     messages: chatState.messages,
     sendMessage,
     setMessages,
-    status: "ready",
+    status: chatState.status,
     error: undefined,
     regenerate: vi.fn(),
     stop: vi.fn(),
@@ -50,6 +56,7 @@ describe("PortfolioAssistant chat navigation", () => {
     setMessages.mockClear()
     submitInquiry.mockReset()
     submitInquiry.mockResolvedValue({ delivered: true })
+    chatState.status = "ready"
     chatState.messages = []
     Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
       configurable: true,
@@ -67,7 +74,8 @@ describe("PortfolioAssistant chat navigation", () => {
     expect(() =>
       fireEvent.click(screen.getByRole("button", { name: "Back to assistant" }))
     ).not.toThrow()
-    expect(screen.getByText("What would you like to know?")).not.toBeNull()
+    expect(screen.getByText("Explore his background")).not.toBeNull()
+    expect(screen.queryByText("What would you like to know?")).toBeNull()
   })
 
   it("returns to assistant home when chat already has messages", () => {
@@ -84,7 +92,37 @@ describe("PortfolioAssistant chat navigation", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Back to assistant" }))
 
-    expect(screen.getByText("What would you like to know?")).not.toBeNull()
+    expect(screen.getByText("Explore his background")).not.toBeNull()
+  })
+
+  it("returns focus to the composer after an AI response completes", () => {
+    chatState.status = "streaming"
+    chatState.messages = [
+      {
+        id: "question",
+        role: "user",
+        parts: [{ type: "text", text: "Tell me about his experience" }],
+      },
+      {
+        id: "answer",
+        role: "assistant",
+        parts: [{ type: "text", text: "He builds reliable products." }],
+      },
+    ]
+    const view = render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+
+    const composer = screen.getByRole("textbox", {
+      name: "Message",
+    })
+    expect(composer.hasAttribute("disabled")).toBe(true)
+
+    chatState.status = "ready"
+    view.rerender(<PortfolioAssistant />)
+
+    expect(composer.hasAttribute("disabled")).toBe(false)
+    expect(document.activeElement).toBe(composer)
   })
 
   it("matches the prototype icon sizes", () => {
@@ -119,6 +157,44 @@ describe("PortfolioAssistant chat navigation", () => {
 
     expect(closeIcon?.getAttribute("class")).toContain("size-5")
     expect(copyIcon?.getAttribute("class")).toContain("size-[15px]")
+  })
+
+  it("renders assistant Markdown as formatted content", async () => {
+    chatState.messages = [
+      {
+        id: "markdown-answer",
+        role: "assistant",
+        metadata: { source: "Experience" },
+        parts: [
+          {
+            type: "text",
+            text: [
+              "## Recent experience",
+              "**Senior Software Engineer**",
+              "- Frontend architecture",
+              "- Production reliability",
+              "[View portfolio](https://example.com)",
+              "<button>Unsafe action</button>",
+            ].join("\n\n"),
+          },
+        ],
+      },
+    ]
+    render(<PortfolioAssistant />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+
+    const role = await screen.findByText("Senior Software Engineer")
+    const heading = screen.getByRole("heading", { name: "Recent experience" })
+    const link = screen.getByRole("link", { name: "View portfolio" })
+
+    expect(role.tagName).toBe("STRONG")
+    expect(heading.tagName).toBe("H2")
+    expect(screen.getAllByRole("listitem")).toHaveLength(2)
+    expect(link.getAttribute("target")).toBe("_blank")
+    expect(screen.queryByText("**Senior Software Engineer**")).toBeNull()
+    expect(screen.queryByRole("button", { name: "Unsafe action" })).toBeNull()
   })
 
   it.each([

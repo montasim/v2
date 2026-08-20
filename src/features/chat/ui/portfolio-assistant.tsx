@@ -44,6 +44,11 @@ import { getStaticFaqAnswer } from "@/features/chat/domain/static-faq"
 import { profileCatalog } from "@/lib/content/profile"
 import { cn } from "@/lib/utils"
 
+const LazyChatMarkdown = React.lazy(async () => {
+  const module = await import("@/features/chat/ui/chat-markdown")
+  return { default: module.ChatMarkdown }
+})
+
 type AssistantMode = "home" | "chat" | "inquiry"
 
 interface AssistantHeaderContent {
@@ -301,17 +306,7 @@ function AssistantHome({
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
-        <section className="rounded-2xl bg-muted p-4">
-          <h2 className="text-lg font-semibold">
-            What would you like to know?
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Ask a question, choose a common topic, or send Montasim a focused
-            inquiry.
-          </p>
-        </section>
-
-        <h3 className="mt-4 text-sm font-semibold">Explore his background</h3>
+        <h2 className="text-sm font-semibold">Explore his background</h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {suggestedQuestions.map((item, index) => {
             const Icon = item.icon
@@ -402,6 +397,26 @@ function ChatView({
   const feedRef = React.useRef<HTMLDivElement>(null)
   const latestMessageRef = React.useRef<HTMLElement>(null)
   const endRef = React.useRef<HTMLDivElement>(null)
+  const composerRef = React.useRef<HTMLTextAreaElement>(null)
+  const wasGeneratingRef = React.useRef(
+    chat.status === "submitted" || chat.status === "streaming"
+  )
+
+  React.useEffect(() => {
+    const isGenerating =
+      chat.status === "submitted" || chat.status === "streaming"
+
+    if (isGenerating) {
+      wasGeneratingRef.current = true
+      return
+    }
+
+    if (chat.status === "ready" && wasGeneratingRef.current) {
+      wasGeneratingRef.current = false
+      composerRef.current?.focus({ preventScroll: true })
+    }
+  }, [chat.status])
+
   React.useEffect(() => {
     const feed = feedRef.current
     const latestMessage = latestMessageRef.current
@@ -453,7 +468,13 @@ function ChatView({
                   : "max-w-[92%] rounded-bl-md bg-muted"
               )}
             >
-              <MessageParagraphs text={text} />
+              {message.role === "assistant" ? (
+                <React.Suspense fallback={<MessageParagraphs text={text} />}>
+                  <LazyChatMarkdown source={text} />
+                </React.Suspense>
+              ) : (
+                <MessageParagraphs text={text} />
+              )}
               {contactGuidance && (
                 <MessageContactAction
                   intent={contactGuidance.intent}
@@ -513,6 +534,7 @@ function ChatView({
         <div ref={endRef} />
       </div>
       <QuickComposer
+        inputRef={composerRef}
         onSend={ask}
         placeholder="Ask a follow-up question"
         disabled={chat.status === "submitted" || chat.status === "streaming"}
@@ -522,16 +544,19 @@ function ChatView({
 }
 
 function QuickComposer({
+  inputRef,
   onSend,
   placeholder,
   disabled = false,
 }: {
+  inputRef?: React.RefObject<HTMLTextAreaElement | null>
   onSend: (text: string) => void
   placeholder: string
   disabled?: boolean
 }) {
   const [value, setValue] = React.useState("")
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null)
+  const localTextareaRef = React.useRef<HTMLTextAreaElement>(null)
+  const textareaRef = inputRef ?? localTextareaRef
 
   function submitQuestion() {
     const question = value.trim()
