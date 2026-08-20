@@ -5,7 +5,11 @@ import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeader } from "@/components/layout/site-header"
 import { SideRails } from "@/components/layout/side-rails"
 import { KonamiCommandCenter } from "@/components/portfolio/konami-command-center"
+import { AppContextMenu } from "@/components/shared/app-context-menu"
+import { CommandPalette } from "@/components/shared/command-palette"
+import { ConsoleBanner } from "@/components/shared/console-banner"
 import { PageShell } from "@/components/shared/page-shell"
+import { PortfolioKeyboardShortcuts } from "@/components/shared/portfolio-keyboard-shortcuts"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 import { createMeta, site } from "@/lib/site"
@@ -54,18 +58,23 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-[100dvh] bg-background text-foreground antialiased selection:bg-[#d8aa63] selection:text-[#151614]">
         <ThemeProvider>
-          <a
-            href="#main-content"
-            className="fixed top-4 left-4 z-[60] -translate-y-24 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus:translate-y-0 motion-reduce:transition-none"
-          >
-            Skip to content
-          </a>
-          <SiteHeader />
-          <SideRails />
-          <KonamiCommandCenter />
-          <PortfolioAssistant />
-          {children}
-          <SiteFooter />
+          <ConsoleBanner />
+          <CommandPalette />
+          <PortfolioKeyboardShortcuts />
+          <AppContextMenu>
+            <a
+              href="#main-content"
+              className="fixed top-4 left-4 z-[60] -translate-y-24 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus:translate-y-0 motion-reduce:transition-none"
+            >
+              Skip to content
+            </a>
+            <SiteHeader />
+            <SideRails />
+            <KonamiCommandCenter />
+            <PortfolioAssistant />
+            {children}
+            <SiteFooter />
+          </AppContextMenu>
         </ThemeProvider>
         <Scripts />
       </body>
