@@ -10,8 +10,9 @@ export const SheetClose = Dialog.Close
 export function SheetContent({
   className,
   children,
+  closeLabel = "Close panel",
   ...props
-}: React.ComponentProps<typeof Dialog.Content>) {
+}: React.ComponentProps<typeof Dialog.Content> & { closeLabel?: string }) {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/15 backdrop-blur-xs motion-reduce:animate-none" />
@@ -28,7 +29,7 @@ export function SheetContent({
             variant="ghost"
             size="icon"
             className="absolute top-3 right-3"
-            aria-label="Close navigation"
+            aria-label={closeLabel}
           >
             <XIcon />
           </Button>
@@ -38,3 +39,4 @@ export function SheetContent({
   )
 }
 export const SheetTitle = Dialog.Title
+export const SheetDescription = Dialog.Description

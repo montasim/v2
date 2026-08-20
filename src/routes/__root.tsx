@@ -4,6 +4,7 @@ import appCss from "../styles.css?url"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SiteHeader } from "@/components/layout/site-header"
 import { SideRails } from "@/components/layout/side-rails"
+import { KonamiCommandCenter } from "@/components/portfolio/konami-command-center"
 import { PageShell } from "@/components/shared/page-shell"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
@@ -61,6 +62,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           </a>
           <SiteHeader />
           <SideRails />
+          <KonamiCommandCenter />
           <PortfolioAssistant />
           {children}
           <SiteFooter />

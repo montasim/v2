@@ -101,7 +101,7 @@ export function SiteHeader() {
                   <ListIcon />
                 </Button>
               </SheetTrigger>
-              <SheetContent>
+              <SheetContent closeLabel="Close navigation">
                 <SheetTitle className="mb-6">
                   <Brand />
                 </SheetTitle>
