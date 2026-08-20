@@ -62,7 +62,13 @@ describe("skill evidence catalog", () => {
   it("exposes project-backed AI and browser extension skill filters", () => {
     expect(
       skillEvidenceCatalog.forCategory("ai").map((record) => record.skill)
-    ).toEqual(["Agent Skills", "Gemini API", "Groq API", "OpenRouter"])
+    ).toEqual([
+      "Agent Skills",
+      "Gemini API",
+      "Groq API",
+      "OpenRouter",
+      "ZhipuAI",
+    ])
     expect(
       skillEvidenceCatalog
         .forCategory("extensions")

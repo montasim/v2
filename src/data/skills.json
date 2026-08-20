@@ -68,7 +68,7 @@
   {
     "id": "skills-ai-agents",
     "category": "AI & Agent Development",
-    "items": ["Agent Skills", "Gemini API", "Groq API", "OpenRouter"]
+    "items": ["Agent Skills", "Gemini API", "Groq API", "OpenRouter", "ZhipuAI"]
   },
   {
     "id": "skills-browser-extensions",
