@@ -39,7 +39,7 @@ export function BackgroundSummary() {
             imageClassName="p-1.5"
           />
           <div className="mt-5 min-w-0 sm:mt-0">
-            <p className="max-w-lg text-xl leading-snug font-semibold tracking-tight sm:text-2xl">
+            <p className="max-w-lg text-xl leading-snug font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
               {summaryEducation.degree.replace("Bachelor of Science", "BSc")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -78,7 +78,9 @@ export function BackgroundSummary() {
                 className="group flex min-h-20 items-center justify-between gap-5 px-5 py-4 transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-0.5 hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:outline-none active:translate-x-0 motion-reduce:transition-none sm:px-6"
               >
                 <span className="min-w-0">
-                  <span className="font-semibold">{item.title}</span>
+                  <span className="font-semibold text-emphasis-foreground">
+                    {item.title}
+                  </span>
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {item.year}
                   </span>
