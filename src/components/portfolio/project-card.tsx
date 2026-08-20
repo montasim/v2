@@ -18,20 +18,14 @@ function projectImage(project: Project) {
   const name = project.imageUrl.split("/").at(-1)
   return name ? optimizedImage(`/images/projects/${name}`) : null
 }
-export function ProjectCard({
-  project,
-  compact = false,
-}: {
-  project: Project
-  compact?: boolean
-}) {
+export function ProjectCard({ project }: { project: Project }) {
   const image = projectImage(project)
   const primaryUrl =
     project.liveUrl || project.npmUrl || project.releaseUrl || project.githubUrl
   return (
     <Card
       asChild
-      className={`interactive-surface group grid overflow-hidden ${compact ? "sm:grid-cols-[15rem_1fr]" : "lg:grid-cols-[1.08fr_0.92fr]"}`}
+      className="interactive-surface group grid overflow-hidden lg:grid-cols-[1.08fr_0.92fr]"
     >
       <article
         id={project.id}
@@ -69,9 +63,7 @@ export function ProjectCard({
           <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-emphasis-foreground">
             {project.title}
           </h2>
-          <p
-            className={`mt-3 text-sm leading-relaxed text-muted-foreground ${compact ? "line-clamp-2" : ""}`}
-          >
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             {project.description}
           </p>
           <BadgeList

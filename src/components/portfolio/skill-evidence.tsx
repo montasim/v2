@@ -94,7 +94,7 @@ export function SkillEvidence({
           </h3>
           <div className="grid gap-5">
             {evidence.projects.map((project) => (
-              <ProjectCard key={project.id} project={project} compact />
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         </section>
