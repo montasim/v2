@@ -1,6 +1,5 @@
 import { z } from "zod"
 import certificationsJson from "@/data/certifications.json"
-import udemyCertificationsJson from "@/data/udemy-certifications.json"
 import type { CatalogFilter } from "@/lib/content/shared"
 import { optionalUrlSchema, uniqueDescending } from "@/lib/content/shared"
 
@@ -16,16 +15,6 @@ const certificationSchema = z.object({
   completedAt: z.iso.date().nullable(),
   description: z.string().min(1),
   url: optionalUrlSchema,
-})
-
-const udemyCertificationSchema = z.object({
-  courseId: z.number().int().positive(),
-  title: z.string().min(1),
-  issuer: z.string().min(1),
-  completedAt: z.iso.date().nullable(),
-  certificateCode: z.string().min(1).nullable(),
-  courseUrl: z.url().optional(),
-  lastActivityAt: z.iso.date().optional(),
 })
 
 export type Certification = z.infer<typeof certificationSchema>
@@ -88,33 +77,7 @@ const hiringRank = new Map<string, number>(
   hiringPriority.map((id, index) => [id, index] as const)
 )
 
-const udemyRecords = z
-  .array(udemyCertificationSchema)
-  .parse(udemyCertificationsJson)
-  .map((record) =>
-    certificationSchema.parse({
-      id: `certification-udemy-${record.courseId}`,
-      platform: "Udemy",
-      platformIcon: "/images/certifications/platforms/udemy.svg",
-      issuer: record.issuer,
-      image: `/images/certifications/udemy-${record.courseId}.jpg`,
-      download: null,
-      title: record.title,
-      year: (record.completedAt ?? record.lastActivityAt)!.slice(0, 4),
-      completedAt: record.completedAt,
-      description: record.certificateCode
-        ? "Course certificate"
-        : "Completed course · 100% progress",
-      url: record.certificateCode
-        ? `https://www.udemy.com/certificate/${record.certificateCode}/`
-        : record.courseUrl,
-    })
-  )
-
-const unsortedRecords = [
-  ...z.array(certificationSchema).parse(certificationsJson),
-  ...udemyRecords,
-]
+const unsortedRecords = z.array(certificationSchema).parse(certificationsJson)
 const records = [...unsortedRecords].sort((left, right) => {
   const leftRank = hiringRank.get(left.id) ?? Number.MAX_SAFE_INTEGER
   const rightRank = hiringRank.get(right.id) ?? Number.MAX_SAFE_INTEGER
