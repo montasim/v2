@@ -208,7 +208,7 @@ export function PortfolioAssistant() {
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={setOpen} modal={false}>
       <div className="chat-launcher-enter fixed right-4 bottom-4 z-40 sm:right-6 sm:bottom-6">
         <Dialog.Trigger asChild>
           <Button

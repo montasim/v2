@@ -66,6 +66,14 @@ describe("PortfolioAssistant chat navigation", () => {
 
   afterEach(() => cleanup())
 
+  it("keeps the document scrollbar available while open", () => {
+    render(<PortfolioAssistant />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+
+    expect(document.body.hasAttribute("data-scroll-locked")).toBe(false)
+  })
+
   it("can leave chat even when scrollIntoView returns a value", () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
