@@ -1,16 +1,20 @@
 import {
   ArrowUpRightIcon,
+  BookOpenTextIcon,
   GithubLogoIcon,
   PackageIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react"
+import { Link } from "@tanstack/react-router"
 import { BadgeList } from "@/components/shared/badge-list"
 import {
   ExternalAction,
   ExternalLink,
 } from "@/components/shared/navigation-action"
 import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import type { Project } from "@/lib/content/projects"
+import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
 
 function projectImage(project: Project) {
@@ -22,6 +26,17 @@ export function ProjectCard({ project }: { project: Project }) {
   const image = projectImage(project)
   const primaryUrl =
     project.liveUrl || project.npmUrl || project.releaseUrl || project.githubUrl
+  const caseStudy = projectCaseStudyCatalog.findByProjectId(project.id)
+  const preview = image ? (
+    <img
+      src={image}
+      alt={`${project.title} interface preview`}
+      width="1600"
+      height="1000"
+      loading="lazy"
+      className="h-full w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] group-hover:grayscale-0 motion-reduce:transition-none"
+    />
+  ) : null
   return (
     <Card
       asChild
@@ -33,19 +48,22 @@ export function ProjectCard({ project }: { project: Project }) {
       >
         <div className="relative min-h-64 overflow-hidden border-b bg-muted p-3 sm:p-4 lg:border-r lg:border-b-0">
           {image ? (
-            <ExternalLink
-              href={primaryUrl || undefined}
-              className="block h-full overflow-hidden rounded-lg"
-            >
-              <img
-                src={image}
-                alt={`${project.title} interface preview`}
-                width="1600"
-                height="1000"
-                loading="lazy"
-                className="h-full w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] group-hover:grayscale-0 motion-reduce:transition-none"
-              />
-            </ExternalLink>
+            caseStudy ? (
+              <Link
+                to="/projects/$slug"
+                params={{ slug: caseStudy.slug }}
+                className="block h-full overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                {preview}
+              </Link>
+            ) : (
+              <ExternalLink
+                href={primaryUrl || undefined}
+                className="block h-full overflow-hidden rounded-lg"
+              >
+                {preview}
+              </ExternalLink>
+            )
           ) : (
             <div className="absolute inset-0 grid place-items-center text-muted-foreground">
               <span className="flex flex-col items-center gap-3 text-sm">
@@ -74,6 +92,18 @@ export function ProjectCard({ project }: { project: Project }) {
             badgeClassName="bg-background dark:bg-transparent"
           />
           <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
+            {caseStudy ? (
+              <Button
+                asChild
+                variant="link"
+                className="h-auto p-0 font-bold text-emphasis-foreground"
+              >
+                <Link to="/projects/$slug" params={{ slug: caseStudy.slug }}>
+                  <BookOpenTextIcon />
+                  Case study
+                </Link>
+              </Button>
+            ) : null}
             {primaryUrl ? (
               <ExternalAction
                 href={primaryUrl}

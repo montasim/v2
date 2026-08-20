@@ -5,6 +5,7 @@ import { contributionCatalog } from "./content/contributions"
 import { educationCatalog } from "./content/education"
 import { experienceCatalog } from "./content/experience"
 import { profileCatalog } from "./content/profile"
+import { projectCaseStudyCatalog } from "./content/project-case-studies"
 import { projectCatalog } from "./content/projects"
 import { recommendationCatalog } from "./content/recommendations"
 import { skillCatalog } from "./content/skills"
@@ -117,6 +118,28 @@ describe("portfolio content", () => {
     expect(recommendationCatalog.featured).toHaveLength(5)
     expect(
       recommendationCatalog.records.every((record) => record.hiringSignal)
+    ).toBe(true)
+  })
+
+  it("publishes evidence-backed case studies for every featured project", () => {
+    expect(
+      projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.projectId)
+    ).toEqual(projectCatalog.featured.map((project) => project.id))
+    expect(
+      new Set(
+        projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.slug)
+      ).size
+    ).toBe(projectCaseStudyCatalog.records.length)
+    expect(
+      projectCaseStudyCatalog.records.every(
+        (caseStudy) =>
+          caseStudy.constraints.length >= 3 &&
+          caseStudy.decisions.length >= 3 &&
+          caseStudy.contribution.length >= 3 &&
+          caseStudy.outcomes.length >= 3 &&
+          caseStudy.project.imageUrl &&
+          caseStudy.project.githubUrl
+      )
     ).toBe(true)
   })
 

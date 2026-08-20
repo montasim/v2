@@ -1,0 +1,86 @@
+import { z } from "zod"
+import caseStudiesJson from "@/data/casestudy.json"
+import { projectCatalog } from "@/lib/content/projects"
+
+const caseStudySchema = z.object({
+  slug: z.string().min(1),
+  projectId: z.string().min(1),
+  summary: z.string().min(1),
+  role: z.string().min(1),
+  scope: z.string().min(1),
+  status: z.string().min(1),
+  verifiedBranch: z.string().min(1),
+  verifiedCommit: z.string().length(40),
+  problem: z.string().min(1),
+  constraints: z.array(z.string().min(1)).min(1),
+  architecture: z.object({
+    summary: z.string().min(1),
+    layers: z
+      .array(
+        z.object({
+          title: z.string().min(1),
+          detail: z.string().min(1),
+        })
+      )
+      .min(2),
+  }),
+  decisions: z
+    .array(
+      z.object({
+        title: z.string().min(1),
+        detail: z.string().min(1),
+      })
+    )
+    .min(1),
+  contribution: z.array(z.string().min(1)).min(1),
+  outcomes: z.array(z.string().min(1)).min(1),
+  screenshot: z.object({
+    alt: z.string().min(1),
+    caption: z.string().min(1),
+  }),
+})
+
+const caseStudyRecords = z.array(caseStudySchema).parse(caseStudiesJson)
+
+const projectsById = new Map(
+  projectCatalog.records.map((project) => [project.id, project])
+)
+
+const records = caseStudyRecords.map((caseStudy) => {
+  const project = projectsById.get(caseStudy.projectId)
+  if (!project) {
+    throw new Error(`Unknown case-study project: ${caseStudy.projectId}`)
+  }
+  if (!project.imageUrl || !project.githubUrl) {
+    throw new Error(`Case-study project lacks evidence links: ${project.id}`)
+  }
+  return {
+    ...caseStudy,
+    project: {
+      ...project,
+      imageUrl: project.imageUrl,
+      githubUrl: project.githubUrl,
+    },
+  }
+})
+
+export type ProjectCaseStudy = (typeof records)[number]
+
+const recordsBySlug = new Map(records.map((record) => [record.slug, record]))
+const recordsByProjectId = new Map(
+  records.map((record) => [record.projectId, record])
+)
+
+export const projectCaseStudyCatalog = {
+  records,
+  findBySlug(slug: string) {
+    return recordsBySlug.get(slug)
+  },
+  findByProjectId(projectId: string) {
+    return recordsByProjectId.get(projectId)
+  },
+  next(slug: string) {
+    const index = records.findIndex((record) => record.slug === slug)
+    return index === -1 ? undefined : records[(index + 1) % records.length]
+  },
+} as const

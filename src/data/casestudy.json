@@ -1,0 +1,203 @@
+[
+  {
+    "slug": "postcraft",
+    "projectId": "project-postcraft",
+    "summary": "A production-oriented publishing workspace that moves one idea through generation, brand controls, platform preview, and scheduled delivery.",
+    "role": "Product design and full-stack engineering",
+    "scope": "AI workflow, publishing integrations, and background jobs",
+    "status": "Active early-stage product",
+    "verifiedBranch": "master",
+    "verifiedCommit": "551d097f5271b541b28a1fd87cbc9820be2c628a",
+    "problem": "Creators and small teams repeat the same editorial work for every social platform. They rewrite one idea for different limits, compare weak AI variants, check brand language, and then move the result into separate publishing tools.",
+    "constraints": [
+      "AI providers vary in availability, rate limits, model behavior, and key quotas.",
+      "LinkedIn, X, and Facebook each impose different OAuth, account, content, and API requirements.",
+      "Scheduled publishing must survive beyond the request that created it and retain a reviewable status."
+    ],
+    "architecture": {
+      "summary": "The Next.js application keeps HTTP boundaries in route handlers, product logic in domain modules, infrastructure in core services, and durable delivery in Inngest.",
+      "layers": [
+        {
+          "title": "Workspace",
+          "detail": "Generation, scoring, editing, brand rules, and platform previews"
+        },
+        {
+          "title": "Domain services",
+          "detail": "Validated workflows for content, library, accounts, and publishing"
+        },
+        {
+          "title": "Provider layer",
+          "detail": "OpenRouter, Groq, Gemini, and ZhipuAI with model and key fallback"
+        },
+        {
+          "title": "Delivery",
+          "detail": "MongoDB persistence, Inngest jobs, and social platform APIs"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate provider choice from generation",
+        "detail": "A provider switcher walks configured models and keys, so product workflows do not depend on one vendor-specific client."
+      },
+      {
+        "title": "Treat brand voice as stored rules",
+        "detail": "Required language, blocked language, audience, tone, and persona context are workspace data rather than prompt-only instructions."
+      },
+      {
+        "title": "Move scheduled work to a durable queue",
+        "detail": "Inngest owns delayed execution and status transitions instead of relying on an open browser session or a long HTTP request."
+      }
+    ],
+    "contribution": [
+      "Defined the end-to-end product flow from topic input to platform-ready output.",
+      "Built the Next.js interface, API routes, domain services, and MongoDB repositories.",
+      "Implemented multi-provider AI selection, reusable guardrails, scoring, and platform previews.",
+      "Integrated authentication, account recovery, social OAuth, Inngest scheduling, and publishing records."
+    ],
+    "outcomes": [
+      "One workspace now covers generation, comparison, refinement, preview, and delivery.",
+      "Provider and key fallback reduce the workflow's dependency on a single AI endpoint.",
+      "Publishing state is persisted for library and insights views instead of ending at generation.",
+      "Operational limits remain explicit: publishing still depends on platform approval, scopes, account type, and API access."
+    ],
+    "screenshot": {
+      "alt": "PostCraft workspace showing the social content creation interface",
+      "caption": "The shipped workspace brings generation, brand-aware editing, scoring, and social previews into one flow."
+    }
+  },
+  {
+    "slug": "b4joinacompany",
+    "projectId": "project-b4joinacompany",
+    "summary": "An evidence-labeled company research product that helps job seekers prepare better questions without turning anonymous reports into verdicts.",
+    "role": "Product design, evidence modeling, and full-stack engineering",
+    "scope": "Decision support, cited AI, private research, and versioned data",
+    "status": "Public research experience live",
+    "verifiedBranch": "main",
+    "verifiedCommit": "21fdf8d873f2d2eb3d5d66443ca15dde24fd4ae1",
+    "problem": "Job seekers in Bangladesh often assemble company research from workplace stories, salary submissions, official pages, and interview conversations. Those sources have different levels of reliability, but conventional summaries can flatten them into an unfair good-or-bad judgment.",
+    "constraints": [
+      "Personal workplace reports provide context, not verified statements of current company policy.",
+      "Company names and salary records can be ambiguous, so fuzzy matching cannot silently publish a result.",
+      "AI answers must remain bounded by retrieved evidence and still work when no model provider is configured."
+    ],
+    "architecture": {
+      "summary": "Versioned source files feed a deterministic research layer. The web product and versioned API consume the same evidence model, while private checkpoints live separately in MongoDB.",
+      "layers": [
+        {
+          "title": "Source releases",
+          "detail": "Versioned company, story, comment, and salary evidence records"
+        },
+        {
+          "title": "Research layer",
+          "detail": "Deterministic identity matching, evidence labels, and question ranking"
+        },
+        {
+          "title": "Product surfaces",
+          "detail": "Next.js research briefs, compare, Ask, and a versioned REST API"
+        },
+        {
+          "title": "Private workspace",
+          "detail": "Better Auth and MongoDB checkpoints pinned to evidence revisions"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Preserve provenance at the record level",
+        "detail": "Reported, submitted, derived, and official information stay distinct, with source URLs and capture context retained for review."
+      },
+      {
+        "title": "Expose unknowns instead of inferring",
+        "detail": "Missing salary, work-arrangement, or hiring evidence appears as a gap rather than a negative score or guessed policy."
+      },
+      {
+        "title": "Keep AI optional and cited",
+        "detail": "Ask retrieves a bounded company-specific evidence set, maps claims to source labels, and falls back to deterministic retrieval when providers are unavailable."
+      }
+    ],
+    "contribution": [
+      "Defined the product methodology and the separation between reports, derived signals, and official facts.",
+      "Built company research, comparison, cited Ask, correction, and private checkpoint workflows.",
+      "Designed the versioned API shared by the website and companion browser extension.",
+      "Implemented optimistic checkpoint revisions and separated private workspace data from the public evidence release."
+    ],
+    "outcomes": [
+      "Visitors can research a company without creating an account and open original evidence for important claims.",
+      "Prepared questions are generated by fixed rules, while Ask provides cited synthesis or an explicit evidence gap.",
+      "Saved checkpoints retain the exact evidence version and append revisions on successful updates.",
+      "The product supports comparison without producing a synthetic company score or declaring a winner."
+    ],
+    "screenshot": {
+      "alt": "b4joinacompany research interface for evaluating a company",
+      "caption": "The research experience keeps evidence type, source context, and uncertainty visible during a high-stakes career decision."
+    }
+  },
+  {
+    "slug": "devtools",
+    "projectId": "project-devtools",
+    "summary": "A searchable toolbox of more than 50 developer workflows, with a deliberate boundary between local transformations and server-backed features.",
+    "role": "Product design and full-stack engineering",
+    "scope": "Developer utilities, shared interaction patterns, and account-backed tools",
+    "status": "Actively deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "dd13e560e20c1bb05cd33da2ceec848958c5a4bb",
+    "problem": "Small development tasks often send people across unrelated single-purpose websites. Each tool has a different interface, unclear privacy behavior, and no shared path for search, history, saved work, or reuse.",
+    "constraints": [
+      "Many transformations should stay in the browser, while network diagnostics necessarily contact a target or server endpoint.",
+      "A catalog with more than 50 workflows must remain quick to search, navigate, and extend without duplicating page infrastructure.",
+      "Saved items, shares, webhooks, and short links introduce authentication, expiration, and persistence concerns absent from local tools."
+    ],
+    "architecture": {
+      "summary": "A navigation registry acts as the catalog source of truth. Tool features own their tabs and logic, shared app infrastructure handles auth and storage, and route handlers isolate network and persistence work.",
+      "layers": [
+        {
+          "title": "Tool registry",
+          "detail": "Searchable navigation, routes, labels, and keyboard discovery"
+        },
+        {
+          "title": "Feature modules",
+          "detail": "Focused formatters, generators, testers, inspectors, and references"
+        },
+        {
+          "title": "Browser boundary",
+          "detail": "Local transforms, preferences, input history, and reusable state"
+        },
+        {
+          "title": "Server boundary",
+          "detail": "Next.js APIs, Better Auth, PostgreSQL, Prisma, and target services"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Make the catalog declarative",
+        "detail": "The navigation registry is the single source for tool discovery, reducing drift between routes, menus, and command search."
+      },
+      {
+        "title": "Keep local work local by default",
+        "detail": "Formatters, encoders, parsers, and generators process current input in the browser; server contact is reserved for workflows that require it."
+      },
+      {
+        "title": "Standardize the tool shell",
+        "detail": "Shared layouts, tabs, editors, history, and actions let new utilities focus on their domain logic while keeping interactions familiar."
+      }
+    ],
+    "contribution": [
+      "Designed and implemented the searchable toolbox and its shared tool interaction patterns.",
+      "Built local formatters and generators alongside network diagnostics and reference utilities.",
+      "Added account sync, expiring shares, short links, webhook inspection, and database-backed saved items.",
+      "Established TypeScript, lint, production-build, and GitHub Actions checks for changes targeting main."
+    ],
+    "outcomes": [
+      "More than 50 workflows are available through one catalog and command-search model.",
+      "Common transformations can run without an account and without sending their current input to the server.",
+      "Server-backed features add reuse and sharing without obscuring when data leaves the browser.",
+      "The architecture supports both small local utilities and stateful workflows without forcing them through one execution path."
+    ],
+    "screenshot": {
+      "alt": "DevTools home page showing the searchable developer toolbox",
+      "caption": "The catalog presents a broad tool set through one consistent navigation and interaction model."
+    }
+  }
+]
