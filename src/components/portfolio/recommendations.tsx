@@ -89,11 +89,11 @@ export function RecommendationDetails({
         <div className="mt-5 grid gap-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-8">
           <div className="pt-0.5">
             <p className="text-xs font-medium text-muted-foreground">Role</p>
-            <p className="mt-1 text-sm leading-relaxed font-semibold text-emphasis-foreground">
+            <p className="mt-1 text-sm leading-relaxed font-semibold text-muted-foreground">
               {item.role}
             </p>
           </div>
-          <blockquote className="space-y-4 border-l-2 border-muted-foreground pl-4 text-sm leading-relaxed text-muted-foreground">
+          <blockquote className="space-y-4 border-l-2 border-muted-foreground/40 pl-4 text-sm leading-relaxed text-muted-foreground">
             <RecommendationParagraphs text={item.text} quoted />
           </blockquote>
         </div>
