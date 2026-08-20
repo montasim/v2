@@ -34,6 +34,8 @@ const resumeSkillGroups = [
   "skills-frontend",
   "skills-backend-apis",
   "skills-databases",
+  "skills-ai-agents",
+  "skills-browser-extensions",
   "skills-cloud-devops",
   "skills-testing-quality",
   "skills-realtime-vision",

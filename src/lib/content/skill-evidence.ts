@@ -48,6 +48,8 @@ export type SkillCategory =
   | "frontend"
   | "backend"
   | "data"
+  | "ai"
+  | "extensions"
   | "devops"
   | "quality"
   | "realtime"
@@ -58,6 +60,8 @@ const categoryGroups: Readonly<Record<SkillCategory, readonly string[]>> = {
   frontend: ["skills-frontend"],
   backend: ["skills-backend-apis"],
   data: ["skills-databases"],
+  ai: ["skills-ai-agents"],
+  extensions: ["skills-browser-extensions"],
   devops: ["skills-cloud-devops"],
   quality: ["skills-testing-quality"],
   realtime: ["skills-realtime-vision"],
@@ -103,6 +107,8 @@ export const skillEvidenceCatalog = {
     { value: "frontend", label: "Frontend" },
     { value: "backend", label: "Backend" },
     { value: "data", label: "Data" },
+    { value: "ai", label: "AI & agents" },
+    { value: "extensions", label: "Extensions" },
     { value: "devops", label: "DevOps" },
     { value: "quality", label: "Quality" },
     { value: "realtime", label: "Real-time" },
@@ -113,6 +119,8 @@ export const skillEvidenceCatalog = {
     "frontend",
     "backend",
     "data",
+    "ai",
+    "extensions",
     "devops",
     "quality",
     "realtime",

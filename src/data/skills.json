@@ -11,6 +11,19 @@
       "CSS",
       "Tailwind CSS",
       "Redux.js",
+      "TanStack Start",
+      "TanStack Query",
+      "React Three Fiber",
+      "Three.js",
+      "Drei",
+      "React Three Rapier",
+      "shadcn/ui",
+      "Radix UI",
+      "React Hook Form",
+      "React Markdown",
+      "CodeMirror 6",
+      "next-intl",
+      "Vite",
       "Bootstrap",
       "jQuery",
       "Responsive Web Design",
@@ -20,12 +33,47 @@
   {
     "id": "skills-backend-apis",
     "category": "Backend & APIs",
-    "items": ["Node.js", "Express.js", "Socket.io", "REST APIs", "PHP"]
+    "items": [
+      "Node.js",
+      "Express.js",
+      "Socket.io",
+      "REST APIs",
+      "Better Auth",
+      "NextAuth",
+      "Zod",
+      "BullMQ",
+      "Inngest",
+      "Web Push",
+      "Resend",
+      "Stripe",
+      "Google Drive API",
+      "Python",
+      "PHP"
+    ]
   },
   {
     "id": "skills-databases",
     "category": "Databases & ORM",
-    "items": ["PostgreSQL", "MongoDB", "Prisma", "PhpMyAdmin"]
+    "items": [
+      "PostgreSQL",
+      "MongoDB",
+      "Prisma",
+      "Drizzle ORM",
+      "Mongoose",
+      "Redis",
+      "SQLite",
+      "PhpMyAdmin"
+    ]
+  },
+  {
+    "id": "skills-ai-agents",
+    "category": "AI & Agent Development",
+    "items": ["Agent Skills", "Gemini API", "Groq API", "OpenRouter"]
+  },
+  {
+    "id": "skills-browser-extensions",
+    "category": "Browser Extensions",
+    "items": ["WXT", "Chrome Extensions API", "Chrome Manifest V3"]
   },
   {
     "id": "skills-cloud-devops",
@@ -36,13 +84,23 @@
       "GitHub Actions",
       "CI/CD",
       "Git",
+      "Netlify",
+      "npm",
+      "tsup",
+      "esbuild",
       "IT Operations"
     ]
   },
   {
     "id": "skills-testing-quality",
     "category": "Testing & Quality",
-    "items": ["Jest", "React Testing Library", "Lighthouse"]
+    "items": [
+      "Jest",
+      "Vitest",
+      "Playwright",
+      "React Testing Library",
+      "Lighthouse"
+    ]
   },
   {
     "id": "skills-design-collaboration",

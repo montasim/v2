@@ -23,7 +23,11 @@ describe("skill evidence catalog", () => {
     expect(redux?.experience.map((role) => role.role)).toContain(
       "Senior Software Engineer"
     )
-    expect(skillEvidenceCatalog.forSkill("Git")?.projects).toHaveLength(0)
+    expect(
+      skillEvidenceCatalog
+        .forSkill("Git")
+        ?.projects.map((project) => project.title)
+    ).toContain("verify-project-release")
   })
 
   it("rejects invalid shareable URL state", () => {
@@ -44,10 +48,49 @@ describe("skill evidence catalog", () => {
       "PostgreSQL",
       "MongoDB",
       "Prisma",
+      "Drizzle ORM",
+      "Mongoose",
+      "Redis",
+      "SQLite",
       "PhpMyAdmin",
     ])
     expect(data.every((record) => record.groupId === "skills-databases")).toBe(
       true
     )
+  })
+
+  it("exposes project-backed AI and browser extension skill filters", () => {
+    expect(
+      skillEvidenceCatalog.forCategory("ai").map((record) => record.skill)
+    ).toEqual(["Agent Skills", "Gemini API", "Groq API", "OpenRouter"])
+    expect(
+      skillEvidenceCatalog
+        .forCategory("extensions")
+        .map((record) => record.skill)
+    ).toEqual(["Chrome Extensions API", "Chrome Manifest V3", "WXT"])
+  })
+
+  it("connects repository tooling only to projects with direct evidence", () => {
+    expect(
+      skillEvidenceCatalog
+        .forSkill("GitHub Actions")
+        ?.projects.map((project) => project.title)
+    ).toContain("VidQuery - YouTube Q&A Extension")
+    expect(
+      skillEvidenceCatalog
+        .forSkill("React Testing Library")
+        ?.projects.map((project) => project.title)
+    ).toContain("Routempo")
+    expect(
+      skillEvidenceCatalog
+        .forSkill("Lighthouse")
+        ?.projects.map((project) => project.title)
+    ).toEqual([])
+    expect(
+      skillEvidenceCatalog
+        .forSkill("System Design")
+        ?.projects.map((project) => project.title)
+    ).toContain("Book Heaven")
+    expect(skillEvidenceCatalog.forSkill("Scrum")?.projects).toHaveLength(0)
   })
 })

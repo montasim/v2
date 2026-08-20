@@ -15,7 +15,8 @@
       "TypeScript",
       "Redux Toolkit",
       "MediaPipe",
-      "Microsoft Azure"
+      "Microsoft Azure",
+      "Figma"
     ]
   },
   {
@@ -34,7 +35,9 @@
       "Node.js",
       "Microsoft Azure",
       "Docker",
-      "CI/CD"
+      "CI/CD",
+      "Konva.js",
+      "Figma"
     ]
   },
   {
@@ -54,7 +57,8 @@
       "WebRTC",
       "Node.js",
       "Express.js",
-      "PostgreSQL"
+      "PostgreSQL",
+      "Responsive Web Design"
     ]
   },
   {
@@ -67,7 +71,7 @@
     "period": "Aug 2022 - Oct 2022",
     "role": "Junior Frontend Developer",
     "description": "Built and maintained **UI components** for a telemedicine platform using React.js, JavaScript, HTML5, and CSS3, improving user experience across devices. Debugged and optimized front-end code, **reducing page load time** and enhancing performance stability.",
-    "technologies": ["React.js", "JavaScript", "HTML5", "CSS3"]
+    "technologies": ["React.js", "JavaScript", "HTML5", "CSS3", "jQuery"]
   },
   {
     "id": "experience-drra-mis-officer",

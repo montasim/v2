@@ -55,6 +55,8 @@ const groupIcons: Record<string, Icon> = {
   "skills-frontend": CodeIcon,
   "skills-backend-apis": HardDrivesIcon,
   "skills-databases": DatabaseIcon,
+  "skills-ai-agents": SparkleIcon,
+  "skills-browser-extensions": DevicesIcon,
   "skills-cloud-devops": CloudIcon,
   "skills-testing-quality": WrenchIcon,
   "skills-design-collaboration": UsersThreeIcon,
