@@ -1,3 +1,7 @@
+"use client"
+
+import { useState } from "react"
+
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
@@ -14,7 +18,9 @@ export function BadgeList({
   className?: string
   badgeClassName?: string
 }) {
-  const visible = limit ? items.slice(0, limit) : items
+  const [expanded, setExpanded] = useState(false)
+  const hasHiddenItems = Boolean(limit && items.length > limit)
+  const visible = hasHiddenItems && !expanded ? items.slice(0, limit) : items
   const remaining = items.length - visible.length
 
   return (
@@ -24,9 +30,28 @@ export function BadgeList({
           <Badge className={badgeClassName}>{item}</Badge>
         </li>
       ))}
-      {remaining > 0 ? (
+      {hasHiddenItems ? (
         <li>
-          <Badge className={badgeClassName}>+{remaining} more</Badge>
+          <Badge
+            asChild
+            className={cn(
+              badgeClassName,
+              "cursor-pointer hover:border-foreground/30 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+            )}
+          >
+            <button
+              type="button"
+              aria-expanded={expanded}
+              aria-label={
+                expanded
+                  ? `Show fewer ${label}`
+                  : `Show ${remaining} more ${label}`
+              }
+              onClick={() => setExpanded((current) => !current)}
+            >
+              {expanded ? "Show fewer" : `+${remaining} more`}
+            </button>
+          </Badge>
         </li>
       ) : null}
     </ul>
