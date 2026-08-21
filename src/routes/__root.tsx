@@ -1,4 +1,5 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import type { ErrorComponentProps } from "@tanstack/react-router"
 
 import appCss from "../styles.css?url"
 import { SiteFooter } from "@/components/layout/site-footer"
@@ -8,7 +9,7 @@ import { KonamiCommandCenter } from "@/components/portfolio/konami-command-cente
 import { AppContextMenu } from "@/components/shared/app-context-menu"
 import { CommandPalette } from "@/components/shared/command-palette"
 import { ConsoleBanner } from "@/components/shared/console-banner"
-import { PageShell } from "@/components/shared/page-shell"
+import { ErrorPage } from "@/components/shared/error-page"
 import { PortfolioKeyboardShortcuts } from "@/components/shared/portfolio-keyboard-shortcuts"
 import { ThemeProvider } from "@/components/theme-provider"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
@@ -34,17 +35,14 @@ export const Route = createRootRoute({
       { rel: "canonical", href: site.url },
     ],
   }),
-  notFoundComponent: () => (
-    <PageShell className="py-24 text-center">
-      <p className="text-sm text-muted-foreground">404</p>
-      <h1 className="mt-3 text-3xl font-bold tracking-tight">Page not found</h1>
-      <p className="mt-3 text-sm text-muted-foreground">
-        The requested page does not exist.
-      </p>
-    </PageShell>
-  ),
+  notFoundComponent: () => <ErrorPage status="404" />,
+  errorComponent: RootErrorPage,
   shellComponent: RootDocument,
 })
+
+function RootErrorPage({ reset }: ErrorComponentProps) {
+  return <ErrorPage status="500" onRetry={reset} />
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
