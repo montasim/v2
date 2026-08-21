@@ -9,9 +9,8 @@ import {
   ExternalAction,
   ExternalLink,
 } from "@/components/shared/navigation-action"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { EntityAvatar } from "@/components/shared/entity-avatar"
+import { Card, CardContent } from "@/components/ui/card"
 import type { Certification } from "@/lib/content/certifications"
 
 const actionClassName =
@@ -24,13 +23,7 @@ const completionDateFormatter = new Intl.DateTimeFormat("en", {
   year: "numeric",
 })
 
-export function CertificationCard({
-  item,
-  featured = false,
-}: {
-  item: Certification
-  featured?: boolean
-}) {
+export function CertificationCard({ item }: { item: Certification }) {
   return (
     <Card
       asChild
@@ -69,21 +62,10 @@ export function CertificationCard({
 
         <CardContent className="flex min-w-0 flex-col p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4 text-muted-foreground">
-            <span className="inline-flex items-center gap-2 text-sm">
-              <EntityAvatar
-                src={item.platformIcon}
-                fallback={item.platform.slice(0, 1)}
-                className="size-8 bg-card"
-                imageClassName="p-2"
-              />
+            <Badge variant="secondary" className="font-medium">
               {item.platform}
-            </span>
+            </Badge>
             <span className="flex items-center gap-2">
-              {featured && (
-                <Badge variant="secondary" className="font-medium">
-                  Career highlight
-                </Badge>
-              )}
               <time
                 dateTime={item.completedAt ?? item.year}
                 className="text-xs tabular-nums"
@@ -104,7 +86,7 @@ export function CertificationCard({
           </p>
 
           {item.url ? (
-            <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-7">
+            <div className="mt-auto flex w-full flex-wrap items-center justify-between gap-x-5 gap-y-2 pt-7">
               <ExternalAction
                 href={item.url}
                 variant="link"
@@ -116,11 +98,12 @@ export function CertificationCard({
               {item.download && (
                 <DownloadAction
                   href={item.download}
+                  newTab
                   variant="link"
-                  className={actionClassName}
+                  className={`${actionClassName} ml-auto`}
                 >
                   <DownloadSimpleIcon />
-                  Download
+                  Download certificate
                 </DownloadAction>
               )}
             </div>

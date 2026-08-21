@@ -80,7 +80,7 @@ describe("shared component interfaces", () => {
       </ExternalAction>
     )
     const download = renderToStaticMarkup(
-      <DownloadAction href="/file.pdf" variant="link">
+      <DownloadAction href="/file.pdf" newTab variant="link">
         Download
       </DownloadAction>
     )
@@ -88,5 +88,7 @@ describe("shared component interfaces", () => {
     expect(external).toContain('target="_blank"')
     expect(external).toContain('rel="noreferrer"')
     expect(download).toContain('download=""')
+    expect(download).toContain('target="_blank"')
+    expect(download).toContain('rel="noreferrer"')
   })
 })

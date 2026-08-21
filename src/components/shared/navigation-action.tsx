@@ -56,11 +56,17 @@ export function ExternalLink({ children, ...props }: ComponentProps<"a">) {
 export function DownloadAction({
   href,
   children,
+  newTab = false,
   ...buttonProps
-}: ActionContent & { href: string }) {
+}: ActionContent & { href: string; newTab?: boolean }) {
   return (
     <Button asChild {...buttonProps}>
-      <a href={href} download>
+      <a
+        href={href}
+        download
+        target={newTab ? "_blank" : undefined}
+        rel={newTab ? "noreferrer" : undefined}
+      >
         {children}
       </a>
     </Button>

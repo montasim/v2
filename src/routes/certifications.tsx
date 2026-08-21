@@ -35,15 +35,7 @@ function Page() {
         navigate(catalogFilterNavigation(nextFilter))
       }
       resultLabel="certifications"
-      renderRecord={(item) => (
-        <CertificationCard
-          key={item.id}
-          item={item}
-          featured={certificationCatalog.featured.some(
-            (featuredItem) => featuredItem.id === item.id
-          )}
-        />
-      )}
+      renderRecord={(item) => <CertificationCard key={item.id} item={item} />}
     />
   )
 }

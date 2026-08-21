@@ -9,7 +9,7 @@ const certificationSchema = z.object({
   platformIcon: z.string().startsWith("/"),
   issuer: z.string().min(1),
   image: z.string().startsWith("/").nullable(),
-  download: z.string().startsWith("/").nullable(),
+  download: z.union([z.string().startsWith("/"), z.url()]).nullable(),
   title: z.string().min(1),
   year: z.string().regex(/^\d{4}$/),
   completedAt: z.iso.date().nullable(),
