@@ -28,17 +28,18 @@ import { optimizedImage } from "@/lib/assets"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import { cn } from "@/lib/utils"
 
-const sectionLinks = [
+const coreSectionLinks = [
   ["problem", "Problem"],
   ["constraints", "Constraints"],
   ["architecture", "Architecture"],
   ["decisions", "Decisions"],
   ["contribution", "Contribution"],
   ["outcomes", "Outcomes"],
-  ["screenshots", "Screenshot"],
 ] as const
+const screenshotSectionLink = ["screenshots", "Screenshot"] as const
 
-type SectionId = (typeof sectionLinks)[number][0]
+type SectionId =
+  (typeof coreSectionLinks)[number][0] | (typeof screenshotSectionLink)[0]
 
 function SectionHeading({
   id,
@@ -57,6 +58,12 @@ function SectionHeading({
   )
 }
 
+function githubRepositoryPath(githubUrl: string) {
+  return new URL(githubUrl).pathname
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/\.git$/, "")
+}
+
 export function ProjectCaseStudyPage({
   caseStudy,
   nextCaseStudy,
@@ -65,13 +72,19 @@ export function ProjectCaseStudyPage({
   nextCaseStudy: ProjectCaseStudy
 }) {
   const { project } = caseStudy
-  const imageName = project.imageUrl.split("/").at(-1)
-  const image = imageName
-    ? optimizedImage(`/images/projects/${imageName}`)
-    : undefined
+  const repositoryPath = githubRepositoryPath(project.githubUrl)
+  const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
+  const imageName = project.imageUrl?.split("/").at(-1)
+  const image =
+    imageName && caseStudy.screenshot
+      ? optimizedImage(`/images/projects/${imageName}`)
+      : undefined
+  const sectionLinks = image
+    ? [...coreSectionLinks, screenshotSectionLink]
+    : coreSectionLinks
   const commitUrl = `${project.githubUrl}/tree/${caseStudy.verifiedCommit}`
   const [activeSection, setActiveSection] = useState<SectionId>(
-    sectionLinks[0][0]
+    coreSectionLinks[0][0]
   )
 
   useEffect(() => {
@@ -81,7 +94,7 @@ export function ProjectCaseStudyPage({
       window.cancelAnimationFrame(animationFrame)
       animationFrame = window.requestAnimationFrame(() => {
         const readingLine = window.innerWidth >= 1024 ? 112 : 96
-        let currentSection: SectionId = sectionLinks[0][0]
+        let currentSection: SectionId = coreSectionLinks[0][0]
 
         for (const [sectionId] of sectionLinks) {
           const section = document.getElementById(sectionId)
@@ -102,7 +115,7 @@ export function ProjectCaseStudyPage({
       })
     }
 
-    setActiveSection(sectionLinks[0][0])
+    setActiveSection(coreSectionLinks[0][0])
     updateActiveSection()
     window.addEventListener("scroll", updateActiveSection, { passive: true })
     window.addEventListener("resize", updateActiveSection)
@@ -112,7 +125,7 @@ export function ProjectCaseStudyPage({
       window.removeEventListener("scroll", updateActiveSection)
       window.removeEventListener("resize", updateActiveSection)
     }
-  }, [caseStudy.slug])
+  }, [caseStudy.slug, image])
 
   return (
     <PageShell padded className="pb-20">
@@ -140,12 +153,26 @@ export function ProjectCaseStudyPage({
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="max-w-[16ch] text-3xl leading-tight font-bold tracking-tight text-balance text-emphasis-foreground">
+              <h1 className="w-auto max-w-[80%] text-3xl leading-tight font-bold tracking-tight text-balance text-emphasis-foreground">
                 {project.title}
               </h1>
               <Badge variant="secondary" className="font-medium">
                 {project.type}
               </Badge>
+              <ExternalLink
+                href={`${project.githubUrl}/commits/${caseStudy.verifiedBranch}`}
+                aria-label={`View the latest commits for ${project.title}`}
+                className="shrink-0 leading-none"
+              >
+                <img
+                  src={lastCommitBadgeUrl}
+                  alt="Last commit"
+                  width="118"
+                  height="20"
+                  loading="lazy"
+                  className="h-5 w-auto"
+                />
+              </ExternalLink>
             </div>
             <p className="mt-5 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg">
               {caseStudy.summary}
@@ -189,7 +216,7 @@ export function ProjectCaseStudyPage({
         </dl>
       </header>
 
-      {image ? (
+      {image && caseStudy.screenshot ? (
         <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
           <img
             src={image}
@@ -360,13 +387,15 @@ export function ProjectCaseStudyPage({
             </section>
           </div>
 
-          <section
-            id="screenshots"
-            aria-labelledby="screenshots-heading"
-            className="scroll-mt-24 border-t py-10"
-          >
-            <SectionHeading id="screenshots">Product screenshot</SectionHeading>
-            {image ? (
+          {image && caseStudy.screenshot ? (
+            <section
+              id="screenshots"
+              aria-labelledby="screenshots-heading"
+              className="scroll-mt-24 border-t py-10"
+            >
+              <SectionHeading id="screenshots">
+                Product screenshot
+              </SectionHeading>
               <figure className="mt-6">
                 <div className="overflow-hidden rounded-lg border bg-card p-2">
                   <img
@@ -382,8 +411,8 @@ export function ProjectCaseStudyPage({
                   {caseStudy.screenshot.caption}
                 </figcaption>
               </figure>
-            ) : null}
-          </section>
+            </section>
+          ) : null}
 
           <section className="border-t py-10" aria-labelledby="stack-heading">
             <h2 id="stack-heading" className="text-lg font-semibold">

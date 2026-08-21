@@ -121,10 +121,10 @@ describe("portfolio content", () => {
     ).toBe(true)
   })
 
-  it("publishes evidence-backed case studies for every featured project", () => {
+  it("publishes evidence-backed case studies for every project", () => {
     expect(
       projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.projectId)
-    ).toEqual(projectCatalog.featured.map((project) => project.id))
+    ).toEqual(projectCatalog.records.map((project) => project.id))
     expect(
       new Set(
         projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.slug)
@@ -137,8 +137,8 @@ describe("portfolio content", () => {
           caseStudy.decisions.length >= 3 &&
           caseStudy.contribution.length >= 3 &&
           caseStudy.outcomes.length >= 3 &&
-          caseStudy.project.imageUrl &&
-          caseStudy.project.githubUrl
+          caseStudy.project.githubUrl &&
+          Boolean(caseStudy.screenshot) === Boolean(caseStudy.project.imageUrl)
       )
     ).toBe(true)
   })

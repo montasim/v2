@@ -34,10 +34,12 @@ const caseStudySchema = z.object({
     .min(1),
   contribution: z.array(z.string().min(1)).min(1),
   outcomes: z.array(z.string().min(1)).min(1),
-  screenshot: z.object({
-    alt: z.string().min(1),
-    caption: z.string().min(1),
-  }),
+  screenshot: z
+    .object({
+      alt: z.string().min(1),
+      caption: z.string().min(1),
+    })
+    .optional(),
 })
 
 const caseStudyRecords = z.array(caseStudySchema).parse(caseStudiesJson)
@@ -45,24 +47,32 @@ const caseStudyRecords = z.array(caseStudySchema).parse(caseStudiesJson)
 const projectsById = new Map(
   projectCatalog.records.map((project) => [project.id, project])
 )
+const projectRank = new Map(
+  projectCatalog.records.map((project, index) => [project.id, index])
+)
 
 const records = caseStudyRecords.map((caseStudy) => {
   const project = projectsById.get(caseStudy.projectId)
   if (!project) {
     throw new Error(`Unknown case-study project: ${caseStudy.projectId}`)
   }
-  if (!project.imageUrl || !project.githubUrl) {
-    throw new Error(`Case-study project lacks evidence links: ${project.id}`)
+  if (!project.githubUrl) {
+    throw new Error(`Case-study project lacks a repository: ${project.id}`)
   }
   return {
     ...caseStudy,
     project: {
       ...project,
-      imageUrl: project.imageUrl,
       githubUrl: project.githubUrl,
     },
   }
 })
+
+records.sort(
+  (left, right) =>
+    (projectRank.get(left.projectId) ?? Number.MAX_SAFE_INTEGER) -
+    (projectRank.get(right.projectId) ?? Number.MAX_SAFE_INTEGER)
+)
 
 export type ProjectCaseStudy = (typeof records)[number]
 

@@ -1,69 +1,1376 @@
 [
   {
-    "slug": "postcraft",
-    "projectId": "project-postcraft",
-    "summary": "A production-oriented publishing workspace that moves one idea through generation, brand controls, platform preview, and scheduled delivery.",
+    "slug": "routempo",
+    "projectId": "project-routempo",
+    "summary": "A timezone-aware routine planner for planning repeatable rhythms, recording outcomes, and learning from real behavior.",
     "role": "Product design and full-stack engineering",
-    "scope": "AI workflow, publishing integrations, and background jobs",
-    "status": "Active early-stage product",
-    "verifiedBranch": "master",
-    "verifiedCommit": "551d097f5271b541b28a1fd87cbc9820be2c628a",
-    "problem": "Creators and small teams repeat the same editorial work for every social platform. They rewrite one idea for different limits, compare weak AI variants, check brand language, and then move the result into separate publishing tools.",
+    "scope": "Product workflows, data boundaries, and delivery",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "40ad55a0205d85f1b70b0c46d712ff8db6742377",
+    "problem": "Repeatable routines are easy to schedule but hard to evaluate when plans, actual outcomes, timezone changes, and external calendars live in separate systems.",
     "constraints": [
-      "AI providers vary in availability, rate limits, model behavior, and key quotas.",
-      "LinkedIn, X, and Facebook each impose different OAuth, account, content, and API requirements.",
-      "Scheduled publishing must survive beyond the request that created it and retain a reviewable status."
+      "Schedule and completion semantics must remain correct across user timezones.",
+      "Reminders require browser permission, subscriptions, and a scheduled server invocation.",
+      "OAuth integrations depend on provider scopes and configuration, while exported/imported personal data must preserve user control."
     ],
     "architecture": {
-      "summary": "The Next.js application keeps HTTP boundaries in route handlers, product logic in domain modules, infrastructure in core services, and durable delivery in Inngest.",
+      "summary": "TanStack Start routes and React UI; routine/session/review domain services; Drizzle repositories over Neon PostgreSQL plus Better Auth; Web Push and Google Calendar/Tasks adapters with scheduled summary endpoints.",
       "layers": [
         {
-          "title": "Workspace",
-          "detail": "Generation, scoring, editing, brand rules, and platform previews"
+          "title": "Interface",
+          "detail": "TanStack Start routes and React UI."
         },
         {
-          "title": "Domain services",
-          "detail": "Validated workflows for content, library, accounts, and publishing"
+          "title": "Domain",
+          "detail": "Routine/session/review domain services."
         },
         {
-          "title": "Provider layer",
-          "detail": "OpenRouter, Groq, Gemini, and ZhipuAI with model and key fallback"
+          "title": "Data and integrations",
+          "detail": "Drizzle repositories over Neon PostgreSQL plus Better Auth."
         },
         {
-          "title": "Delivery",
-          "detail": "MongoDB persistence, Inngest jobs, and social platform APIs"
+          "title": "Quality and delivery",
+          "detail": "Web Push and Google Calendar/Tasks adapters with scheduled summary endpoints."
         }
       ]
     },
     "decisions": [
       {
-        "title": "Separate provider choice from generation",
-        "detail": "A provider switcher walks configured models and keys, so product workflows do not depend on one vendor-specific client."
+        "title": "Store durable behavioral records in PostgreSQL through Drizzle",
+        "detail": "Store durable behavioral records in PostgreSQL through Drizzle rather than browser-only state, trading infrastructure for queryable history and portability."
       },
       {
-        "title": "Treat brand voice as stored rules",
-        "detail": "Required language, blocked language, audience, tone, and persona context are workspace data rather than prompt-only instructions."
+        "title": "Separate planned routines from recorded outcomes",
+        "detail": "Separate planned routines from recorded outcomes so analysis reflects actual behavior."
       },
       {
-        "title": "Move scheduled work to a durable queue",
-        "detail": "Inngest owns delayed execution and status transitions instead of relying on an open browser session or a long HTTP request."
+        "title": "Isolate notification and OAuth integrations behind configured boundaries",
+        "detail": "Isolate notification and OAuth integrations behind configured boundaries so the core planner remains usable without every external connection."
       }
     ],
     "contribution": [
-      "Defined the end-to-end product flow from topic input to platform-ready output.",
-      "Built the Next.js interface, API routes, domain services, and MongoDB repositories.",
-      "Implemented multi-provider AI selection, reusable guardrails, scoring, and platform previews.",
-      "Integrated authentication, account recovery, social OAuth, Inngest scheduling, and publishing records."
+      "Built repeatable routine creation and daily execution flows.",
+      "Modeled sessions, check-ins, reviews, and account data in migrations/schema.",
+      "Added calendar/task sync, push subscriptions, scheduled weekly summaries, import/export, and deletion paths.",
+      "Established Vitest, Testing Library, and Playwright coverage."
     ],
     "outcomes": [
-      "One workspace now covers generation, comparison, refinement, preview, and delivery.",
-      "Provider and key fallback reduce the workflow's dependency on a single AI endpoint.",
-      "Publishing state is persisted for library and insights views instead of ending at generation.",
-      "Operational limits remain explicit: publishing still depends on platform approval, scopes, account type, and API access."
+      "Users can plan and run routines.",
+      "Record outcomes and review patterns.",
+      "Move account data in and out.",
+      "Optionally connect Google services and receive reminders/summaries."
     ],
     "screenshot": {
-      "alt": "PostCraft workspace showing the social content creation interface",
-      "caption": "The shipped workspace brings generation, brand-aware editing, scoring, and social previews into one flow."
+      "alt": "Routempo interface preview",
+      "caption": "Routempo presents a timezone-aware routine planner for planning repeatable rhythms, recording outcomes, and learning from real behavior."
+    }
+  },
+  {
+    "slug": "foliofarer",
+    "projectId": "project-foliofarer",
+    "summary": "Foliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL rendering.",
+    "role": "Product design and full-stack engineering",
+    "scope": "Product workflows, data boundaries, and delivery",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "03fbc6d5971a30d91bbd23a2f24dedd894e4f147",
+    "problem": "A memorable 3D portfolio can hide the information recruiters need and exclude visitors whose devices, preferences, or assistive technology do not suit WebGL exploration.",
+    "constraints": [
+      "Generated worlds must be deterministic enough for navigation and tests.",
+      "Content must remain fully reachable without relying on 3D interaction.",
+      "Rendering must adapt to reduced motion/data, viewport, connection, and device capability."
+    ],
+    "architecture": {
+      "summary": "Next.js route shell and accessible Atlas; React Three Fiber/Three.js scene runtime and Rapier interaction; deterministic journey compiler/generators and validated portfolio data; Playwright/unit/visual contracts plus static assets.",
+      "layers": [
+        {
+          "title": "Interface",
+          "detail": "Next.js route shell and accessible Atlas."
+        },
+        {
+          "title": "Domain",
+          "detail": "React Three Fiber/Three.js scene runtime and Rapier interaction."
+        },
+        {
+          "title": "Data and integrations",
+          "detail": "Deterministic journey compiler/generators and validated portfolio data."
+        },
+        {
+          "title": "Quality and delivery",
+          "detail": "Playwright/unit/visual contracts plus static assets."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Pair the explorable world with a complete Atlas",
+        "detail": "Pair the explorable world with a complete Atlas instead of making WebGL the only information path."
+      },
+      {
+        "title": "Compile deterministic route/world data",
+        "detail": "Compile deterministic route/world data rather than hand-place every element, trading generator complexity for repeatability."
+      },
+      {
+        "title": "Use adaptive quality tiers and preference signals",
+        "detail": "Use adaptive quality tiers and preference signals rather than a single maximum-fidelity renderer."
+      }
+    ],
+    "contribution": [
+      "Implemented world generation, route validation, scene navigation, minimap, landmarks, and Passport progression.",
+      "Built the accessible Atlas and keyboard-friendly navigation.",
+      "Added capability-aware rendering and reduced-motion behavior.",
+      "Maintained compiler, interaction, accessibility, browser, and visual-baseline tests."
+    ],
+    "outcomes": [
+      "Visitors can explore a 3D career world.",
+      "Read the same professional history through an accessible document surface.",
+      "Track local visit progress.",
+      "Use the experience across a broader range of capabilities and preferences."
+    ],
+    "screenshot": {
+      "alt": "Foliofarer interface preview",
+      "caption": "Foliofarer presents foliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL rendering."
+    }
+  },
+  {
+    "slug": "vidquery",
+    "projectId": "project-vidquery",
+    "summary": "Chromium extension that adds Gemini-powered Q&A to YouTube using visible video metadata, transcripts, and the user's own API key.",
+    "role": "Product design and browser-extension engineering",
+    "scope": "Browser integration, provider workflows, and privacy",
+    "status": "GitHub release available",
+    "verifiedBranch": "main",
+    "verifiedCommit": "ad828756cb52a42e922abed6491e29cc44033703",
+    "problem": "Viewers must scrub long YouTube videos to find specific answers even when the page already exposes metadata and a transcript.",
+    "constraints": [
+      "Answers are limited by transcript availability and quality.",
+      "Gemini calls require the user's own API key and send bounded video context to an external provider.",
+      "YouTube route/DOM changes and extension permission boundaries can break extraction."
+    ],
+    "architecture": {
+      "summary": "YouTube content extraction; React extension UI and request state; validated transcript/context envelope and Gemini adapter; browser storage/permissions plus release-built Manifest V3 package. The companion web app documents and distributes the product.",
+      "layers": [
+        {
+          "title": "Page integration",
+          "detail": "YouTube content extraction."
+        },
+        {
+          "title": "Extension interface",
+          "detail": "React extension UI and request state."
+        },
+        {
+          "title": "Provider boundary",
+          "detail": "Validated transcript/context envelope and Gemini adapter."
+        },
+        {
+          "title": "Storage and delivery",
+          "detail": "Browser storage/permissions plus release-built Manifest V3 package. The companion web app documents and distributes the product."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Use visible page metadata/transcripts",
+        "detail": "Use visible page metadata/transcripts rather than downloading or processing media."
+      },
+      {
+        "title": "Keep API credentials user-supplied",
+        "detail": "Keep API credentials user-supplied instead of operating a shared proxy, trading onboarding friction for a smaller service/data boundary."
+      },
+      {
+        "title": "Separate extension and website workspaces",
+        "detail": "Separate extension and website workspaces so product runtime and public documentation can ship independently."
+      }
+    ],
+    "contribution": [
+      "Built YouTube route detection and transcript/metadata extraction.",
+      "Implemented Gemini-backed question answering with schema validation and bounded context.",
+      "Added local credential/settings handling and explicit privacy guidance.",
+      "Created release automation and extension/web quality gates."
+    ],
+    "outcomes": [
+      "Users can ask questions about an open YouTube video.",
+      "Answers can use available transcript and visible metadata.",
+      "Users control their own provider credential.",
+      "Maintainers can produce installable GitHub release artifacts."
+    ],
+    "screenshot": {
+      "alt": "VidQuery - YouTube Q&A Extension interface preview",
+      "caption": "VidQuery - YouTube Q&A Extension presents chromium extension that adds Gemini-powered Q&A to YouTube using visible video metadata, transcripts, and the user's own API key."
+    }
+  },
+  {
+    "slug": "thoughtline",
+    "projectId": "project-thoughtline",
+    "summary": "User-controlled Chrome side-panel extension for understanding LinkedIn conversations and shaping replies and posts in your own voice.",
+    "role": "Product design and browser-extension engineering",
+    "scope": "Browser integration, provider workflows, and privacy",
+    "status": "GitHub release available",
+    "verifiedBranch": "main",
+    "verifiedCommit": "64fd8335b8933f51aba1f1b7fd5ce1dc03795a0a",
+    "problem": "Writing a useful LinkedIn reply or post requires understanding the visible conversation while preserving the author's own voice, intent, and control.",
+    "constraints": [
+      "LinkedIn page content is untrusted and must be bounded before entering prompts.",
+      "Both valid provider keys are currently required although Groq is used only for eligible fallback.",
+      "Extension permissions, encrypted local storage, and retention/export behavior must remain understandable to the user."
+    ],
+    "architecture": {
+      "summary": "LinkedIn content scripts/extraction; React side-panel workflows; typed drafting/source-research ports with Gemini-first and one Groq fallback; encrypted browser storage, migrations, backup/export, and Manifest V3 permissions.",
+      "layers": [
+        {
+          "title": "Page integration",
+          "detail": "LinkedIn content scripts/extraction."
+        },
+        {
+          "title": "Extension interface",
+          "detail": "React side-panel workflows."
+        },
+        {
+          "title": "Provider boundary",
+          "detail": "Typed drafting/source-research ports with Gemini-first and one Groq fallback."
+        },
+        {
+          "title": "Storage and delivery",
+          "detail": "Encrypted browser storage, migrations, backup/export, and Manifest V3 permissions."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Depend on typed provider ports",
+        "detail": "Depend on typed provider ports instead of provider response shapes, making fallback replaceable at adapter boundaries."
+      },
+      {
+        "title": "Use a bounded validated untrusted-content envelope",
+        "detail": "Use a bounded, validated untrusted-content envelope to reduce prompt-injection/data-sprawl risk."
+      },
+      {
+        "title": "Ask for permissions when a capability needs them",
+        "detail": "Ask for permissions when a capability needs them rather than upfront, trading workflow branching for user control."
+      }
+    ],
+    "contribution": [
+      "Implemented reply, idea, refine, history, settings, and onboarding journeys.",
+      "Built content extraction and validated prompt envelopes.",
+      "Added encrypted credential storage, migrations/recovery/retention, configuration backup, and data archives.",
+      "Established static, unit, packed-extension, Axe, responsive, and visual-regression gates."
+    ],
+    "outcomes": [
+      "Users can understand a visible conversation and draft replies.",
+      "Generate/refine post ideas in configured voice.",
+      "Fall back across two providers under defined rules.",
+      "Export and restore validated configurations and history."
+    ],
+    "screenshot": {
+      "alt": "Thoughtline - LinkedIn Writing Assistant interface preview",
+      "caption": "Thoughtline - LinkedIn Writing Assistant presents user-controlled Chrome side-panel extension for understanding LinkedIn conversations and shaping replies and posts in your own voice."
+    }
+  },
+  {
+    "slug": "mulalens",
+    "projectId": "project-mulalens",
+    "summary": "Chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",
+    "role": "Product design and browser-extension engineering",
+    "scope": "Browser integration, provider workflows, and privacy",
+    "status": "GitHub release available",
+    "verifiedBranch": "main",
+    "verifiedCommit": "c4fbbc08a7c9dd99211a61fb0d77780e8d414265",
+    "problem": "Deshi Mula company pages surface community conversation, but job seekers need structured identity, salary, workplace, story, and cited-research context at the decision point.",
+    "constraints": [
+      "Salary/workplace reports may be community-submitted and require independent verification.",
+      "The extension depends on the hosted b4join API and cannot operate as a complete offline research system.",
+      "Page matching and injection must remain narrow to avoid collecting unrelated browsing data."
+    ],
+    "architecture": {
+      "summary": "Deshi Mula page detection/content script; injected research panel UI; typed thin client to hosted b4join endpoints; release-built Manifest V3 package plus public documentation site.",
+      "layers": [
+        {
+          "title": "Page integration",
+          "detail": "Deshi Mula page detection/content script."
+        },
+        {
+          "title": "Extension interface",
+          "detail": "Injected research panel UI."
+        },
+        {
+          "title": "Provider boundary",
+          "detail": "Typed thin client to hosted b4join endpoints."
+        },
+        {
+          "title": "Storage and delivery",
+          "detail": "Release-built Manifest V3 package plus public documentation site."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Keep the extension thin and exclude backend keys/research datasets",
+        "detail": "Keep the extension thin and exclude backend keys/research datasets, trading offline independence for a smaller distributable privacy surface."
+      },
+      {
+        "title": "Attach context only to recognized company pages",
+        "detail": "Attach context only to recognized company pages instead of broad browsing surveillance."
+      },
+      {
+        "title": "Preserve source citations and caveats",
+        "detail": "Preserve source citations and caveats rather than presenting community data as authoritative."
+      }
+    ],
+    "contribution": [
+      "Implemented company-page detection and panel injection.",
+      "Built identity, workplace, salary, job, story, and cited-research sections.",
+      "Integrated hosted b4join lookup endpoints and error/loading states.",
+      "Produced release packaging, store artwork, privacy docs, ADRs, and checks."
+    ],
+    "outcomes": [
+      "Users can open workplace context without leaving the company page.",
+      "Inspect salary and narrative signals alongside source links.",
+      "Install a packaged release.",
+      "Understand that evidence is advisory and API-dependent."
+    ],
+    "screenshot": {
+      "alt": "MulaLens - Workplace Context Extension interface preview",
+      "caption": "MulaLens - Workplace Context Extension presents chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages."
+    }
+  },
+  {
+    "slug": "skillfoliox",
+    "projectId": "project-skillfoliox",
+    "summary": "A curated portfolio of reusable SKILL.md capabilities for Claude Code, OpenAI Codex, Cursor, and other AI coding agents.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "7ec23cae440a5dae06a52a5f4a79e470ad261007",
+    "problem": "Reusable SKILL.md capabilities are scattered across repositories and are difficult to compare by purpose, host compatibility, maturity, and install path.",
+    "constraints": [
+      "Catalog facts can drift from source repositories and package releases.",
+      "Remote GitHub README fetching can fail or be rate-limited.",
+      "Heterogeneous Markdown must render safely and consistently without implying every skill has identical support."
+    ],
+    "architecture": {
+      "summary": "TanStack Start routes and React catalog UI; typed local catalog/search/filter model; remote README fetch/render pipeline with retry/source fallback; build-time metadata, sitemap, and Netlify deployment.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "TanStack Start routes and React catalog UI."
+        },
+        {
+          "title": "Automation",
+          "detail": "Typed local catalog/search/filter model."
+        },
+        {
+          "title": "Verification",
+          "detail": "Remote README fetch/render pipeline with retry/source fallback."
+        },
+        {
+          "title": "Distribution",
+          "detail": "Build-time metadata, sitemap, and Netlify deployment."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Keep discovery metadata in a curated local catalog",
+        "detail": "Keep discovery metadata in a curated local catalog for predictable builds, accepting explicit synchronization work."
+      },
+      {
+        "title": "Render source documentation",
+        "detail": "Render source documentation while retaining direct-source fallbacks when fetches fail."
+      },
+      {
+        "title": "Use one featured entry and structured status/compatibility fields",
+        "detail": "Use one featured entry and structured status/compatibility fields so comparisons remain consistent."
+      }
+    ],
+    "contribution": [
+      "Designed catalog schema, filters, summaries, cards, and detail routes.",
+      "Implemented remote README rendering and failure fallbacks.",
+      "Documented the add-skill workflow and validation expectations.",
+      "Added tests, sitemap generation, responsive UI, and Netlify configuration."
+    ],
+    "outcomes": [
+      "Visitors can browse and compare skills.",
+      "Open rendered documentation and canonical repositories.",
+      "Inspect compatibility, version, status, and categories.",
+      "Maintainers can add catalog entries through a documented, testable workflow."
+    ],
+    "screenshot": {
+      "alt": "Skillfoliox - Agent Skill Catalog interface preview",
+      "caption": "Skillfoliox - Agent Skill Catalog presents a curated portfolio of reusable SKILL.md capabilities for Claude Code, OpenAI Codex, Cursor, and other AI coding agents."
+    }
+  },
+  {
+    "slug": "ship-agent-skill",
+    "projectId": "project-ship-agent-skill",
+    "summary": "End-to-end Codex and Claude Code skill for validating, packaging, publishing, releasing, and verifying portable Agent Skills.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "579c49367e6ab254b48c22cc9be74815eb58437e",
+    "problem": "Releasing a skill spans mutable local state and several independent remote systems, making partial success, version drift, and accidental publication easy.",
+    "constraints": [
+      "Publishing, pushing, releases, deployment, and catalog changes need separate authorization.",
+      "Codex and Claude Code require different install destinations but one portable payload.",
+      "An immutable artifact may already exist when a later stage fails."
+    ],
+    "architecture": {
+      "summary": "Agent-facing orchestration in SKILL.md; deterministic preflight/release-gate references; npm installer/package contract and consumer-side tests.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Agent-facing orchestration in SKILL.md."
+        },
+        {
+          "title": "Automation",
+          "detail": "Deterministic preflight/release-gate references."
+        },
+        {
+          "title": "Verification",
+          "detail": "Npm installer/package contract and consumer-side tests."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Model release stages separately",
+        "detail": "Model release stages separately rather than treating \"ship\" as blanket permission."
+      },
+      {
+        "title": "Validate host portability before creating immutable artifacts",
+        "detail": "Validate host portability before creating immutable artifacts."
+      },
+      {
+        "title": "Verify the installed consumer view after registry/release checks",
+        "detail": "Verify the installed consumer view after registry/release checks, accepting more gates for stronger end-to-end evidence."
+      }
+    ],
+    "contribution": [
+      "Defined an authorization-aware release inventory and workflow.",
+      "Built deterministic preflight checks.",
+      "Implemented safe dual-host installation with path/symlink/rollback protections.",
+      "Tested dry runs, replacement, package contents, and consumer contracts."
+    ],
+    "outcomes": [
+      "Agents can prepare without publishing.",
+      "Execute only authorized stages.",
+      "Distinguish partial remote success.",
+      "Verify tag, GitHub release, npm package, install command, and catalog state from the consumer side."
+    ]
+  },
+  {
+    "slug": "verify-project-release",
+    "projectId": "project-verify-project-release",
+    "summary": "Read-only Codex and Claude Code skill for verifying GitHub releases, npm packages, tags, CI, install commands, and catalog metadata.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "0b947cba17e7b9b39e87ece974255c5b3f5aa052",
+    "problem": "A release can look complete in one system while its tag, package version, CI, install instructions, or catalog entry points elsewhere.",
+    "constraints": [
+      "Auditing must never mutate or repair release state.",
+      "Authentication/network errors cannot be interpreted as artifact absence.",
+      "Mutable aliases such as latest are weaker proof than package@version."
+    ],
+    "architecture": {
+      "summary": "Evidence collection from Git/GitHub/npm/catalog; deterministic identity comparison and classification; human-facing pass/warning/fail/blocked report.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Evidence collection from Git/GitHub/npm/catalog."
+        },
+        {
+          "title": "Automation",
+          "detail": "Deterministic identity comparison and classification."
+        },
+        {
+          "title": "Verification",
+          "detail": "Human-facing pass/warning/fail/blocked report."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Preserve a strict read-only boundary",
+        "detail": "Preserve a strict read-only boundary."
+      },
+      {
+        "title": "Normalize findings into four explicit states",
+        "detail": "Normalize findings into four explicit states instead of a vague success flag."
+      },
+      {
+        "title": "Prefer immutable version evidence and treat correct mutable aliases as conditional",
+        "detail": "Prefer immutable version evidence and treat correct mutable aliases as conditional."
+      }
+    ],
+    "contribution": [
+      "Implemented cross-system release identity resolution.",
+      "Built deterministic Git/GitHub/npm/catalog evaluators.",
+      "Encoded CI and install-command checks.",
+      "Added regression, installer-safety, and package-contract tests."
+    ],
+    "outcomes": [
+      "Agents can detect version/tag drift.",
+      "Distinguish missing artifacts from blocked verification.",
+      "Report exact failing surfaces.",
+      "Provide evidence links without claiming an install was executed."
+    ]
+  },
+  {
+    "slug": "write-project-readme",
+    "projectId": "project-write-project-readme",
+    "summary": "Install an evidence-based project README skill for Codex and Claude Code.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "f855eb892345c0700e113ee910055b78bdc3f764",
+    "problem": "README generators often preserve stale claims or produce generic sections because they do not inspect the actual project or distinguish evidence from inference.",
+    "constraints": [
+      "The skill may edit only the root README.",
+      "Features, commands, compatibility, status, URLs, metrics, and license terms cannot be invented.",
+      "Applications, packages, APIs, CLIs, monorepos, datasets, and skills require different reading flows."
+    ],
+    "architecture": {
+      "summary": "Repository evidence inventory; project-type/quality references and authoring workflow; deterministic README checker plus npm installer/tests.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Repository evidence inventory."
+        },
+        {
+          "title": "Automation",
+          "detail": "Project-type/quality references and authoring workflow."
+        },
+        {
+          "title": "Verification",
+          "detail": "Deterministic README checker plus npm installer/tests."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Treat the old README as evidence to verify not a template to preserve",
+        "detail": "Treat the old README as evidence to verify, not a template to preserve."
+      },
+      {
+        "title": "Classify facts as verified inferred or unknown",
+        "detail": "Classify facts as verified, inferred, or unknown."
+      },
+      {
+        "title": "Enforce a full-document output contract",
+        "detail": "Enforce a full-document output contract rather than allowing a badge-only or single-section patch."
+      }
+    ],
+    "contribution": [
+      "Defined evidence priority and project-type routing.",
+      "Bundled comprehensive quality and benchmark references.",
+      "Implemented structural/content checks.",
+      "Added installer, release-workflow, compatibility, and package tests."
+    ],
+    "outcomes": [
+      "Agents can produce audience-first setup and usage docs.",
+      "Preserve verified voice/attribution while removing stale claims.",
+      "Surface material absences such as missing licenses.",
+      "Validate that the finished README is complete."
+    ]
+  },
+  {
+    "slug": "craft-github-release",
+    "projectId": "project-craft-github-release",
+    "summary": "Agent skill for Codex and Claude Code that turns verified repository evidence into trustworthy GitHub release notes and releases.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "da7df4509d46bbb1a4732f21feece6b37dc5c9fc",
+    "problem": "Commit logs are implementation-centric and can lead release authors to omit user impact, invent compatibility, or choose the wrong comparison boundary.",
+    "constraints": [
+      "Tag/version/range ambiguity can materially change the release.",
+      "Only user-visible changes supported by commits, diffs, issues, or changelogs belong in notes.",
+      "Creating/editing a GitHub release is a remote mutation distinct from drafting."
+    ],
+    "architecture": {
+      "summary": "Git/tag/diff evidence collector; release-note rules and drafting workflow; optional GitHub release adapter with explicit output/validation report.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Git/tag/diff evidence collector."
+        },
+        {
+          "title": "Automation",
+          "detail": "Release-note rules and drafting workflow."
+        },
+        {
+          "title": "Verification",
+          "detail": "Optional GitHub release adapter with explicit output/validation report."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Resolve target and comparison boundary before prose",
+        "detail": "Resolve target and comparison boundary before prose."
+      },
+      {
+        "title": "Separate breaking changes from ordinary improvements",
+        "detail": "Separate breaking changes from ordinary improvements and qualify inferred impact."
+      },
+      {
+        "title": "Keep drafting read-only",
+        "detail": "Keep drafting read-only and gate remote release creation independently."
+      }
+    ],
+    "contribution": [
+      "Built release evidence collection.",
+      "Codified note structure and evidence rules.",
+      "Implemented uncertainty and authorization checkpoints.",
+      "Packaged portable installers and tests for release behavior."
+    ],
+    "outcomes": [
+      "Agents can turn repository history into scoped notes.",
+      "Exclude unsupported names/compatibility/test claims.",
+      "Flag breaking changes.",
+      "Hand off final notes or an authorized release URL with evidence."
+    ]
+  },
+  {
+    "slug": "sync-project-metadata",
+    "projectId": "project-sync-project-metadata",
+    "summary": "Agent skill for Codex and Claude Code that audits and synchronizes project metadata across manifests, documentation, releases, and catalogs.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "b44373b73378cfd73923d19775ca793964a0f125",
+    "problem": "Project identity and version details are duplicated across files and drift, leaving users with broken links, wrong install commands, or conflicting compatibility claims.",
+    "constraints": [
+      "Each field has a different authoritative source.",
+      "A human-facing description must match implemented behavior, not merely manifest prose.",
+      "Local synchronization does not authorize publishing or changing remote metadata."
+    ],
+    "architecture": {
+      "summary": "Evidence/source precedence model; deterministic metadata auditor and reconciliation workflow; repository-native validation plus npm distribution.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Evidence/source precedence model."
+        },
+        {
+          "title": "Automation",
+          "detail": "Deterministic metadata auditor and reconciliation workflow."
+        },
+        {
+          "title": "Verification",
+          "detail": "Repository-native validation plus npm distribution."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Define field-by-field source authority",
+        "detail": "Define field-by-field source authority rather than one universal source of truth."
+      },
+      {
+        "title": "Report ambiguity",
+        "detail": "Report ambiguity instead of overwriting uncertain values."
+      },
+      {
+        "title": "Validate every downstream consumer after edits",
+        "detail": "Validate every downstream consumer after edits."
+      }
+    ],
+    "contribution": [
+      "Encoded canonical-source rules.",
+      "Built metadata drift detection.",
+      "Designed scoped local synchronization and validation reporting.",
+      "Added safe installation and package tests."
+    ],
+    "outcomes": [
+      "Agents can identify conflicting names/versions/URLs.",
+      "Repair authorized local copies.",
+      "Preserve unknowns for manual resolution.",
+      "Report remaining remote actions separately."
+    ]
+  },
+  {
+    "slug": "prepare-netlify-deployment",
+    "projectId": "project-prepare-netlify-deployment",
+    "summary": "Codex and Claude Code skill for auditing and preparing reliable Netlify deployments across static, SPA, SSR, and hybrid web apps.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "5f8f771ab59ba0c3e920449d278ae71fb0d9e967",
+    "problem": "A build can succeed locally yet fail on Netlify because base paths, publish directories, runtime models, redirects, adapters, or environment requirements are misidentified.",
+    "constraints": [
+      "Static, SPA, hybrid, and SSR routing require different contracts.",
+      "Netlify adapter behavior is framework/version-sensitive.",
+      "Dashboard/environment/deployment changes are remote actions that need explicit authority."
+    ],
+    "architecture": {
+      "summary": "Project/framework/lockfile detection; deterministic netlify.toml and output audit using documented patterns; local build/route verification and authorization-gated remote handoff.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Project/framework/lockfile detection."
+        },
+        {
+          "title": "Automation",
+          "detail": "Deterministic netlify.toml and output audit using documented patterns."
+        },
+        {
+          "title": "Verification",
+          "detail": "Local build/route verification and authorization-gated remote handoff."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Derive an explicit build contract before changing configuration",
+        "detail": "Derive an explicit build contract before changing configuration."
+      },
+      {
+        "title": "Prefer maintained framework adapters over hand-written function shims",
+        "detail": "Prefer maintained framework adapters over hand-written function shims."
+      },
+      {
+        "title": "Preserve unrelated configuration and never hide build defects behind catch-all redirects",
+        "detail": "Preserve unrelated configuration and never hide build defects behind catch-all redirects."
+      }
+    ],
+    "contribution": [
+      "Implemented package manager/framework/runtime detection.",
+      "Built a Python Netlify configuration auditor.",
+      "Codified redirect, base, publish, functions, and adapter rules.",
+      "Added installer and package verification."
+    ],
+    "outcomes": [
+      "Agents can classify a project's runtime model.",
+      "Repair minimal local configuration.",
+      "Verify root/nested routes and output shape.",
+      "Separate a deployment-ready local state from unperformed dashboard/deploy actions."
+    ]
+  },
+  {
+    "slug": "audit-frontend-consistency",
+    "projectId": "project-audit-frontend-consistency",
+    "summary": "Agent skill for auditing frontend typography, spacing, color, responsive behavior, states, motion, and accessibility consistency.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "69f608bfae1033a1c46a8eb4c7c468834dd6262b",
+    "problem": "Visual inconsistencies are often reported from one screenshot without provenance, comparison points, responsive states, or a systemic root cause.",
+    "constraints": [
+      "Screenshots must be tied to route, viewport, time/build, and state.",
+      "Responsive/a11y behavior needs multiple widths and interaction states.",
+      "An audit request alone does not authorize implementation."
+    ],
+    "architecture": {
+      "summary": "Agent audit/repair workflow; consistency reference defining evidence, severity, dependency order, and verification expectations. Packaging supplies portable host installation.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Agent audit/repair workflow."
+        },
+        {
+          "title": "Automation",
+          "detail": "Consistency reference defining evidence, severity, dependency order, and verification expectations. Packaging supplies portable host installation."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Compare equivalent elements side-by-side before generalizing",
+        "detail": "Compare equivalent elements side-by-side before generalizing."
+      },
+      {
+        "title": "Audit shared tokens/primitives before local pages",
+        "detail": "Audit shared tokens/primitives before local pages."
+      },
+      {
+        "title": "Repair shared causes before adding component overrides",
+        "detail": "Repair shared causes before adding component overrides, trading a broader root fix for less design drift."
+      }
+    ],
+    "contribution": [
+      "Defined screenshot provenance and viewport/state coverage.",
+      "Codified severity and finding fields.",
+      "Designed dependency-ordered audit and repair sequencing.",
+      "Packaged cross-host installation and contract tests."
+    ],
+    "outcomes": [
+      "Agents can produce reproducible UI findings.",
+      "Distinguish observed defects from inferred causes.",
+      "Propose the smallest systemic fix.",
+      "Recheck affected viewports, states, motion, focus, tests, and builds when implementation is requested."
+    ]
+  },
+  {
+    "slug": "prepare-github-project",
+    "projectId": "project-prepare-github-project",
+    "summary": "Agent skill for auditing and preparing professional GitHub repositories, metadata, topics, community files, security, and CI.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "da41975fe0bfc3f9c6b87d1e41a25a2a34d08b1c",
+    "problem": "A codebase can be technically ready while its Git identity, metadata, security guidance, community files, secret hygiene, and CI do not support professional public collaboration.",
+    "constraints": [
+      "Visibility, repository creation, branch/settings changes, and pushes are external mutations.",
+      "Licenses and homepage URLs cannot be assumed.",
+      "Partial remote success must not trigger destructive compensation."
+    ],
+    "architecture": {
+      "summary": "Local manifest/Git/community/workflow auditor; metadata and preparation rules; authorization-gated GitHub CLI/API actions with read-back verification.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Local manifest/Git/community/workflow auditor."
+        },
+        {
+          "title": "Automation",
+          "detail": "Metadata and preparation rules."
+        },
+        {
+          "title": "Verification",
+          "detail": "Authorization-gated GitHub CLI/API actions with read-back verification."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate local readiness edits from remote mutations",
+        "detail": "Separate local readiness edits from remote mutations."
+      },
+      {
+        "title": "Require an explicit visibility/license choice",
+        "detail": "Require an explicit visibility/license choice instead of defaults."
+      },
+      {
+        "title": "Verify remote settings and SHAs after changes",
+        "detail": "Verify remote settings and SHAs after changes rather than trusting mutation responses alone."
+      }
+    ],
+    "contribution": [
+      "Built recognized-manifest/community/CI/secret-name inventory.",
+      "Encoded description/homepage/topic/default-branch guidance.",
+      "Designed safe local preparation and remote authorization boundaries.",
+      "Added read-back and partial-success reporting."
+    ],
+    "outcomes": [
+      "Agents can identify readiness gaps.",
+      "Prepare factual community and CI materials.",
+      "Propose accurate repository metadata.",
+      "Create/configure a repository only when authorized and verify the resulting state."
+    ]
+  },
+  {
+    "slug": "publish-skill-to-skillfolio",
+    "projectId": "project-publish-skill-to-skillfolio",
+    "summary": "Agent skill for adding verified Codex and Claude Code skills to Skillfolio catalogs with schema, README, sitemap, and build validation.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "8af5a17d68337226ac87dde3c8be436d5abce090",
+    "problem": "Adding a skill to a catalog touches duplicated consumers and can import stale package/repository facts or mistake \"publish\" for permission to deploy.",
+    "constraints": [
+      "Catalog schemas and consumers vary by target app.",
+      "Repository/package/version/compatibility facts require primary-source verification.",
+      "Local catalog editing does not authorize commit, push, npm publication, pull requests, or deployment."
+    ],
+    "architecture": {
+      "summary": "Source identity/evidence resolution; target-app schema and consumer tracing; Python entry validator plus repository-native format/type/test/build/sitemap gates.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Source identity/evidence resolution."
+        },
+        {
+          "title": "Automation",
+          "detail": "Target-app schema and consumer tracing."
+        },
+        {
+          "title": "Verification",
+          "detail": "Python entry validator plus repository-native format/type/test/build/sitemap gates."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Discover the live catalog schema",
+        "detail": "Discover the live catalog schema instead of assuming one."
+      },
+      {
+        "title": "Update exactly one entry and trace all existing consumers",
+        "detail": "Update exactly one entry and trace all existing consumers."
+      },
+      {
+        "title": "Pair the heuristic validator with the app's own checks",
+        "detail": "Pair the heuristic validator with the app's own checks because JSON shape alone cannot prove presentation or routing."
+      }
+    ],
+    "contribution": [
+      "Defined evidence and authorization rules.",
+      "Built schema/consumer discovery workflow.",
+      "Implemented deterministic catalog-entry validation.",
+      "Integrated README index, sitemap, type-check, test, and production-build acceptance gates."
+    ],
+    "outcomes": [
+      "Agents can resolve a canonical skill identity.",
+      "Add/update a valid entry.",
+      "Keep indexes and sitemap aligned.",
+      "Report local completion without implying external publication."
+    ]
+  },
+  {
+    "slug": "ensure-social-preview",
+    "projectId": "project-ensure-social-preview",
+    "summary": "Audit, create, repair, and verify large-image social previews for web apps and websites.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Agent workflow, validation automation, and packaging",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "ca3e4e6822d416e44f21f6c79a742de8c1b8c06c",
+    "problem": "A page can look correct in a browser while link-card crawlers see missing/client-only metadata, an inaccessible/small image, or stale platform cache.",
+    "constraints": [
+      "Proprietary social platforms' selection and cache algorithms cannot be simulated or controlled.",
+      "Metadata must be crawler-visible and image URLs remotely reachable.",
+      "Only PNG, JPEG, and supported WebP encodings yield deterministic dimension checks."
+    ],
+    "architecture": {
+      "summary": "Repository/framework inspection and standards; deterministic HTML/image checker with 0/1/2 exit contract; preserve/repair/create workflow followed by local and deployed verification.",
+      "layers": [
+        {
+          "title": "Skill workflow",
+          "detail": "Repository/framework inspection and standards."
+        },
+        {
+          "title": "Automation",
+          "detail": "Deterministic HTML/image checker with 0/1/2 exit contract."
+        },
+        {
+          "title": "Verification",
+          "detail": "Preserve/repair/create workflow followed by local and deployed verification."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate implementation eligibility from platform cache symptoms",
+        "detail": "Separate implementation eligibility from platform cache symptoms."
+      },
+      {
+        "title": "Preserve valid metadata and make the smallest framework-native repair",
+        "detail": "Preserve valid metadata and make the smallest framework-native repair."
+      },
+      {
+        "title": "Standardize new preview assets at 1200×630",
+        "detail": "Standardize new preview assets at 1200×630 while verifying bytes/type/dimensions rather than trusting file extensions."
+      }
+    ],
+    "contribution": [
+      "Built raw HTML/meta/image response auditing.",
+      "Implemented raster dimension validation and explicit exit codes.",
+      "Codified framework patterns and a social-preview standard.",
+      "Added installer, checker, and package-contract tests."
+    ],
+    "outcomes": [
+      "Agents can diagnose missing versus cached cards.",
+      "Repair incomplete/relative/client-only metadata.",
+      "Create a branded large-image asset when needed.",
+      "Verify local implementation and deployed crawler eligibility without promising a platform-specific layout."
+    ]
+  },
+  {
+    "slug": "bangladesh-location-registry",
+    "projectId": "project-bangladesh-location-registry",
+    "summary": "Versioned, provenance-rich Bangladesh location registry with census, postal, facility, ward, and infrastructure data from government-published sources.",
+    "role": "Data modeling, validation, and release engineering",
+    "scope": "Provenance, transformation, validation, and distribution",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "ca6aa4c0a5d9c59d745201fa8150692486f2086c",
+    "problem": "Bangladesh location records are spread across differently structured sources, making normalized lookup, provenance review, and repeatable machine consumption difficult.",
+    "constraints": [
+      "Administrative boundaries, names, and facilities change.",
+      "Source coverage and confidence vary and do not establish authoritative identity/address truth.",
+      "Health, emergency, eligibility, routing, or legal use requires current authoritative confirmation."
+    ],
+    "architecture": {
+      "summary": "Source/provenance manifests; normalized records governed by JSON Schema; JavaScript validation/build scripts; versioned JSON, JSONL, compressed, and SQLite release outputs with samples/docs.",
+      "layers": [
+        {
+          "title": "Source records",
+          "detail": "Source/provenance manifests."
+        },
+        {
+          "title": "Transformation",
+          "detail": "Normalized records governed by JSON Schema."
+        },
+        {
+          "title": "Release formats",
+          "detail": "JavaScript validation/build scripts."
+        },
+        {
+          "title": "Validation",
+          "detail": "Versioned JSON, JSONL, compressed, and SQLite release outputs with samples/docs."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Preserve source lineage and limitations beside normalized data",
+        "detail": "Preserve source lineage and limitations beside normalized data instead of hiding uncertainty."
+      },
+      {
+        "title": "Commit schemas/manifests and generate distribution formats",
+        "detail": "Commit schemas/manifests and generate distribution formats, trading release work for reviewability."
+      },
+      {
+        "title": "Publish multiple interoperable formats from one model",
+        "detail": "Publish multiple interoperable formats from one model rather than maintain divergent datasets."
+      }
+    ],
+    "contribution": [
+      "Designed normalized geographic/facility schemas.",
+      "Assembled provenance and coverage manifests.",
+      "Built validation and deterministic release-generation scripts.",
+      "Documented responsible use, update process, samples, citation, and source terms."
+    ],
+    "outcomes": [
+      "Consumers can download structured location data.",
+      "Validate records against schemas.",
+      "Choose JSON, streaming JSONL, or SQLite.",
+      "Trace coverage and provenance limitations before use."
+    ],
+    "screenshot": {
+      "alt": "Bangladesh Location Registry interface preview",
+      "caption": "Bangladesh Location Registry presents versioned, provenance-rich Bangladesh location registry with census, postal, facility, ward, and infrastructure data from government-published sources."
+    }
+  },
+  {
+    "slug": "educanvas",
+    "projectId": "project-educanvas",
+    "summary": "Theme-driven educational website and content-management starter built with Next.js",
+    "role": "Application architecture and full-stack engineering",
+    "scope": "Content architecture, authentication, and deployment",
+    "status": "Reusable project starter",
+    "verifiedBranch": "main",
+    "verifiedCommit": "451061ebc68abbf237a791775e88a892a2978c69",
+    "problem": "Education organizations need familiar public information and publishing workflows, but cloning whole codebases per institution creates drift and costly maintenance.",
+    "constraints": [
+      "Three institution types and multiple layouts must share behavior without content/theme leakage.",
+      "MongoDB, Google OAuth/Drive, and Resend are optional/configured services.",
+      "Public read-only defaults must remain usable when database-backed administration is absent."
+    ],
+    "architecture": {
+      "summary": "Next.js public/admin routes; feature-owned content/admission/media domain modules; centralized institution and visual-theme configuration/tokens; MongoDB/auth/Drive/email adapters with server-boundary enforcement.",
+      "layers": [
+        {
+          "title": "Application shell",
+          "detail": "Next.js public/admin routes."
+        },
+        {
+          "title": "Content services",
+          "detail": "Feature-owned content/admission/media domain modules."
+        },
+        {
+          "title": "Integrations",
+          "detail": "Centralized institution and visual-theme configuration/tokens."
+        },
+        {
+          "title": "Quality",
+          "detail": "MongoDB/auth/Drive/email adapters with server-boundary enforcement."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Split institution identity tokens from layout composition",
+        "detail": "Split institution identity tokens from layout composition so branding and structure vary independently."
+      },
+      {
+        "title": "Resolve both themes server-side",
+        "detail": "Resolve both themes server-side to prevent a fallback-theme flash."
+      },
+      {
+        "title": "Keep route and feature code shared",
+        "detail": "Keep route and feature code shared, accepting stronger configuration discipline to avoid forks."
+      }
+    ],
+    "contribution": [
+      "Built public education pages and admin publishing workflows.",
+      "Implemented institution/layout selection with named themes.",
+      "Added MongoDB content/admission storage, Google sign-in/Drive media, and email integration.",
+      "Created Playwright coverage, archived prototypes, SEO/social metadata, and deployment docs."
+    ],
+    "outcomes": [
+      "Developers can deploy one starter for three institution categories.",
+      "Administrators can publish content and manage enquiries.",
+      "Visitors get configured branding/layout on shared routes.",
+      "Deployments can fall back to read-only repository defaults where documented."
+    ],
+    "screenshot": {
+      "alt": "EduCanvas interface preview",
+      "caption": "EduCanvas presents theme-driven educational website and content-management starter built with Next.js."
+    }
+  },
+  {
+    "slug": "content-types-lite",
+    "projectId": "project-content-types-lite",
+    "summary": "Tiny, type-safe HTTP media type constants and utilities for parsing, formatting, matching, and validation.",
+    "role": "Library design and package engineering",
+    "scope": "Typed APIs, compatibility, and package distribution",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "ea801eda6cb89d58d5f16ce2a6e012b7885112e7",
+    "problem": "Applications repeatedly implement subtly different Content-Type parsing and negotiation logic or import larger dependency trees for a focused HTTP-header task.",
+    "constraints": [
+      "Quoted parameters and malformed header values need predictable parsing.",
+      "Package output must work across ESM and CommonJS consumers.",
+      "The public API must stay small and type-safe without runtime dependencies."
+    ],
+    "architecture": {
+      "summary": "Pure TypeScript library and tests; dual ESM/CommonJS build/exports; workspace-linked React documentation/playground that consumes the local package.",
+      "layers": [
+        {
+          "title": "Core library",
+          "detail": "Pure TypeScript library and tests."
+        },
+        {
+          "title": "Package builds",
+          "detail": "Dual ESM/CommonJS build/exports."
+        },
+        {
+          "title": "Documentation app",
+          "detail": "Workspace-linked React documentation/playground that consumes the local package."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Keep runtime dependencies at zero",
+        "detail": "Keep runtime dependencies at zero, trading broad convenience helpers for a focused surface."
+      },
+      {
+        "title": "Ship dual module formats with typed exports",
+        "detail": "Ship dual module formats with typed exports."
+      },
+      {
+        "title": "Colocate docs playground and package",
+        "detail": "Colocate docs playground and package so every app build exercises the workspace implementation."
+      }
+    ],
+    "contribution": [
+      "Implemented media-type parsing/formatting and parameter handling.",
+      "Added content negotiation/validation helpers and type declarations.",
+      "Configured tsup/package exports and release gates.",
+      "Built searchable interactive docs/examples against workspace:*."
+    ],
+    "outcomes": [
+      "Consumers can parse and serialize Content-Type values.",
+      "Validate/compare media types.",
+      "Use the package from ESM or CommonJS.",
+      "Test behavior interactively in the documentation app."
+    ],
+    "screenshot": {
+      "alt": "content-types-lite interface preview",
+      "caption": "content-types-lite presents tiny, type-safe HTTP media type constants and utilities for parsing, formatting, matching, and validation."
+    }
+  },
+  {
+    "slug": "http-status-lite",
+    "projectId": "project-http-status-lite",
+    "summary": "Tiny, standards-backed, type-safe HTTP status codes for Node.js and browsers.",
+    "role": "Library design and package engineering",
+    "scope": "Typed APIs, compatibility, and package distribution",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "5c12e9665c1643fd1f66c1fefa4b2c4ad60ef0ed",
+    "problem": "Developers need status-code names, categories, and lifecycle metadata without memorized numeric checks, stale hand-written lists, or a heavy dependency.",
+    "constraints": [
+      "IANA registry state changes over time.",
+      "Obsolete, temporary, and unused codes must remain distinguishable.",
+      "API typing and ESM/CommonJS compatibility must not depend on live network access."
+    ],
+    "architecture": {
+      "summary": "Committed IANA-derived registry and generated typed library; independently importable constants/predicates/metadata entry points; workspace-linked interactive reference and automated registry/release workflows.",
+      "layers": [
+        {
+          "title": "Core library",
+          "detail": "Committed IANA-derived registry and generated typed library."
+        },
+        {
+          "title": "Package builds",
+          "detail": "Independently importable constants/predicates/metadata entry points."
+        },
+        {
+          "title": "Documentation app",
+          "detail": "Workspace-linked interactive reference and automated registry/release workflows."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Commit the registry snapshot",
+        "detail": "Commit the registry snapshot instead of fetching at runtime, trading periodic maintenance for deterministic builds."
+      },
+      {
+        "title": "Preserve lifecycle metadata",
+        "detail": "Preserve lifecycle metadata rather than flattening every number to \"valid\"."
+      },
+      {
+        "title": "Expose separate entry points",
+        "detail": "Expose separate entry points to support focused imports while retaining a complete main API."
+      }
+    ],
+    "contribution": [
+      "Built the typed registry, lookups, parsers, and status-class predicates.",
+      "Modeled permanent/temporary/obsolete/unused entries.",
+      "Added generator/drift and package publishing gates.",
+      "Implemented an interactive status reference that consumes the local library."
+    ],
+    "outcomes": [
+      "Consumers can retrieve status metadata.",
+      "Classify success/client/server categories.",
+      "Parse and validate codes.",
+      "Use a reviewable standards snapshot without runtime network access."
+    ],
+    "screenshot": {
+      "alt": "http-status-lite interface preview",
+      "caption": "http-status-lite presents tiny, standards-backed, type-safe HTTP status codes for Node.js and browsers."
+    }
+  },
+  {
+    "slug": "mime-types-lite",
+    "projectId": "project-mime-types-lite",
+    "summary": "Tiny, zero-dependency, type-safe MIME constants and helpers for HTTP APIs, uploads, and file extensions.",
+    "role": "Library design and package engineering",
+    "scope": "Typed APIs, compatibility, and package distribution",
+    "status": "Published npm package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "e82cf34bb917980e136b420ac98e190c545ade89",
+    "problem": "Upload, download, and HTTP code needs dependable mappings between filenames/extensions and media types without carrying a broad database dependency into every bundle.",
+    "constraints": [
+      "One extension can have aliases or ambiguous mappings.",
+      "Lookup must normalize case/dots/paths without pretending file content was inspected.",
+      "ESM/CommonJS consumers require stable typed exports with no runtime dependencies."
+    ],
+    "architecture": {
+      "summary": "Curated media-type registry and pure lookup/validation functions; tsup dual-format package/exports; workspace-linked TanStack Start docs and playground.",
+      "layers": [
+        {
+          "title": "Core library",
+          "detail": "Curated media-type registry and pure lookup/validation functions."
+        },
+        {
+          "title": "Package builds",
+          "detail": "Tsup dual-format package/exports."
+        },
+        {
+          "title": "Documentation app",
+          "detail": "Workspace-linked TanStack Start docs and playground."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Scope the registry/helpers narrowly and keep zero dependencies",
+        "detail": "Scope the registry/helpers narrowly and keep zero dependencies."
+      },
+      {
+        "title": "Treat extension lookup as metadata inference not content security validation",
+        "detail": "Treat extension lookup as metadata inference, not content security validation."
+      },
+      {
+        "title": "Exercise the exact local package from the documentation app before release",
+        "detail": "Exercise the exact local package from the documentation app before release."
+      }
+    ],
+    "contribution": [
+      "Implemented extension-to-type and type-to-extension lookups.",
+      "Added normalization and validation helpers.",
+      "Configured typed ESM/CommonJS publishing.",
+      "Built interactive docs, examples, tests, CI, and Netlify deployment."
+    ],
+    "outcomes": [
+      "Consumers can infer common media types from filenames.",
+      "Recover preferred extensions.",
+      "Validate/normalize media-type inputs.",
+      "Use the same API in browser/Node module systems."
+    ],
+    "screenshot": {
+      "alt": "mime-types-lite interface preview",
+      "caption": "mime-types-lite presents tiny, zero-dependency, type-safe MIME constants and helpers for HTTP APIs, uploads, and file extensions."
+    }
+  },
+  {
+    "slug": "client-parser",
+    "projectId": "project-client-parser",
+    "summary": "A tiny, type-safe client classifier with User-Agent, Client Hints, and HTTP header support.",
+    "role": "Library design and package engineering",
+    "scope": "Typed APIs, compatibility, and package distribution",
+    "status": "Pre-1.0 package",
+    "verifiedBranch": "main",
+    "verifiedCommit": "6e634f6ed53febc958c31d7c5f851ca5e5bac262",
+    "problem": "Analytics and diagnostics need a normalized view of client strings and hints, while many parsers are heavy or encourage unsafe use of inherently heuristic data.",
+    "constraints": [
+      "User-Agent classification is heuristic and spoofable.",
+      "Client Hints availability varies and may be privacy-restricted.",
+      "Results cannot safely drive authentication, authorization, or capability decisions."
+    ],
+    "architecture": {
+      "summary": "Pure parsing/normalization rules and typed result model; zero-dependency dual-module package; workspace-linked playground/docs and regression corpus.",
+      "layers": [
+        {
+          "title": "Core library",
+          "detail": "Pure parsing/normalization rules and typed result model."
+        },
+        {
+          "title": "Package builds",
+          "detail": "Zero-dependency dual-module package."
+        },
+        {
+          "title": "Documentation app",
+          "detail": "Workspace-linked playground/docs and regression corpus."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "State the heuristic boundary explicitly and recommend feature detection for behavior",
+        "detail": "State the heuristic boundary explicitly and recommend feature detection for behavior."
+      },
+      {
+        "title": "Combine User-Agent and Client Hints through one normalized output",
+        "detail": "Combine User-Agent and Client Hints through one normalized output."
+      },
+      {
+        "title": "Remain zero dependency and pre-1.0",
+        "detail": "Remain zero dependency and pre-1.0, accepting a maintained rule/test corpus and changelog review."
+      }
+    ],
+    "contribution": [
+      "Implemented browser, OS, device, mobile, and bot classification.",
+      "Added Client Hints support and normalized typed results.",
+      "Created representative regression tests and package builds.",
+      "Built a local-input playground without requiring a server parser."
+    ],
+    "outcomes": [
+      "Consumers can classify common client strings.",
+      "Enrich results with available hints.",
+      "Distinguish bots/devices/browsers for analytics or presentation.",
+      "Inspect parsing behavior interactively."
+    ],
+    "screenshot": {
+      "alt": "client-parser interface preview",
+      "caption": "client-parser presents a tiny, type-safe client classifier with User-Agent, Client Hints, and HTTP header support."
     }
   },
   {
@@ -134,6 +1441,329 @@
     }
   },
   {
+    "slug": "book-heaven",
+    "projectId": "project-book-heaven",
+    "summary": "Admin Dashboard UI built with Shadcn and Next.js.",
+    "role": "Product design and full-stack engineering",
+    "scope": "Product workflows, data boundaries, and delivery",
+    "status": "Public beta",
+    "verifiedBranch": "main",
+    "verifiedCommit": "8b74ad10ee943895c0d7e5f34b572e2254c87fdb",
+    "problem": "Readers, communities, marketplace activity, library operations, and AI-assisted discovery are commonly split across separate systems with disconnected identity and catalog data.",
+    "constraints": [
+      "The broad feature set has many service dependencies and is beta, not a turnkey production claim.",
+      "Real-time messaging is optional and falls back to HTTP polling.",
+      "AI, embeddings/pgvector, payments, email, Redis queues, Firebase, and Socket.IO each require separate configuration and operational review."
+    ],
+    "architecture": {
+      "summary": "Next.js/React reader, marketplace, community, and admin UI; application/domain services and TanStack client state; Prisma/PostgreSQL persistence with optional pgvector and Redis/BullMQ jobs; provider adapters for auth, AI, Firebase/Socket.IO, Stripe, and Resend.",
+      "layers": [
+        {
+          "title": "Interface",
+          "detail": "Next.js/React reader, marketplace, community, and admin UI."
+        },
+        {
+          "title": "Domain",
+          "detail": "Application/domain services and TanStack client state."
+        },
+        {
+          "title": "Data and integrations",
+          "detail": "Prisma/PostgreSQL persistence with optional pgvector and Redis/BullMQ jobs."
+        },
+        {
+          "title": "Quality and delivery",
+          "detail": "Provider adapters for auth, AI, Firebase/Socket.IO, Stripe, and Resend."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Use a modular monolith around one catalog/identity model",
+        "detail": "Use a modular monolith around one catalog/identity model rather than split services early."
+      },
+      {
+        "title": "Make richer infrastructure optional",
+        "detail": "Make richer infrastructure optional so the catalog remains the minimum viable setup."
+      },
+      {
+        "title": "Provide polling fallback for optional socket delivery",
+        "detail": "Provide polling fallback for optional socket delivery, trading immediacy for operability."
+      }
+    ],
+    "contribution": [
+      "Built discovery, reading/library, marketplace, community, and admin surfaces.",
+      "Modeled catalog, user, commerce, and community entities in Prisma.",
+      "Integrated job queues, payments, email, AI chat/recommendations, and optional retrieval.",
+      "Documented staged configuration and operational boundaries."
+    ],
+    "outcomes": [
+      "Readers can discover and organize books.",
+      "Users can participate in community and marketplace flows.",
+      "Administrators can operate catalog/library workflows.",
+      "Deployments can add AI, queues, real-time, payment, and email capabilities incrementally."
+    ],
+    "screenshot": {
+      "alt": "Book Heaven interface preview",
+      "caption": "Book Heaven presents admin Dashboard UI built with Shadcn and Next.js."
+    }
+  },
+  {
+    "slug": "markdown-typing-svg",
+    "projectId": "project-markdown-typing-svg",
+    "summary": "Generator and cacheable API for customizable animated typing SVGs used in GitHub profiles, README files, and websites.",
+    "role": "Developer-tool design and full-stack engineering",
+    "scope": "Developer workflow, API surface, and deployment",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "5004d1b4c77750844cfd81b93b47d4d99dd5308b",
+    "problem": "Creating a customized typing animation for a README normally requires manual SVG/CSS editing and hosting the result.",
+    "constraints": [
+      "Public embeds depend on deployment availability.",
+      "Successful responses cache for 24 hours.",
+      "There is no documented request-rate/abuse-control layer and SVG text must be safely escaped/validated."
+    ],
+    "architecture": {
+      "summary": "React visual editor and preset state; URL/query serialization with Zod validation; server SVG generator returning explicit image and cache headers.",
+      "layers": [
+        {
+          "title": "Product interface",
+          "detail": "React visual editor and preset state."
+        },
+        {
+          "title": "Core service",
+          "detail": "URL/query serialization with Zod validation."
+        },
+        {
+          "title": "Persistence",
+          "detail": "Server SVG generator returning explicit image and cache headers."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Encode configuration in the URL",
+        "detail": "Encode configuration in the URL so results are shareable and stateless."
+      },
+      {
+        "title": "Generate SVG on demand",
+        "detail": "Generate SVG on demand instead of persisting images, trading service availability for zero asset storage."
+      },
+      {
+        "title": "Return an error SVG with HTTP 422 for invalid options",
+        "detail": "Return an error SVG with HTTP 422 for invalid options so image consumers still receive a diagnosable visual response."
+      }
+    ],
+    "contribution": [
+      "Built multi-line typography/animation controls and live preview.",
+      "Implemented Markdown/HTML/direct-URL output.",
+      "Added validated server-side SVG generation and escaping.",
+      "Configured cache headers and browser-local presets."
+    ],
+    "outcomes": [
+      "Users can compose animated text visually.",
+      "Embed it through Markdown, HTML, or an image URL.",
+      "Reproduce designs from query parameters.",
+      "Receive explicit validation behavior without stored generated files."
+    ],
+    "screenshot": {
+      "alt": "Markdown Typing SVG interface preview",
+      "caption": "Markdown Typing SVG presents generator and cacheable API for customizable animated typing SVGs used in GitHub profiles, README files, and websites."
+    }
+  },
+  {
+    "slug": "shrnkly",
+    "projectId": "project-shrnkly",
+    "summary": "Multilingual Next.js application for shortening URLs, sharing text, generating QR codes, and viewing basic usage analytics.",
+    "role": "Product design and full-stack engineering",
+    "scope": "Product workflows, data boundaries, and delivery",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "bddfcd2dbd9c1dbac4d86789a398722b4547d187",
+    "problem": "Sharing links, expiring text/code, and QR payloads often requires separate tools and gives users little control over slugs, access, expiry, or basic view/click records.",
+    "constraints": [
+      "Password protection is application access control, not safe secret storage.",
+      "Click/view logging has privacy and retention implications.",
+      "Installed Redis and checked-in Docker artifacts are not documented as active/reliable runtime paths."
+    ],
+    "architecture": {
+      "summary": "Next.js localized URL/text/QR UI; server actions/routes for creation, redirect, and access checks; Prisma/MongoDB persistence; authentication, validation, and QR/browser-share adapters.",
+      "layers": [
+        {
+          "title": "Interface",
+          "detail": "Next.js localized URL/text/QR UI."
+        },
+        {
+          "title": "Domain",
+          "detail": "Server actions/routes for creation, redirect, and access checks."
+        },
+        {
+          "title": "Data and integrations",
+          "detail": "Prisma/MongoDB persistence."
+        },
+        {
+          "title": "Quality and delivery",
+          "detail": "Authentication, validation, and QR/browser-share adapters."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Put URLs and text shares on one persistence/access model",
+        "detail": "Put URLs and text shares on one persistence/access model."
+      },
+      {
+        "title": "Enforce expiry/password/view limits at the server path",
+        "detail": "Enforce expiry/password/view limits at the server path."
+      },
+      {
+        "title": "Document inactive/stale infrastructure",
+        "detail": "Document inactive/stale infrastructure instead of advertising dependency presence as a capability."
+      }
+    ],
+    "contribution": [
+      "Implemented custom-slug URL creation and redirects.",
+      "Added text/code shares with language/visibility/expiry/password/view settings.",
+      "Built QR customization/download/copy/share.",
+      "Modeled persistence and account/localization flows with validation/tests."
+    ],
+    "outcomes": [
+      "Users can shorten and track links.",
+      "Share bounded text/code.",
+      "Create reusable QR payloads.",
+      "Apply supported access and lifecycle controls while understanding their privacy limits."
+    ],
+    "screenshot": {
+      "alt": "Shrnkly interface preview",
+      "caption": "Shrnkly presents multilingual Next.js application for shortening URLs, sharing text, generating QR codes, and viewing basic usage analytics."
+    }
+  },
+  {
+    "slug": "github-readme-counter",
+    "projectId": "project-github-readme-counter",
+    "summary": "Express service that increments a file-backed counter and returns the current value as a customizable SVG image.",
+    "role": "API design and backend engineering",
+    "scope": "HTTP delivery, state management, and SVG generation",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "7f41313a75026367b0c43db26331037188688871",
+    "problem": "README authors need an image-embeddable counter endpoint because Markdown cannot run application JavaScript or call an API and render arbitrary data directly.",
+    "constraints": [
+      "Requests from bots, caches, renderers, and refreshes are counted, so values are not unique-human analytics.",
+      "File persistence is single-process and can reset on ephemeral filesystems.",
+      "The endpoint has no authentication or documented rate limiting."
+    ],
+    "architecture": {
+      "summary": "Express routes and query validation; in-memory/file counter store; escaped dynamic SVG renderer plus JSON health endpoint.",
+      "layers": [
+        {
+          "title": "HTTP service",
+          "detail": "Express routes and query validation."
+        },
+        {
+          "title": "State",
+          "detail": "In-memory/file counter store."
+        },
+        {
+          "title": "SVG response",
+          "detail": "Escaped dynamic SVG renderer plus JSON health endpoint."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Return SVG",
+        "detail": "Return SVG so the result embeds in standard Markdown."
+      },
+      {
+        "title": "Use simple file persistence",
+        "detail": "Use simple file persistence, trading horizontal scalability/durability for easy self-hosting."
+      },
+      {
+        "title": "Describe the value as request count",
+        "detail": "Describe the value as request count rather than visitor count."
+      }
+    ],
+    "contribution": [
+      "Implemented named counter increment/read behavior.",
+      "Built configurable escaped SVG output.",
+      "Added health/status/uptime reporting.",
+      "Documented embedding, configuration, persistence, and deployment limitations."
+    ],
+    "outcomes": [
+      "Users can self-host an embeddable counter.",
+      "Customize the generated badge.",
+      "Keep separate counters by identifier.",
+      "Monitor basic process health."
+    ]
+  },
+  {
+    "slug": "ramadan-clock",
+    "projectId": "project-ramadan-clock",
+    "summary": "🌙 District-aware Sehri and Iftar schedules for Bangladesh, with PDF exports and protected timetable management. Next.js, PostgreSQL, Prisma.",
+    "role": "Product design and full-stack engineering",
+    "scope": "Product workflows, data boundaries, and delivery",
+    "status": "Pre-release application",
+    "verifiedBranch": "main",
+    "verifiedCommit": "f765aa1a497f2506479c1c9d337a9b3e8c5a58bc",
+    "problem": "Sehri/Iftar schedules need a clear local-time public view and an auditable maintenance workflow because external prayer-time sources, district selection, and timetable corrections can change the result.",
+    "constraints": [
+      "Calculated times depend on source, method, location, and local authority.",
+      "External fetching requires retry/rate limiting and must not overwrite validated data indiscriminately.",
+      "Duplicate date/location rows and malformed bulk imports must be rejected."
+    ],
+    "architecture": {
+      "summary": "Next.js public/admin UI; schedule service for query/import/status/formatting; Prisma/PostgreSQL with unique (date, location) records and tagged cache; Aladhan adapter with retry/token-bucket controls plus export generators.",
+      "layers": [
+        {
+          "title": "Interface",
+          "detail": "Next.js public/admin UI."
+        },
+        {
+          "title": "Domain",
+          "detail": "Schedule service for query/import/status/formatting."
+        },
+        {
+          "title": "Data and integrations",
+          "detail": "Prisma/PostgreSQL with unique (date, location) records and tagged cache."
+        },
+        {
+          "title": "Quality and delivery",
+          "detail": "Aladhan adapter with retry/token-bucket controls plus export generators."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Persist normalized date/location times",
+        "detail": "Persist normalized date/location times rather than calculate every public request."
+      },
+      {
+        "title": "Validate JSON/CSV size fields row limits and duplicates before writes",
+        "detail": "Validate JSON/CSV size, fields, row limits, and duplicates before writes."
+      },
+      {
+        "title": "Use tagged caching/revalidation for reads and explicit source/method caveats for accuracy",
+        "detail": "Use tagged caching/revalidation for reads and explicit source/method caveats for accuracy."
+      }
+    ],
+    "contribution": [
+      "Built today/calendar/location views and live status.",
+      "Implemented authenticated administration, multi-district fetch progress, upload history, and cache controls.",
+      "Created robust JSON/CSV import and data model.",
+      "Added PDF/image export, API docs, Vitest, and operational guides."
+    ],
+    "outcomes": [
+      "Visitors can check daily and full Ramadan schedules.",
+      "Administrators can import/fetch/manage location data.",
+      "Duplicate/malformed records are rejected.",
+      "Users can export schedules while seeing source/accuracy guidance."
+    ],
+    "screenshot": {
+      "alt": "Ramadan Clock interface preview",
+      "caption": "Ramadan Clock presents 🌙 District-aware Sehri and Iftar schedules for Bangladesh, with PDF exports and protected timetable management. Next.js, PostgreSQL, Prisma."
+    }
+  },
+  {
     "slug": "devtools",
     "projectId": "project-devtools",
     "summary": "A searchable toolbox of more than 50 developer workflows, with a deliberate boundary between local transformations and server-backed features.",
@@ -198,6 +1828,136 @@
     "screenshot": {
       "alt": "DevTools home page showing the searchable developer toolbox",
       "caption": "The catalog presents a broad tool set through one consistent navigation and interaction model."
+    }
+  },
+  {
+    "slug": "postcraft",
+    "projectId": "project-postcraft",
+    "summary": "A production-oriented publishing workspace that moves one idea through generation, brand controls, platform preview, and scheduled delivery.",
+    "role": "Product design and full-stack engineering",
+    "scope": "AI workflow, publishing integrations, and background jobs",
+    "status": "Active early-stage product",
+    "verifiedBranch": "master",
+    "verifiedCommit": "551d097f5271b541b28a1fd87cbc9820be2c628a",
+    "problem": "Creators and small teams repeat the same editorial work for every social platform. They rewrite one idea for different limits, compare weak AI variants, check brand language, and then move the result into separate publishing tools.",
+    "constraints": [
+      "AI providers vary in availability, rate limits, model behavior, and key quotas.",
+      "LinkedIn, X, and Facebook each impose different OAuth, account, content, and API requirements.",
+      "Scheduled publishing must survive beyond the request that created it and retain a reviewable status."
+    ],
+    "architecture": {
+      "summary": "The Next.js application keeps HTTP boundaries in route handlers, product logic in domain modules, infrastructure in core services, and durable delivery in Inngest.",
+      "layers": [
+        {
+          "title": "Workspace",
+          "detail": "Generation, scoring, editing, brand rules, and platform previews"
+        },
+        {
+          "title": "Domain services",
+          "detail": "Validated workflows for content, library, accounts, and publishing"
+        },
+        {
+          "title": "Provider layer",
+          "detail": "OpenRouter, Groq, Gemini, and ZhipuAI with model and key fallback"
+        },
+        {
+          "title": "Delivery",
+          "detail": "MongoDB persistence, Inngest jobs, and social platform APIs"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate provider choice from generation",
+        "detail": "A provider switcher walks configured models and keys, so product workflows do not depend on one vendor-specific client."
+      },
+      {
+        "title": "Treat brand voice as stored rules",
+        "detail": "Required language, blocked language, audience, tone, and persona context are workspace data rather than prompt-only instructions."
+      },
+      {
+        "title": "Move scheduled work to a durable queue",
+        "detail": "Inngest owns delayed execution and status transitions instead of relying on an open browser session or a long HTTP request."
+      }
+    ],
+    "contribution": [
+      "Defined the end-to-end product flow from topic input to platform-ready output.",
+      "Built the Next.js interface, API routes, domain services, and MongoDB repositories.",
+      "Implemented multi-provider AI selection, reusable guardrails, scoring, and platform previews.",
+      "Integrated authentication, account recovery, social OAuth, Inngest scheduling, and publishing records."
+    ],
+    "outcomes": [
+      "One workspace now covers generation, comparison, refinement, preview, and delivery.",
+      "Provider and key fallback reduce the workflow's dependency on a single AI endpoint.",
+      "Publishing state is persisted for library and insights views instead of ending at generation.",
+      "Operational limits remain explicit: publishing still depends on platform approval, scopes, account type, and API access."
+    ],
+    "screenshot": {
+      "alt": "PostCraft workspace showing the social content creation interface",
+      "caption": "The shipped workspace brings generation, brand-aware editing, scoring, and social previews into one flow."
+    }
+  },
+  {
+    "slug": "tin-audit-checker",
+    "projectId": "project-tin-audit-checker",
+    "summary": "Check if your Bangladesh TIN is selected for NBR Risk-Based Audit (AY 2023-24). Client-side, private, instant lookup of 72,342 returns.",
+    "role": "Data modeling, validation, and release engineering",
+    "scope": "Provenance, transformation, validation, and distribution",
+    "status": "Publicly deployed",
+    "verifiedBranch": "main",
+    "verifiedCommit": "8388fab454c39b3f9ae8f59a46cc89942dd07de4",
+    "problem": "A static historical audit list is inconvenient to search manually, especially on mobile, while submitting a tax identifier to another application server creates avoidable query exposure.",
+    "constraints": [
+      "The data is historical, not live audit/compliance status.",
+      "Claimed NBR provenance, accuracy, completeness, and redistribution rights are not established.",
+      "Shipping the dataset to browsers makes records retrievable even though lookup queries stay client-side."
+    ],
+    "architecture": {
+      "summary": "Next.js lookup UI; session-cached static JSON dataset; client-side normalization and exact matching with no TIN submission API.",
+      "layers": [
+        {
+          "title": "Source records",
+          "detail": "Next.js lookup UI."
+        },
+        {
+          "title": "Transformation",
+          "detail": "Session-cached static JSON dataset."
+        },
+        {
+          "title": "Release formats",
+          "detail": "Client-side normalization and exact matching with no TIN submission API."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Perform lookup entirely in the browser",
+        "detail": "Perform lookup entirely in the browser to avoid server receipt of entered TINs."
+      },
+      {
+        "title": "Normalize formatting characters but require an exact digit match",
+        "detail": "Normalize formatting characters but require an exact digit match."
+      },
+      {
+        "title": "Show match state and mapped details",
+        "detail": "Show match state and mapped details without inferring reasons, current status, or broader compliance."
+      }
+    ],
+    "contribution": [
+      "Converted the bundled list into a focused responsive lookup.",
+      "Implemented one-fetch-per-session in-memory caching and digit normalization.",
+      "Added privacy/provenance/methodology warnings and official-verification guidance.",
+      "Documented deployment and the repository's missing test/security/license controls."
+    ],
+    "outcomes": [
+      "Users can search the historical list quickly.",
+      "Lookup text is not submitted to an application API.",
+      "Matches return bounded mapped details.",
+      "Non-matches and matches are both framed as requiring current official confirmation."
+    ],
+    "screenshot": {
+      "alt": "TIN Audit Checker - Bangladesh interface preview",
+      "caption": "TIN Audit Checker - Bangladesh presents check if your Bangladesh TIN is selected for NBR Risk-Based Audit (AY 2023-24). Client-side, private, instant lookup of 72,342 returns."
     }
   }
 ]
