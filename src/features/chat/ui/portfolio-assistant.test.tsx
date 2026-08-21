@@ -9,6 +9,7 @@ import {
 } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
+import { AvailabilityCard } from "@/components/portfolio/availability-card"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 
 const sendMessage = vi.hoisted(() => vi.fn())
@@ -417,6 +418,24 @@ describe("PortfolioAssistant chat navigation", () => {
         .getAttribute("href")
     ).toBe("https://www.supportkori.com/montasim")
     expect(screen.getByText("supportkori.com/montasim")).not.toBeNull()
+  })
+
+  it("opens the role inquiry directly from the availability card", () => {
+    render(
+      <>
+        <AvailabilityCard />
+        <PortfolioAssistant />
+      </>
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Discuss a role" }))
+
+    expect(screen.getByRole("dialog")).not.toBeNull()
+    expect(screen.getByText("Question 1 of 4")).not.toBeNull()
+    expect(screen.getByText("What role are you hiring for?")).not.toBeNull()
+    expect(
+      screen.getByRole("button", { name: "Senior Frontend Engineer" })
+    ).not.toBeNull()
   })
 
   it("matches the prototype through a successful role inquiry", async () => {

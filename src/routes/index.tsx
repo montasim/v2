@@ -17,6 +17,7 @@ import { PageShell } from "@/components/shared/page-shell"
 import { RichText } from "@/components/shared/rich-text"
 import { AffiliationList } from "@/components/portfolio/affiliation-list"
 import { BackgroundSummary } from "@/components/portfolio/background-summary"
+import { AvailabilityCard } from "@/components/portfolio/availability-card"
 import { ContributionCalendar } from "@/components/portfolio/contribution-calendar"
 import { ExperienceList } from "@/components/portfolio/experience-list"
 import { ProjectCard } from "@/components/portfolio/project-card"
@@ -132,6 +133,13 @@ function OverviewPage() {
             </p>
           ))}
         </div>
+      </PageSection>
+      <PageSection
+        id="availability"
+        headingId="availability-heading"
+        title="Availability"
+      >
+        <AvailabilityCard />
       </PageSection>
       <PageSection
         id="experience"

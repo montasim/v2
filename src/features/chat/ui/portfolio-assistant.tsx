@@ -43,6 +43,10 @@ import type { InquiryState, InquiryType } from "@/features/chat/domain/inquiry"
 import { getPreparedAnswer } from "@/features/chat/domain/prepared-answers"
 import type { PreparedAnswerId } from "@/features/chat/domain/prepared-answers"
 import { getStaticFaqAnswer } from "@/features/chat/domain/static-faq"
+import {
+  isPortfolioAssistantInquiryRequest,
+  portfolioAssistantInquiryEvent,
+} from "@/features/chat/ui/assistant-request"
 import { profileCatalog } from "@/lib/content/profile"
 import { cn } from "@/lib/utils"
 
@@ -106,6 +110,36 @@ export function PortfolioAssistant() {
   )
   const chat = useChat<PortfolioUIMessage>({ transport })
 
+  const startInquiry = React.useCallback((type: InquiryType) => {
+    setInquiryType(type)
+    setInquiryHeader({
+      title: type === "hire" ? "Discuss a role" : "Discuss a project",
+      description: "Question 1 of 4",
+    })
+    setInquiryKey((value) => value + 1)
+    setMode("inquiry")
+  }, [])
+
+  React.useEffect(() => {
+    function handleInquiryRequest(event: Event) {
+      const request = (event as CustomEvent<unknown>).detail
+      if (!isPortfolioAssistantInquiryRequest(request)) return
+
+      startInquiry(request.inquiryType)
+      setOpen(true)
+    }
+
+    window.addEventListener(
+      portfolioAssistantInquiryEvent,
+      handleInquiryRequest
+    )
+    return () =>
+      window.removeEventListener(
+        portfolioAssistantInquiryEvent,
+        handleInquiryRequest
+      )
+  }, [startInquiry])
+
   function ask(question: string) {
     const staticAnswer = getStaticFaqAnswer(question)
     if (staticAnswer) {
@@ -167,16 +201,6 @@ export function PortfolioAssistant() {
       },
     ])
     setMode("chat")
-  }
-
-  function startInquiry(type: InquiryType) {
-    setInquiryType(type)
-    setInquiryHeader({
-      title: type === "hire" ? "Discuss a role" : "Discuss a project",
-      description: "Question 1 of 4",
-    })
-    setInquiryKey((value) => value + 1)
-    setMode("inquiry")
   }
 
   function returnToAssistant() {

@@ -26,6 +26,7 @@ export const landingNavigation = [
 
 export const landingSectionIds = [
   "about",
+  "availability",
   "experience",
   "projects",
   "skills",
