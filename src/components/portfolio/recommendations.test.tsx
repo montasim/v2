@@ -16,6 +16,7 @@ const carouselApi = vi.hoisted(() => ({
   off: vi.fn(),
   scrollPrev: vi.fn(),
   scrollNext: vi.fn(),
+  selectedScrollSnap: vi.fn(() => 0),
 }))
 
 let intersectionCallback: IntersectionObserverCallback
@@ -100,6 +101,32 @@ describe("RecommendationCarousel movement", () => {
     expect(number.parentElement?.parentElement?.className).toContain(
       "justify-between"
     )
+  })
+
+  it("shows one timed progress indicator on the active card", async () => {
+    const { container } = render(<RecommendationCarousel />)
+    await act(async () => {})
+
+    const progress = container.querySelector<HTMLElement>(
+      ".recommendation-carousel-progress"
+    )
+    expect(progress).toBeTruthy()
+    expect(
+      container.querySelectorAll(".recommendation-carousel-progress")
+    ).toHaveLength(1)
+    expect(progress?.style.animationPlayState).toBe("paused")
+
+    act(() =>
+      intersectionCallback(
+        [{ isIntersecting: true } as IntersectionObserverEntry],
+        {} as IntersectionObserver
+      )
+    )
+
+    expect(
+      container.querySelector<HTMLElement>(".recommendation-carousel-progress")
+        ?.style.animationPlayState
+    ).toBe("running")
   })
 
   it("places the detail-card badge and number on the right", () => {

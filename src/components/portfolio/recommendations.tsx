@@ -105,16 +105,34 @@ export function RecommendationDetails({
 function FeaturedRecommendation({
   item,
   index,
+  isActive,
+  progressPaused,
 }: {
   item: Recommendation
   index: number
+  isActive: boolean
+  progressPaused: boolean
 }) {
   return (
     <Card
       asChild
-      className={`${cardInsetClassName} flex h-full w-full flex-col`}
+      className={`${cardInsetClassName} relative flex h-full w-full flex-col overflow-hidden`}
     >
       <figure>
+        {isActive ? (
+          <div
+            className="pointer-events-none absolute inset-x-3 top-0 z-10 h-px overflow-hidden"
+            aria-hidden="true"
+          >
+            <div
+              key={`recommendation-progress-${index}-${progressPaused}`}
+              className="recommendation-carousel-progress h-full bg-emphasis-foreground will-change-transform"
+              style={{
+                animationPlayState: progressPaused ? "paused" : "running",
+              }}
+            />
+          </div>
+        ) : null}
         <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
           <QuotesIcon />
           <span className="flex items-center gap-2">
@@ -157,6 +175,7 @@ export function RecommendationCarousel() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [paused, setPaused] = React.useState(false)
   const [inViewport, setInViewport] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
   const [canScrollPrevious, setCanScrollPrevious] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
 
@@ -165,6 +184,7 @@ export function RecommendationCarousel() {
     const updateControls = () => {
       setCanScrollPrevious(api.canScrollPrev())
       setCanScrollNext(api.canScrollNext())
+      setSelectedIndex(api.selectedScrollSnap())
     }
     updateControls()
     api.on("select", updateControls)
@@ -231,7 +251,12 @@ export function RecommendationCarousel() {
             key={`${item.name}-${item.date}`}
             className="flex basis-4/5 pl-4"
           >
-            <FeaturedRecommendation item={item} index={index} />
+            <FeaturedRecommendation
+              item={item}
+              index={index}
+              isActive={index === selectedIndex}
+              progressPaused={paused || !inViewport}
+            />
           </CarouselItem>
         ))}
       </CarouselContent>

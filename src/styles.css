@@ -332,6 +332,12 @@
     transform: scaleX(0);
     transform-origin: left;
   }
+
+  .recommendation-carousel-progress {
+    animation: reading-progress 7000ms linear forwards;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
 }
 
 @supports (animation-timeline: scroll()) {
@@ -459,6 +465,11 @@
 
   .reading-progress {
     display: none;
+  }
+
+  .recommendation-carousel-progress {
+    display: none;
+    animation: none;
   }
 
   .motion-overlay,
