@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { blogCatalog } from "./blog"
 import { projectCatalog } from "./projects"
+import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
   it("provides routable featured articles", () => {
@@ -48,5 +49,39 @@ describe("blog catalog", () => {
     expect(blogCatalog.next(blogCatalog.featured.slug).slug).not.toBe(
       blogCatalog.featured.slug
     )
+  })
+
+  it("builds article-specific social preview metadata", () => {
+    const post = blogCatalog.featured
+    const metadata = createMeta(
+      post.title,
+      post.excerpt,
+      `/blog/${post.slug}`,
+      {
+        type: "article",
+        image: post.image.src,
+        imageAlt: post.image.alt,
+        publishedTime: `${post.publishedAt}T00:00:00.000Z`,
+        author: blogCatalog.author.name,
+        section: post.category,
+      }
+    )
+
+    expect(metadata.meta).toContainEqual({
+      property: "og:type",
+      content: "article",
+    })
+    expect(metadata.meta).toContainEqual({
+      property: "og:image",
+      content: new URL(post.image.src, site.url).toString(),
+    })
+    expect(metadata.meta).toContainEqual({
+      property: "article:published_time",
+      content: `${post.publishedAt}T00:00:00.000Z`,
+    })
+    expect(metadata.meta).toContainEqual({
+      name: "twitter:image:alt",
+      content: post.image.alt,
+    })
   })
 })

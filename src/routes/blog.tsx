@@ -28,6 +28,7 @@ function Page() {
       onQueryChange={(nextQuery) =>
         navigate({
           replace: true,
+          resetScroll: false,
           search: (previous) => ({ ...previous, q: nextQuery }),
         })
       }

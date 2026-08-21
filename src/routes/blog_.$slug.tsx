@@ -15,7 +15,15 @@ export const Route = createFileRoute("/blog_/$slug")({
       ? createMeta(
           loaderData.title,
           loaderData.excerpt,
-          `/blog/${loaderData.slug}`
+          `/blog/${loaderData.slug}`,
+          {
+            type: "article",
+            image: loaderData.image.src,
+            imageAlt: loaderData.image.alt,
+            publishedTime: `${loaderData.publishedAt}T00:00:00.000Z`,
+            author: blogCatalog.author.name,
+            section: loaderData.category,
+          }
         )
       : {},
   component: Page,
