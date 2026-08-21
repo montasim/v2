@@ -50,7 +50,10 @@ export function SiteHeader() {
   const hash = useRouterState({
     select: (state) => state.location.hash,
   })
-  const { activeSection, items } = useLandingNavigation(pathname, hash)
+  const { activeSection, items, navigateToSection } = useLandingNavigation(
+    pathname,
+    hash
+  )
 
   const themeButton = (
     <Button
@@ -63,7 +66,7 @@ export function SiteHeader() {
     </Button>
   )
   return (
-    <header className="site-header-enter sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
+    <header className="site-header-enter sticky top-0 z-40 border-b bg-background/98">
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
           <Brand />
@@ -76,6 +79,10 @@ export function SiteHeader() {
                   key={item.sectionId}
                   to="/"
                   hash={item.sectionId}
+                  onClick={(event) => {
+                    if (!navigateToSection(item.sectionId)) return
+                    event.preventDefault()
+                  }}
                   className={cn(
                     "rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted hover:text-foreground active:scale-[0.98] motion-reduce:transition-none",
                     isActive && "bg-muted font-medium text-foreground"
@@ -114,6 +121,10 @@ export function SiteHeader() {
                         <Link
                           to="/"
                           hash={item.sectionId}
+                          onClick={(event) => {
+                            if (!navigateToSection(item.sectionId)) return
+                            event.preventDefault()
+                          }}
                           className={cn(
                             "rounded-md px-3 py-2 text-sm text-muted-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted hover:text-foreground active:scale-[0.98] motion-reduce:transition-none",
                             isActive && "bg-muted font-medium text-foreground"
