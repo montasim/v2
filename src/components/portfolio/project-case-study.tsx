@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
 import {
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
@@ -11,11 +12,13 @@ import {
   GitCommitIcon,
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
+import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
 import {
   ExternalAction,
   ExternalLink,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
+import { VisitorCountBadge } from "@/components/shared/visitor-count-badge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,6 +30,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { optimizedImage } from "@/lib/assets"
+import {
+  getProjectViewCount,
+  recordProjectView,
+} from "@/features/project-views/application/project-views"
+import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import { profileCatalog } from "@/lib/content/profile"
 import { cn } from "@/lib/utils"
@@ -109,6 +117,8 @@ export function ProjectCaseStudyPage({
   caseStudy: ProjectCaseStudy
   nextCaseStudy: ProjectCaseStudy
 }) {
+  const getViewCount = useServerFn(getProjectViewCount)
+  const recordView = useServerFn(recordProjectView)
   const { project } = caseStudy
   const repositoryPath = githubRepositoryPath(project.githubUrl)
   const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
@@ -124,6 +134,12 @@ export function ProjectCaseStudyPage({
   const [activeSection, setActiveSection] = useState<SectionId>(
     coreSectionLinks[0][0]
   )
+  const viewCount = useVisitorCount({
+    resourceKey: "project-case-study",
+    slug: caseStudy.slug,
+    getCount: getViewCount,
+    recordView,
+  })
 
   useEffect(() => {
     let animationFrame = 0
@@ -183,7 +199,7 @@ export function ProjectCaseStudyPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Project case study</BreadcrumbPage>
+              <BreadcrumbPage>{project.title} case study</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -195,8 +211,10 @@ export function ProjectCaseStudyPage({
                 {project.title}
               </h1>
               <Badge variant="secondary" className="font-medium">
+                <ProjectTypeIcon type={project.type} className="size-[1em]" />
                 {project.type}
               </Badge>
+              <VisitorCountBadge count={viewCount} />
               <ExternalLink
                 href={`${project.githubUrl}/commits/${caseStudy.verifiedBranch}`}
                 aria-label={`View the latest commits for ${project.title}`}

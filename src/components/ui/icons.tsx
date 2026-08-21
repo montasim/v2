@@ -91,6 +91,7 @@ import HugeUsersThreeIcon from "@hugeicons/core-free-icons/UserGroupIcon"
 import HugeUserIcon from "@hugeicons/core-free-icons/UserIcon"
 import HugeUserFocusIcon from "@hugeicons/core-free-icons/UserSearch01Icon"
 import HugeVideoIcon from "@hugeicons/core-free-icons/Video01Icon"
+import HugeViewIcon from "@hugeicons/core-free-icons/ViewIcon"
 import HugeWhatsappLogoIcon from "@hugeicons/core-free-icons/WhatsappIcon"
 import HugeWindIcon from "@hugeicons/core-free-icons/WindIcon"
 import HugeWrenchIcon from "@hugeicons/core-free-icons/Wrench01Icon"
@@ -307,6 +308,7 @@ export const VideoCameraIcon = createIcon(
   "VideoCameraIcon"
 )
 export const VideoIcon = createIcon(HugeVideoIcon, "VideoIcon")
+export const ViewIcon = createIcon(HugeViewIcon, "ViewIcon")
 export const WarningCircleIcon = createIcon(
   HugeWarningCircleIcon,
   "WarningCircleIcon"

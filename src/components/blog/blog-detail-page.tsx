@@ -1,7 +1,9 @@
 import { useEffect, useId, useMemo, useState } from "react"
 import { Link } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
+import { VisitorCountBadge } from "@/components/shared/visitor-count-badge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,11 +20,26 @@ import {
   ArrowUpCompactIcon,
   ChatCenteredDotsIcon,
   CheckIcon,
+  CircleDashedIcon,
   ShareIcon,
 } from "@/components/ui/icons"
-import { blogCatalog, blogCommentListSchema } from "@/lib/content/blog"
-import type { BlogComment, BlogPost } from "@/lib/content/blog"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  getBlogComments,
+  postBlogComment,
+} from "@/features/blog-comments/application/comments"
+import {
+  getBlogPostViewCount,
+  recordBlogPostView,
+} from "@/features/blog-views/application/blog-views"
+import { blogCommentMessageSchema } from "@/features/blog-comments/domain/comment"
+import type { BlogComment } from "@/features/blog-comments/domain/comment"
+import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
+import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
+import { blogCatalog } from "@/lib/content/blog"
+import type { BlogPost } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
+import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en", {
@@ -68,27 +85,45 @@ function BlogDiscussion({
   const nameId = useId()
   const emailId = useId()
   const messageId = useId()
-  const storageKey = `blog-comments:${post.slug}`
-  const [comments, setComments] = useState<BlogComment[]>(post.comments)
+  const messageErrorId = useId()
+  const getComments = useServerFn(getBlogComments)
+  const createComment = useServerFn(postBlogComment)
+  const [comments, setComments] = useState<BlogComment[]>([])
   const [replyTo, setReplyTo] = useState<BlogComment | null>(null)
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
+  const [website, setWebsite] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [loadError, setLoadError] = useState("")
+  const [submissionError, setSubmissionError] = useState("")
+  const [messageError, setMessageError] = useState("")
 
   useEffect(() => {
-    const storedComments = window.localStorage.getItem(storageKey)
-    if (!storedComments) {
-      setComments(post.comments)
-      return
-    }
+    let active = true
+    setComments([])
+    setReplyTo(null)
+    setLoadError("")
+    setIsLoading(true)
 
-    try {
-      const parsed = blogCommentListSchema.safeParse(JSON.parse(storedComments))
-      setComments(parsed.success ? parsed.data : post.comments)
-    } catch {
-      setComments(post.comments)
+    void getComments({ data: post.slug })
+      .then((loadedComments) => {
+        if (active) setComments(loadedComments)
+      })
+      .catch(() => {
+        if (active) {
+          setLoadError("Comments are unavailable for this article right now.")
+        }
+      })
+      .finally(() => {
+        if (active) setIsLoading(false)
+      })
+
+    return () => {
+      active = false
     }
-  }, [post.comments, storageKey])
+  }, [getComments, post.slug])
 
   useEffect(() => {
     onCommentCountChange(comments.length)
@@ -186,23 +221,61 @@ function BlogDiscussion({
           </span>
         </header>
 
-        <div className="divide-y" aria-live="polite">
-          {commentThreads.length ? (
-            commentThreads.map(({ comment, replies }) => (
-              <div key={comment.id}>
-                {renderComment(comment)}
-                {replies.map((reply) => renderComment(reply, true))}
-              </div>
-            ))
-          ) : (
+        <div className="divide-y" aria-live="polite" aria-busy={isSubmitting}>
+          {isLoading ? (
             <div className="px-5 py-10 text-center">
               <p className="text-sm font-semibold text-emphasis-foreground">
-                Start the discussion
+                Loading discussion
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Share a question, observation, or useful counterexample.
+                Fetching the latest comments.
               </p>
             </div>
+          ) : loadError ? (
+            <div className="px-5 py-10 text-center">
+              <p className="text-sm font-semibold text-emphasis-foreground">
+                No discussion available
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{loadError}</p>
+            </div>
+          ) : (
+            <>
+              {commentThreads.length
+                ? commentThreads.map(({ comment, replies }) => (
+                    <div key={comment.id}>
+                      {renderComment(comment)}
+                      {replies.map((reply) => renderComment(reply, true))}
+                    </div>
+                  ))
+                : !isSubmitting && (
+                    <div className="px-5 py-10 text-center">
+                      <p className="text-sm font-semibold text-emphasis-foreground">
+                        Start the discussion
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Share a question, observation, or useful counterexample.
+                      </p>
+                    </div>
+                  )}
+              {isSubmitting ? (
+                <article className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3.5 px-4 py-5 sm:px-6">
+                  <span className="sr-only" role="status">
+                    Saving your comment
+                  </span>
+                  <div aria-hidden="true" className="contents">
+                    <Skeleton className="size-10 rounded-full" />
+                    <div className="min-w-0 pt-0.5">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-3.5 w-24" />
+                        <Skeleton className="h-2.5 w-12" />
+                      </div>
+                      <Skeleton className="mt-3 h-3 w-[min(100%,34rem)]" />
+                      <Skeleton className="mt-2 h-3 w-[min(72%,24rem)]" />
+                    </div>
+                  </div>
+                </article>
+              ) : null}
+            </>
           )}
         </div>
       </section>
@@ -224,26 +297,72 @@ function BlogDiscussion({
         </header>
         <form
           id="reply-composer"
+          aria-busy={isSubmitting}
           className="grid gap-4 px-4 pt-5 pb-6 sm:px-6"
-          onSubmit={(event) => {
+          onSubmit={async (event) => {
             event.preventDefault()
-            const nextComment: BlogComment = {
-              id: `${Date.now()}-${name.trim().toLocaleLowerCase().replace(/\s+/g, "-")}`,
-              name: name.trim(),
-              createdAt: new Date().toISOString(),
-              message: message.trim(),
-              replyTo: replyTo?.id ?? null,
+            setSubmissionError("")
+            setMessageError("")
+
+            const messageResult = blogCommentMessageSchema.safeParse(message)
+            if (!messageResult.success) {
+              setMessageError(
+                messageResult.error.issues[0]?.message ??
+                  "Please revise your comment before posting."
+              )
+              document.getElementById(messageId)?.focus()
+              return
             }
-            const nextComments = [...comments, nextComment]
-            setComments(nextComments)
-            window.localStorage.setItem(
-              storageKey,
-              JSON.stringify(nextComments)
-            )
-            setMessage("")
-            setReplyTo(null)
+
+            setIsSubmitting(true)
+
+            try {
+              const moderationError = await getCommentModerationError(message)
+              if (moderationError) {
+                setMessageError(moderationError)
+                document.getElementById(messageId)?.focus()
+                return
+              }
+
+              const nextComment = await createComment({
+                data: {
+                  comment: {
+                    postSlug: post.slug,
+                    name,
+                    email,
+                    message,
+                    replyTo: replyTo?.id ?? null,
+                  },
+                  website,
+                },
+              })
+
+              if (nextComment) {
+                setComments((current) => [...current, nextComment])
+              }
+              setMessage("")
+              setReplyTo(null)
+            } catch (error) {
+              setSubmissionError(
+                getEmailVerificationError(error) ??
+                  "Your comment could not be posted. Your draft is still here."
+              )
+            } finally {
+              setIsSubmitting(false)
+            }
           }}
         >
+          <div className="hidden" aria-hidden="true">
+            <label htmlFor={`${nameId}-website`}>Website</label>
+            <input
+              id={`${nameId}-website`}
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(event) => setWebsite(event.target.value)}
+            />
+          </div>
           {replyTo ? (
             <div className="flex items-center justify-between gap-4 rounded-[0.625rem] bg-muted px-3 py-2.5 text-xs text-muted-foreground">
               <span>
@@ -272,6 +391,8 @@ function BlogDiscussion({
               <input
                 id={nameId}
                 required
+                disabled={isSubmitting}
+                maxLength={80}
                 autoComplete="name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
@@ -290,6 +411,8 @@ function BlogDiscussion({
                 id={emailId}
                 type="email"
                 required
+                disabled={isSubmitting}
+                maxLength={320}
                 autoComplete="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
@@ -309,13 +432,26 @@ function BlogDiscussion({
               Ctrl + Enter to post
             </span>
           </div>
-          <div className="flex items-end gap-2 rounded-xl border bg-card p-1.5 focus-within:outline-2 focus-within:outline-offset-1 focus-within:outline-ring">
+          <div
+            className={cn(
+              "flex items-end gap-2 rounded-xl border bg-card p-1.5 focus-within:outline-2 focus-within:outline-offset-1 focus-within:outline-ring",
+              messageError &&
+                "border-destructive focus-within:outline-destructive"
+            )}
+          >
             <textarea
               id={messageId}
               required
+              disabled={isSubmitting}
+              maxLength={2_000}
               rows={1}
               value={message}
-              onChange={(event) => setMessage(event.target.value)}
+              aria-invalid={Boolean(messageError)}
+              aria-describedby={messageError ? messageErrorId : undefined}
+              onChange={(event) => {
+                setMessage(event.target.value)
+                if (messageError) setMessageError("")
+              }}
               onKeyDown={(event) => {
                 if (event.ctrlKey && event.key === "Enter") {
                   event.currentTarget.form?.requestSubmit()
@@ -326,15 +462,40 @@ function BlogDiscussion({
             />
             <button
               type="submit"
-              aria-label={replyTo ? `Reply to ${replyTo.name}` : "Post comment"}
-              className="grid size-9 shrink-0 place-items-center rounded-[0.625rem] border border-emphasis-foreground bg-emphasis-foreground text-lg text-background hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              disabled={isSubmitting}
+              aria-label={
+                isSubmitting
+                  ? "Saving comment"
+                  : replyTo
+                    ? `Reply to ${replyTo.name}`
+                    : "Post comment"
+              }
+              className="grid size-9 shrink-0 place-items-center rounded-[0.625rem] border border-emphasis-foreground bg-emphasis-foreground text-lg text-background hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:cursor-wait disabled:opacity-75"
             >
-              <ArrowUpCompactIcon className="size-4" />
+              {isSubmitting ? (
+                <CircleDashedIcon className="size-4 animate-spin motion-reduce:animate-none" />
+              ) : (
+                <ArrowUpCompactIcon className="size-4" />
+              )}
             </button>
           </div>
+          {messageError ? (
+            <p
+              id={messageErrorId}
+              className="text-xs text-destructive"
+              role="alert"
+            >
+              {messageError}
+            </p>
+          ) : null}
           <p className="text-xs text-muted-foreground">
-            Your email stays private. Comments are saved on this device.
+            Your email stays private. Comments are stored securely.
           </p>
+          {submissionError ? (
+            <p className="text-xs text-destructive" role="alert">
+              {submissionError}
+            </p>
+          ) : null}
         </form>
       </section>
     </div>
@@ -348,6 +509,8 @@ export function BlogDetailPage({
   post: BlogPost
   nextPost: BlogPost
 }) {
+  const getViewCount = useServerFn(getBlogPostViewCount)
+  const recordView = useServerFn(recordBlogPostView)
   const sectionLinks = useMemo(
     () => [
       ...post.sections.map((section) => [section.id, section.label] as const),
@@ -357,7 +520,13 @@ export function BlogDetailPage({
   )
   const [activeSection, setActiveSection] = useState(sectionLinks[0][0])
   const [shareStatus, setShareStatus] = useState("")
-  const [commentCount, setCommentCount] = useState(post.comments.length)
+  const [commentCount, setCommentCount] = useState(0)
+  const viewCount = useVisitorCount({
+    resourceKey: "blog",
+    slug: post.slug,
+    getCount: getViewCount,
+    recordView,
+  })
 
   useEffect(() => {
     let animationFrame = 0
@@ -397,10 +566,6 @@ export function BlogDetailPage({
       window.removeEventListener("resize", updateActiveSection)
     }
   }, [post.slug, sectionLinks])
-
-  useEffect(() => {
-    setCommentCount(post.comments.length)
-  }, [post.comments.length])
 
   async function shareArticle() {
     const shareData = {
@@ -450,9 +615,12 @@ export function BlogDetailPage({
 
       <header className="mt-8.5">
         <div className="flex flex-col items-start gap-3">
-          <Badge variant="secondary" className="font-medium">
-            {post.category}
-          </Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary" className="font-medium">
+              {post.category}
+            </Badge>
+            <VisitorCountBadge count={viewCount} />
+          </div>
           <h1 className="w-full max-w-none text-3xl leading-tight font-bold tracking-[-0.025em] text-emphasis-foreground">
             {post.title}
           </h1>

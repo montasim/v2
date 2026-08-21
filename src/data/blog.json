@@ -70,8 +70,7 @@
             "That is the senior engineering lesson I took from Routempo: recurring software becomes reliable when the model preserves meaning, not merely timestamps."
           ]
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "slug": "the-linkedin-page-is-untrusted-input",
@@ -139,8 +138,7 @@
             "The senior engineering work was not making the model write more. It was deciding what the model could see, what the page could influence, how providers could fail, and where the user remained in control."
           ]
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "slug": "i-refused-to-make-webgl-the-only-way-in",
@@ -208,8 +206,7 @@
             "Foliofarer reinforced a principle I use in senior frontend work: ambitious presentation is safest when content and behavior have deeper, renderer-independent foundations."
           ]
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "slug": "from-useeffect-chaos-to-deterministic-systems",
@@ -274,8 +271,7 @@
             "But when your UI orchestrates real-time ML inference, video encoding, and audio playback in parallel — and the cost of a state bug is a patient losing their assessment data — you need deterministic state transitions."
           ]
         }
-      ],
-      "comments": []
+      ]
     }
   ]
 }

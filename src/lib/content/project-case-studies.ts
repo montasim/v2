@@ -2,8 +2,15 @@ import { z } from "zod"
 import caseStudiesJson from "@/data/casestudy.json"
 import { projectCatalog } from "@/lib/content/projects"
 
+export const projectCaseStudySlugSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(200)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+
 const caseStudySchema = z.object({
-  slug: z.string().min(1),
+  slug: projectCaseStudySlugSchema,
   projectId: z.string().min(1),
   summary: z.string().min(1),
   role: z.string().min(1),

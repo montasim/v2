@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react"
 import { Link } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
 import { Button } from "@/components/ui/button"
@@ -15,9 +16,12 @@ import {
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
   CheckIcon,
+  CircleDashedIcon,
   FunnelSimpleIcon,
   SearchIcon,
 } from "@/components/ui/icons"
+import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
+import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import { blogCatalog, blogTopicNavigation } from "@/lib/content/blog"
 import type { BlogPost, BlogTopic } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
@@ -281,8 +285,11 @@ function FeaturedCarousel({ posts }: { posts: BlogPost[] }) {
 
 function SubscriptionCard() {
   const fieldId = useId()
+  const verifyEmail = useServerFn(verifyVisitorEmail)
   const [email, setEmail] = useState("")
   const [saved, setSaved] = useState(false)
+  const [isChecking, setIsChecking] = useState(false)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     const storedEmail = window.localStorage.getItem("blog-subscription-email")
@@ -310,10 +317,23 @@ function SubscriptionCard() {
       </header>
       <form
         className="grid w-full max-w-180 gap-2.5 px-4 pt-5 pb-6 sm:px-6"
-        onSubmit={(event) => {
+        onSubmit={async (event) => {
           event.preventDefault()
-          window.localStorage.setItem("blog-subscription-email", email)
-          setSaved(true)
+          setError("")
+          setIsChecking(true)
+
+          try {
+            await verifyEmail({ data: email })
+            window.localStorage.setItem("blog-subscription-email", email)
+            setSaved(true)
+          } catch (verificationError) {
+            setError(
+              getEmailVerificationError(verificationError) ??
+                "This email could not be verified. Try again."
+            )
+          } finally {
+            setIsChecking(false)
+          }
         }}
       >
         <label htmlFor={fieldId} className="text-xs font-semibold">
@@ -325,26 +345,40 @@ function SubscriptionCard() {
             type="email"
             autoComplete="email"
             required
+            disabled={isChecking}
             value={email}
             onChange={(event) => {
               setEmail(event.target.value)
               setSaved(false)
+              setError("")
             }}
             placeholder="you@example.com"
             className="min-h-9 min-w-0 flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
           />
           <Button
             type="submit"
+            disabled={isChecking}
             className="min-h-9 bg-emphasis-foreground px-4.5 text-background"
           >
-            {saved ? <CheckIcon /> : null}
-            {saved ? "Saved" : "Subscribe"}
+            {isChecking ? (
+              <CircleDashedIcon className="animate-spin motion-reduce:animate-none" />
+            ) : saved ? (
+              <CheckIcon />
+            ) : null}
+            {isChecking ? "Checking" : saved ? "Saved" : "Subscribe"}
           </Button>
         </div>
-        <p className="min-h-4.5 text-xs text-muted-foreground" role="status">
-          {saved
-            ? "Preference saved on this device."
-            : "Prototype only. No email will be sent."}
+        <p
+          className={cn(
+            "min-h-4.5 text-xs",
+            error ? "text-destructive" : "text-muted-foreground"
+          )}
+          role={error ? "alert" : "status"}
+        >
+          {error ||
+            (saved
+              ? "Preference saved on this device."
+              : "Prototype only. No email will be sent.")}
         </p>
       </form>
     </aside>

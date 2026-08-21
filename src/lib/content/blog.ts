@@ -5,19 +5,15 @@ import projectBlogJson from "@/data/project-blog.json"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 
 export const blogTopicSchema = z.enum(["all", "product", "career", "tools"])
-
-const commentSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  createdAt: z.iso.datetime(),
-  message: z.string().min(1),
-  replyTo: z.string().min(1).nullable(),
-})
-
-export const blogCommentListSchema = z.array(commentSchema)
+export const blogPostSlugSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(200)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
 
 const postSchema = z.object({
-  slug: z.string().min(1),
+  slug: blogPostSlugSchema,
   projectId: z.string().min(1).optional(),
   title: z.string().min(1),
   excerpt: z.string().min(1),
@@ -42,7 +38,6 @@ const postSchema = z.object({
       })
     )
     .min(1),
-  comments: blogCommentListSchema,
 })
 
 const blogSchema = z.object({
@@ -122,7 +117,6 @@ const projectPosts = projectBlogMetadata.map((metadata) => {
         ],
       },
     ],
-    comments: [],
   })
 })
 
@@ -172,5 +166,4 @@ export const blogCatalog = {
 } as const
 
 export type BlogPost = z.infer<typeof postSchema>
-export type BlogComment = z.infer<typeof commentSchema>
 export type BlogTopic = z.infer<typeof blogTopicSchema>
