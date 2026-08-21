@@ -98,14 +98,14 @@ function ResumeHeader() {
           </span>
           <ExternalLink
             href={profileCatalog.socialUrl("linkedin")}
-            className="inline-flex items-center gap-1.5 rounded-sm transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+            className="inline-flex items-center gap-1.5 rounded-sm transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
           >
             <LinkedinLogoIcon aria-hidden="true" />
             LinkedIn
           </ExternalLink>
           <ExternalLink
             href={profileCatalog.socialUrl("github")}
-            className="inline-flex items-center gap-1.5 rounded-sm transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+            className="inline-flex items-center gap-1.5 rounded-sm transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
           >
             <GithubLogoIcon aria-hidden="true" />
             GitHub

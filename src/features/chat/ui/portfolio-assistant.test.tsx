@@ -153,7 +153,7 @@ describe("PortfolioAssistant chat navigation", () => {
 
     expect(launcher.className).toContain("size-14")
     expect(launcher.className).toContain("rounded-full")
-    expect(launcher.className).toContain("chat-launcher-float")
+    expect(launcher.className).not.toContain("chat-launcher-float")
     expect(launcher.parentElement?.className).toContain("chat-launcher-enter")
     expect(launcher.textContent).toBe("")
 

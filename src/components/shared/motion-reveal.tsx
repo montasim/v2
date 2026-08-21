@@ -9,12 +9,16 @@ const useIsomorphicLayoutEffect =
 export function MotionReveal({
   asChild = false,
   delay = 0,
+  rootMargin = "0px 0px -8%",
+  variant = "default",
   className,
   style,
   ...props
 }: React.ComponentProps<"div"> & {
   asChild?: boolean
   delay?: number
+  rootMargin?: string
+  variant?: "default" | "subtle"
 }) {
   const elementRef = React.useRef<HTMLElement | null>(null)
   const Comp = asChild ? Slot.Root : "div"
@@ -40,31 +44,40 @@ export function MotionReveal({
         element.dataset.motionState = "revealed"
         observer.unobserve(element)
       },
-      { rootMargin: "0px 0px -8%", threshold: 0.08 }
+      { rootMargin, threshold: 0.08 }
     )
+    let observationFrame = 0
 
     const revealForReducedMotion = (event: MediaQueryListEvent) => {
       if (!event.matches) return
 
+      window.cancelAnimationFrame(observationFrame)
       element.dataset.motionState = "revealed"
       observer.disconnect()
     }
 
-    observer.observe(element)
+    observationFrame = window.requestAnimationFrame(() => {
+      observer.observe(element)
+    })
     reducedMotion.addEventListener("change", revealForReducedMotion)
 
     return () => {
+      window.cancelAnimationFrame(observationFrame)
       observer.disconnect()
       reducedMotion.removeEventListener("change", revealForReducedMotion)
     }
-  }, [])
+  }, [rootMargin])
 
   return (
     <Comp
       ref={(node: HTMLElement | null) => {
         elementRef.current = node
       }}
-      className={cn("motion-reveal", className)}
+      className={cn(
+        "motion-reveal",
+        variant === "subtle" && "motion-reveal-subtle",
+        className
+      )}
       style={
         {
           "--motion-reveal-delay": `${delay}ms`,

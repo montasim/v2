@@ -242,7 +242,7 @@ export function PortfolioAssistant() {
         <Dialog.Trigger asChild>
           <Button
             size="icon"
-            className="chat-launcher-float size-14 rounded-full shadow-lg"
+            className="size-14 rounded-full shadow-lg"
             aria-label="Ask about Montasim"
             title="Ask about Montasim"
           >
@@ -251,8 +251,8 @@ export function PortfolioAssistant() {
         </Dialog.Trigger>
       </div>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/15 backdrop-blur-[2px] motion-reduce:animate-none sm:hidden" />
-        <Dialog.Content className="fixed inset-0 z-50 flex min-h-0 flex-col overflow-hidden bg-background outline-none motion-reduce:animate-none sm:inset-auto sm:right-6 sm:bottom-2 sm:h-[min(720px,calc(100dvh-1rem))] sm:w-[440px] sm:rounded-2xl sm:border sm:shadow-2xl">
+        <Dialog.Overlay className="motion-overlay fixed inset-0 z-50 bg-foreground/15 backdrop-blur-[2px] sm:hidden" />
+        <Dialog.Content className="motion-dialog fixed inset-0 z-50 flex min-h-0 flex-col overflow-hidden bg-background outline-none sm:inset-auto sm:right-6 sm:bottom-2 sm:h-[min(720px,calc(100dvh-1rem))] sm:w-[440px] sm:rounded-2xl sm:border sm:shadow-2xl">
           <AssistantHeader
             content={mode === "inquiry" ? inquiryHeader : defaultHeader}
           />
@@ -338,7 +338,7 @@ function AssistantHome({
   startInquiry: (type: InquiryType) => void
 }) {
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
         <h2 className="text-sm font-semibold">Explore his background</h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
@@ -350,7 +350,7 @@ function AssistantHome({
                 type="button"
                 onClick={() => openPreparedAnswer(item.answerId)}
                 className={cn(
-                  "min-h-14 rounded-xl border bg-card p-3 text-left transition-colors hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring dark:bg-muted",
+                  "min-h-14 rounded-xl border bg-card p-3 text-left transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:bg-muted",
                   index === 2 && "col-span-2"
                 )}
               >
@@ -407,7 +407,7 @@ function InquiryEntry({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 text-sm font-semibold focus-visible:ring-2 focus-visible:ring-ring",
+        "flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none",
         primary
           ? "border-primary bg-primary text-primary-foreground hover:bg-primary/85"
           : "bg-card hover:bg-muted dark:bg-muted/60"
@@ -473,7 +473,7 @@ function ChatView({
   }, [chat.messages, chat.status])
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div
         ref={feedRef}
         aria-live="polite"
@@ -498,7 +498,7 @@ function ChatView({
               }
               key={message.id}
               className={cn(
-                "scroll-mt-4 rounded-2xl px-4 py-4 text-sm leading-6",
+                "motion-view scroll-mt-4 rounded-2xl px-4 py-4 text-sm leading-6",
                 message.role === "user"
                   ? "ml-auto max-w-[84%] rounded-br-md bg-primary text-primary-foreground"
                   : "max-w-[92%] rounded-bl-md bg-muted"
@@ -891,7 +891,7 @@ function InquiryFlow({
   if (state.status === "submitting") {
     return (
       <div
-        className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-4 py-5 text-center"
+        className="motion-view flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-4 py-5 text-center"
         aria-live="polite"
       >
         <div className="w-full max-w-xs py-12">
@@ -944,7 +944,7 @@ function InquiryQuestion({
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
         <div className="flex items-end justify-between text-xs">
           <span className="font-semibold">{title}</span>
@@ -954,9 +954,9 @@ function InquiryQuestion({
         </div>
         <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
           <div
-            className="h-full rounded-full bg-primary transition-[width] motion-reduce:transition-none"
+            className="h-full origin-left rounded-full bg-primary transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
             style={{
-              width: `${((progressStep + 1) / steps.length) * 100}%`,
+              transform: `scaleX(${(progressStep + 1) / steps.length})`,
             }}
           />
         </div>
@@ -984,7 +984,7 @@ function InquiryQuestion({
                 key={option}
                 type="button"
                 onClick={() => answer(option)}
-                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring dark:bg-muted"
+                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
               >
                 {option}
                 <ArrowRightIcon className="ml-auto size-[17px] text-muted-foreground" />
@@ -1126,7 +1126,7 @@ function InquirySuccess({
     state.type === "hire" ? state.answers.role : state.answers.projectType
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
         <div className="flex min-h-full items-center py-8">
           <div className="w-full">
@@ -1189,7 +1189,7 @@ function InquiryError({
   onEditEmail: () => void
 }) {
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
+    <div className="motion-view min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
       <div className="flex min-h-full items-center py-8">
         <div className="w-full">
           <span className="grid size-12 place-items-center rounded-xl bg-destructive/10 text-destructive">

@@ -16,11 +16,14 @@ export function CommandDialog({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Content aria-label="Portfolio command menu">
+        <DialogPrimitive.Content
+          aria-label="Portfolio command menu"
+          className="motion-command fixed top-[10%] left-1/2 z-[61] w-[calc(100%-1.5rem)] max-w-2xl -translate-x-1/2 outline-none sm:w-[calc(100%-3rem)]"
+        >
           <Command
             data-slot="command-dialog"
             className={cn(
-              "fixed top-[10%] left-1/2 z-[61] w-[calc(100%-1.5rem)] max-w-2xl -translate-x-1/2 overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-2xl motion-reduce:animate-none sm:w-[calc(100%-3rem)]",
+              "w-full max-w-2xl overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-2xl",
               className
             )}
             {...props}
@@ -101,7 +104,7 @@ export function CommandItem({
     <Command.Item
       data-slot="command-item"
       className={cn(
-        "relative flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-base outline-none select-none data-[selected=true]:bg-muted data-[selected=true]:text-foreground [&_svg]:size-[1.125rem] [&_svg]:shrink-0",
+        "relative flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-base transition-colors duration-150 ease-out outline-none select-none data-[selected=true]:bg-muted data-[selected=true]:text-foreground motion-reduce:transition-none [&_svg]:size-[1.125rem] [&_svg]:shrink-0",
         className
       )}
       {...props}

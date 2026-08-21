@@ -125,7 +125,12 @@ function OverviewPage() {
           </div>
         </div>
       </section>
-      <PageSection id="about" headingId="about-heading" title="About">
+      <PageSection
+        id="about"
+        headingId="about-heading"
+        title="About"
+        revealRootMargin="0px 0px -20%"
+      >
         <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
           {profile.about.split("\n\n").map((paragraph) => (
             <p key={paragraph}>
@@ -138,6 +143,8 @@ function OverviewPage() {
         id="availability"
         headingId="availability-heading"
         title="Availability"
+        revealRootMargin="0px 0px -20%"
+        revealVariant="subtle"
       >
         <AvailabilityCard />
       </PageSection>

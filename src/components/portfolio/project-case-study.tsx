@@ -280,7 +280,7 @@ export function ProjectCaseStudyPage({
                     aria-current={activeSection === id ? "location" : undefined}
                     onClick={() => setActiveSection(id)}
                     className={cn(
-                      "block rounded-sm border-l-2 py-0.5 pl-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4",
+                      "block rounded-sm border-l-2 py-0.5 pl-3 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none",
                       activeSection === id
                         ? "border-emphasis-foreground font-semibold text-emphasis-foreground"
                         : "border-transparent text-muted-foreground hover:text-foreground"

@@ -76,8 +76,8 @@
   --radius: 0.5rem;
   --motion-fast: 160ms;
   --motion-base: 280ms;
+  --motion-slow: 420ms;
   --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-reference: cubic-bezier(0.645, 0.045, 0.355, 1);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -142,7 +142,7 @@
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(1.25rem);
+    transform: translateY(1rem);
   }
   to {
     opacity: 1;
@@ -153,7 +153,7 @@
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(1.25rem);
+    transform: translateY(0.875rem);
   }
   to {
     opacity: 1;
@@ -164,7 +164,7 @@
 @keyframes fade-down {
   from {
     opacity: 0;
-    transform: translateY(-1.25rem);
+    transform: translateY(-0.75rem);
   }
   to {
     opacity: 1;
@@ -181,13 +181,120 @@
   }
 }
 
-@keyframes chat-launcher-float {
-  0%,
-  100% {
-    transform: translateY(0);
+@keyframes overlay-enter {
+  from {
+    opacity: 0;
   }
-  50% {
-    transform: translateY(-0.375rem);
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dialog-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(0.25rem) scale(0.99);
+  }
+}
+
+@keyframes command-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.5rem) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes command-exit {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, 0.25rem) scale(0.99);
+  }
+}
+
+@keyframes sheet-enter {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sheet-exit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+}
+
+@keyframes popover-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popover-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.375rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -201,13 +308,19 @@
 
   .motion-reveal {
     transition:
-      opacity 500ms var(--ease-reference) var(--motion-reveal-delay, 0ms),
-      transform 500ms var(--ease-reference) var(--motion-reveal-delay, 0ms);
+      opacity var(--motion-slow) var(--ease-out-quart)
+        var(--motion-reveal-delay, 0ms),
+      transform var(--motion-slow) var(--ease-out-quart)
+        var(--motion-reveal-delay, 0ms);
   }
 
   .motion-reveal[data-motion-state="pending"] {
     opacity: 0;
-    transform: translateY(1.25rem);
+    transform: translateY(1rem);
+  }
+
+  .motion-reveal-subtle[data-motion-state="pending"] {
+    transform: translateY(0.375rem);
   }
 
   .motion-reveal[data-motion-state="revealed"] {
@@ -239,7 +352,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .page-enter {
-    animation: page-enter 500ms var(--ease-reference) both;
+    animation: page-enter var(--motion-slow) var(--ease-out-quart) both;
   }
 
   .overview-page.page-enter {
@@ -247,41 +360,82 @@
   }
 
   .site-header-enter {
-    animation: fade-down 300ms var(--ease-reference) both;
+    animation: fade-down var(--motion-base) var(--ease-out-quart) both;
   }
 
   .hero-copy > *,
   .hero-portrait {
-    animation: fade-up 300ms var(--ease-reference) both;
+    animation: fade-up 360ms var(--ease-out-quart) both;
   }
 
   .hero-copy > :nth-child(1) {
-    animation-delay: 100ms;
+    animation-delay: 80ms;
   }
 
   .hero-copy > :nth-child(2) {
-    animation-delay: 200ms;
+    animation-delay: 160ms;
   }
 
   .hero-copy > :nth-child(3),
   .hero-portrait {
-    animation-delay: 300ms;
+    animation-delay: 240ms;
   }
 
   .hero-copy > :nth-child(4) {
-    animation-delay: 400ms;
+    animation-delay: 320ms;
   }
 
   .side-rail {
-    animation: fade-up 300ms var(--ease-reference) 700ms both;
+    animation: fade-up 360ms var(--ease-out-quart) 520ms both;
   }
 
   .chat-launcher-enter {
-    animation: fade-up 300ms var(--ease-reference) 700ms both;
+    animation: fade-up 360ms var(--ease-out-quart) 520ms both;
   }
 
-  .chat-launcher-float {
-    animation: chat-launcher-float 3s ease-in-out 1s infinite;
+  .motion-overlay[data-state="open"] {
+    animation: overlay-enter var(--motion-fast) ease-out both;
+  }
+
+  .motion-overlay[data-state="closed"] {
+    animation: overlay-exit var(--motion-fast) ease-in both;
+  }
+
+  .motion-dialog[data-state="open"] {
+    animation: dialog-enter var(--motion-base) var(--ease-out-quart) both;
+  }
+
+  .motion-dialog[data-state="closed"] {
+    animation: dialog-exit var(--motion-fast) ease-in both;
+  }
+
+  .motion-command[data-state="open"] {
+    animation: command-enter var(--motion-base) var(--ease-out-quart) both;
+  }
+
+  .motion-command[data-state="closed"] {
+    animation: command-exit var(--motion-fast) ease-in both;
+  }
+
+  .motion-sheet[data-state="open"] {
+    animation: sheet-enter var(--motion-base) var(--ease-out-quart) both;
+  }
+
+  .motion-sheet[data-state="closed"] {
+    animation: sheet-exit var(--motion-fast) ease-in both;
+  }
+
+  .motion-popover[data-state="open"] {
+    animation: popover-enter var(--motion-fast) var(--ease-out-quart) both;
+  }
+
+  .motion-popover[data-state="closed"] {
+    animation: popover-exit 120ms ease-in both;
+  }
+
+  .motion-view,
+  .motion-tab-panel[data-state="active"] {
+    animation: view-enter var(--motion-base) var(--ease-out-quart) both;
   }
 }
 
@@ -305,5 +459,15 @@
 
   .reading-progress {
     display: none;
+  }
+
+  .motion-overlay,
+  .motion-dialog,
+  .motion-command,
+  .motion-sheet,
+  .motion-popover,
+  .motion-view,
+  .motion-tab-panel {
+    animation: none;
   }
 }

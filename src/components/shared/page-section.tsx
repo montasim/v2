@@ -11,6 +11,8 @@ export function PageSection({
   title,
   to,
   label,
+  revealRootMargin,
+  revealVariant,
   className,
   children,
   ...props
@@ -19,10 +21,17 @@ export function PageSection({
   title: string
   to?: InternalPath
   label?: string
+  revealRootMargin?: string
+  revealVariant?: "default" | "subtle"
   children: ReactNode
 }) {
   return (
-    <MotionReveal asChild delay={80}>
+    <MotionReveal
+      asChild
+      delay={80}
+      rootMargin={revealRootMargin}
+      variant={revealVariant}
+    >
       <section
         className={cn("scroll-mt-14 py-10 sm:py-12", className)}
         aria-labelledby={headingId}

@@ -51,6 +51,21 @@ describe("shared component interfaces", () => {
     expect(markup).toContain("motion-reveal")
   })
 
+  it("supports a subtle reveal for dense section surfaces", () => {
+    const markup = renderToStaticMarkup(
+      <PageSection
+        headingId="availability-heading"
+        title="Availability"
+        revealVariant="subtle"
+      >
+        <p>Current working preferences</p>
+      </PageSection>
+    )
+
+    expect(markup).toContain("motion-reveal-subtle")
+    expect(markup).not.toContain('revealVariant="subtle"')
+  })
+
   it("applies shared page spacing while preserving main semantics", () => {
     const page = renderToStaticMarkup(<PageShell padded>Content</PageShell>)
 

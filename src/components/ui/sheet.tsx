@@ -15,10 +15,10 @@ export function SheetContent({
 }: React.ComponentProps<typeof Dialog.Content> & { closeLabel?: string }) {
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/15 backdrop-blur-xs motion-reduce:animate-none" />
+      <Dialog.Overlay className="motion-overlay fixed inset-0 z-50 bg-foreground/15 backdrop-blur-xs" />
       <Dialog.Content
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-3/4 max-w-sm flex-col border-l bg-background p-4 shadow-xl motion-reduce:animate-none",
+          "motion-sheet fixed inset-y-0 right-0 z-50 flex w-3/4 max-w-sm flex-col border-l bg-background p-4 shadow-xl",
           className
         )}
         {...props}
