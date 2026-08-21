@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { affiliationCatalog } from "./content/affiliations"
 import { certificationCatalog } from "./content/certifications"
@@ -161,6 +162,8 @@ describe("portfolio content", () => {
   })
 
   it("builds canonical social metadata", () => {
+    expect(site.url).toBe("https://montasim.dev")
+
     const metadata = createMeta(
       "Projects",
       "A verified project catalog.",
@@ -174,5 +177,20 @@ describe("portfolio content", () => {
       property: "og:image",
       content: `${site.url}/images/social-preview.png`,
     })
+  })
+
+  it("keeps crawler files on the canonical domain", () => {
+    const robots = readFileSync(
+      new URL("../../public/robots.txt", import.meta.url),
+      "utf8"
+    )
+    const sitemap = readFileSync(
+      new URL("../../public/sitemap.xml", import.meta.url),
+      "utf8"
+    )
+
+    expect(robots).toContain("https://montasim.dev/sitemap.xml")
+    expect(sitemap).toContain("<loc>https://montasim.dev/</loc>")
+    expect(`${robots}\n${sitemap}`).not.toContain("montasim.vercel.app")
   })
 })

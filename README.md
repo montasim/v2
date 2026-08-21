@@ -206,7 +206,7 @@ The same run measured a cumulative layout shift of `0.002`, total blocking time 
 Every route uses TanStack Router document-head management for deduplicated metadata. The application includes:
 
 - Unique route titles and descriptions
-- Canonical URLs rooted at `https://montasim.vercel.app`
+- Canonical URLs rooted at `https://montasim.dev`
 - Open Graph and Twitter large-card metadata
 - A 1200 by 630 PNG preview at `public/images/social-preview.png`
 - Crawl directives in `public/robots.txt`

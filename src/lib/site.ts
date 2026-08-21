@@ -13,7 +13,7 @@ export const site = siteSchema.parse({
   fullName: "Mohammad Montasim Al Mamun Shuvo",
   description:
     "Senior Software Engineer building deterministic, high-performance web platforms for real-time and AI-driven applications.",
-  url: "https://montasim.vercel.app",
+  url: "https://montasim.dev",
   ogImage: "/images/social-preview.png",
 })
 
