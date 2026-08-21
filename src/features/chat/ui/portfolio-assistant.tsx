@@ -242,7 +242,7 @@ export function PortfolioAssistant() {
         <Dialog.Trigger asChild>
           <Button
             size="icon"
-            className="size-14 rounded-full shadow-lg"
+            className="size-14 rounded-full bg-emphasis-foreground text-background shadow-lg hover:bg-emphasis-foreground/80"
             aria-label="Ask about Montasim"
             title="Ask about Montasim"
           >
@@ -303,11 +303,11 @@ export function PortfolioAssistant() {
 function AssistantHeader({ content }: { content: AssistantHeaderContent }) {
   return (
     <header className="flex min-h-16 shrink-0 items-center gap-3 border-b px-4">
-      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
+      <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-emphasis-foreground text-background">
         <ChatCircleDotsIcon className="size-[19px]" />
       </span>
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="truncate text-sm font-semibold">
+        <Dialog.Title className="truncate text-sm font-semibold text-emphasis-foreground">
           {content.title}
         </Dialog.Title>
         <Dialog.Description className="truncate text-xs text-muted-foreground">
@@ -340,7 +340,9 @@ function AssistantHome({
   return (
     <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
-        <h2 className="text-sm font-semibold">Explore his background</h2>
+        <h2 className="text-sm font-semibold text-emphasis-foreground">
+          Explore his background
+        </h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {suggestedQuestions.map((item, index) => {
             const Icon = item.icon
@@ -355,9 +357,9 @@ function AssistantHome({
                 )}
               >
                 <span className="flex items-start gap-3">
-                  <Icon className="mt-0.5 size-[19px]" />
+                  <Icon className="mt-0.5 size-[19px] text-emphasis-foreground" />
                   <span>
-                    <span className="block text-sm font-medium">
+                    <span className="block text-sm font-medium text-emphasis-foreground">
                       {item.title}
                     </span>
                     <span className="mt-1 block text-xs text-muted-foreground">
@@ -371,7 +373,9 @@ function AssistantHome({
         </div>
 
         <div className="mt-5 border-t pt-4">
-          <h3 className="text-sm font-semibold">Contact Montasim</h3>
+          <h3 className="text-sm font-semibold text-emphasis-foreground">
+            Contact Montasim
+          </h3>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
             Send the details he needs to reply.
           </p>
@@ -409,8 +413,8 @@ function InquiryEntry({
       className={cn(
         "flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none",
         primary
-          ? "border-primary bg-primary text-primary-foreground hover:bg-primary/85"
-          : "bg-card hover:bg-muted dark:bg-muted/60"
+          ? "border-emphasis-foreground bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+          : "bg-card text-emphasis-foreground hover:bg-muted dark:bg-muted/60"
       )}
     >
       {children}
@@ -500,7 +504,7 @@ function ChatView({
               className={cn(
                 "motion-view scroll-mt-4 rounded-2xl px-4 py-4 text-sm leading-6",
                 message.role === "user"
-                  ? "ml-auto max-w-[84%] rounded-br-md bg-primary text-primary-foreground"
+                  ? "ml-auto max-w-[84%] rounded-br-md bg-emphasis-foreground text-background"
                   : "max-w-[92%] rounded-bl-md bg-muted"
               )}
             >
@@ -604,7 +608,7 @@ function MessageCitations({
             key={citation.href}
             href={citation.href}
             onClick={onNavigate}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             {citation.label}
             <ArrowRightCompactIcon className="size-3.5" aria-hidden="true" />
@@ -647,7 +651,10 @@ function QuickComposer({
       }}
     >
       <div className="flex items-center justify-between gap-3 text-xs">
-        <label htmlFor="assistant-message" className="font-semibold">
+        <label
+          htmlFor="assistant-message"
+          className="font-semibold text-emphasis-foreground"
+        >
           Message
         </label>
         <span className="text-muted-foreground">Enter to send</span>
@@ -678,6 +685,7 @@ function QuickComposer({
         <Button
           type="submit"
           size="icon-lg"
+          className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
           disabled={!value.trim() || disabled}
           aria-label="Send message"
         >
@@ -698,7 +706,9 @@ function MessageContactAction({
   if (intent === "funding") {
     return (
       <section className="mt-4 border-t pt-4">
-        <p className="font-semibold">Want to support Montasim's work?</p>
+        <p className="font-semibold text-emphasis-foreground">
+          Want to support Montasim's work?
+        </p>
         <p className="mt-1 text-xs leading-5 text-muted-foreground">
           Support his independent projects directly through SupportKori.
         </p>
@@ -706,7 +716,7 @@ function MessageContactAction({
           href={profileCatalog.profile.supportUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-3 flex min-h-14 w-full items-center gap-3 rounded-xl border border-primary bg-primary px-4 text-primary-foreground hover:bg-primary/85 focus-visible:ring-2 focus-visible:ring-ring"
+          className="mt-3 flex min-h-14 w-full items-center gap-3 rounded-xl border border-emphasis-foreground bg-emphasis-foreground px-4 text-background hover:bg-emphasis-foreground/80 focus-visible:ring-2 focus-visible:ring-ring"
         >
           <HeartStraightIcon className="size-[19px] shrink-0" />
           <span className="min-w-0 flex-1">
@@ -729,7 +739,7 @@ function MessageContactAction({
 
   return (
     <section className="mt-4 border-t pt-4">
-      <p className="font-semibold">
+      <p className="font-semibold text-emphasis-foreground">
         {isRole
           ? "Interested in hiring Montasim?"
           : "Have a project for Montasim?"}
@@ -752,7 +762,7 @@ function MessageContactAction({
       <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
         <a
           href={emailUrl}
-          className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium hover:border-primary focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
           <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
           <span className="truncate">{profileCatalog.profile.email}</span>
@@ -761,7 +771,7 @@ function MessageContactAction({
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium hover:border-primary focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
           <WhatsappLogoIcon className="size-[17px]" />
           WhatsApp
@@ -967,14 +977,16 @@ function InquiryQuestion({
     <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
         <div className="flex items-end justify-between text-xs">
-          <span className="font-semibold">{title}</span>
+          <span className="font-semibold text-emphasis-foreground">
+            {title}
+          </span>
           <span className="text-muted-foreground">
             {progressStep + 1} of {steps.length}
           </span>
         </div>
         <div className="mt-2 h-1 overflow-hidden rounded-full bg-border">
           <div
-            className="h-full origin-left rounded-full bg-primary transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
+            className="h-full origin-left rounded-full bg-emphasis-foreground transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none"
             style={{
               transform: `scaleX(${(progressStep + 1) / steps.length})`,
             }}
