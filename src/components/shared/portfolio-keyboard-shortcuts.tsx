@@ -19,6 +19,7 @@ export function PortfolioKeyboardShortcuts() {
   React.useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.defaultPrevented || event.repeat) return
+      if (typeof event.key !== "string") return
 
       const key = event.key.toLowerCase()
       const usesCommandModifier = event.metaKey || event.ctrlKey

@@ -59,6 +59,8 @@ export function useKonamiCode(onUnlock: () => void) {
     }
 
     function handleKeyDown(event: KeyboardEvent) {
+      if (typeof event.key !== "string") return
+
       if (
         event.defaultPrevented ||
         event.altKey ||

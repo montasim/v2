@@ -7,6 +7,8 @@ export function CommandPalette() {
 
   React.useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
+      if (typeof event.key !== "string") return
+
       if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault()
         setOpen((current) => !current)

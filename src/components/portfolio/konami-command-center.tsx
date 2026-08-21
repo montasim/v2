@@ -84,6 +84,8 @@ export function KonamiCommandCenter() {
     if (!open) return
 
     function handleShortcut(event: KeyboardEvent) {
+      if (typeof event.key !== "string") return
+
       if (
         event.altKey ||
         event.ctrlKey ||

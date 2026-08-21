@@ -51,6 +51,15 @@ describe("PortfolioKeyboardShortcuts", () => {
     expect(toggleTheme).toHaveBeenCalledOnce()
   })
 
+  it("ignores keydown events without a key value", () => {
+    render(<PortfolioKeyboardShortcuts />)
+
+    document.dispatchEvent(new Event("keydown"))
+
+    expect(toggleTheme).not.toHaveBeenCalled()
+    expect(navigate).not.toHaveBeenCalled()
+  })
+
   it("toggles the assistant using the visible close control first", () => {
     const openAssistant = vi.fn()
     const closeAssistant = vi.fn()

@@ -111,4 +111,14 @@ describe("KonamiCommandCenter", () => {
     expect(navigate).toHaveBeenCalledWith({ to: "/projects" })
     expect(screen.queryByRole("dialog")).toBeNull()
   })
+
+  it("ignores keydown events without a key while open", () => {
+    render(<KonamiCommandCenter />)
+    enterKonamiCode()
+
+    window.dispatchEvent(new Event("keydown"))
+
+    expect(screen.getByRole("dialog")).not.toBeNull()
+    expect(navigate).not.toHaveBeenCalled()
+  })
 })

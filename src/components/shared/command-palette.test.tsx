@@ -66,6 +66,14 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("dialog")).toBeNull()
   })
 
+  it("ignores keydown events without a key value", () => {
+    render(<CommandPalette />)
+
+    document.dispatchEvent(new Event("keydown"))
+
+    expect(screen.queryByRole("dialog")).toBeNull()
+  })
+
   it("keeps the document scrollbar available while open", () => {
     render(<CommandPalette />)
 
