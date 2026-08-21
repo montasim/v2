@@ -1,11 +1,13 @@
 import { z } from "zod"
 
+import { visitorEmailSchema } from "@/features/email-verification/domain/email-verification"
+
 export const inquiryTypeSchema = z.enum(["hire", "project"])
 
 const baseInquirySchema = z.object({
   id: z.string().trim().min(8).max(100),
   name: z.string().trim().min(2).max(80),
-  email: z.email().max(254),
+  email: visitorEmailSchema,
   context: z.string().trim().max(1_000).optional(),
 })
 
@@ -135,6 +137,7 @@ export interface InquiryState {
   context: string
   website: string
   status: InquiryStatus
+  submissionError: string | null
 }
 
 export type InquiryAction =
@@ -143,7 +146,7 @@ export type InquiryAction =
   | { type: "begin-edit"; stepIndex: number }
   | { type: "cancel-edit" }
   | { type: "submission-succeeded" }
-  | { type: "submission-failed" }
+  | { type: "submission-failed"; message: string }
   | { type: "retry-submission" }
   | { type: "edit-email" }
 
@@ -157,6 +160,7 @@ export function createInquiryState(type: InquiryType): InquiryState {
     context: "",
     website: "",
     status: "active",
+    submissionError: null,
   }
 }
 
@@ -229,21 +233,22 @@ export function inquiryReducer(
       }
     case "submission-succeeded":
       return state.status === "submitting"
-        ? { ...state, status: "success" }
+        ? { ...state, status: "success", submissionError: null }
         : state
     case "submission-failed":
       return state.status === "submitting"
-        ? { ...state, status: "error" }
+        ? { ...state, status: "error", submissionError: action.message }
         : state
     case "retry-submission":
       return state.status === "error"
-        ? { ...state, status: "submitting" }
+        ? { ...state, status: "submitting", submissionError: null }
         : state
     case "edit-email":
       return state.status === "error"
         ? {
             ...state,
             status: "active",
+            submissionError: null,
             stepIndex: steps.length - 1,
             editReturnStep: null,
           }

@@ -28,6 +28,7 @@ import { Dialog } from "radix-ui"
 
 import { Button } from "@/components/ui/button"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
+import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import type { PortfolioUIMessage } from "@/features/chat/domain/chat"
 import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
 import { selectPortfolioCitations } from "@/features/chat/domain/portfolio-citations"
@@ -847,7 +848,16 @@ function InquiryFlow({
       },
     })
       .then(() => active && dispatch({ type: "submission-succeeded" }))
-      .catch(() => active && dispatch({ type: "submission-failed" }))
+      .catch(
+        (error) =>
+          active &&
+          dispatch({
+            type: "submission-failed",
+            message:
+              getEmailVerificationError(error) ??
+              "The connection failed. Your answers are still here, so you can retry without starting over.",
+          })
+      )
     return () => {
       active = false
     }
@@ -898,6 +908,7 @@ function InquiryFlow({
   if (state.status === "error") {
     return (
       <InquiryError
+        message={state.submissionError}
         onRetry={() => dispatch({ type: "retry-submission" })}
         onEditEmail={() => dispatch({ type: "edit-email" })}
       />
@@ -1296,9 +1307,11 @@ function InquirySuccess({
 }
 
 function InquiryError({
+  message,
   onRetry,
   onEditEmail,
 }: {
+  message: string | null
   onRetry: () => void
   onEditEmail: () => void
 }) {
@@ -1313,8 +1326,7 @@ function InquiryError({
             Your inquiry was not sent.
           </h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            The connection failed. Your answers are still here, so you can retry
-            without starting over.
+            {message ?? "Your answers are still here. Try again to continue."}
           </p>
           <Button
             size="lg"

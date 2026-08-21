@@ -92,7 +92,10 @@ describe("inquiryReducer", () => {
     ]) {
       state = inquiryReducer(state, { type: "answer", value })
     }
-    state = inquiryReducer(state, { type: "submission-failed" })
+    state = inquiryReducer(state, {
+      type: "submission-failed",
+      message: "Delivery failed.",
+    })
     state = inquiryReducer(state, { type: "retry-submission" })
 
     expect(state.status).toBe("submitting")
