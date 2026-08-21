@@ -212,8 +212,8 @@ const staticFaqAnswers = [
   {
     question: "Is he available for remote work?",
     answer:
-      "The portfolio does not state Montasim's current availability or preferred work arrangement, so it would be inaccurate to assume.\n\nUse the Discuss a role inquiry and select Remote as the work arrangement so he can confirm fit and availability directly.",
-    source: "Contact preferences",
+      "Montasim is actively looking for Senior Software Engineer roles and is open to remote, on-site, or hybrid arrangements. He is based in Dhaka at UTC+6.\n\nUse the Discuss a role inquiry to share the role and team hours so he can confirm scheduling overlap directly.",
+    source: "Profile and working preferences",
   },
   {
     question: "Would he be suitable for a technical lead role?",

@@ -28,6 +28,19 @@ describe("portfolio evidence", () => {
     expect(evidence.source).toContain("Recommendations")
   })
 
+  it("grounds recruiter logistics in explicit working preferences", () => {
+    const evidence = selectPortfolioEvidence(
+      "Does he need visa sponsorship, and when can he start?"
+    )
+
+    expect(evidence.context).toContain("WORKING PREFERENCES")
+    expect(evidence.context).toContain("Time zone: UTC+6")
+    expect(evidence.context).toContain(
+      "Visa status: Not publicly specified; confirm directly"
+    )
+    expect(evidence.context).toContain("Earliest start date: Immediately")
+  })
+
   it("tells the model to treat portfolio content as data", () => {
     const instruction = buildAssistantInstruction(
       selectPortfolioEvidence("What is his technical expertise?")

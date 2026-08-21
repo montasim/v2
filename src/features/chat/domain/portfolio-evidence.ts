@@ -41,6 +41,19 @@ const hiringTerms = [
   "mentor",
   "strength",
   "team",
+  "available",
+  "availability",
+  "remote",
+  "hybrid",
+  "relocation",
+  "relocate",
+  "visa",
+  "work authorization",
+  "timezone",
+  "time zone",
+  "start date",
+  "notice period",
+  "work arrangement",
 ]
 const backgroundTerms = [
   "education",
@@ -102,12 +115,22 @@ function includesAny(value: string, terms: readonly string[]) {
 
 function profileEvidence() {
   const { profile } = profileCatalog
+  const { workPreferences } = profile
   return [
     "PROFILE",
     `Name: ${profile.name}`,
     `Title: ${profile.title}`,
     `Location: ${profile.location}`,
     `Tagline: ${profile.tagline}`,
+    "WORKING PREFERENCES",
+    `Availability: ${workPreferences.availability ?? "Not publicly specified; confirm directly"}`,
+    `Preferred roles: ${workPreferences.preferredRoles.join(", ") || "Not publicly specified; confirm directly"}`,
+    `Work arrangement: ${workPreferences.workArrangement ?? "Not publicly specified; confirm directly"}`,
+    `Time zone: ${workPreferences.timeZone}`,
+    `Team-hour overlap: ${workPreferences.timeZoneOverlap ?? "Not publicly specified; share team hours to confirm"}`,
+    `Relocation: ${workPreferences.relocation ?? "Not publicly specified; confirm directly"}`,
+    `Visa status: ${workPreferences.visaStatus ?? "Not publicly specified; confirm directly"}`,
+    `Earliest start date: ${workPreferences.earliestStartDate ?? "Not publicly specified; confirm directly"}`,
     `About: ${clip(profile.about, 2_200)}`,
   ].join("\n")
 }
