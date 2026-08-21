@@ -269,11 +269,11 @@ export function ProjectCaseStudyPage({
 
       <div className="mt-14 grid gap-10 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-16">
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <p className="text-xs font-medium text-muted-foreground">
+          <p className="text-xs font-normal text-muted-foreground">
             On this page
           </p>
-          <nav aria-label="Case study sections" className="mt-3">
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm lg:block lg:space-y-2">
+          <nav aria-label="Case study sections" className="mt-2.5">
+            <ul className="flex flex-wrap gap-x-4 text-[0.8125rem] lg:grid lg:gap-0">
               {sectionLinks.map(([id, label]) => (
                 <li key={id}>
                   <a
@@ -281,7 +281,7 @@ export function ProjectCaseStudyPage({
                     aria-current={activeSection === id ? "location" : undefined}
                     onClick={() => setActiveSection(id)}
                     className={cn(
-                      "block rounded-sm border-l-2 py-0.5 pl-3 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none",
+                      "block border-l-2 py-[0.4375rem] pl-3 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none",
                       activeSection === id
                         ? "border-emphasis-foreground font-semibold text-emphasis-foreground"
                         : "border-transparent text-muted-foreground hover:text-foreground"
