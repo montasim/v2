@@ -1,0 +1,281 @@
+{
+  "author": {
+    "name": "Montasim Shuvo",
+    "avatarUrl": "/images/avatar.webp"
+  },
+  "posts": [
+    {
+      "slug": "a-routine-is-not-a-timestamp",
+      "projectId": "project-routempo",
+      "title": "A Routine Is Not a Timestamp: Designing Routempo for Real-World Time",
+      "excerpt": "The hard part of a routine planner was not recurrence. It was preserving user intent across timezones, actual outcomes, reminders, and external calendars.",
+      "category": "System design",
+      "topic": "product",
+      "publishedAt": "2026-08-22",
+      "readingMinutes": 7,
+      "featured": false,
+      "image": {
+        "src": "/images/projects/routempo.webp",
+        "alt": "Routempo timezone-aware routine planner interface"
+      },
+      "sections": [
+        {
+          "id": "false-model",
+          "label": "The real problem",
+          "title": "A recurring task was the wrong domain model",
+          "paragraphs": [
+            "Routempo started with a familiar product idea: let people define repeatable routines, remind them at the right time, and show their progress. The interface looked like a scheduling problem. The data quickly proved otherwise.",
+            "A schedule records intention. It does not tell me whether the person started, completed, skipped, or changed the routine. If I store all of that on one recurring record, every edit risks rewriting history. A timezone change makes the ambiguity worse: did the user mean a fixed instant, or a local morning rhythm that should follow them?",
+            "That was the real engineering problem. I needed a model that could preserve what was planned, what actually happened, and the local-time meaning behind both."
+          ],
+          "callout": "Time was not a formatting concern. It was part of the product's domain language."
+        },
+        {
+          "id": "separate-intent-outcome",
+          "label": "Domain model",
+          "title": "I separated routine intent from behavioral evidence",
+          "paragraphs": [
+            "I modeled routines as durable plans and sessions as individual opportunities to perform them. Check-ins and reviews belong to the outcome side of the system, not to the recurring definition. That boundary lets a user change tomorrow's plan without changing yesterday's evidence.",
+            "The distinction also made the product more honest. A completed checkbox is not the same thing as a reusable routine definition, and a skipped session is still useful behavioral data. PostgreSQL and Drizzle provide queryable, portable history instead of hiding the record in browser-only state.",
+            "Once those concepts were separate, the application services became easier to reason about. Planning creates intent. Daily execution records an outcome. Review reads across both without mutating either."
+          ]
+        },
+        {
+          "id": "timezone-boundary",
+          "label": "Timezones",
+          "title": "Timezone correctness needed an explicit boundary",
+          "paragraphs": [
+            "The system carries the user's timezone through schedule and completion semantics instead of treating it as a display preference added at the edge. That matters whenever a routine, session, reminder, and calendar event must agree on what “today” means.",
+            "I kept the conversion rules behind domain services so route components do not invent their own interpretation of dates. The UI can format a value for a person, while the underlying workflow still has one place that decides which local day and planned session an action belongs to.",
+            "This is a small architectural choice with a large failure radius. When temporal rules are duplicated across components, the system can look correct while silently attaching an outcome to the wrong day."
+          ]
+        },
+        {
+          "id": "integration-boundaries",
+          "label": "Integrations",
+          "title": "Reminders and calendars could not own the core product",
+          "paragraphs": [
+            "Web Push is a distributed workflow: the browser grants permission, a subscription is stored, and a scheduled server invocation eventually attempts delivery. Google Calendar and Tasks add OAuth scopes, provider configuration, and failure modes outside the planner's control.",
+            "I isolated those capabilities behind adapters and kept them optional. A missing provider configuration or rejected notification permission should disable an enhancement, not make the routine planner unusable. Scheduled summaries call into the same domain behavior rather than becoming a second implementation of it.",
+            "That boundary also gave failures an owner. The core can record a session successfully even when a notification or external sync needs to be retried or explained separately."
+          ]
+        },
+        {
+          "id": "ownership",
+          "label": "Outcome",
+          "title": "Reliability included an exit path",
+          "paragraphs": [
+            "Because the product stores personal behavioral history, import, export, and deletion are not secondary settings. They are part of the data contract. Users can move their account data in and out, and the system validates those paths alongside the daily workflow.",
+            "The final architecture is less about a clever recurrence algorithm and more about stable boundaries: plans versus evidence, local time versus presentation, core behavior versus optional providers, and product data versus user ownership.",
+            "That is the senior engineering lesson I took from Routempo: recurring software becomes reliable when the model preserves meaning, not merely timestamps."
+          ]
+        }
+      ],
+      "comments": []
+    },
+    {
+      "slug": "the-linkedin-page-is-untrusted-input",
+      "projectId": "project-thoughtline",
+      "title": "The LinkedIn Page Is Untrusted Input: Building a Safer AI Writing Assistant",
+      "excerpt": "Thoughtline became reliable when I treated page content, model providers, browser permissions, and local credentials as separate trust boundaries.",
+      "category": "AI engineering",
+      "topic": "tools",
+      "publishedAt": "2026-08-21",
+      "readingMinutes": 8,
+      "featured": true,
+      "image": {
+        "src": "/images/projects/thoughtline.webp",
+        "alt": "Thoughtline LinkedIn writing assistant side-panel interface"
+      },
+      "sections": [
+        {
+          "id": "context-not-control",
+          "label": "The real problem",
+          "title": "The assistant needed context without surrendering control",
+          "paragraphs": [
+            "Thoughtline helps a person understand a visible LinkedIn conversation and shape a reply or post in their own voice. Generating text was the easy demo. Building a browser extension I could trust with page content, API credentials, writing history, and provider failures was the actual project.",
+            "The assistant needs enough context to be useful, but the LinkedIn page is neither my database nor a trusted instruction source. It is mutable third-party content. Passing the DOM directly into a prompt would mix data, instructions, unrelated page text, and potentially hostile content into one opaque string.",
+            "I designed the system around a stricter rule: page content may inform a request, but it does not control the application."
+          ],
+          "callout": "An AI feature starts at a trust boundary, not at the model call."
+        },
+        {
+          "id": "bounded-envelope",
+          "label": "Input boundary",
+          "title": "I put untrusted content inside a bounded envelope",
+          "paragraphs": [
+            "The content script extracts only the context needed by a workflow. Before anything reaches a provider, the data enters a typed, size-bounded, validated envelope. That gives the application an explicit contract for what was captured and prevents arbitrary page structure from leaking through the rest of the system.",
+            "Validation does not magically eliminate prompt injection, and I do not present it as doing so. It reduces the attack and data-sprawl surface, preserves a clear distinction between application instructions and quoted source material, and gives malformed extraction a safe place to fail.",
+            "The same decision improved maintainability. When LinkedIn changes its DOM, extraction can break at one boundary without forcing the side panel, prompt builder, and storage model to understand selectors."
+          ]
+        },
+        {
+          "id": "provider-ports",
+          "label": "Provider design",
+          "title": "Model fallback became a policy, not a catch block",
+          "paragraphs": [
+            "Thoughtline uses Gemini first and Groq only for eligible fallback. I did not let either provider's response shape spread through the UI. Typed drafting and source-research ports define what the product needs; adapters translate provider-specific requests, responses, and errors.",
+            "That makes fallback an explicit application policy. The system can decide which failures are eligible, attempt one controlled fallback, and still return a normalized result. It avoids the dangerous pattern where every error silently triggers another provider and users cannot tell which service received their data.",
+            "Provider abstraction was useful here because it removed real volatility from the product core. It was not abstraction for the sake of making two SDK calls look identical."
+          ]
+        },
+        {
+          "id": "browser-trust",
+          "label": "Browser trust",
+          "title": "Permissions, credentials, and retention needed visible ownership",
+          "paragraphs": [
+            "A browser extension lives close to the user's browsing activity, so convenience cannot justify broad invisible access. Thoughtline asks for capabilities when a workflow needs them instead of treating every permission as an onboarding checkbox.",
+            "Provider credentials and settings live in encrypted browser storage with migrations and recovery paths. Configuration backup, history archives, retention controls, and restore validation make local-first storage operable over time; encryption alone would not solve schema drift, accidental loss, or unclear ownership.",
+            "These choices add branches to the product. A permission can be declined, stored data can require migration, and a restore can fail validation. I accepted that complexity because each branch corresponds to control the user should actually have."
+          ]
+        },
+        {
+          "id": "proof",
+          "label": "Outcome",
+          "title": "I tested the packaged system, not only the React components",
+          "paragraphs": [
+            "The quality gates cover static checks, unit behavior, the packed extension, accessibility, responsive layouts, and visual regression. That matters because an extension can pass component tests and still fail after Manifest V3 packaging, permission resolution, or content-script injection.",
+            "The result is a writing assistant with deliberate limits: bounded page context, replaceable provider adapters, defined fallback, recoverable local data, and permissions connected to visible capabilities.",
+            "The senior engineering work was not making the model write more. It was deciding what the model could see, what the page could influence, how providers could fail, and where the user remained in control."
+          ]
+        }
+      ],
+      "comments": []
+    },
+    {
+      "slug": "i-refused-to-make-webgl-the-only-way-in",
+      "projectId": "project-foliofarer",
+      "title": "I Refused to Make WebGL the Only Way In: The Architecture Behind Foliofarer",
+      "excerpt": "A 3D portfolio can be memorable and still fail its users. I designed Foliofarer so content, navigation, performance, and testing never depended on one renderer.",
+      "category": "Frontend architecture",
+      "topic": "product",
+      "publishedAt": "2026-08-20",
+      "readingMinutes": 7,
+      "featured": false,
+      "image": {
+        "src": "/images/projects/foliofarer.webp",
+        "alt": "Foliofarer interactive 3D developer portfolio interface"
+      },
+      "sections": [
+        {
+          "id": "memorable-is-not-usable",
+          "label": "The real problem",
+          "title": "A memorable portfolio can still hide the information that matters",
+          "paragraphs": [
+            "Foliofarer presents a career as an explorable 3D world. That makes for a strong first impression, but the product has a more important job: help a visitor understand my work. A recruiter should not need gaming instincts, a powerful GPU, precise pointer control, or a tolerance for motion to reach the evidence.",
+            "The first architectural risk was obvious. If WebGL owned the content model, every fallback would become a reduced version of the real site. Accessibility would be a patch, search and testing would depend on scene state, and lower-capability devices would receive less information.",
+            "I chose a different constraint: 3D could own the experience, but it could not own access to the content."
+          ],
+          "callout": "Progressive enhancement only works when the enhanced layer is not the sole source of truth."
+        },
+        {
+          "id": "atlas",
+          "label": "Accessible path",
+          "title": "The Atlas is a complete interface, not a fallback apology",
+          "paragraphs": [
+            "I paired the world with an accessible Atlas that exposes the same professional history through a document-oriented surface. It supports keyboard-friendly navigation and lets visitors move directly through projects and career landmarks without operating the scene.",
+            "Both experiences are driven by validated portfolio data. The scene can translate that data into geography and interaction, while the Atlas translates it into headings, links, and readable structure. Neither needs to scrape or reverse-engineer the other.",
+            "This separation changed how I evaluated features. A new landmark was not complete when it looked good in Three.js. It was complete when its meaning was represented in the shared data and reachable through both paths."
+          ]
+        },
+        {
+          "id": "deterministic-world",
+          "label": "World generation",
+          "title": "I compiled the world instead of hand-placing it",
+          "paragraphs": [
+            "Hand-authored coordinates would have made the first scene quick and every later change fragile. Navigation, the minimap, landmarks, progression, and tests all need to agree about the same route. Small visual edits cannot be allowed to create unreachable content or nondeterministic test failures.",
+            "Foliofarer uses a deterministic journey compiler and generators to produce route and world data. The compiler adds complexity, but it creates a stable contract: the same input produces a world that navigation and tests can inspect consistently.",
+            "That decision turns procedural generation from visual decoration into an engineering tool. Repeatability makes generated environments debuggable. Validation catches broken route assumptions before a visitor discovers them inside the scene."
+          ]
+        },
+        {
+          "id": "adaptive-rendering",
+          "label": "Performance",
+          "title": "Maximum fidelity was not the default definition of quality",
+          "paragraphs": [
+            "A single rendering profile assumes every device and visitor values the same thing. Foliofarer instead uses adaptive quality tiers and preference signals, including viewport, connection and device capability, reduced motion, and reduced data.",
+            "The goal is not to guess a benchmark score perfectly. It is to avoid making the heaviest experience the price of entry. Capability-aware rendering can reduce scene work while the Atlas preserves the complete information path.",
+            "Reduced motion is also a product decision, not a CSS afterthought. When movement is part of navigation and atmosphere, honoring the preference requires the interaction model to remain understandable with that movement reduced."
+          ]
+        },
+        {
+          "id": "testable-experience",
+          "label": "Outcome",
+          "title": "The architecture made an unusual interface testable",
+          "paragraphs": [
+            "The project maintains compiler, interaction, accessibility, browser, and visual-baseline tests. Each suite protects a different contract: valid generated routes, usable navigation, reachable content, real browser behavior, and intentional presentation.",
+            "Visitors can explore the 3D career world, read the same history through the Atlas, track local Passport progress, and use the experience across a broader range of capabilities and preferences.",
+            "Foliofarer reinforced a principle I use in senior frontend work: ambitious presentation is safest when content and behavior have deeper, renderer-independent foundations."
+          ]
+        }
+      ],
+      "comments": []
+    },
+    {
+      "slug": "from-useeffect-chaos-to-deterministic-systems",
+      "title": "From useEffect Chaos to Deterministic Systems: Why I Rebuilt Our Biometric Pipeline with a Finite State Machine",
+      "excerpt": "I deleted 40+ useEffects and replaced them with a Finite State Machine. That was the best decision I made for our biometric assessment pipeline.",
+      "category": "Architecture",
+      "topic": "product",
+      "publishedAt": "2026-05-16",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/deterministic-systems.png",
+        "alt": "A deterministic state machine coordinating a real-time biometric assessment pipeline"
+      },
+      "sections": [
+        {
+          "id": "introduction",
+          "label": "Introduction",
+          "title": "From useEffect chaos to deterministic systems",
+          "paragraphs": [
+            "I deleted 40+ useEffects and replaced them with a Finite State Machine.",
+            "That was the best decision I made for our biometric assessment pipeline.",
+            "Our movement assessment system runs real-time computer vision (MediaPipe Pose, TensorFlow.js MoveNet), WebRTC video recording, and Azure text-to-speech audio guidance — all simultaneously in the browser."
+          ]
+        },
+        {
+          "id": "problem",
+          "label": "The problem",
+          "title": "The problem wasn't the developers. It was the paradigm.",
+          "paragraphs": [
+            "The original code managed this with scattered: useState + useEffect chains.",
+            "10 boolean flags. Race conditions everywhere. “Works on my machine” became the norm. State transitions had no boundaries. One missed flag flip = broken recording = lost patient data.",
+            "When your system has 10 distinct states, 19 events, guard conditions, parallel detection loops, and real-time pose estimation running at 60 fps, useEffect dependency arrays cannot model that reality. They were never designed to."
+          ]
+        },
+        {
+          "id": "architecture",
+          "label": "Architecture",
+          "title": "So I rebuilt the entire flow on a custom FSM architecture",
+          "paragraphs": [
+            "A pure reducer function handles all transitions. Every state is explicit. Every event is named. Every transition is guarded.",
+            "A detection bridge pattern connects the 60fps pose pipeline to state transitions without stale closures.",
+            "A priority-based audio manager prevents instruction collisions.",
+            "Zero race conditions. Zero phantom states. Zero “How did we get here?”"
+          ]
+        },
+        {
+          "id": "result",
+          "label": "The result",
+          "title": "Debugging dropped from hours to minutes",
+          "paragraphs": [
+            "What used to take 3 hours to debug (tracing useEffect chains through 5 components) now takes 3 minutes. The state chart is the documentation. If the system is in RECORDING_MOVEMENT_VIDEO, I know exactly which 3 events can follow and which guards each one is."
+          ],
+          "callout": "A finite state machine doesn't just fix bugs. It's the architecture shift that separates “it works” from “it's reliable.”"
+        },
+        {
+          "id": "truth",
+          "label": "The truth",
+          "title": "The uncomfortable truth most frontend devs avoid",
+          "paragraphs": [
+            "Not every state problem needs XState. Not every state problem can be solved with useState.",
+            "But when your UI orchestrates real-time ML inference, video encoding, and audio playback in parallel — and the cost of a state bug is a patient losing their assessment data — you need deterministic state transitions."
+          ]
+        }
+      ],
+      "comments": []
+    }
+  ]
+}

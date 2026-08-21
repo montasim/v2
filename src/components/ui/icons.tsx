@@ -9,6 +9,7 @@ import HugeArrowLeftCompactIcon from "@hugeicons/core-free-icons/ArrowLeft04Icon
 import HugeArrowRightIcon from "@hugeicons/core-free-icons/ArrowRight02Icon"
 import HugeArrowRightCompactIcon from "@hugeicons/core-free-icons/ArrowRight04Icon"
 import HugeArrowUpIcon from "@hugeicons/core-free-icons/ArrowUp02Icon"
+import HugeArrowUpCompactIcon from "@hugeicons/core-free-icons/ArrowUp04Icon"
 import HugeArrowUpRightIcon from "@hugeicons/core-free-icons/ArrowUpRight02Icon"
 import HugeAtomIcon from "@hugeicons/core-free-icons/Atom01Icon"
 import HugeBookOpenTextIcon from "@hugeicons/core-free-icons/BookOpenTextIcon"
@@ -76,6 +77,8 @@ import HugeQuotesIcon from "@hugeicons/core-free-icons/QuoteDownIcon"
 import HugeArrowClockwiseIcon from "@hugeicons/core-free-icons/RefreshCwIcon"
 import HugeArrowsClockwiseIcon from "@hugeicons/core-free-icons/RefreshIcon"
 import HugeRulerIcon from "@hugeicons/core-free-icons/RulerIcon"
+import HugeSearchIcon from "@hugeicons/core-free-icons/Search01Icon"
+import HugeShareIcon from "@hugeicons/core-free-icons/Share08Icon"
 import HugePaperPlaneTiltIcon from "@hugeicons/core-free-icons/SendIcon"
 import HugeGearIcon from "@hugeicons/core-free-icons/Settings02Icon"
 import HugeShieldCheckIcon from "@hugeicons/core-free-icons/ShieldCheckIcon"
@@ -143,6 +146,10 @@ export const ArrowsClockwiseIcon = createIcon(
   "ArrowsClockwiseIcon"
 )
 export const ArrowUpIcon = createIcon(HugeArrowUpIcon, "ArrowUpIcon")
+export const ArrowUpCompactIcon = createIcon(
+  HugeArrowUpCompactIcon,
+  "ArrowUpCompactIcon"
+)
 export const ArrowUpRightIcon = createIcon(
   HugeArrowUpRightIcon,
   "ArrowUpRightIcon"
@@ -270,6 +277,8 @@ export const PolygonIcon = createIcon(HugePolygonIcon, "PolygonIcon")
 export const QuotesIcon = createIcon(HugeQuotesIcon, "QuotesIcon")
 export const ReadCvLogoIcon = createIcon(HugeFileDocIcon, "ReadCvLogoIcon")
 export const RulerIcon = createIcon(HugeRulerIcon, "RulerIcon")
+export const SearchIcon = createIcon(HugeSearchIcon, "SearchIcon")
+export const ShareIcon = createIcon(HugeShareIcon, "ShareIcon")
 export const SelectionAllIcon = createIcon(
   HugeSelectionAllIcon,
   "SelectionAllIcon"

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CertificationsRouteImport } from './routes/certifications'
 import { Route as EducationRouteImport } from './routes/education'
 import { Route as ExperienceRouteImport } from './routes/experience'
@@ -18,11 +19,17 @@ import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificationsRoute = CertificationsRouteImport.update({
@@ -65,6 +72,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/projects_/$slug',
   path: '/projects/$slug',
@@ -73,6 +85,7 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/certifications': typeof CertificationsRoute
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
@@ -81,10 +94,12 @@ export interface FileRoutesByFullPath {
   '/resume': typeof ResumeRoute
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/certifications': typeof CertificationsRoute
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
@@ -93,11 +108,13 @@ export interface FileRoutesByTo {
   '/resume': typeof ResumeRoute
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/projects/$slug': typeof ProjectsSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/certifications': typeof CertificationsRoute
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
@@ -106,12 +123,14 @@ export interface FileRoutesById {
   '/resume': typeof ResumeRoute
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
+  '/blog_/$slug': typeof BlogSlugRoute
   '/projects_/$slug': typeof ProjectsSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blog'
     | '/certifications'
     | '/education'
     | '/experience'
@@ -120,10 +139,12 @@ export interface FileRouteTypes {
     | '/resume'
     | '/skills'
     | '/api/chat'
+    | '/blog/$slug'
     | '/projects/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blog'
     | '/certifications'
     | '/education'
     | '/experience'
@@ -132,10 +153,12 @@ export interface FileRouteTypes {
     | '/resume'
     | '/skills'
     | '/api/chat'
+    | '/blog/$slug'
     | '/projects/$slug'
   id:
     | '__root__'
     | '/'
+    | '/blog'
     | '/certifications'
     | '/education'
     | '/experience'
@@ -144,11 +167,13 @@ export interface FileRouteTypes {
     | '/resume'
     | '/skills'
     | '/api/chat'
+    | '/blog_/$slug'
     | '/projects_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlogRoute: typeof BlogRoute
   CertificationsRoute: typeof CertificationsRoute
   EducationRoute: typeof EducationRoute
   ExperienceRoute: typeof ExperienceRoute
@@ -157,6 +182,7 @@ export interface RootRouteChildren {
   ResumeRoute: typeof ResumeRoute
   SkillsRoute: typeof SkillsRoute
   ApiChatRoute: typeof ApiChatRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
 }
 
@@ -167,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certifications': {
@@ -225,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog_/$slug': {
+      id: '/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects_/$slug': {
       id: '/projects_/$slug'
       path: '/projects/$slug'
@@ -237,6 +277,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlogRoute: BlogRoute,
   CertificationsRoute: CertificationsRoute,
   EducationRoute: EducationRoute,
   ExperienceRoute: ExperienceRoute,
@@ -245,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResumeRoute: ResumeRoute,
   SkillsRoute: SkillsRoute,
   ApiChatRoute: ApiChatRoute,
+  BlogSlugRoute: BlogSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
 }
 export const routeTree = rootRouteImport

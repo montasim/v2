@@ -93,6 +93,18 @@ export function SiteHeader() {
                 </Link>
               )
             })}
+            <Link
+              to="/blog"
+              search={{ topic: "all", q: "" }}
+              className={cn(
+                "rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted hover:text-foreground active:scale-[0.98] motion-reduce:transition-none",
+                pathname.startsWith("/blog") &&
+                  "bg-muted font-medium text-foreground"
+              )}
+              aria-current={pathname.startsWith("/blog") ? "page" : undefined}
+            >
+              Blog
+            </Link>
             <span className="mx-1 h-4 border-l" aria-hidden="true" />
             {themeButton}
           </div>
@@ -136,6 +148,22 @@ export function SiteHeader() {
                       </SheetClose>
                     )
                   })}
+                  <SheetClose asChild>
+                    <Link
+                      to="/blog"
+                      search={{ topic: "all", q: "" }}
+                      className={cn(
+                        "rounded-md px-3 py-2 text-sm text-muted-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted hover:text-foreground active:scale-[0.98] motion-reduce:transition-none",
+                        pathname.startsWith("/blog") &&
+                          "bg-muted font-medium text-foreground"
+                      )}
+                      aria-current={
+                        pathname.startsWith("/blog") ? "page" : undefined
+                      }
+                    >
+                      Blog
+                    </Link>
+                  </SheetClose>
                 </nav>
               </SheetContent>
             </Sheet>
