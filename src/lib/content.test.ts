@@ -164,6 +164,13 @@ describe("portfolio content", () => {
   it("builds canonical social metadata", () => {
     expect(site.url).toBe("https://montasim.dev")
 
+    const homepageMetadata = createMeta(site.fullName, site.description)
+    expect(homepageMetadata.meta).toContainEqual({ title: site.title })
+    expect(homepageMetadata.meta).toContainEqual({
+      property: "og:title",
+      content: site.title,
+    })
+
     const metadata = createMeta(
       "Projects",
       "A verified project catalog.",
@@ -175,7 +182,7 @@ describe("portfolio content", () => {
     })
     expect(metadata.meta).toContainEqual({
       property: "og:image",
-      content: `${site.url}/images/social-preview.png`,
+      content: `${site.url}/images/social-preview-v2.png`,
     })
   })
 

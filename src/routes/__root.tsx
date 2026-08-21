@@ -32,7 +32,6 @@ export const Route = createRootRoute({
         sizes: "64x64",
       },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "canonical", href: site.url },
     ],
   }),
   notFoundComponent: () => <ErrorPage status="404" />,

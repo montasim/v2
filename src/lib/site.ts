@@ -3,6 +3,7 @@ import { z } from "zod"
 const siteSchema = z.object({
   name: z.string().min(1),
   fullName: z.string().min(1),
+  title: z.string().min(1),
   description: z.string().min(50),
   url: z.url(),
   ogImage: z.string().startsWith("/"),
@@ -11,10 +12,11 @@ const siteSchema = z.object({
 export const site = siteSchema.parse({
   name: "Montasim",
   fullName: "Mohammad Montasim Al Mamun Shuvo",
+  title: "Mohammad Montasim Al Mamun Shuvo — Senior Software Engineer",
   description:
     "Senior Software Engineer building deterministic, high-performance web platforms for real-time and AI-driven applications.",
   url: "https://montasim.dev",
-  ogImage: "/images/social-preview.png",
+  ogImage: "/images/social-preview-v2.png",
 })
 
 export const landingNavigation = [
@@ -76,7 +78,8 @@ export function createMeta(
   const image = socialImageUrl(options.image ?? site.ogImage)
   const imageType = imageContentType(image)
   const imageAlt = options.imageAlt ?? `${site.fullName} portfolio preview`
-  const pageTitle = title === site.fullName ? title : `${title} | ${site.name}`
+  const pageTitle =
+    title === site.fullName ? site.title : `${title} | ${site.name}`
   const isArticle = options.type === "article"
 
   return {
