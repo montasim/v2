@@ -15,7 +15,9 @@ import { createMeta, site } from "./site"
 describe("portfolio content", () => {
   it("validates every required JSON catalog", () => {
     expect(profileCatalog.profile.name).toContain("Montasim")
+    expect(profileCatalog.profile.workPreferences.timeZone).toBe("UTC+6")
     expect(experienceCatalog.records.length).toBeGreaterThan(0)
+    expect(experienceCatalog.current.period).toContain("Present")
     expect(projectCatalog.records.length).toBeGreaterThan(0)
     expect(skillCatalog.records.length).toBeGreaterThan(0)
     expect(educationCatalog.records.length).toBeGreaterThan(0)

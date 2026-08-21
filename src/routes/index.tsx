@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import {
+  ClockIcon,
   DownloadSimpleIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
@@ -22,6 +23,7 @@ import { ProjectCard } from "@/components/portfolio/project-card"
 import { RecommendationCarousel } from "@/components/portfolio/recommendations"
 import { SkillGroups } from "@/components/portfolio/skill-groups"
 import { affiliationCatalog } from "@/lib/content/affiliations"
+import { experienceCatalog } from "@/lib/content/experience"
 import { profileCatalog } from "@/lib/content/profile"
 import { projectCatalog } from "@/lib/content/projects"
 import { createMeta, site } from "@/lib/site"
@@ -61,13 +63,20 @@ function OverviewPage() {
           </div>
           <div className="hero-copy min-w-0 text-center sm:order-1 sm:text-left">
             <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-emphasis-foreground sm:justify-start">
-              <span>Senior Software Engineer</span>
+              <span>{experienceCatalog.current.role}</span>
               <span className="text-border" aria-hidden="true">
                 /
               </span>
               <span className="inline-flex items-center gap-1.5 font-normal text-muted-foreground">
                 <MapPinIcon className="size-3.5" />
                 {profile.location}
+              </span>
+              <span className="text-border" aria-hidden="true">
+                /
+              </span>
+              <span className="inline-flex items-center gap-1.5 font-normal text-muted-foreground">
+                <ClockIcon className="size-3.5" aria-hidden="true" />
+                {profile.workPreferences.timeZone}
               </span>
             </p>
             <h1

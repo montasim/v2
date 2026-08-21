@@ -11,6 +11,16 @@ const profileSchema = z.object({
   resumeUrl: z.url(),
   resumeDownloadUrl: z.string().startsWith("/"),
   supportUrl: z.url(),
+  workPreferences: z.object({
+    availability: z.string().min(1).nullable(),
+    preferredRoles: z.array(z.string().min(1)),
+    workArrangement: z.string().min(1).nullable(),
+    timeZone: z.string().min(1),
+    timeZoneOverlap: z.string().min(1).nullable(),
+    relocation: z.string().min(1).nullable(),
+    visaStatus: z.string().min(1).nullable(),
+    earliestStartDate: z.string().min(1).nullable(),
+  }),
   about: z.string().min(1),
   socialLinks: z.array(
     z.object({

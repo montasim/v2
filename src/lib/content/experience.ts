@@ -18,5 +18,10 @@ const experienceSchema = z.object({
 export type Experience = z.infer<typeof experienceSchema>
 
 const records = z.array(experienceSchema).parse(experienceJson)
+const current =
+  records.find((experience) => experience.period.includes("Present")) ??
+  records.at(0)
 
-export const experienceCatalog = { records } as const
+if (!current) throw new Error("At least one experience record is required")
+
+export const experienceCatalog = { current, records } as const
