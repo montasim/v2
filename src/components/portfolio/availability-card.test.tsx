@@ -13,10 +13,10 @@ describe("AvailabilityCard", () => {
 
     expect(screen.getByText("Working preferences")).not.toBeNull()
     expect(screen.getByText("Actively looking")).not.toBeNull()
-    expect(screen.getByText("Senior Software Engineer")).not.toBeNull()
+    expect(screen.queryByText("Senior Software Engineer")).toBeNull()
     expect(screen.getByText("Remote, on-site, or hybrid")).not.toBeNull()
     expect(screen.getByText("Dhaka, Bangladesh (UTC+6)")).not.toBeNull()
-    expect(screen.getByText("Immediately")).not.toBeNull()
+    expect(screen.queryByText("Immediately")).toBeNull()
     expect(screen.getAllByText("Ask me")).toHaveLength(1)
     expect(
       screen.getByRole("button", { name: "Discuss a role" }).className
@@ -28,11 +28,9 @@ describe("AvailabilityCard", () => {
 
     for (const label of [
       "Availability",
-      "Role",
       "Work setup",
       "Location and timezone",
       "Relocation and visa",
-      "Start date",
     ]) {
       expect(screen.getByText(label)).not.toBeNull()
     }

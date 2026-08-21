@@ -1,6 +1,5 @@
 import {
   AirplaneTiltIcon,
-  BriefcaseIcon,
   CalendarCheckIcon,
   ClockIcon,
   EnvelopeSimpleIcon,
@@ -23,13 +22,6 @@ export function AvailabilityCard() {
       icon: CalendarCheckIcon,
     },
     {
-      label: "Role",
-      value: workPreferences.preferredRoles.length
-        ? workPreferences.preferredRoles.join(", ")
-        : undisclosed,
-      icon: BriefcaseIcon,
-    },
-    {
       label: "Work setup",
       value: workPreferences.workArrangement ?? undisclosed,
       icon: HouseLineIcon,
@@ -49,11 +41,6 @@ export function AvailabilityCard() {
           .filter(Boolean)
           .join("; ") || undisclosed,
       icon: AirplaneTiltIcon,
-    },
-    {
-      label: "Start date",
-      value: workPreferences.earliestStartDate ?? undisclosed,
-      icon: CalendarCheckIcon,
     },
   ]
 
