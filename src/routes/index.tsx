@@ -90,7 +90,11 @@ function OverviewPage() {
               {profile.tagline}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
-              <ExternalAction href={profile.resumeUrl} variant="outline">
+              <ExternalAction
+                href={profile.resumeUrl}
+                variant="outline"
+                className="font-medium text-foreground"
+              >
                 <DownloadSimpleIcon />
                 Download resume
               </ExternalAction>
