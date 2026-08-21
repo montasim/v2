@@ -46,6 +46,26 @@ type MetaOptions = {
   section?: string
 }
 
+function imageContentType(imageUrl: string) {
+  const extension = new URL(imageUrl).pathname.split(".").at(-1)?.toLowerCase()
+
+  if (extension === "jpg" || extension === "jpeg") return "image/jpeg"
+  if (extension === "png") return "image/png"
+  if (extension === "webp") return "image/webp"
+  return undefined
+}
+
+function socialImageUrl(imagePath: string) {
+  const imageUrl = new URL(imagePath, site.url)
+  const siteOrigin = new URL(site.url).origin
+
+  if (imageUrl.origin === siteOrigin && /\.webp$/i.test(imageUrl.pathname)) {
+    imageUrl.pathname = imageUrl.pathname.replace(/\.webp$/i, ".png")
+  }
+
+  return imageUrl.toString()
+}
+
 export function createMeta(
   title: string,
   description: string,
@@ -53,7 +73,8 @@ export function createMeta(
   options: MetaOptions = {}
 ) {
   const canonical = new URL(path, site.url).toString()
-  const image = new URL(options.image ?? site.ogImage, site.url).toString()
+  const image = socialImageUrl(options.image ?? site.ogImage)
+  const imageType = imageContentType(image)
   const imageAlt = options.imageAlt ?? `${site.fullName} portfolio preview`
   const pageTitle = title === site.fullName ? title : `${title} | ${site.name}`
   const isArticle = options.type === "article"
@@ -72,6 +93,7 @@ export function createMeta(
       { property: "og:url", content: canonical },
       { property: "og:image", content: image },
       { property: "og:image:secure_url", content: image },
+      ...(imageType ? [{ property: "og:image:type", content: imageType }] : []),
       { property: "og:image:alt", content: imageAlt },
       ...(!options.image
         ? [

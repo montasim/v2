@@ -179,6 +179,28 @@ describe("portfolio content", () => {
     })
   })
 
+  it("uses crawler-compatible PNG previews for local WebP images", () => {
+    const metadata = createMeta(
+      "Article",
+      "A sufficiently descriptive summary for a social preview card.",
+      "/blog/article",
+      { image: "/images/projects/thoughtline.webp" }
+    )
+
+    expect(metadata.meta).toContainEqual({
+      property: "og:image",
+      content: `${site.url}/images/projects/thoughtline.png`,
+    })
+    expect(metadata.meta).toContainEqual({
+      property: "og:image:type",
+      content: "image/png",
+    })
+    expect(metadata.meta).toContainEqual({
+      name: "twitter:image",
+      content: `${site.url}/images/projects/thoughtline.png`,
+    })
+  })
+
   it("keeps crawler files on the canonical domain", () => {
     const robots = readFileSync(
       new URL("../../public/robots.txt", import.meta.url),

@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 
 import { blogCatalog } from "./blog"
@@ -51,8 +52,31 @@ describe("blog catalog", () => {
     )
   })
 
+  it("provides crawler-safe social images for every article", () => {
+    for (const post of blogCatalog.posts) {
+      const metadata = createMeta(
+        post.title,
+        post.excerpt,
+        `/blog/${post.slug}`,
+        {
+          image: post.image.src,
+        }
+      )
+      const socialImageUrl = metadata.meta.find(
+        (entry) => "property" in entry && entry.property === "og:image"
+      )?.content
+      expect(socialImageUrl).toBeDefined()
+      const socialImage = new URL(socialImageUrl!).pathname
+      expect(socialImage).not.toMatch(/\.webp$/i)
+      expect(
+        existsSync(new URL(`../../../public${socialImage}`, import.meta.url))
+      ).toBe(true)
+    }
+  })
+
   it("builds article-specific social preview metadata", () => {
     const post = blogCatalog.featured
+    const socialImage = post.image.src.replace(/\.webp$/i, ".png")
     const metadata = createMeta(
       post.title,
       post.excerpt,
@@ -73,7 +97,11 @@ describe("blog catalog", () => {
     })
     expect(metadata.meta).toContainEqual({
       property: "og:image",
-      content: new URL(post.image.src, site.url).toString(),
+      content: new URL(socialImage, site.url).toString(),
+    })
+    expect(metadata.meta).toContainEqual({
+      property: "og:image:type",
+      content: "image/png",
     })
     expect(metadata.meta).toContainEqual({
       property: "article:published_time",
