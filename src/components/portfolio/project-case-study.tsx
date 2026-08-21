@@ -14,6 +14,7 @@ import {
   ExternalLink,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
@@ -41,25 +42,18 @@ type SectionId = (typeof sectionLinks)[number][0]
 
 function SectionHeading({
   id,
-  number,
   children,
 }: {
   id: string
-  number: string
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-baseline gap-3">
-      <span className="font-mono text-xs text-muted-foreground" aria-hidden>
-        {number}
-      </span>
-      <h2
-        id={`${id}-heading`}
-        className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
-      >
-        {children}
-      </h2>
-    </div>
+    <h2
+      id={`${id}-heading`}
+      className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+    >
+      {children}
+    </h2>
   )
 }
 
@@ -138,26 +132,32 @@ export function ProjectCaseStudyPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{project.title}</BreadcrumbPage>
+              <BreadcrumbPage>Project case study</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">
-              Project case study / {project.type}
-            </p>
-            <h1 className="mt-3 max-w-[16ch] text-3xl leading-tight font-bold tracking-tight text-balance">
-              {project.title}
-            </h1>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="max-w-[16ch] text-3xl leading-tight font-bold tracking-tight text-balance text-emphasis-foreground">
+                {project.title}
+              </h1>
+              <Badge variant="secondary" className="font-medium">
+                {project.type}
+              </Badge>
+            </div>
             <p className="mt-5 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg">
               {caseStudy.summary}
             </p>
           </div>
           <div className="flex flex-wrap gap-3 lg:justify-end">
             {project.liveUrl ? (
-              <ExternalAction href={project.liveUrl} size="lg">
+              <ExternalAction
+                href={project.liveUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
                 Open product
                 <ArrowUpRightIcon />
               </ExternalAction>
@@ -243,9 +243,7 @@ export function ProjectCaseStudyPage({
             aria-labelledby="problem-heading"
             className="scroll-mt-24 py-10"
           >
-            <SectionHeading id="problem" number="01">
-              Problem
-            </SectionHeading>
+            <SectionHeading id="problem">Problem</SectionHeading>
             <p className="mt-5 max-w-[68ch] text-base leading-7 text-muted-foreground">
               {caseStudy.problem}
             </p>
@@ -256,9 +254,7 @@ export function ProjectCaseStudyPage({
             aria-labelledby="constraints-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="constraints" number="02">
-              Constraints
-            </SectionHeading>
+            <SectionHeading id="constraints">Constraints</SectionHeading>
             <ol className="mt-6 grid gap-px overflow-hidden rounded-lg border bg-border md:grid-cols-3">
               {caseStudy.constraints.map((constraint, index) => (
                 <li key={constraint} className="bg-card p-5">
@@ -278,9 +274,7 @@ export function ProjectCaseStudyPage({
             aria-labelledby="architecture-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="architecture" number="03">
-              Architecture
-            </SectionHeading>
+            <SectionHeading id="architecture">Architecture</SectionHeading>
             <p className="mt-5 max-w-[68ch] text-base leading-7 text-muted-foreground">
               {caseStudy.architecture.summary}
             </p>
@@ -314,9 +308,7 @@ export function ProjectCaseStudyPage({
             aria-labelledby="decisions-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="decisions" number="04">
-              Decisions
-            </SectionHeading>
+            <SectionHeading id="decisions">Decisions</SectionHeading>
             <div className="mt-6 divide-y border-y">
               {caseStudy.decisions.map((decision, index) => (
                 <article
@@ -341,9 +333,7 @@ export function ProjectCaseStudyPage({
               aria-labelledby="contribution-heading"
               className="scroll-mt-24 py-10 md:pr-8"
             >
-              <SectionHeading id="contribution" number="05">
-                Contribution
-              </SectionHeading>
+              <SectionHeading id="contribution">Contribution</SectionHeading>
               <ul className="mt-6 space-y-4">
                 {caseStudy.contribution.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-6">
@@ -358,9 +348,7 @@ export function ProjectCaseStudyPage({
               aria-labelledby="outcomes-heading"
               className="scroll-mt-24 border-t py-10 md:border-t-0 md:pl-8"
             >
-              <SectionHeading id="outcomes" number="06">
-                Outcomes
-              </SectionHeading>
+              <SectionHeading id="outcomes">Outcomes</SectionHeading>
               <ul className="mt-6 space-y-4">
                 {caseStudy.outcomes.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-6">
@@ -377,9 +365,7 @@ export function ProjectCaseStudyPage({
             aria-labelledby="screenshots-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="screenshots" number="07">
-              Product screenshot
-            </SectionHeading>
+            <SectionHeading id="screenshots">Product screenshot</SectionHeading>
             {image ? (
               <figure className="mt-6">
                 <div className="overflow-hidden rounded-lg border bg-card p-2">
