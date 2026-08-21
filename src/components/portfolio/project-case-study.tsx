@@ -5,6 +5,7 @@ import {
   ArrowRightIcon,
   ArrowUpRightIcon,
   CheckCircleIcon,
+  EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
 } from "@phosphor-icons/react"
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { optimizedImage } from "@/lib/assets"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
+import { profileCatalog } from "@/lib/content/profile"
 import { cn } from "@/lib/utils"
 
 const coreSectionLinks = [
@@ -62,6 +64,41 @@ function githubRepositoryPath(githubUrl: string) {
   return new URL(githubUrl).pathname
     .replace(/^\/+|\/+$/g, "")
     .replace(/\.git$/, "")
+}
+
+function CaseStudyFeedback({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
+  const projectTitle = caseStudy.project.title
+  const emailSubject = `A similar problem to ${projectTitle}`
+  const emailBody = `I read the ${projectTitle} case study and would like to discuss a similar problem.`
+  const emailHref = `mailto:${profileCatalog.profile.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+
+  return (
+    <section
+      aria-labelledby="case-study-feedback-heading"
+      className="mt-12 border-y py-8 sm:py-10"
+    >
+      <h2
+        id="case-study-feedback-heading"
+        className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+      >
+        Was this relevant to your role?
+      </h2>
+      <p className="mt-3 max-w-[62ch] text-sm leading-6 text-muted-foreground">
+        Share a similar challenge and start a focused conversation.
+      </p>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Button
+          asChild
+          className="bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
+        >
+          <a href={emailHref}>
+            <EnvelopeSimpleIcon />
+            Discuss similar problem
+          </a>
+        </Button>
+      </div>
+    </section>
+  )
 }
 
 export function ProjectCaseStudyPage({
@@ -314,7 +351,9 @@ export function ProjectCaseStudyPage({
                   <span className="font-mono text-xs text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-3 font-semibold">{layer.title}</h3>
+                  <h3 className="mt-3 font-semibold text-emphasis-foreground">
+                    {layer.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
                     {layer.detail}
                   </p>
@@ -345,7 +384,9 @@ export function ProjectCaseStudyPage({
                   <span className="font-mono text-xs text-muted-foreground">
                     D{index + 1}
                   </span>
-                  <h3 className="text-sm font-semibold">{decision.title}</h3>
+                  <h3 className="text-sm font-semibold text-emphasis-foreground">
+                    {decision.title}
+                  </h3>
                   <p className="text-sm leading-6 text-muted-foreground">
                     {decision.detail}
                   </p>
@@ -427,7 +468,9 @@ export function ProjectCaseStudyPage({
         </div>
       </div>
 
-      <footer className="mt-4 flex flex-wrap gap-3 border-t pt-8">
+      <CaseStudyFeedback caseStudy={caseStudy} />
+
+      <footer className="mt-8 flex flex-wrap gap-3">
         <Button asChild variant="outline" size="lg" className="w-auto">
           <Link to="/projects">
             <ArrowLeftIcon />
