@@ -9,6 +9,7 @@ import {
 describe("inquiry acknowledgement", () => {
   it("writes a personal role acknowledgement without repeating contact data", () => {
     const email = formatAcknowledgement({
+      id: "inquiry-role-1",
       type: "hire",
       name: "Tanim",
       email: "tanim@example.com",
@@ -29,6 +30,7 @@ describe("inquiry acknowledgement", () => {
 
   it("adapts the acknowledgement for a project inquiry", () => {
     const email = formatAcknowledgement({
+      id: "inquiry-project-1",
       type: "project",
       name: "Amina",
       email: "amina@example.com",
@@ -45,6 +47,7 @@ describe("inquiry acknowledgement", () => {
 describe("owner inquiry notification", () => {
   it("summarizes a role inquiry as a personal, actionable message", () => {
     const inquiry = {
+      id: "inquiry-role-2",
       type: "hire" as const,
       name: "Tanim",
       email: "tanim@yopmail.com",
@@ -68,6 +71,7 @@ describe("owner inquiry notification", () => {
 
   it("adapts the summary and subject for a project inquiry", () => {
     const inquiry = {
+      id: "inquiry-project-2",
       type: "project" as const,
       name: "Amina",
       email: "amina@example.com",

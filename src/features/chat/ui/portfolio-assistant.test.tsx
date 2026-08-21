@@ -438,6 +438,21 @@ describe("PortfolioAssistant chat navigation", () => {
     ).not.toBeNull()
   })
 
+  it("collects a specific custom project type instead of a generic option", () => {
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Discuss a project/ }))
+    fireEvent.click(screen.getByRole("button", { name: "Something else" }))
+
+    fireEvent.change(screen.getByLabelText("Project type"), {
+      target: { value: "Developer tooling" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+
+    expect(screen.getByText("When would you like to start?")).not.toBeNull()
+    expect(screen.getByText("Developer tooling")).not.toBeNull()
+  })
+
   it("matches the prototype through a successful role inquiry", async () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
@@ -474,7 +489,28 @@ describe("PortfolioAssistant chat navigation", () => {
     fireEvent.change(screen.getByLabelText("Work email"), {
       target: { value: "mamun@yopmail.com" },
     })
+    expect(
+      (
+        screen
+          .getByText("Review earlier answers")
+          .closest("details") as HTMLDetailsElement
+      ).open
+    ).toBe(true)
+    fireEvent.change(screen.getByLabelText(/Company or job link/), {
+      target: { value: "https://example.com/jobs/senior-frontend" },
+    })
     fireEvent.click(screen.getByRole("button", { name: /Send inquiry/ }))
+
+    expect(submitInquiry).toHaveBeenCalledWith({
+      data: {
+        inquiry: expect.objectContaining({
+          id: expect.any(String),
+          context: "https://example.com/jobs/senior-frontend",
+          role: "Senior Frontend Engineer",
+        }),
+        website: "",
+      },
+    })
 
     expect(screen.getByText("Sending inquiry")).not.toBeNull()
     expect(

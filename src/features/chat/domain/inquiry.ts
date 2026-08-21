@@ -3,8 +3,10 @@ import { z } from "zod"
 export const inquiryTypeSchema = z.enum(["hire", "project"])
 
 const baseInquirySchema = z.object({
+  id: z.string().trim().min(8).max(100),
   name: z.string().trim().min(2).max(80),
   email: z.email().max(254),
+  context: z.string().trim().max(1_000).optional(),
 })
 
 export const inquirySubmissionSchema = z.discriminatedUnion("type", [
@@ -125,15 +127,18 @@ export const inquirySteps = {
 export type InquiryStatus = "active" | "submitting" | "success" | "error"
 
 export interface InquiryState {
+  id: string
   type: InquiryType
   stepIndex: number
   editReturnStep: number | null
   answers: Partial<Record<InquiryAnswerKey, string>>
+  context: string
+  website: string
   status: InquiryStatus
 }
 
 export type InquiryAction =
-  | { type: "answer"; value: string }
+  | { type: "answer"; value: string; context?: string; website?: string }
   | { type: "back" }
   | { type: "begin-edit"; stepIndex: number }
   | { type: "cancel-edit" }
@@ -144,10 +149,13 @@ export type InquiryAction =
 
 export function createInquiryState(type: InquiryType): InquiryState {
   return {
+    id: createInquiryId(),
     type,
     stepIndex: 0,
     editReturnStep: null,
     answers: {},
+    context: "",
+    website: "",
     status: "active",
   }
 }
@@ -164,18 +172,36 @@ export function inquiryReducer(
       const step = steps[state.stepIndex]
 
       const answers = { ...state.answers, [step.key]: action.value.trim() }
+      const supplemental =
+        step.key === "email"
+          ? {
+              context: action.context?.trim() ?? state.context,
+              website: action.website?.trim() ?? state.website,
+            }
+          : {}
       if (state.editReturnStep !== null) {
         return {
           ...state,
+          ...supplemental,
           answers,
           stepIndex: state.editReturnStep,
           editReturnStep: null,
         }
       }
       if (state.stepIndex < steps.length - 1) {
-        return { ...state, answers, stepIndex: state.stepIndex + 1 }
+        return {
+          ...state,
+          ...supplemental,
+          answers,
+          stepIndex: state.stepIndex + 1,
+        }
       }
-      return { ...state, answers, status: "submitting" }
+      return {
+        ...state,
+        ...supplemental,
+        answers,
+        status: "submitting",
+      }
     }
     case "back":
       if (state.status !== "active" || state.stepIndex === 0) return state
@@ -226,6 +252,19 @@ export function inquiryReducer(
 }
 
 export function toInquirySubmission(state: InquiryState): InquirySubmission {
-  const candidate = { type: state.type, ...state.answers }
+  const candidate = {
+    id: state.id,
+    type: state.type,
+    context: state.context || undefined,
+    ...state.answers,
+  }
   return inquirySubmissionSchema.parse(candidate)
+}
+
+export function createInquiryId() {
+  if (typeof globalThis.crypto.randomUUID === "function") {
+    return globalThis.crypto.randomUUID()
+  }
+
+  return `inquiry-${Date.now()}-${Math.random().toString(36).slice(2)}`
 }

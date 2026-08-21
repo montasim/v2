@@ -13,6 +13,7 @@ describe("submitInquiryWith", () => {
       },
     }
     const inquiry: InquirySubmission = {
+      id: "inquiry-test-project",
       type: "project",
       name: "Amina Rahman",
       email: "amina@example.com",

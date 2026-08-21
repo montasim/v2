@@ -26,12 +26,15 @@ export class ResendInquiryDelivery implements InquiryDelivery {
     logger.info({ inquiryType: inquiry.type }, "Portfolio inquiry delivered")
 
     try {
-      await resend.emails.send({
+      const acknowledgement = await resend.emails.send({
         from,
         to: inquiry.email,
         subject: "Thanks for reaching out - Montasim",
         text: formatAcknowledgement(inquiry),
       })
+      if (acknowledgement.error) {
+        throw new Error("Inquiry acknowledgement failed.")
+      }
     } catch {
       logger.warn(
         { inquiryType: inquiry.type },
@@ -54,6 +57,7 @@ export function formatAcknowledgement(inquiry: InquirySubmission) {
           `Project type: ${inquiry.projectType}`,
           `Preferred timeline: ${inquiry.timeline}`,
         ]
+  if (inquiry.context) details.push(`Additional context: ${inquiry.context}`)
 
   return [
     `Hi ${inquiry.name},`,
@@ -82,6 +86,7 @@ export function formatOwnerNotification(inquiry: InquirySubmission) {
           `Project type: ${inquiry.projectType}`,
           `Preferred timeline: ${inquiry.timeline}`,
         ]
+  if (inquiry.context) details.push(`Additional context: ${inquiry.context}`)
 
   return [
     "Hi Montasim,",

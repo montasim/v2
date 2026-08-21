@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start"
+import { z } from "zod"
 
 import type { InquiryDelivery } from "@/features/chat/application/ports/inquiry-delivery"
 import { inquirySubmissionSchema } from "@/features/chat/domain/inquiry"
@@ -6,6 +7,12 @@ import type { InquirySubmission } from "@/features/chat/domain/inquiry"
 import { CompositeInquiryDelivery } from "@/features/chat/infrastructure/inquiry/composite.server"
 import { GoogleSheetsInquiryDelivery } from "@/features/chat/infrastructure/inquiry/google-sheets.server"
 import { ResendInquiryDelivery } from "@/features/chat/infrastructure/inquiry/resend.server"
+import { checkInquiryRateLimit } from "@/features/chat/infrastructure/inquiry/rate-limit.server"
+
+export const inquiryRequestSchema = z.object({
+  inquiry: inquirySubmissionSchema,
+  website: z.string().trim().max(200).default(""),
+})
 
 export async function submitInquiryWith(
   delivery: InquiryDelivery,
@@ -16,13 +23,15 @@ export async function submitInquiryWith(
 }
 
 export const submitInquiry = createServerFn({ method: "POST" })
-  .validator((input: unknown) => inquirySubmissionSchema.parse(input))
-  .handler(async ({ data }) =>
-    submitInquiryWith(
-      new CompositeInquiryDelivery([
-        new GoogleSheetsInquiryDelivery(),
+  .validator((input: unknown) => inquiryRequestSchema.parse(input))
+  .handler(async ({ data }) => {
+    if (data.website) return { delivered: true as const }
+
+    checkInquiryRateLimit(data.inquiry.email)
+    return submitInquiryWith(
+      new CompositeInquiryDelivery(new GoogleSheetsInquiryDelivery(), [
         new ResendInquiryDelivery(),
       ]),
-      data
+      data.inquiry
     )
-  )
+  })

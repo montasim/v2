@@ -7,8 +7,8 @@ import { logger } from "@/lib/logger.server"
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets"
 const TOKEN_URL = "https://oauth2.googleapis.com/token"
 const SHEETS_API = "https://sheets.googleapis.com/v4/spreadsheets"
-const DEFAULT_ROLE_RANGE = "'Role Inquiries'!A:H"
-const DEFAULT_PROJECT_RANGE = "'Project Inquiries'!A:H"
+const DEFAULT_ROLE_RANGE = "'Role Inquiries'!A:J"
+const DEFAULT_PROJECT_RANGE = "'Project Inquiries'!A:J"
 
 interface GoogleSheetsConfig {
   clientEmail: string
@@ -28,9 +28,28 @@ export class GoogleSheetsInquiryDelivery implements InquiryDelivery {
 
   async deliver(inquiry: InquirySubmission) {
     const accessToken = await getGoogleAccessToken(this.config, this.fetcher)
-    const range = encodeURIComponent(
+    const configuredRange =
       inquiry.type === "hire" ? this.config.roleRange : this.config.projectRange
+    const range = encodeURIComponent(configuredRange)
+    const idRange = encodeURIComponent(inquiryIdRange(configuredRange))
+    const lookupResponse = await this.fetcher(
+      `${SHEETS_API}/${this.config.sheetId}/values/${idRange}?majorDimension=COLUMNS`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     )
+
+    if (!lookupResponse.ok) {
+      throw new Error(`Google Sheets lookup failed (${lookupResponse.status}).`)
+    }
+
+    const lookup: unknown = await lookupResponse.json()
+    if (sheetValues(lookup).some((value) => value === inquiry.id)) {
+      logger.info(
+        { inquiryId: inquiry.id, inquiryType: inquiry.type },
+        "Portfolio inquiry already stored"
+      )
+      return
+    }
+
     const response = await this.fetcher(
       `${SHEETS_API}/${this.config.sheetId}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
       {
@@ -47,7 +66,10 @@ export class GoogleSheetsInquiryDelivery implements InquiryDelivery {
       throw new Error(`Google Sheets append failed (${response.status}).`)
     }
 
-    logger.info({ inquiryType: inquiry.type }, "Portfolio inquiry stored")
+    logger.info(
+      { inquiryId: inquiry.id, inquiryType: inquiry.type },
+      "Portfolio inquiry stored"
+    )
   }
 }
 
@@ -58,24 +80,44 @@ export function inquiryToRow(
   return inquiry.type === "hire"
     ? [
         timestamp,
+        inquiry.id,
         "hire",
-        inquiry.name,
-        inquiry.email,
-        inquiry.role,
-        inquiry.arrangement,
+        safeSheetValue(inquiry.name),
+        safeSheetValue(inquiry.email),
+        safeSheetValue(inquiry.role),
+        safeSheetValue(inquiry.arrangement),
         "",
         "",
+        safeSheetValue(inquiry.context ?? ""),
       ]
     : [
         timestamp,
+        inquiry.id,
         "project",
-        inquiry.name,
-        inquiry.email,
+        safeSheetValue(inquiry.name),
+        safeSheetValue(inquiry.email),
         "",
         "",
-        inquiry.projectType,
-        inquiry.timeline,
+        safeSheetValue(inquiry.projectType),
+        safeSheetValue(inquiry.timeline),
+        safeSheetValue(inquiry.context ?? ""),
       ]
+}
+
+export function inquiryIdRange(range: string) {
+  const separator = range.lastIndexOf("!")
+  return separator >= 0 ? `${range.slice(0, separator + 1)}B:B` : "B:B"
+}
+
+function sheetValues(value: unknown): string[] {
+  if (!value || typeof value !== "object" || !("values" in value)) return []
+  const columns = value.values
+  if (!Array.isArray(columns) || !Array.isArray(columns[0])) return []
+  return columns[0].filter((cell): cell is string => typeof cell === "string")
+}
+
+function safeSheetValue(value: string) {
+  return /^[=+\-@]/.test(value) ? `'${value}` : value
 }
 
 function readGoogleSheetsConfig(): GoogleSheetsConfig {

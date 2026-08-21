@@ -1,6 +1,6 @@
 import { generateKeyPairSync } from "node:crypto"
 
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 
 import {
   GoogleSheetsInquiryDelivery,
@@ -8,12 +8,13 @@ import {
 } from "@/features/chat/infrastructure/inquiry/google-sheets.server"
 
 describe("GoogleSheetsInquiryDelivery", () => {
-  it("maps role and project inquiries to the v1 sheet schema", () => {
+  it("maps role and project inquiries to the v2 sheet schema", () => {
     const timestamp = "2026-08-20T10:00:00.000Z"
 
     expect(
       inquiryToRow(
         {
+          id: "inquiry-role-1",
           type: "hire",
           name: "Tanim",
           email: "tanim@example.com",
@@ -24,6 +25,7 @@ describe("GoogleSheetsInquiryDelivery", () => {
       )
     ).toEqual([
       timestamp,
+      "inquiry-role-1",
       "hire",
       "Tanim",
       "tanim@example.com",
@@ -31,11 +33,13 @@ describe("GoogleSheetsInquiryDelivery", () => {
       "Remote",
       "",
       "",
+      "",
     ])
 
     expect(
       inquiryToRow(
         {
+          id: "inquiry-project-1",
           type: "project",
           name: "Amina",
           email: "amina@example.com",
@@ -46,6 +50,7 @@ describe("GoogleSheetsInquiryDelivery", () => {
       )
     ).toEqual([
       timestamp,
+      "inquiry-project-1",
       "project",
       "Amina",
       "amina@example.com",
@@ -53,6 +58,7 @@ describe("GoogleSheetsInquiryDelivery", () => {
       "",
       "SaaS platform",
       "Within 1-3 months",
+      "",
     ])
   })
 
@@ -60,24 +66,26 @@ describe("GoogleSheetsInquiryDelivery", () => {
     {
       label: "role",
       inquiry: {
+        id: "inquiry-role-2",
         type: "hire" as const,
         name: "Tanim",
         email: "tanim@example.com",
         role: "Senior Frontend Engineer",
         arrangement: "Remote",
       },
-      expectedRange: "Role%20Inquiries!A%3AH",
+      expectedRange: "Role%20Inquiries!A%3AJ",
     },
     {
       label: "project",
       inquiry: {
+        id: "inquiry-project-2",
         type: "project" as const,
         name: "Amina",
         email: "amina@example.com",
         projectType: "SaaS platform",
         timeline: "Flexible",
       },
-      expectedRange: "Project%20Inquiries!A%3AH",
+      expectedRange: "Project%20Inquiries!A%3AJ",
     },
   ])(
     "authenticates and appends a $label inquiry to its own tab",
@@ -87,9 +95,11 @@ describe("GoogleSheetsInquiryDelivery", () => {
       const fetcher: typeof fetch = async (input, init) => {
         const url = input instanceof Request ? input.url : input.toString()
         requests.push({ url, init })
-        return requests.length === 1
-          ? Response.json({ access_token: "access-token" })
-          : Response.json({ updates: { updatedRows: 1 } })
+        if (requests.length === 1) {
+          return Response.json({ access_token: "access-token" })
+        }
+        if (requests.length === 2) return Response.json({ values: [] })
+        return Response.json({ updates: { updatedRows: 1 } })
       }
       const delivery = new GoogleSheetsInquiryDelivery(
         {
@@ -98,24 +108,25 @@ describe("GoogleSheetsInquiryDelivery", () => {
             .export({ type: "pkcs8", format: "pem" })
             .toString(),
           sheetId: "sheet-id",
-          roleRange: "Role Inquiries!A:H",
-          projectRange: "Project Inquiries!A:H",
+          roleRange: "Role Inquiries!A:J",
+          projectRange: "Project Inquiries!A:J",
         },
         fetcher
       )
 
       await delivery.deliver(inquiry)
 
-      expect(requests).toHaveLength(2)
+      expect(requests).toHaveLength(3)
       expect(requests[0]?.url).toBe("https://oauth2.googleapis.com/token")
-      expect(requests[1]?.url).toContain(
+      expect(requests[1]?.url).toContain("!B%3AB?majorDimension=COLUMNS")
+      expect(requests[2]?.url).toContain(
         `/sheet-id/values/${expectedRange}:append?valueInputOption=USER_ENTERED`
       )
-      expect(requests[1]?.init?.headers).toEqual({
+      expect(requests[2]?.init?.headers).toEqual({
         Authorization: "Bearer access-token",
         "Content-Type": "application/json",
       })
-      const body: unknown = JSON.parse(String(requests[1]?.init?.body))
+      const body: unknown = JSON.parse(String(requests[2]?.init?.body))
       expect(body).toEqual({
         values: [
           [expect.any(String), ...inquiryToRow(inquiry, "timestamp").slice(1)],
@@ -123,4 +134,37 @@ describe("GoogleSheetsInquiryDelivery", () => {
       })
     }
   )
+
+  it("does not append an inquiry whose ID is already stored", async () => {
+    const { privateKey } = generateKeyPairSync("rsa", { modulusLength: 2048 })
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json({ access_token: "access-token" }))
+      .mockResolvedValueOnce(
+        Response.json({ values: [["inquiry ID", "inquiry-role-existing"]] })
+      )
+    const delivery = new GoogleSheetsInquiryDelivery(
+      {
+        clientEmail: "portfolio@example.iam.gserviceaccount.com",
+        privateKey: privateKey
+          .export({ type: "pkcs8", format: "pem" })
+          .toString(),
+        sheetId: "sheet-id",
+        roleRange: "Role Inquiries!A:J",
+        projectRange: "Project Inquiries!A:J",
+      },
+      fetcher
+    )
+
+    await delivery.deliver({
+      id: "inquiry-role-existing",
+      type: "hire",
+      name: "Tanim",
+      email: "tanim@example.com",
+      role: "Technical Lead",
+      arrangement: "Remote",
+    })
+
+    expect(fetcher).toHaveBeenCalledTimes(2)
+  })
 })

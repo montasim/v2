@@ -290,19 +290,19 @@ const staticFaqAnswers = [
   {
     question: "Can I discuss a role with him?",
     answer:
-      "Yes. Choose Discuss a role in the assistant. The short inquiry asks for the role, work arrangement, your name, and your work email so Montasim receives enough context to reply directly.",
+      "Yes. Choose Discuss a role in the assistant. The short inquiry asks for the role, work arrangement, your name, and your work email. You can also add a job link or brief company context before sending.",
     source: "Contact preferences",
   },
   {
     question: "Can I discuss a project with him?",
     answer:
-      "Yes. Choose Discuss a project in the assistant. The guided inquiry collects the project type, preferred timeline, your name, and email so Montasim can review the context and respond directly.",
+      "Yes. Choose Discuss a project in the assistant. The guided inquiry collects the project type, preferred timeline, your name, and email, with space for an optional brief or existing product link.",
     source: "Contact preferences",
   },
   {
     question: "What information should I provide in an inquiry?",
     answer:
-      "For a role, provide the position, expected work arrangement, your name, and work email. For a project, provide the project type, preferred timeline, your name, and email. Contact details remain separate from the AI conversation history.",
+      "For a role, provide the position, expected work arrangement, your name, and work email; a job link or brief company context is optional. For a project, provide the project type, preferred timeline, your name, and email; you can also add a short brief or product link. Contact details remain separate from the AI conversation history.",
     source: "Contact preferences",
   },
   {

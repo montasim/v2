@@ -830,7 +830,12 @@ function InquiryFlow({
   React.useEffect(() => {
     if (state.status !== "submitting") return
     let active = true
-    void submit({ data: toInquirySubmission(state) })
+    void submit({
+      data: {
+        inquiry: toInquirySubmission(state),
+        website: state.website,
+      },
+    })
       .then(() => active && dispatch({ type: "submission-succeeded" }))
       .catch(() => active && dispatch({ type: "submission-failed" }))
     return () => {
@@ -928,8 +933,14 @@ function InquiryQuestion({
   const steps = inquirySteps[state.type]
   const step = steps[state.stepIndex]
   const [value, setValue] = React.useState(state.answers[step.key] ?? "")
+  const [context, setContext] = React.useState(state.context)
+  const [website, setWebsite] = React.useState(state.website)
+  const [isCustomOption, setIsCustomOption] = React.useState(false)
   React.useEffect(() => {
     setValue(state.answers[step.key] ?? "")
+    setContext(state.context)
+    setWebsite(state.website)
+    setIsCustomOption(false)
   }, [state.stepIndex, step.key, state.answers])
   const title = state.type === "hire" ? "Discuss a role" : "Discuss a project"
   const isEditing = state.editReturnStep !== null
@@ -940,8 +951,17 @@ function InquiryQuestion({
     value.trim().length >= (step.type === "email" ? 3 : 2) && isEmailValid
 
   function answer(answerValue: string) {
-    dispatch({ type: "answer", value: answerValue })
+    dispatch({
+      type: "answer",
+      value: answerValue,
+      context: step.type === "email" ? context : undefined,
+      website: step.type === "email" ? website : undefined,
+    })
   }
+
+  const customChoice =
+    step.type === "options" &&
+    (step.key === "role" || step.key === "projectType")
 
   return (
     <div className="motion-view flex min-h-0 flex-1 flex-col">
@@ -977,14 +997,24 @@ function InquiryQuestion({
           </p>
         </section>
 
-        {step.type === "options" ? (
+        {step.type === "options" && !isCustomOption ? (
           <div className="mt-5 space-y-2">
             {step.options.map((option) => (
               <button
                 key={option}
                 type="button"
-                onClick={() => answer(option)}
-                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
+                onClick={() => {
+                  if (
+                    customChoice &&
+                    (option === "Another role" || option === "Something else")
+                  ) {
+                    setValue("")
+                    setIsCustomOption(true)
+                    return
+                  }
+                  answer(option)
+                }}
+                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium text-emphasis-foreground transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
               >
                 {option}
                 <ArrowRightCompactIcon className="ml-auto size-[17px] text-muted-foreground" />
@@ -1001,17 +1031,29 @@ function InquiryQuestion({
           >
             <label
               htmlFor={`inquiry-${step.key}`}
-              className="text-sm font-semibold"
+              className="text-sm font-semibold text-emphasis-foreground"
             >
-              {step.label}
+              {isCustomOption
+                ? step.key === "role"
+                  ? "Role title"
+                  : "Project type"
+                : step.label}
             </label>
             <input
               id={`inquiry-${step.key}`}
-              type={step.type}
+              type={isCustomOption ? "text" : step.type}
               autoComplete={step.type === "email" ? "email" : "name"}
               value={value}
               onChange={(event) => setValue(event.target.value)}
-              placeholder={step.placeholder}
+              placeholder={
+                isCustomOption
+                  ? step.key === "role"
+                    ? "e.g. Staff Software Engineer"
+                    : "e.g. Design system modernization"
+                  : "placeholder" in step
+                    ? step.placeholder
+                    : undefined
+              }
               className="mt-2 min-h-12 w-full rounded-xl border bg-card px-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
             />
             <p className="mt-2 min-h-5 text-xs font-medium text-destructive">
@@ -1019,10 +1061,48 @@ function InquiryQuestion({
                 ? "Enter a valid email address."
                 : ""}
             </p>
+            {step.type === "email" && (
+              <>
+                <label
+                  htmlFor="inquiry-context"
+                  className="mt-3 block text-sm font-semibold text-emphasis-foreground"
+                >
+                  {state.type === "hire"
+                    ? "Company or job link"
+                    : "Project brief or link"}{" "}
+                  <span className="font-normal text-muted-foreground">
+                    (optional)
+                  </span>
+                </label>
+                <textarea
+                  id="inquiry-context"
+                  value={context}
+                  onChange={(event) => setContext(event.target.value)}
+                  maxLength={1_000}
+                  rows={3}
+                  placeholder={
+                    state.type === "hire"
+                      ? "Paste a job link or share brief context"
+                      : "Share a short brief or existing product link"
+                  }
+                  className="mt-2 w-full resize-y rounded-xl border bg-card px-3 py-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+                />
+                <input
+                  type="text"
+                  name="website"
+                  value={website}
+                  onChange={(event) => setWebsite(event.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                />
+              </>
+            )}
             <Button
               type="submit"
               size="lg"
-              className="mt-3 min-h-12 w-full rounded-xl text-sm font-semibold"
+              className="mt-3 min-h-12 w-full rounded-xl bg-emphasis-foreground text-sm font-semibold text-background hover:bg-emphasis-foreground/80"
               disabled={!canContinue}
             >
               {isEditing
@@ -1032,18 +1112,35 @@ function InquiryQuestion({
                   : "Continue"}
               <ArrowRightCompactIcon className="size-[17px]" />
             </Button>
+            {isCustomOption && (
+              <Button
+                type="button"
+                variant="ghost"
+                className="mt-2 min-h-10 w-full rounded-xl text-xs font-semibold text-muted-foreground"
+                onClick={() => {
+                  setValue("")
+                  setIsCustomOption(false)
+                }}
+              >
+                <CaretLeftIcon className="size-4" /> Choose from the list
+              </Button>
+            )}
           </form>
         )}
 
         {state.stepIndex > 0 && !isEditing && (
-          <ReviewAnswers state={state} dispatch={dispatch} />
+          <ReviewAnswers
+            state={state}
+            dispatch={dispatch}
+            expanded={step.type === "email"}
+          />
         )}
       </div>
       <footer className="flex shrink-0 items-center justify-between gap-3 border-t p-3">
         {isEditing ? (
           <Button
             variant="ghost"
-            className="min-h-10 rounded-lg px-3 text-xs font-semibold"
+            className="min-h-10 rounded-lg px-3 text-xs font-semibold text-emphasis-foreground"
             onClick={() => dispatch({ type: "cancel-edit" })}
           >
             <CaretLeftIcon className="size-4" /> Cancel edit
@@ -1051,7 +1148,7 @@ function InquiryQuestion({
         ) : state.stepIndex > 0 ? (
           <Button
             variant="ghost"
-            className="min-h-10 rounded-lg px-3 text-xs font-semibold"
+            className="min-h-10 rounded-lg px-3 text-xs font-semibold text-emphasis-foreground"
             onClick={() => dispatch({ type: "back" })}
           >
             <CaretLeftIcon className="size-4" /> Back
@@ -1074,14 +1171,19 @@ function InquiryQuestion({
 function ReviewAnswers({
   state,
   dispatch,
+  expanded = false,
 }: {
   state: InquiryState
   dispatch: React.Dispatch<Parameters<typeof inquiryReducer>[1]>
+  expanded?: boolean
 }) {
   const steps = inquirySteps[state.type]
   return (
-    <details className="mt-6 rounded-xl border bg-card px-4 py-3">
-      <summary className="cursor-pointer rounded text-xs font-semibold focus-visible:ring-2 focus-visible:ring-ring">
+    <details
+      className="mt-6 rounded-xl border bg-card px-4 py-3"
+      open={expanded || undefined}
+    >
+      <summary className="cursor-pointer rounded text-xs font-semibold text-emphasis-foreground focus-visible:ring-2 focus-visible:ring-ring">
         Review earlier answers
       </summary>
       <div className="mt-3 space-y-2 border-t pt-3">
@@ -1094,7 +1196,7 @@ function ReviewAnswers({
               <span className="block text-muted-foreground">
                 {earlier.label}
               </span>
-              <span className="mt-1 block truncate font-medium">
+              <span className="mt-1 block truncate font-medium text-emphasis-foreground">
                 {state.answers[earlier.key]}
               </span>
             </div>
@@ -1141,7 +1243,7 @@ function InquirySuccess({
               <strong className="font-semibold text-foreground">
                 {state.answers.email}
               </strong>
-              . A copy of your inquiry would normally be emailed to you.
+              . He will review the details and reply directly.
             </p>
             <div className="mt-6 rounded-2xl bg-muted p-4">
               <div className="flex justify-between gap-4 text-sm">
@@ -1157,7 +1259,7 @@ function InquirySuccess({
             </div>
             <Button
               size="lg"
-              className="mt-6 min-h-12 w-full rounded-xl text-sm font-semibold"
+              className="mt-6 min-h-12 w-full rounded-xl bg-emphasis-foreground text-sm font-semibold text-background hover:bg-emphasis-foreground/80"
               onClick={onContinue}
             >
               Continue asking questions
@@ -1204,7 +1306,7 @@ function InquiryError({
           </p>
           <Button
             size="lg"
-            className="mt-6 min-h-12 w-full rounded-xl text-sm font-semibold"
+            className="mt-6 min-h-12 w-full rounded-xl bg-emphasis-foreground text-sm font-semibold text-background hover:bg-emphasis-foreground/80"
             onClick={onRetry}
           >
             <ArrowClockwiseIcon className="size-[17px]" />

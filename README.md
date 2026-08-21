@@ -77,11 +77,11 @@ GOOGLE_SERVICE_ACCOUNT_EMAIL=portfolio-writer@your-project.iam.gserviceaccount.c
 GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n"
 GOOGLE_SHEET_ID=your_spreadsheet_id
 # Optional; these defaults keep inquiry types in separate tabs
-GOOGLE_ROLE_INQUIRIES_RANGE="'Role Inquiries'!A:H"
-GOOGLE_PROJECT_INQUIRIES_RANGE="'Project Inquiries'!A:H"
+GOOGLE_ROLE_INQUIRIES_RANGE="'Role Inquiries'!A:J"
+GOOGLE_PROJECT_INQUIRIES_RANGE="'Project Inquiries'!A:J"
 ```
 
-Gemini `gemini-3.5-flash` is the primary assistant model. Groq `openai/gpt-oss-120b` is attempted once only when Gemini fails before visible text. Both are isolated behind the same application port, so changing a provider does not affect the UI or route contract. Resend requires a verified sender domain outside its testing restrictions. Share the target spreadsheet with the service-account email as an editor. New submissions go to `Role Inquiries` or `Project Inquiries`; both tabs use the columns timestamp, intent, name, email, role, work arrangement, project type, and timeline.
+Gemini `gemini-3.5-flash` is the primary assistant model. Groq `openai/gpt-oss-120b` is attempted once only when Gemini fails before visible text. Both are isolated behind the same application port, so changing a provider does not affect the UI or route contract. Resend requires a verified sender domain outside its testing restrictions. Share the target spreadsheet with the service-account email as an editor. New submissions go to `Role Inquiries` or `Project Inquiries`; both tabs use the columns timestamp, inquiry ID, intent, name, email, role, work arrangement, project type, timeline, and additional context. The inquiry ID makes retries safe to process without adding duplicate rows.
 
 ### Production build preview
 

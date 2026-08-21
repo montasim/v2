@@ -42,6 +42,7 @@ describe("inquiryReducer", () => {
 
     expect(state.status).toBe("submitting")
     expect(toInquirySubmission(state)).toEqual({
+      id: expect.any(String),
       type: "hire",
       role: "Senior Frontend Engineer",
       arrangement: "Remote",
@@ -82,6 +83,7 @@ describe("inquiryReducer", () => {
 
   it("preserves answers after a failed submission so it can retry", () => {
     let state = createInquiryState("project")
+    const inquiryId = state.id
     for (const value of [
       "Something else",
       "Within 1-3 months",
@@ -94,6 +96,23 @@ describe("inquiryReducer", () => {
     state = inquiryReducer(state, { type: "retry-submission" })
 
     expect(state.status).toBe("submitting")
+    expect(state.id).toBe(inquiryId)
     expect(state.answers.email).toBe("tariq@example.com")
+  })
+
+  it("includes optional context in the final submission", () => {
+    let state = createInquiryState("hire")
+    for (const value of ["Technical Lead", "Hybrid", "Amina Rahman"]) {
+      state = inquiryReducer(state, { type: "answer", value })
+    }
+    state = inquiryReducer(state, {
+      type: "answer",
+      value: "amina@example.com",
+      context: "https://example.com/jobs/technical-lead",
+    })
+
+    expect(toInquirySubmission(state).context).toBe(
+      "https://example.com/jobs/technical-lead"
+    )
   })
 })
