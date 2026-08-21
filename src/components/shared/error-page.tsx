@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
 import {
   ArrowClockwiseIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
+  ArrowLeftCompactIcon,
+  ArrowRightCompactIcon,
 } from "@/components/ui/icons"
 import { InternalAction } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
@@ -70,7 +70,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
               </Button>
             ) : (
               <InternalAction to="/" size="lg" className={actionClassName}>
-                <ArrowLeftIcon />
+                <ArrowLeftCompactIcon />
                 Back to overview
               </InternalAction>
             )}
@@ -82,7 +82,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
                 className={actionClassName}
               >
                 View projects
-                <ArrowRightIcon />
+                <ArrowRightCompactIcon />
               </InternalAction>
             ) : (
               <InternalAction
@@ -91,7 +91,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
                 size="lg"
                 className={actionClassName}
               >
-                <ArrowLeftIcon />
+                <ArrowLeftCompactIcon />
                 Back to overview
               </InternalAction>
             )}
