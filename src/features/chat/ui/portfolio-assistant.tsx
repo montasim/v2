@@ -3,7 +3,7 @@ import { useChat } from "@ai-sdk/react"
 import {
   ArrowClockwiseIcon,
   ArrowLeftIcon,
-  ArrowRightIcon,
+  ArrowRightCompactIcon,
   ArrowUpIcon,
   BracketsCurlyIcon,
   BriefcaseIcon,
@@ -21,7 +21,7 @@ import {
   WarningCircleIcon,
   WhatsappLogoIcon,
   XIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import { useServerFn } from "@tanstack/react-start"
 import { DefaultChatTransport } from "ai"
 import { Dialog } from "radix-ui"
@@ -414,7 +414,7 @@ function InquiryEntry({
       )}
     >
       {children}
-      <ArrowRightIcon className="ml-auto size-[18px]" />
+      <ArrowRightCompactIcon className="ml-auto size-[18px]" />
     </button>
   )
 }
@@ -607,7 +607,7 @@ function MessageCitations({
             className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             {citation.label}
-            <ArrowRightIcon className="size-3.5" aria-hidden="true" />
+            <ArrowRightCompactIcon className="size-3.5" aria-hidden="true" />
           </a>
         ))}
       </div>
@@ -717,7 +717,7 @@ function MessageContactAction({
               supportkori.com/montasim
             </span>
           </span>
-          <ArrowRightIcon className="size-[18px] shrink-0" />
+          <ArrowRightCompactIcon className="size-[18px] shrink-0" />
         </a>
       </section>
     )
@@ -987,7 +987,7 @@ function InquiryQuestion({
                 className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
               >
                 {option}
-                <ArrowRightIcon className="ml-auto size-[17px] text-muted-foreground" />
+                <ArrowRightCompactIcon className="ml-auto size-[17px] text-muted-foreground" />
               </button>
             ))}
           </div>
@@ -1030,7 +1030,7 @@ function InquiryQuestion({
                 : state.stepIndex === steps.length - 1
                   ? "Send inquiry"
                   : "Continue"}
-              <ArrowRightIcon className="size-[17px]" />
+              <ArrowRightCompactIcon className="size-[17px]" />
             </Button>
           </form>
         )}
@@ -1161,7 +1161,7 @@ function InquirySuccess({
               onClick={onContinue}
             >
               Continue asking questions
-              <ArrowRightIcon className="size-[17px]" />
+              <ArrowRightCompactIcon className="size-[17px]" />
             </Button>
             <Button
               size="lg"

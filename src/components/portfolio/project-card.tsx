@@ -1,10 +1,18 @@
 import {
   ArrowUpRightIcon,
   BookOpenTextIcon,
+  BracketsCurlyIcon,
+  DatabaseIcon,
+  DevicesIcon,
+  FilesIcon,
   GithubLogoIcon,
   PackageIcon,
+  PlugsConnectedIcon,
+  SparkleIcon,
   SquaresFourIcon,
-} from "@phosphor-icons/react"
+  WrenchIcon,
+} from "@/components/ui/icons"
+import type { Icon } from "@/components/ui/icons"
 import { Link } from "@tanstack/react-router"
 import { BadgeList } from "@/components/shared/badge-list"
 import {
@@ -17,6 +25,17 @@ import type { Project } from "@/lib/content/projects"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
 
+const projectTypeIcons: Record<Project["type"], Icon> = {
+  website: DevicesIcon,
+  extension: PlugsConnectedIcon,
+  package: PackageIcon,
+  skill: SparkleIcon,
+  dataset: DatabaseIcon,
+  tool: WrenchIcon,
+  api: BracketsCurlyIcon,
+  template: FilesIcon,
+}
+
 function projectImage(project: Project) {
   if (!project.imageUrl) return null
   const name = project.imageUrl.split("/").at(-1)
@@ -27,6 +46,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const primaryUrl =
     project.liveUrl || project.npmUrl || project.releaseUrl || project.githubUrl
   const caseStudy = projectCaseStudyCatalog.findByProjectId(project.id)
+  const ProjectTypeIcon = projectTypeIcons[project.type]
   const preview = image ? (
     <img
       src={image}
@@ -75,7 +95,7 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
         <CardContent className="flex min-w-0 flex-col p-5 sm:p-6">
           <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <SquaresFourIcon />
+            <ProjectTypeIcon className="size-[1em]" />
             {project.type}
           </p>
           <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-emphasis-foreground">

@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router"
-import { ListIcon, MoonIcon, SunIcon } from "@phosphor-icons/react"
+import { ListIcon, MoonIcon, SunIcon } from "@/components/ui/icons"
 import { Button } from "@/components/ui/button"
 import { SiteContainer } from "@/components/shared/site-container"
 import {

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Dialog } from "radix-ui"
-import { XIcon } from "@phosphor-icons/react"
+import { XIcon } from "@/components/ui/icons"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 

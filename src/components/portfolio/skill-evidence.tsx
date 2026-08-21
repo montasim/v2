@@ -2,7 +2,7 @@ import {
   ArrowUpIcon,
   BriefcaseIcon,
   SquaresFourIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import { ExperienceList } from "@/components/portfolio/experience-list"
 import { ProjectCard } from "@/components/portfolio/project-card"
 import type { SkillEvidence as SkillEvidenceRecord } from "@/lib/content/skill-evidence"

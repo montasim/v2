@@ -6,7 +6,7 @@ import {
   CodeIcon,
   GithubLogoIcon,
   ReadCvLogoIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 
 import { profileCatalog } from "@/lib/content/profile"
 import { KONAMI_DISPLAY_SEQUENCE, useKonamiCode } from "@/hooks/use-konami-code"

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { FunnelSimpleIcon } from "@phosphor-icons/react"
+import { FunnelSimpleIcon } from "@/components/ui/icons"
 import { DetailPage } from "@/components/shared/detail-page"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { CatalogFilter } from "@/lib/content/shared"

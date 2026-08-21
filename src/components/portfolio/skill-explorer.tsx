@@ -1,4 +1,4 @@
-import { FunnelSimpleIcon } from "@phosphor-icons/react"
+import { FunnelSimpleIcon } from "@/components/ui/icons"
 import { SkillLink } from "@/components/portfolio/skill-groups"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { skillEvidenceCatalog } from "@/lib/content/skill-evidence"

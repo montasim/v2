@@ -15,6 +15,32 @@ export default [
     },
   },
   {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/components/ui/icons.tsx"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "@heroicons/*",
+                "@hugeicons/*",
+                "@phosphor-icons/*",
+                "@tabler/icons*",
+                "lucide-react",
+                "react-icons",
+                "react-icons/*",
+              ],
+              message:
+                "Import icons from '@/components/ui/icons' so the app uses the shared Hugeicons system.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     ignores: ["eslint.config.js", ".prettierrc", "prototypes/**", "dist/**"],
   },
 ]

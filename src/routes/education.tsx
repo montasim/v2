@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
-import { ArrowUpRightIcon } from "@phosphor-icons/react"
+import { ArrowUpRightIcon } from "@/components/ui/icons"
 import { Card, CardContent } from "@/components/ui/card"
 import { EntityAvatar } from "@/components/shared/entity-avatar"
 import { CatalogPage } from "@/components/shared/catalog-page"

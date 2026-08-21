@@ -4,7 +4,7 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   DownloadSimpleIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import {
   Breadcrumb,
   BreadcrumbItem,

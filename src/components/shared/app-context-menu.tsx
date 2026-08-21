@@ -8,7 +8,7 @@ import {
   CoffeeIcon,
   CopyIcon,
   SelectionAllIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 
 import {
   ContextMenu,

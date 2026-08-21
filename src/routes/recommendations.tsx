@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
-import { ArrowUpRightIcon } from "@phosphor-icons/react"
+import { ArrowUpRightIcon } from "@/components/ui/icons"
 
 import { RecommendationDetails } from "@/components/portfolio/recommendations"
 import { CatalogPage } from "@/components/shared/catalog-page"

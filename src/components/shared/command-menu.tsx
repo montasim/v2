@@ -16,8 +16,8 @@ import {
   SunIcon,
   UserIcon,
   UsersThreeIcon,
-} from "@phosphor-icons/react"
-import type { Icon } from "@phosphor-icons/react"
+} from "@/components/ui/icons"
+import type { Icon } from "@/components/ui/icons"
 
 import {
   CommandDialog,

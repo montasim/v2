@@ -42,8 +42,8 @@ import {
   VideoIcon,
   WindIcon,
   WrenchIcon,
-} from "@phosphor-icons/react"
-import type { Icon } from "@phosphor-icons/react"
+} from "@/components/ui/icons"
+import type { Icon } from "@/components/ui/icons"
 import { Link } from "@tanstack/react-router"
 import { Badge } from "@/components/ui/badge"
 import { skillEvidenceCatalog } from "@/lib/content/skill-evidence"

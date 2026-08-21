@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react"
 import { Link } from "@tanstack/react-router"
 import {
-  ArrowLeftIcon,
+  ArrowLeftCompactIcon,
+  ArrowRightCompactIcon,
   ArrowRightIcon,
   ArrowUpRightIcon,
   CheckCircleIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
 import {
   ExternalAction,
@@ -473,14 +474,14 @@ export function ProjectCaseStudyPage({
       <footer className="mt-8 flex flex-wrap gap-3">
         <Button asChild variant="outline" size="lg" className="w-auto">
           <Link to="/projects">
-            <ArrowLeftIcon />
+            <ArrowLeftCompactIcon />
             All projects
           </Link>
         </Button>
         <Button asChild variant="outline" size="lg" className="ml-auto w-auto">
           <Link to="/projects/$slug" params={{ slug: nextCaseStudy.slug }}>
             Next: {nextCaseStudy.project.title}
-            <ArrowRightIcon />
+            <ArrowRightCompactIcon />
           </Link>
         </Button>
       </footer>

@@ -4,7 +4,7 @@ import {
   CalendarBlankIcon,
   CertificateIcon,
   GraduationCapIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { EntityAvatar } from "@/components/shared/entity-avatar"

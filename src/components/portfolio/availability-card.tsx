@@ -5,7 +5,7 @@ import {
   ClockIcon,
   EnvelopeSimpleIcon,
   HouseLineIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"

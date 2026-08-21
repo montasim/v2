@@ -6,7 +6,7 @@ import {
   GithubLogoIcon,
   LinkedinLogoIcon,
   MapPinIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   ExternalAction,

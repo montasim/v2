@@ -2,7 +2,7 @@ import {
   ArrowUpRightIcon,
   CertificateIcon,
   DownloadSimpleIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 
 import {
   DownloadAction,

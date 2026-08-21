@@ -7,7 +7,7 @@ import {
   GraduationCapIcon,
   LinkedinLogoIcon,
   MapPinIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
 import {
   DownloadAction,

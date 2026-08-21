@@ -1,12 +1,12 @@
 import * as React from "react"
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
+  ArrowLeftCompactIcon,
+  ArrowRightCompactIcon,
   ArrowUpRightIcon,
   CalendarBlankIcon,
   QuotesIcon,
   UsersThreeIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -222,7 +222,7 @@ export function RecommendationCarousel() {
           aria-label="Move recommendations left"
           disabled={!canScrollPrevious}
         >
-          <ArrowLeftIcon />
+          <ArrowLeftCompactIcon />
         </Button>
       </div>
       <CarouselContent className="-ml-4 pb-1">
@@ -245,7 +245,7 @@ export function RecommendationCarousel() {
           aria-label="Move recommendations right"
           disabled={!canScrollNext}
         >
-          <ArrowRightIcon />
+          <ArrowRightCompactIcon />
         </Button>
       </div>
       <p className="sr-only" aria-live="polite">

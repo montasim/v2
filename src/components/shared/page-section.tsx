@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from "react"
 
-import { ArrowRightIcon } from "@phosphor-icons/react"
+import { ArrowRightCompactIcon } from "@/components/ui/icons"
 import { InternalAction } from "@/components/shared/navigation-action"
 import { MotionReveal } from "@/components/shared/motion-reveal"
 import type { InternalPath } from "@/components/shared/navigation-action"
@@ -51,7 +51,7 @@ export function PageSection({
               className="group/action mt-4 h-auto p-0 font-medium text-emphasis-foreground sm:mt-0 sm:shrink-0"
             >
               {label}
-              <ArrowRightIcon className="group-hover/action:translate-x-0.5" />
+              <ArrowRightCompactIcon className="group-hover/action:translate-x-0.5" />
             </InternalAction>
           ) : null}
         </div>

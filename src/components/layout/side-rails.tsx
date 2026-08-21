@@ -3,7 +3,7 @@ import {
   GithubLogoIcon,
   LinkedinLogoIcon,
   WhatsappLogoIcon,
-} from "@phosphor-icons/react"
+} from "@/components/ui/icons"
 import { Separator } from "@/components/ui/separator"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { profileCatalog } from "@/lib/content/profile"
