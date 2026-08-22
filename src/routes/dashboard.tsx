@@ -100,7 +100,7 @@ function OwnerDashboardPage() {
         <div className="flex h-16 items-center border-b px-4 lg:px-5">
           <Link
             to="/"
-            className="flex items-center gap-2 font-semibold tracking-tight"
+            className="flex items-center gap-2 font-semibold tracking-tight text-emphasis-foreground"
           >
             <span className="relative">
               <img
@@ -141,7 +141,7 @@ function OwnerDashboardPage() {
         <header className="sticky top-0 z-30 flex h-16 items-center border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6 lg:px-10">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-4">
             <div
-              className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground"
+              className="flex min-w-0 items-center gap-2 text-xs text-emphasis-foreground"
               aria-label="Dashboard location"
             >
               <DatabaseIcon className="size-3.5 shrink-0" />
@@ -149,9 +149,7 @@ function OwnerDashboardPage() {
               <span className="hidden text-border sm:inline" aria-hidden="true">
                 /
               </span>
-              <span className="truncate font-medium text-foreground">
-                {activeNavigation}
-              </span>
+              <span className="truncate font-medium">{activeNavigation}</span>
             </div>
 
             <div className="ml-auto flex items-center">
