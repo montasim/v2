@@ -1,9 +1,13 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { z } from "zod"
 
+import {
+  DashboardEmptyState,
+  DashboardPageHeader,
+} from "@/components/dashboard/dashboard-page-state"
 import { DashboardCommentsSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import { getOwnerComments } from "@/features/owner-dashboard/application/dashboard"
-import { Comments, DashboardHeader, Pagination } from "@/routes/dashboard"
+import { Comments, Pagination } from "@/routes/dashboard"
 
 export const Route = createFileRoute("/dashboard/comments")({
   validateSearch: z.object({
@@ -23,8 +27,15 @@ function DashboardCommentsPage() {
   const router = useRouter()
   return (
     <>
-      <DashboardHeader title="Blog comments" />
-      <Comments data={data.items} refresh={() => router.invalidate()} />
+      <DashboardPageHeader
+        title="Blog comments"
+        onRefresh={() => router.invalidate()}
+      />
+      {data.items.length ? (
+        <Comments data={data.items} refresh={() => router.invalidate()} />
+      ) : (
+        <DashboardEmptyState kind="comments" />
+      )}
       <Pagination
         {...data}
         label="comments"

@@ -1,10 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { z } from "zod"
 
+import {
+  DashboardEmptyState,
+  DashboardPageHeader,
+} from "@/components/dashboard/dashboard-page-state"
 import { DashboardInquiriesSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import { InquiryStats } from "@/components/dashboard/inquiry-stats"
 import { getOwnerInquiries } from "@/features/owner-dashboard/application/dashboard"
-import { DashboardHeader, Inquiries, Pagination } from "@/routes/dashboard"
+import { Inquiries, Pagination } from "@/routes/dashboard"
 
 export const Route = createFileRoute("/dashboard/inquiries")({
   validateSearch: z.object({
@@ -21,13 +25,21 @@ export const Route = createFileRoute("/dashboard/inquiries")({
 function DashboardInquiriesPage() {
   const data = Route.useLoaderData()
   const navigate = Route.useNavigate()
+  const router = useRouter()
   return (
     <>
-      <DashboardHeader title="Role & projects" />
-      <div className="space-y-7">
-        <InquiryStats {...data.stats} />
-        <Inquiries data={data.items} />
-      </div>
+      <DashboardPageHeader
+        title="Role & projects"
+        onRefresh={() => router.invalidate()}
+      />
+      {data.items.length ? (
+        <div className="space-y-7">
+          <InquiryStats {...data.stats} />
+          <Inquiries data={data.items} />
+        </div>
+      ) : (
+        <DashboardEmptyState kind="inquiries" />
+      )}
       <Pagination
         {...data}
         label="inquiries"

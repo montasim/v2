@@ -1,9 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { z } from "zod"
 
+import {
+  DashboardEmptyState,
+  DashboardPageHeader,
+} from "@/components/dashboard/dashboard-page-state"
 import { DashboardConversationsSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import { getOwnerConversations } from "@/features/owner-dashboard/application/dashboard"
-import { Conversations, DashboardHeader, Pagination } from "@/routes/dashboard"
+import { Conversations, Pagination } from "@/routes/dashboard"
 
 export const Route = createFileRoute("/dashboard/conversations")({
   validateSearch: z.object({
@@ -20,10 +24,18 @@ export const Route = createFileRoute("/dashboard/conversations")({
 function DashboardConversationsPage() {
   const data = Route.useLoaderData()
   const navigate = Route.useNavigate()
+  const router = useRouter()
   return (
     <>
-      <DashboardHeader title="Chat history" />
-      <Conversations data={data.items} />
+      <DashboardPageHeader
+        title="Chat history"
+        onRefresh={() => router.invalidate()}
+      />
+      {data.items.length ? (
+        <Conversations data={data.items} />
+      ) : (
+        <DashboardEmptyState kind="conversations" />
+      )}
       <Pagination
         {...data}
         label="exchanges"
