@@ -1,13 +1,18 @@
 import { createServerFn } from "@tanstack/react-start"
 
-import { blogCommentRequestSchema } from "@/features/blog-comments/domain/comment"
+import {
+  blogCommentDeletionSchema,
+  blogCommentRequestSchema,
+} from "@/features/blog-comments/domain/comment"
 import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
 import {
   createStoredBlogComment,
+  deleteStoredBlogComment,
   listStoredBlogComments,
 } from "@/features/blog-comments/infrastructure/comments.server"
 import { checkBlogCommentRateLimit } from "@/features/blog-comments/infrastructure/rate-limit.server"
 import { requirePermanentEmail } from "@/features/email-verification/infrastructure/disposable-email.server"
+import { requirePortfolioOwner } from "@/features/owner-auth/infrastructure/neon-auth.server"
 import { blogCatalog, blogPostSlugSchema } from "@/lib/content/blog"
 
 function assertKnownPost(postSlug: string) {
@@ -35,4 +40,13 @@ export const postBlogComment = createServerFn({ method: "POST" })
     await requirePermanentEmail(data.comment.email)
     checkBlogCommentRateLimit(data.comment.email)
     return createStoredBlogComment(data.comment)
+  })
+
+export const deleteBlogComment = createServerFn({ method: "POST" })
+  .validator((input: unknown) => blogCommentDeletionSchema.parse(input))
+  .handler(async ({ data }) => {
+    await requirePortfolioOwner()
+    assertKnownPost(data.postSlug)
+    await deleteStoredBlogComment(data.id, data.postSlug)
+    return { deleted: true }
   })

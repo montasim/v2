@@ -76,3 +76,12 @@ export async function createStoredBlogComment(
   if (!created) throw new Error("The comment could not be created.")
   return serializeComment(created)
 }
+
+export async function deleteStoredBlogComment(id: string, postSlug: string) {
+  const deleted = await getDatabase()
+    .delete(blogComments)
+    .where(and(eq(blogComments.id, id), eq(blogComments.postSlug, postSlug)))
+    .returning({ id: blogComments.id })
+
+  if (!deleted.length) throw new Error("The comment is unavailable.")
+}

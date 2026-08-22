@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react"
 import { Link, useRouterState } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
 import { ListIcon, MoonIcon, SunIcon } from "@/components/ui/icons"
 import { Button } from "@/components/ui/button"
 import { SiteContainer } from "@/components/shared/site-container"
@@ -11,21 +13,31 @@ import {
 } from "@/components/ui/sheet"
 import { useTheme } from "@/components/theme-provider"
 import { useLandingNavigation } from "@/components/layout/use-landing-navigation"
+import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { cn } from "@/lib/utils"
 
-function Brand() {
+function Brand({ isOwner }: { isOwner: boolean }) {
   return (
     <Link
       to="/"
+      aria-label={isOwner ? "Montasim — owner signed in" : "Montasim"}
       className="flex items-center gap-2 rounded-md font-semibold tracking-tight transition-opacity duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-75 active:opacity-60 motion-reduce:transition-none"
     >
-      <img
-        src="/images/logo.webp"
-        alt=""
-        width="28"
-        height="28"
-        className="size-7 rounded-sm"
-      />
+      <span className="relative shrink-0">
+        <img
+          src="/images/logo.webp"
+          alt=""
+          width="28"
+          height="28"
+          className="size-7 rounded-sm"
+        />
+        {isOwner ? (
+          <span
+            className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background"
+            aria-hidden="true"
+          />
+        ) : null}
+      </span>
       <span>Montasim</span>
     </Link>
   )
@@ -44,6 +56,8 @@ function ScrollProgress() {
 
 export function SiteHeader() {
   const { theme, toggleTheme } = useTheme()
+  const getOwnerAuth = useServerFn(getPortfolioOwnerAuth)
+  const [isOwner, setIsOwner] = useState(false)
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
@@ -54,6 +68,22 @@ export function SiteHeader() {
     pathname,
     hash
   )
+
+  useEffect(() => {
+    let active = true
+
+    void getOwnerAuth()
+      .then((auth) => {
+        if (active) setIsOwner(auth.status === "owner")
+      })
+      .catch(() => {
+        if (active) setIsOwner(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [getOwnerAuth])
 
   const themeButton = (
     <Button
@@ -69,7 +99,7 @@ export function SiteHeader() {
     <header className="site-header-enter sticky top-0 z-40 border-b bg-background/98">
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
-          <Brand />
+          <Brand isOwner={isOwner} />
           <div className="hidden items-center gap-1 lg:flex">
             {items.map((item) => {
               const isActive =
@@ -122,7 +152,7 @@ export function SiteHeader() {
               </SheetTrigger>
               <SheetContent closeLabel="Close navigation">
                 <SheetTitle className="mb-6">
-                  <Brand />
+                  <Brand isOwner={isOwner} />
                 </SheetTitle>
                 <nav className="grid gap-1" aria-label="Mobile navigation">
                   {items.map((item) => {

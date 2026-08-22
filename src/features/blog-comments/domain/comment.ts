@@ -31,5 +31,10 @@ export const blogCommentRequestSchema = z.object({
   website: z.string().trim().max(200).default(""),
 })
 
+export const blogCommentDeletionSchema = z.object({
+  id: z.uuid(),
+  postSlug: blogPostSlugSchema,
+})
+
 export type BlogComment = z.infer<typeof blogCommentSchema>
 export type BlogCommentSubmission = z.infer<typeof blogCommentSubmissionSchema>

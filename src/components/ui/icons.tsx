@@ -48,6 +48,7 @@ import HugeGitBranchIcon from "@hugeicons/core-free-icons/GitBranchIcon"
 import HugeGitCommitIcon from "@hugeicons/core-free-icons/GitCommitIcon"
 import HugeGithubLogoIcon from "@hugeicons/core-free-icons/Github01Icon"
 import HugeGraduationCapIcon from "@hugeicons/core-free-icons/GraduationCapIcon"
+import HugeGoogleIcon from "@hugeicons/core-free-icons/GoogleIcon"
 import HugeCirclesThreePlusIcon from "@hugeicons/core-free-icons/GroupItemsIcon"
 import HugeHandHeartIcon from "@hugeicons/core-free-icons/HandHeartIcon"
 import HugeHandIcon from "@hugeicons/core-free-icons/HandIcon"
@@ -62,6 +63,7 @@ import HugeLeafIcon from "@hugeicons/core-free-icons/Leaf01Icon"
 import HugeLightbulbIcon from "@hugeicons/core-free-icons/LightbulbIcon"
 import HugeLinkedinLogoIcon from "@hugeicons/core-free-icons/Linkedin01Icon"
 import HugeListChecksIcon from "@hugeicons/core-free-icons/ListChecksIcon"
+import HugeLogoutIcon from "@hugeicons/core-free-icons/Logout03Icon"
 import HugeEnvelopeSimpleIcon from "@hugeicons/core-free-icons/Mail01Icon"
 import HugeMapPinIcon from "@hugeicons/core-free-icons/MapPinIcon"
 import HugeListIcon from "@hugeicons/core-free-icons/Menu01Icon"
@@ -86,6 +88,7 @@ import HugeSparkleIcon from "@hugeicons/core-free-icons/SparkleIcon"
 import HugeStudentIcon from "@hugeicons/core-free-icons/StudentIcon"
 import HugeSunIcon from "@hugeicons/core-free-icons/Sun03Icon"
 import HugeTestTubeIcon from "@hugeicons/core-free-icons/TestTubeIcon"
+import HugeTrashIcon from "@hugeicons/core-free-icons/TrashIcon"
 import HugeFileTsIcon from "@hugeicons/core-free-icons/Typescript01Icon"
 import HugeUsersThreeIcon from "@hugeicons/core-free-icons/UserGroupIcon"
 import HugeUserIcon from "@hugeicons/core-free-icons/UserIcon"
@@ -241,6 +244,7 @@ export const GraduationCapIcon = createIcon(
   HugeGraduationCapIcon,
   "GraduationCapIcon"
 )
+export const GoogleIcon = createIcon(HugeGoogleIcon, "GoogleIcon")
 export const HandHeartIcon = createIcon(HugeHandHeartIcon, "HandHeartIcon")
 export const HandIcon = createIcon(HugeHandIcon, "HandIcon")
 export const HardDrivesIcon = createIcon(HugeHardDrivesIcon, "HardDrivesIcon")
@@ -259,6 +263,7 @@ export const LinkedinLogoIcon = createIcon(
 )
 export const ListChecksIcon = createIcon(HugeListChecksIcon, "ListChecksIcon")
 export const ListIcon = createIcon(HugeListIcon, "ListIcon")
+export const LogoutIcon = createIcon(HugeLogoutIcon, "LogoutIcon")
 export const MapPinIcon = createIcon(HugeMapPinIcon, "MapPinIcon")
 export const MoonIcon = createIcon(HugeMoonIcon, "MoonIcon")
 export const PackageIcon = createIcon(HugePackageIcon, "PackageIcon")
@@ -296,6 +301,7 @@ export const SquaresFourIcon = createIcon(
 export const StudentIcon = createIcon(HugeStudentIcon, "StudentIcon")
 export const SunIcon = createIcon(HugeSunIcon, "SunIcon")
 export const TestTubeIcon = createIcon(HugeTestTubeIcon, "TestTubeIcon")
+export const TrashIcon = createIcon(HugeTrashIcon, "TrashIcon")
 export const TreeStructureIcon = createIcon(
   HugeTreeStructureIcon,
   "TreeStructureIcon"

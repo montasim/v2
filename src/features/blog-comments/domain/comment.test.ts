@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import {
+  blogCommentDeletionSchema,
   blogCommentSchema,
   blogCommentSubmissionSchema,
 } from "@/features/blog-comments/domain/comment"
@@ -49,6 +50,25 @@ describe("blog comments", () => {
     })
 
     expect(comment).not.toHaveProperty("email")
+  })
+
+  it("requires a valid comment id and known post-shaped slug for deletion", () => {
+    expect(
+      blogCommentDeletionSchema.parse({
+        id: "d184e0f3-b845-49c4-a7b5-d589df44e606",
+        postSlug: "reliable-state-machines",
+      })
+    ).toEqual({
+      id: "d184e0f3-b845-49c4-a7b5-d589df44e606",
+      postSlug: "reliable-state-machines",
+    })
+
+    expect(() =>
+      blogCommentDeletionSchema.parse({
+        id: "not-a-comment-id",
+        postSlug: "../root",
+      })
+    ).toThrow()
   })
 
   it.each([

@@ -23,9 +23,11 @@ import {
   CircleDashedIcon,
   EnvelopeSimpleIcon,
   ShareIcon,
+  TrashIcon,
 } from "@/components/ui/icons"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
+  deleteBlogComment,
   getBlogComments,
   postBlogComment,
 } from "@/features/blog-comments/application/comments"
@@ -38,6 +40,7 @@ import type { BlogComment } from "@/features/blog-comments/domain/comment"
 import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
+import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { blogCatalog } from "@/lib/content/blog"
 import type { BlogPost } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
@@ -90,6 +93,8 @@ function BlogDiscussion({
   const messageErrorId = useId()
   const getComments = useServerFn(getBlogComments)
   const createComment = useServerFn(postBlogComment)
+  const removeComment = useServerFn(deleteBlogComment)
+  const getOwnerAuth = useServerFn(getPortfolioOwnerAuth)
   const [comments, setComments] = useState<BlogComment[]>([])
   const [replyTo, setReplyTo] = useState<BlogComment | null>(null)
   const [name, setName] = useState("")
@@ -101,6 +106,12 @@ function BlogDiscussion({
   const [loadError, setLoadError] = useState("")
   const [submissionError, setSubmissionError] = useState("")
   const [messageError, setMessageError] = useState("")
+  const [canManageComments, setCanManageComments] = useState(false)
+  const [pendingDeletionId, setPendingDeletionId] = useState<string | null>(
+    null
+  )
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [deletionError, setDeletionError] = useState("")
 
   useEffect(() => {
     let active = true
@@ -128,6 +139,23 @@ function BlogDiscussion({
   }, [getComments, post.slug])
 
   useEffect(() => {
+    let active = true
+    setCanManageComments(false)
+
+    void getOwnerAuth()
+      .then((state) => {
+        if (active) setCanManageComments(state.status === "owner")
+      })
+      .catch(() => {
+        if (active) setCanManageComments(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [getOwnerAuth, post.slug])
+
+  useEffect(() => {
     onCommentCountChange(comments.length)
   }, [comments.length, onCommentCountChange])
 
@@ -152,6 +180,27 @@ function BlogDiscussion({
     })
   }
 
+  async function confirmCommentDeletion(comment: BlogComment) {
+    setDeletingId(comment.id)
+    setDeletionError("")
+
+    try {
+      await removeComment({
+        data: { id: comment.id, postSlug: post.slug },
+      })
+      const loadedComments = await getComments({ data: post.slug })
+      setComments(loadedComments)
+      setPendingDeletionId(null)
+      if (replyTo?.id === comment.id || replyTo?.replyTo === comment.id) {
+        setReplyTo(null)
+      }
+    } catch {
+      setDeletionError("The comment could not be deleted. Try again.")
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   function renderComment(comment: BlogComment, nested = false) {
     const parent = comments.find((item) => item.id === comment.replyTo)
 
@@ -172,29 +221,68 @@ function BlogDiscussion({
               Replying to {parent.name}
             </p>
           ) : null}
-          <div className="flex flex-wrap items-baseline gap-2">
-            <h3 className="text-sm font-semibold text-foreground">
-              {comment.name}
-            </h3>
-            <time
-              dateTime={comment.createdAt}
-              className="text-[0.6875rem] text-muted-foreground"
-            >
-              {formatCommentDate(comment.createdAt)}
-            </time>
+          <div className="flex items-start gap-2">
+            <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-2">
+              <h3 className="text-sm font-semibold text-foreground">
+                {comment.name}
+              </h3>
+              <time
+                dateTime={comment.createdAt}
+                className="text-[0.6875rem] text-muted-foreground"
+              >
+                {formatCommentDate(comment.createdAt)}
+              </time>
+            </div>
+            {canManageComments && pendingDeletionId !== comment.id ? (
+              <button
+                type="button"
+                aria-label={`Delete comment by ${comment.name}`}
+                title={`Delete comment by ${comment.name}`}
+                onClick={() => {
+                  setDeletionError("")
+                  setPendingDeletionId(comment.id)
+                }}
+                className="-mt-1 grid size-7 shrink-0 place-items-center rounded-md text-destructive/60 transition-colors hover:bg-destructive/10 hover:text-destructive/80 focus-visible:text-destructive/80 focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                <TrashIcon className="size-3.5" />
+              </button>
+            ) : null}
           </div>
           <p className="mt-1.5 text-sm leading-[1.65] text-muted-foreground">
             {comment.message}
           </p>
-          {!nested ? (
-            <button
-              type="button"
-              onClick={() => focusComposer(comment)}
-              className="mt-2 rounded-sm text-xs font-semibold text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
-            >
-              Reply
-            </button>
-          ) : null}
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+            {!nested ? (
+              <button
+                type="button"
+                onClick={() => focusComposer(comment)}
+                className="rounded-sm text-xs font-semibold text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                Reply
+              </button>
+            ) : null}
+            {canManageComments && pendingDeletionId === comment.id ? (
+              <span className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                Delete this comment?
+                <button
+                  type="button"
+                  disabled={deletingId === comment.id}
+                  onClick={() => setPendingDeletionId(null)}
+                  className="rounded-sm font-semibold text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={deletingId === comment.id}
+                  onClick={() => confirmCommentDeletion(comment)}
+                  className="rounded-sm font-semibold text-destructive hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-wait disabled:opacity-60"
+                >
+                  {deletingId === comment.id ? "Deleting" : "Delete"}
+                </button>
+              </span>
+            ) : null}
+          </div>
         </div>
       </article>
     )
@@ -280,6 +368,14 @@ function BlogDiscussion({
             </>
           )}
         </div>
+        {deletionError ? (
+          <p
+            className="border-t px-4 py-3 text-xs text-destructive sm:px-6"
+            role="alert"
+          >
+            {deletionError}
+          </p>
+        ) : null}
       </section>
 
       <section
