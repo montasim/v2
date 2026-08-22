@@ -673,9 +673,12 @@ export function BlogDetailPage({
                 height="38"
                 className="size-9.5 rounded-full object-cover"
               />
-              <strong className="block text-foreground">
+              <Link
+                to="/"
+                className="font-bold text-foreground underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
                 {blogCatalog.author.name}
-              </strong>
+              </Link>
             </div>
           </div>
           <div className="flex min-w-0 flex-col justify-center py-4 pr-5 sm:border-l sm:px-5 sm:py-4.5">
