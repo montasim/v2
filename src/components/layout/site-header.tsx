@@ -21,7 +21,7 @@ function Brand({ isOwner }: { isOwner: boolean }) {
     <Link
       to="/"
       aria-label={isOwner ? "Montasim — owner signed in" : "Montasim"}
-      className="flex items-center gap-2 rounded-md font-semibold tracking-tight transition-opacity duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-75 active:opacity-60 motion-reduce:transition-none"
+      className="flex items-center gap-2 rounded-md font-semibold tracking-tight text-emphasis-foreground transition-opacity duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-75 active:opacity-60 motion-reduce:transition-none"
     >
       <span className="relative shrink-0">
         <img
