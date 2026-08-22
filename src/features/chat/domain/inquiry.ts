@@ -40,6 +40,20 @@ export interface InquiryStep {
   options?: readonly string[]
 }
 
+export const roleInquiryOptions = [
+  "Senior Frontend Engineer",
+  "Senior Full-Stack Engineer",
+  "Technical Lead",
+  "Another role",
+] as const
+
+export const arrangementInquiryOptions = [
+  "Remote",
+  "Hybrid",
+  "On-site",
+  "Flexible",
+] as const
+
 export const inquirySteps = {
   hire: [
     {
@@ -48,12 +62,7 @@ export const inquirySteps = {
       title: "What role are you hiring for?",
       help: "Choose the closest match.",
       type: "options",
-      options: [
-        "Senior Frontend Engineer",
-        "Senior Full-Stack Engineer",
-        "Technical Lead",
-        "Another role",
-      ],
+      options: roleInquiryOptions,
     },
     {
       key: "arrangement",
@@ -61,7 +70,7 @@ export const inquirySteps = {
       title: "What is the work arrangement?",
       help: "This helps Montasim confirm fit and availability.",
       type: "options",
-      options: ["Remote", "Hybrid", "On-site", "Flexible"],
+      options: arrangementInquiryOptions,
     },
     {
       key: "name",

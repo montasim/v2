@@ -1,4 +1,4 @@
-import { count, desc } from "drizzle-orm"
+import { count, desc, eq } from "drizzle-orm"
 
 import { getDatabase } from "@/db/client.server"
 import {
@@ -7,6 +7,10 @@ import {
   portfolioInquiries,
 } from "@/db/schema"
 import { loadAvailabilitySettings } from "@/features/availability/infrastructure/settings.server"
+import {
+  arrangementInquiryOptions,
+  roleInquiryOptions,
+} from "@/features/chat/domain/inquiry"
 
 export const OWNER_DASHBOARD_PAGE_SIZE = 6
 
@@ -19,6 +23,28 @@ export type OwnerPagination = {
 
 export type OwnerPaginatedResult<T> = OwnerPagination & {
   items: T[]
+}
+
+export type InquiryStat = {
+  label: string
+  count: number
+}
+
+function normalizeInquiryStats(
+  rows: Array<{ label: string | null; count: number }>,
+  expectedLabels: readonly string[]
+): InquiryStat[] {
+  const counts = new Map(
+    rows.map((row) => [row.label ?? "Not specified", row.count])
+  )
+  const labels = [...expectedLabels]
+  for (const label of counts.keys()) {
+    if (!labels.includes(label)) labels.push(label)
+  }
+
+  return labels
+    .map((label) => ({ label, count: counts.get(label) ?? 0 }))
+    .sort((left, right) => right.count - left.count)
 }
 
 async function loadPage<T>(
@@ -83,13 +109,34 @@ export async function loadOwnerDashboard() {
 }
 
 export async function loadOwnerInquiries(page: number) {
-  const result = await loadPage<typeof portfolioInquiries.$inferSelect>(
-    page,
-    portfolioInquiries,
-    portfolioInquiries.createdAt
-  )
+  const database = getDatabase()
+  const [result, roles, arrangements] = await Promise.all([
+    loadPage<typeof portfolioInquiries.$inferSelect>(
+      page,
+      portfolioInquiries,
+      portfolioInquiries.createdAt
+    ),
+    database
+      .select({ label: portfolioInquiries.role, count: count() })
+      .from(portfolioInquiries)
+      .where(eq(portfolioInquiries.type, "hire"))
+      .groupBy(portfolioInquiries.role),
+    database
+      .select({ label: portfolioInquiries.arrangement, count: count() })
+      .from(portfolioInquiries)
+      .where(eq(portfolioInquiries.type, "hire"))
+      .groupBy(portfolioInquiries.arrangement),
+  ])
+
   return {
     ...result,
+    stats: {
+      roles: normalizeInquiryStats(roles, roleInquiryOptions),
+      arrangements: normalizeInquiryStats(
+        arrangements,
+        arrangementInquiryOptions
+      ),
+    },
     items: result.items.map((inquiry) => ({
       ...inquiry,
       createdAt: inquiry.createdAt.toISOString(),

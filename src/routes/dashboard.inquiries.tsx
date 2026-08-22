@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 
+import { InquiryStats } from "@/components/dashboard/inquiry-stats"
 import { getOwnerInquiries } from "@/features/owner-dashboard/application/dashboard"
 import { DashboardHeader, Inquiries, Pagination } from "@/routes/dashboard"
 
@@ -19,7 +20,10 @@ function DashboardInquiriesPage() {
   return (
     <>
       <DashboardHeader title="Role & projects" />
-      <Inquiries data={data.items} />
+      <div className="space-y-7">
+        <InquiryStats {...data.stats} />
+        <Inquiries data={data.items} />
+      </div>
       <Pagination
         {...data}
         label="inquiries"
