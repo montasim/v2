@@ -9,37 +9,34 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
-import { profileCatalog } from "@/lib/content/profile"
+import { defaultAvailabilitySettings } from "@/features/availability/domain/settings"
+import type { AvailabilitySettings } from "@/features/availability/domain/settings"
 
-const undisclosed = "Ask me"
-
-export function AvailabilityCard() {
-  const { location, workPreferences } = profileCatalog.profile
+export function AvailabilityCard({
+  settings = defaultAvailabilitySettings,
+}: {
+  settings?: AvailabilitySettings
+}) {
   const rows = [
     {
       label: "Availability",
-      value: workPreferences.availability ?? undisclosed,
+      value: settings.availability,
       icon: CalendarCheckIcon,
     },
     {
       label: "Work setup",
-      value: workPreferences.workArrangement ?? undisclosed,
+      value: settings.workSetup,
       icon: HouseLineIcon,
     },
     {
       label: "Location and timezone",
-      value: `${location} (${workPreferences.timeZone})`,
-      detail: workPreferences.timeZoneOverlap
-        ? `${workPreferences.timeZoneOverlap} overlap`
-        : "Share team hours to confirm overlap",
+      value: `${settings.location} (${settings.timeZone})`,
+      detail: settings.timeZoneDetail,
       icon: ClockIcon,
     },
     {
       label: "Relocation and visa",
-      value:
-        [workPreferences.relocation, workPreferences.visaStatus]
-          .filter(Boolean)
-          .join("; ") || undisclosed,
+      value: settings.relocationVisa,
       icon: AirplaneTiltIcon,
     },
   ]
@@ -49,17 +46,17 @@ export function AvailabilityCard() {
       <div className="grid md:grid-cols-12">
         <div className="flex flex-col bg-muted/35 p-5 sm:p-6 md:col-span-4">
           <h3 className="text-lg font-semibold tracking-tight text-emphasis-foreground">
-            Working preferences
+            {settings.cardTitle}
           </h3>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Current preferences for new opportunities.
+            {settings.description}
           </p>
           <Button
             className="mt-6 w-fit bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80 active:scale-[0.98] md:mt-auto"
             onClick={() => requestPortfolioInquiry({ inquiryType: "hire" })}
           >
             <EnvelopeSimpleIcon aria-hidden="true" />
-            Discuss a role
+            {settings.ctaLabel}
           </Button>
         </div>
 

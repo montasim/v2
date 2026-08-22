@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { getPublicAvailabilitySettings } from "@/features/availability/application/settings"
 import {
   ClockIcon,
   DownloadSimpleIcon,
@@ -29,11 +30,13 @@ import { projectCatalog } from "@/lib/content/projects"
 import { createMeta, site } from "@/lib/site"
 
 export const Route = createFileRoute("/")({
+  loader: () => getPublicAvailabilitySettings(),
   head: () => createMeta(site.fullName, site.description),
   component: OverviewPage,
 })
 function OverviewPage() {
   const { profile } = profileCatalog
+  const availabilitySettings = Route.useLoaderData()
   return (
     <PageShell className="overview-page">
       <section
@@ -74,7 +77,7 @@ function OverviewPage() {
             </p>
             <h1
               id="profile-name"
-              className="mx-auto mt-3 text-[clamp(0.875rem,4.5vw,1.875rem)] font-bold tracking-tight whitespace-nowrap sm:mx-0"
+              className="mx-auto mt-3 text-[clamp(0.875rem,4.5vw,1.875rem)] font-bold tracking-tight whitespace-nowrap text-emphasis-foreground sm:mx-0"
             >
               {profile.name}
             </h1>
@@ -135,15 +138,17 @@ function OverviewPage() {
           ))}
         </div>
       </PageSection>
-      <PageSection
-        id="availability"
-        headingId="availability-heading"
-        title="Availability"
-        revealRootMargin="0px 0px -20%"
-        revealVariant="subtle"
-      >
-        <AvailabilityCard />
-      </PageSection>
+      {availabilitySettings.enabled ? (
+        <PageSection
+          id="availability"
+          headingId="availability-heading"
+          title={availabilitySettings.sectionTitle}
+          revealRootMargin="0px 0px -20%"
+          revealVariant="subtle"
+        >
+          <AvailabilityCard settings={availabilitySettings} />
+        </PageSection>
+      ) : null}
       <PageSection
         id="experience"
         headingId="experience-heading"
