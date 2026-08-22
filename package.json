@@ -12,6 +12,7 @@
     "build": "vite build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:index-chat": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx src/scripts/index-chat-evidence.ts",
     "db:studio": "drizzle-kit studio",
     "preview": "vite preview",
     "test": "vitest run",
@@ -71,6 +72,7 @@
     "jsdom": "^28",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "tsx": "^4.23.12",
     "typescript": "^6",
     "vite": "^8",
     "vitest": "^4"

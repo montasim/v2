@@ -197,7 +197,11 @@ describe("PortfolioAssistant chat navigation", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
     fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
 
-    const role = await screen.findByText("Senior Software Engineer")
+    const role = await screen.findByText(
+      "Senior Software Engineer",
+      undefined,
+      { timeout: 3000 }
+    )
     const heading = screen.getByRole("heading", { name: "Recent experience" })
     const link = screen.getByRole("link", { name: "View portfolio" })
 

@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
   varchar,
+  vector,
 } from "drizzle-orm/pg-core"
 import type { AnyPgColumn } from "drizzle-orm/pg-core"
 
@@ -61,6 +62,29 @@ export const assistantExchanges = pgTable(
       table.conversationId,
       table.createdAt
     ),
+  ]
+)
+
+export const portfolioEvidenceDocuments = pgTable(
+  "portfolio_evidence_documents",
+  {
+    id: varchar("id", { length: 240 }).primaryKey(),
+    source: varchar("source", { length: 80 }).notNull(),
+    title: varchar("title", { length: 240 }).notNull(),
+    content: text("content").notNull(),
+    citationLabel: varchar("citation_label", { length: 260 }).notNull(),
+    citationHref: varchar("citation_href", { length: 320 }).notNull(),
+    citationKind: varchar("citation_kind", { length: 32 }).notNull(),
+    contentHash: varchar("content_hash", { length: 64 }).notNull(),
+    embeddingModel: varchar("embedding_model", { length: 80 }).notNull(),
+    embedding: vector("embedding", { dimensions: 768 }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("portfolio_evidence_source_idx").on(table.source),
+    index("portfolio_evidence_content_hash_idx").on(table.contentHash),
   ]
 )
 

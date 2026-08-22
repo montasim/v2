@@ -3,25 +3,32 @@ import type { UIMessageChunk } from "ai"
 
 import type { AiProviderAdapter } from "@/features/chat/application/ports/ai-provider"
 import type { ChatExchangeRecorder } from "@/features/chat/application/ports/chat-exchange-recorder"
+import type { PortfolioEvidenceRetriever } from "@/features/chat/application/ports/portfolio-evidence-retriever"
+import { chatProviderAvailability } from "@/features/chat/application/provider-availability"
+import type { ProviderAvailability } from "@/features/chat/application/provider-availability"
 import { validateChatRequest } from "@/features/chat/domain/chat"
 import type { PortfolioMessageMetadata } from "@/features/chat/domain/chat"
-import {
-  buildAssistantInstruction,
-  selectPortfolioEvidence,
-} from "@/features/chat/domain/portfolio-evidence"
+import { buildAssistantInstruction } from "@/features/chat/domain/portfolio-evidence"
+import { buildPortfolioRetrievalQuery } from "@/features/chat/domain/portfolio-retrieval-query"
 import { createAiProviders } from "@/features/chat/infrastructure/ai/providers.server"
 import { DatabaseChatExchangeRecorder } from "@/features/chat/infrastructure/chat-exchanges.server"
+import { ResilientPortfolioEvidenceRetriever } from "@/features/chat/infrastructure/evidence/vector-retriever.server"
 import { logger } from "@/lib/logger.server"
 
 export async function createPortfolioAssistantResponse(
   input: unknown,
   signal?: AbortSignal,
   providers: readonly AiProviderAdapter[] = createAiProviders(),
-  recorder: ChatExchangeRecorder = new DatabaseChatExchangeRecorder()
+  recorder: ChatExchangeRecorder = new DatabaseChatExchangeRecorder(),
+  providerAvailability: ProviderAvailability = chatProviderAvailability,
+  evidenceRetriever: PortfolioEvidenceRetriever = new ResilientPortfolioEvidenceRetriever()
 ) {
   const { conversationId, messages, question } =
     await validateChatRequest(input)
-  const evidence = selectPortfolioEvidence(question)
+  const evidence = await evidenceRetriever.retrieve(
+    buildPortfolioRetrievalQuery(messages, question),
+    signal
+  )
   const modelMessages = await convertToModelMessages(messages)
   const request = {
     system: buildAssistantInstruction(evidence),
@@ -32,6 +39,14 @@ export async function createPortfolioAssistantResponse(
   const stream = new ReadableStream<UIMessageChunk<PortfolioMessageMetadata>>({
     async start(controller) {
       for (const [index, provider] of providers.entries()) {
+        if (!providerAvailability.canAttempt(provider.provider)) {
+          logger.info(
+            { provider: provider.provider, model: provider.modelId },
+            "Portfolio assistant provider is cooling down"
+          )
+          continue
+        }
+
         try {
           const providerStream = await provider.stream(request)
           const metadata = {
@@ -47,6 +62,7 @@ export async function createPortfolioAssistantResponse(
             metadata
           )
           if (answer !== null) {
+            providerAvailability.recordSuccess(provider.provider)
             await recorder
               .record({
                 conversationId,
@@ -75,6 +91,7 @@ export async function createPortfolioAssistantResponse(
           controller.close()
           return
         } catch (error) {
+          providerAvailability.recordFailure(provider.provider, error)
           logger.warn(
             {
               provider: provider.provider,
@@ -83,17 +100,15 @@ export async function createPortfolioAssistantResponse(
             },
             "Portfolio assistant provider failed"
           )
-          if (index === providers.length - 1) {
-            controller.enqueue({
-              type: "error",
-              errorText:
-                "The assistant is temporarily unavailable. Please try again shortly.",
-            })
-            controller.close()
-            return
-          }
         }
       }
+
+      controller.enqueue({
+        type: "error",
+        errorText:
+          "The assistant is temporarily unavailable. Please try again shortly.",
+      })
+      controller.close()
     },
   })
 

@@ -5,10 +5,65 @@ import { skillEvidenceCatalog } from "@/lib/content/skill-evidence"
 export interface PortfolioCitation {
   label: string
   href: string
-  kind: "project" | "experience" | "skill" | "page"
+  kind: "project" | "case-study" | "blog" | "experience" | "skill" | "page"
 }
 
 const MAX_CITATIONS = 3
+const portfolioTerms = [
+  "montasim",
+  "he",
+  "him",
+  "his",
+  "portfolio",
+  "experience",
+  "work",
+  "role",
+  "hire",
+  "hiring",
+  "engineer",
+  "engineering",
+  "skill",
+  "skills",
+  "project",
+  "projects",
+  "product",
+  "products",
+  "impact",
+  "evidence",
+  "prove",
+]
+const projectIntentTerms = ["project", "projects", "built", "build", "shipped"]
+const skillIntentTerms = [
+  "skill",
+  "skills",
+  "stack",
+  "technical",
+  "technology",
+  "technologies",
+  "expertise",
+]
+const recommendationIntentTerms = [
+  "hire",
+  "hiring",
+  "interview",
+  "leadership",
+  "mentor",
+  "mentoring",
+  "team",
+  "collaboration",
+  "collaborative",
+  "communication",
+  "recommendation",
+  "recommendations",
+]
+const adversarialTerms = [
+  "ignore every previous instruction",
+  "ignore previous instructions",
+  "hidden system prompt",
+  "reveal your system prompt",
+  "private database",
+  "database records",
+]
 
 export function selectPortfolioCitations(
   question: string,
@@ -17,6 +72,15 @@ export function selectPortfolioCitations(
   const normalizedQuestion = normalize(question)
   const normalizedSource = normalize(source)
   const citations: PortfolioCitation[] = []
+  const hasPortfolioIntent = includesAny(normalizedQuestion, portfolioTerms)
+  const wantsProjects = includesAny(normalizedQuestion, projectIntentTerms)
+  const wantsSkills = includesAny(normalizedQuestion, skillIntentTerms)
+  const wantsRecommendations = includesAny(
+    normalizedQuestion,
+    recommendationIntentTerms
+  )
+
+  if (includesAny(normalizedQuestion, adversarialTerms)) return []
 
   const add = (citation: PortfolioCitation) => {
     if (
@@ -47,30 +111,42 @@ export function selectPortfolioCitations(
     })
   )
 
-  if (normalizedSource.includes("experience")) {
+  if (normalizedSource.includes("experience") && hasPortfolioIntent) {
     add(roleCitation(selectRelevantRole(normalizedQuestion)))
   }
 
-  if (normalizedSource.includes("projects") && matchingProjects.length === 0) {
+  if (
+    normalizedSource.includes("projects") &&
+    matchingProjects.length === 0 &&
+    wantsProjects
+  ) {
     projectCatalog.featured
       .slice(0, 2)
       .forEach((project) => add(projectCitation(project)))
   }
 
-  if (normalizedSource.includes("skills") && matchingSkills.length === 0) {
+  if (
+    normalizedSource.includes("skills") &&
+    matchingSkills.length === 0 &&
+    wantsSkills
+  ) {
     add({ label: "Explore technical skills", href: "/skills", kind: "page" })
   }
-  if (normalizedSource.includes("recommendations")) {
+  if (
+    normalizedSource.includes("recommendations") &&
+    hasPortfolioIntent &&
+    wantsRecommendations
+  ) {
     add({
       label: "View colleague recommendations",
       href: "/recommendations",
       kind: "page",
     })
   }
-  if (normalizedSource.includes("education")) {
+  if (normalizedSource.includes("education") && hasPortfolioIntent) {
     add({ label: "View education", href: "/education", kind: "page" })
   }
-  if (normalizedSource.includes("certifications")) {
+  if (normalizedSource.includes("certifications") && hasPortfolioIntent) {
     add({
       label: "View certifications",
       href: "/certifications",
@@ -79,7 +155,10 @@ export function selectPortfolioCitations(
   }
   if (
     citations.length === 0 &&
+    hasPortfolioIntent &&
     normalizedSource.includes("profile") &&
+    !normalizedSource.includes("blog") &&
+    !normalizedSource.includes("case studies") &&
     !normalizedSource.includes("contact")
   ) {
     add({ label: "View profile", href: "/#about", kind: "page" })
