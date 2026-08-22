@@ -279,24 +279,24 @@ export function ProjectCaseStudyPage({
         </figure>
       ) : null}
 
-      <div className="mt-14 grid gap-10 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-16">
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          <p className="text-xs font-normal text-muted-foreground">
+      <div className="mt-14 grid items-start gap-7 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">
+        <aside className="sticky top-14 z-30 flex items-center gap-2.5 overflow-x-auto rounded-xl border bg-background/95 px-2.5 py-2 backdrop-blur-sm lg:top-24 lg:grid lg:gap-0 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+          <p className="mr-1 shrink-0 text-xs font-medium text-muted-foreground lg:mb-2.5">
             On this page
           </p>
-          <nav aria-label="Case study sections" className="mt-2.5">
-            <ul className="flex flex-wrap gap-x-4 text-[0.8125rem] lg:grid lg:gap-0">
+          <nav aria-label="Case study sections">
+            <ul className="flex text-[0.8125rem] lg:grid">
               {sectionLinks.map(([id, label]) => (
-                <li key={id}>
+                <li key={id} className="shrink-0">
                   <a
                     href={`#${id}`}
                     aria-current={activeSection === id ? "location" : undefined}
                     onClick={() => setActiveSection(id)}
                     className={cn(
-                      "block border-l-2 py-[0.4375rem] pl-3 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none",
+                      "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l-2 lg:px-0 lg:py-1.75 lg:pl-3",
                       activeSection === id
-                        ? "border-emphasis-foreground font-semibold text-emphasis-foreground"
-                        : "border-transparent text-muted-foreground hover:text-foreground"
+                        ? "bg-muted font-semibold text-foreground lg:border-emphasis-foreground lg:bg-transparent"
+                        : "border-transparent hover:bg-muted hover:text-foreground lg:hover:bg-transparent"
                     )}
                   >
                     {label}
@@ -307,7 +307,7 @@ export function ProjectCaseStudyPage({
           </nav>
           <ExternalLink
             href={commitUrl}
-            className="mt-6 inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline"
+            className="mt-6 hidden items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline lg:inline-flex"
           >
             <GitCommitIcon className="size-4" />
             {caseStudy.verifiedBranch} @ {caseStudy.verifiedCommit.slice(0, 7)}

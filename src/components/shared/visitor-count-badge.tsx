@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { ViewIcon } from "@/components/ui/icons"
 import { Skeleton } from "@/components/ui/skeleton"
+import type { VisitorCount } from "@/features/visitor-count/use-visitor-count"
 
 function formatVisitorCount(count: number) {
   return new Intl.NumberFormat("en", {
@@ -10,7 +11,9 @@ function formatVisitorCount(count: number) {
   }).format(count)
 }
 
-export function VisitorCountBadge({ count }: { count: number | null }) {
+export function VisitorCountBadge({ count }: { count: VisitorCount }) {
+  const isUnavailable = count === "unavailable"
+
   return (
     <Badge
       variant="secondary"
@@ -18,12 +21,17 @@ export function VisitorCountBadge({ count }: { count: number | null }) {
       aria-label={
         count === null
           ? "Loading visitor count"
-          : `${count} ${count === 1 ? "visitor" : "visitors"}`
+          : isUnavailable
+            ? "Visitor count unavailable"
+            : `${count} ${count === 1 ? "visitor" : "visitors"}`
       }
+      title={isUnavailable ? "Visitor count unavailable" : undefined}
     >
       <ViewIcon className="size-3.5" />
       {count === null ? (
         <Skeleton className="h-3 w-10 bg-foreground/10" />
+      ) : isUnavailable ? (
+        <span aria-hidden="true">—</span>
       ) : (
         `${formatVisitorCount(count)} ${count === 1 ? "visitor" : "visitors"}`
       )}

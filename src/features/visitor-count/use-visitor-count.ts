@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 type ViewCountAction = (options: { data: string }) => Promise<number>
+export type VisitorCount = number | null | "unavailable"
 
 const pendingRequests = new Map<string, Promise<number>>()
 
@@ -15,7 +16,7 @@ export function useVisitorCount({
   getCount: ViewCountAction
   recordView: ViewCountAction
 }) {
-  const [count, setCount] = useState<number | null>(null)
+  const [count, setCount] = useState<VisitorCount>(null)
 
   useEffect(() => {
     const storageKey = `portfolio-viewed:${resourceKey}:${slug}`
@@ -44,7 +45,7 @@ export function useVisitorCount({
     }
 
     void request.then(setCount).catch(() => {
-      setCount(null)
+      setCount("unavailable")
       if (shouldRecord) {
         try {
           window.sessionStorage.removeItem(storageKey)

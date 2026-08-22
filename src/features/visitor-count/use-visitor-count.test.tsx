@@ -50,4 +50,27 @@ describe("useVisitorCount", () => {
     expect(getCount).toHaveBeenCalledTimes(1)
     expect(recordView).not.toHaveBeenCalled()
   })
+
+  it("leaves loading and permits a retry when recording fails", async () => {
+    const getCount = vi.fn().mockResolvedValue(0)
+    const recordView = vi
+      .fn()
+      .mockRejectedValue(new Error("Database unavailable"))
+
+    const { result } = renderHook(() =>
+      useVisitorCount({
+        resourceKey: "project-case-study",
+        slug: "postcraft",
+        getCount,
+        recordView,
+      })
+    )
+
+    await waitFor(() => expect(result.current).toBe("unavailable"))
+    expect(
+      window.sessionStorage.getItem(
+        "portfolio-viewed:project-case-study:postcraft"
+      )
+    ).toBeNull()
+  })
 })
