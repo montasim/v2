@@ -21,6 +21,7 @@ import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as RootRouteImport } from './routes/root'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardAvailabilityRouteImport } from './routes/dashboard.availability'
@@ -90,6 +91,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog_/$slug',
   path: '/blog/$slug',
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/root': typeof RootRoute
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/availability': typeof DashboardAvailabilityRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
@@ -165,6 +172,7 @@ export interface FileRoutesByTo {
   '/root': typeof RootRoute
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/dashboard/availability': typeof DashboardAvailabilityRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
@@ -188,6 +196,7 @@ export interface FileRoutesById {
   '/root': typeof RootRoute
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/blog_/$slug': typeof BlogSlugRoute
   '/dashboard/availability': typeof DashboardAvailabilityRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/root'
     | '/skills'
     | '/api/chat'
+    | '/auth/callback'
     | '/blog/$slug'
     | '/dashboard/availability'
     | '/dashboard/comments'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
     | '/root'
     | '/skills'
     | '/api/chat'
+    | '/auth/callback'
     | '/blog/$slug'
     | '/dashboard/availability'
     | '/dashboard/comments'
@@ -255,6 +266,7 @@ export interface FileRouteTypes {
     | '/root'
     | '/skills'
     | '/api/chat'
+    | '/auth/callback'
     | '/blog_/$slug'
     | '/dashboard/availability'
     | '/dashboard/comments'
@@ -278,6 +290,7 @@ export interface RootRouteChildren {
   RootRoute: typeof RootRoute
   SkillsRoute: typeof SkillsRoute
   ApiChatRoute: typeof ApiChatRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -367,6 +380,13 @@ declare module '@tanstack/react-router' {
       path: '/api/chat'
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog_/$slug': {
@@ -461,6 +481,7 @@ const rootRouteChildren: RootRouteChildren = {
   RootRoute: RootRoute,
   SkillsRoute: SkillsRoute,
   ApiChatRoute: ApiChatRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   BlogSlugRoute: BlogSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

@@ -1,9 +1,22 @@
-export const OWNER_OAUTH_CALLBACK_PATH = "/dashboard"
+export const OWNER_OAUTH_CALLBACK_PATH = "/auth/callback"
 
-export function isOwnerOAuthCallbackRequest(request: Request) {
-  const url = new URL(request.url)
-  return (
-    url.pathname === OWNER_OAUTH_CALLBACK_PATH &&
-    url.searchParams.has("neon_auth_session_verifier")
-  )
+type GetSession = () => Promise<{
+  data?: { user?: unknown } | null
+  error?: unknown
+}>
+type GetOwnerState = () => Promise<{ status: string }>
+
+export async function resolveOwnerOAuthDestination(
+  getSession: GetSession,
+  getOwnerState: GetOwnerState
+): Promise<"/dashboard" | "/root"> {
+  try {
+    const result = await getSession()
+    if (result.error || !result.data?.user) return "/root"
+
+    const ownerState = await getOwnerState()
+    return ownerState.status === "owner" ? "/dashboard" : "/root"
+  } catch {
+    return "/root"
+  }
 }

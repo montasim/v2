@@ -62,7 +62,10 @@ export function getNeonAuthProxyConfiguration() {
 }
 
 export async function getOwnerAuthState(): Promise<OwnerAuthState> {
-  if (!getOptionalNeonAuthConfiguration()) return { status: "unconfigured" }
+  const ownerEmail = process.env.OWNER_EMAIL?.trim()
+  if (!getOptionalNeonAuthConfiguration() || !ownerEmail) {
+    return { status: "unconfigured" }
+  }
 
   const cookies = getRequestHeader("cookie") ?? ""
   if (!cookies.includes(NEON_AUTH_COOKIE_PREFIX)) {
@@ -74,7 +77,7 @@ export async function getOwnerAuthState(): Promise<OwnerAuthState> {
   if (error) throw new Error("The owner session could not be verified.")
   if (!data?.user) return { status: "signed-out" }
 
-  if (!isPortfolioOwnerEmail(data.user.email)) {
+  if (!isPortfolioOwnerEmail(data.user.email, ownerEmail)) {
     await auth.signOut().catch(() => undefined)
     return { status: "forbidden", email: data.user.email }
   }

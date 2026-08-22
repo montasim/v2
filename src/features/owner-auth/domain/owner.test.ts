@@ -4,17 +4,22 @@ import {
   isPortfolioOwnerEmail,
   isGoogleAuthRequest,
   isOwnerAuthPath,
-  portfolioOwnerEmail,
 } from "@/features/owner-auth/domain/owner"
 
 describe("portfolio owner authorization", () => {
   it("accepts only the configured owner email", () => {
-    expect(isPortfolioOwnerEmail(portfolioOwnerEmail)).toBe(true)
+    const ownerEmail = "owner@example.com"
+
+    expect(isPortfolioOwnerEmail(ownerEmail, ownerEmail)).toBe(true)
     expect(
-      isPortfolioOwnerEmail(` ${portfolioOwnerEmail.toUpperCase()} `)
+      isPortfolioOwnerEmail(
+        ` ${ownerEmail.toUpperCase()} `,
+        ` ${ownerEmail.toUpperCase()} `
+      )
     ).toBe(true)
-    expect(isPortfolioOwnerEmail("someone@example.com")).toBe(false)
-    expect(isPortfolioOwnerEmail(null)).toBe(false)
+    expect(isPortfolioOwnerEmail("someone@example.com", ownerEmail)).toBe(false)
+    expect(isPortfolioOwnerEmail(null, ownerEmail)).toBe(false)
+    expect(isPortfolioOwnerEmail(ownerEmail, undefined)).toBe(false)
   })
 
   it("allows only the Google owner authentication endpoints", () => {

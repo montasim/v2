@@ -1,5 +1,3 @@
-export const portfolioOwnerEmail = "montasimmamun@gmail.com"
-
 const ownerAuthPaths = new Set([
   "callback/google",
   "get-session",
@@ -7,8 +5,15 @@ const ownerAuthPaths = new Set([
   "sign-out",
 ])
 
-export function isPortfolioOwnerEmail(email: string | null | undefined) {
-  return email?.trim().toLocaleLowerCase() === portfolioOwnerEmail
+export function isPortfolioOwnerEmail(
+  email: string | null | undefined,
+  ownerEmail: string | null | undefined
+) {
+  const normalizedOwnerEmail = ownerEmail?.trim().toLocaleLowerCase()
+  return (
+    Boolean(normalizedOwnerEmail) &&
+    email?.trim().toLocaleLowerCase() === normalizedOwnerEmail
+  )
 }
 
 export function isOwnerAuthPath(path: string) {
