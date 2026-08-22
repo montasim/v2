@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPublicAvailabilitySettings } from "@/features/availability/application/settings"
 import {
-  ClockIcon,
   DownloadSimpleIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
@@ -70,8 +69,7 @@ function OverviewPage() {
               <span className="text-border" aria-hidden="true">
                 /
               </span>
-              <span className="inline-flex items-center gap-1.5 font-normal text-muted-foreground">
-                <ClockIcon className="size-3.5" aria-hidden="true" />
+              <span className="font-normal text-muted-foreground">
                 {profile.location} ({profile.workPreferences.timeZone})
               </span>
             </p>
@@ -90,35 +88,35 @@ function OverviewPage() {
                 variant="outline"
                 className="font-medium text-foreground"
               >
-                <DownloadSimpleIcon />
+                <DownloadSimpleIcon className="size-[18px] sm:size-4" />
                 Download resume
               </ExternalAction>
               <ExternalAction
                 href={profileCatalog.socialUrl("linkedin")}
                 variant="ghost"
                 size="icon"
-                className="size-9 sm:size-8 xl:hidden [&_svg]:size-[18px] sm:[&_svg]:size-4"
+                className="size-9 sm:size-8 xl:hidden"
               >
                 <span className="sr-only">LinkedIn profile</span>
-                <LinkedinLogoIcon />
+                <LinkedinLogoIcon className="size-5 sm:size-4" />
               </ExternalAction>
               <ExternalAction
                 href={profileCatalog.socialUrl("github")}
                 variant="ghost"
                 size="icon"
-                className="size-9 sm:size-8 xl:hidden [&_svg]:size-[18px] sm:[&_svg]:size-4"
+                className="size-9 sm:size-8 xl:hidden"
               >
                 <span className="sr-only">GitHub profile</span>
-                <GithubLogoIcon />
+                <GithubLogoIcon className="size-5 sm:size-4" />
               </ExternalAction>
               <MailAction
                 email={profile.email}
                 variant="ghost"
                 size="icon"
-                className="size-9 sm:size-8 xl:hidden [&_svg]:size-[18px] sm:[&_svg]:size-4"
+                className="size-9 sm:size-8 xl:hidden"
               >
                 <span className="sr-only">Send email</span>
-                <EnvelopeSimpleIcon />
+                <EnvelopeSimpleIcon className="size-5 sm:size-4" />
               </MailAction>
             </div>
           </div>
