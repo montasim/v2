@@ -37,6 +37,7 @@ const request = {
 
 describe("createPortfolioAssistantResponse", () => {
   it("falls back when the primary provider fails before visible text", async () => {
+    const record = vi.fn().mockResolvedValue(undefined)
     const primary = provider("gemini", async () => {
       throw new Error("quota")
     })
@@ -53,7 +54,8 @@ describe("createPortfolioAssistantResponse", () => {
     const response = await createPortfolioAssistantResponse(
       request,
       undefined,
-      [primary, fallback]
+      [primary, fallback],
+      { record }
     )
     const body = await response.text()
 
@@ -63,6 +65,14 @@ describe("createPortfolioAssistantResponse", () => {
     expect(body).toContain('"usedFallback":true')
     expect(body).toContain('"provider":"groq"')
     expect(body).toContain('"citations"')
+    expect(record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        question: "What are his strongest skills?",
+        answer: "A grounded answer.",
+        provider: "groq",
+        usedFallback: true,
+      })
+    )
   })
 
   it("does not call fallback after the primary emits visible text", async () => {

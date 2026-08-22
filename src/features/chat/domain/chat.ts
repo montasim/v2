@@ -28,9 +28,11 @@ const chatEnvelopeSchema = z.object({
 
 export class InvalidChatRequestError extends Error {}
 
-export async function validateChatRequest(
-  input: unknown
-): Promise<{ messages: PortfolioUIMessage[]; question: string }> {
+export async function validateChatRequest(input: unknown): Promise<{
+  conversationId: string
+  messages: PortfolioUIMessage[]
+  question: string
+}> {
   const envelope = chatEnvelopeSchema.safeParse(input)
   if (!envelope.success) {
     throw new InvalidChatRequestError("The chat request is invalid.")
@@ -106,5 +108,9 @@ export async function validateChatRequest(
     )
   }
 
-  return { messages, question }
+  return {
+    conversationId: envelope.data.id ?? crypto.randomUUID(),
+    messages,
+    question,
+  }
 }

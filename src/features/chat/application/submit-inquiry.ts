@@ -5,6 +5,7 @@ import type { InquiryDelivery } from "@/features/chat/application/ports/inquiry-
 import { inquirySubmissionSchema } from "@/features/chat/domain/inquiry"
 import type { InquirySubmission } from "@/features/chat/domain/inquiry"
 import { CompositeInquiryDelivery } from "@/features/chat/infrastructure/inquiry/composite.server"
+import { DatabaseInquiryDelivery } from "@/features/chat/infrastructure/inquiry/database.server"
 import { GoogleSheetsInquiryDelivery } from "@/features/chat/infrastructure/inquiry/google-sheets.server"
 import { ResendInquiryDelivery } from "@/features/chat/infrastructure/inquiry/resend.server"
 import { checkInquiryRateLimit } from "@/features/chat/infrastructure/inquiry/rate-limit.server"
@@ -31,7 +32,8 @@ export const submitInquiry = createServerFn({ method: "POST" })
     await requirePermanentEmail(data.inquiry.email)
     checkInquiryRateLimit(data.inquiry.email)
     return submitInquiryWith(
-      new CompositeInquiryDelivery(new GoogleSheetsInquiryDelivery(), [
+      new CompositeInquiryDelivery(new DatabaseInquiryDelivery(), [
+        new GoogleSheetsInquiryDelivery(),
         new ResendInquiryDelivery(),
       ]),
       data.inquiry
