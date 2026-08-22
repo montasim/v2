@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { lazy, Suspense, useState } from "react"
 import { createAuthClient } from "@neondatabase/auth"
 import {
   createFileRoute,
@@ -38,6 +38,11 @@ import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-a
 import type { OwnerDashboardData } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 import { blogCatalog } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
+
+const LazyChatMarkdown = lazy(async () => {
+  const module = await import("@/features/chat/ui/chat-markdown")
+  return { default: module.ChatMarkdown }
+})
 
 export const Route = createFileRoute("/dashboard")({
   loader: async () => {
@@ -493,9 +498,13 @@ export function Conversations({
             </h2>
           </div>
           <div className="px-5 py-4">
-            <p className="text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
-              {item.answer}
-            </p>
+            <div className="text-sm leading-6 text-muted-foreground">
+              <Suspense
+                fallback={<p className="whitespace-pre-wrap">{item.answer}</p>}
+              >
+                <LazyChatMarkdown source={item.answer} />
+              </Suspense>
+            </div>
             <p className="mt-4 border-t pt-3 text-[0.6875rem] text-muted-foreground">
               {item.provider} · {item.model}
               {item.usedFallback ? " · fallback" : ""} · {item.source}
