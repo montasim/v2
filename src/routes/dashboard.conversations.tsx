@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 
+import { DashboardConversationsSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import { getOwnerConversations } from "@/features/owner-dashboard/application/dashboard"
 import { Conversations, DashboardHeader, Pagination } from "@/routes/dashboard"
 
@@ -10,6 +11,9 @@ export const Route = createFileRoute("/dashboard/conversations")({
   }),
   loaderDeps: ({ search: { page } }) => ({ page }),
   loader: ({ deps }) => getOwnerConversations({ data: deps }),
+  pendingComponent: DashboardConversationsSkeleton,
+  pendingMs: 150,
+  pendingMinMs: 300,
   component: DashboardConversationsPage,
 })
 

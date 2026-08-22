@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  ArrowUpRightIcon,
   BookOpenTextIcon,
   BriefcaseIcon,
   CalendarCheckIcon,
@@ -197,12 +198,23 @@ function OwnerDashboardPage() {
   )
 }
 
-export function DashboardHeader({ title }: { title: string }) {
+export function DashboardHeader({
+  title,
+  description,
+}: {
+  title: string
+  description?: string
+}) {
   return (
     <header className="mb-7 border-b pb-5">
       <h1 className="text-2xl font-semibold tracking-tight text-emphasis-foreground">
         {title}
       </h1>
+      {description ? (
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          {description}
+        </p>
+      ) : null}
     </header>
   )
 }
@@ -211,45 +223,171 @@ type DashboardData = OwnerDashboardData
 
 export function Overview({ data }: { data: DashboardData }) {
   const stats = [
-    ["Role & project inquiries", data.inquiries.length],
-    ["Saved AI exchanges", data.conversations.length],
-    ["Blog comments", data.comments.length],
-    ["Availability", data.availability.enabled ? "Live" : "Hidden"],
+    {
+      label: "Role & project inquiries",
+      value: data.inquiries.length,
+      detail: "Review opportunities",
+      to: "/dashboard/inquiries" as const,
+      icon: BriefcaseIcon,
+    },
+    {
+      label: "Saved AI exchanges",
+      value: data.conversations.length,
+      detail: "Review visitor questions",
+      to: "/dashboard/conversations" as const,
+      icon: ChatCenteredDotsIcon,
+    },
+    {
+      label: "Blog comments",
+      value: data.comments.length,
+      detail: "Moderate discussion",
+      to: "/dashboard/comments" as const,
+      icon: ChatCircleDotsIcon,
+    },
+    {
+      label: "Availability",
+      value: data.availability.enabled ? "Live" : "Hidden",
+      detail: "Manage public status",
+      to: "/dashboard/availability" as const,
+      icon: CalendarCheckIcon,
+    },
   ]
+
   return (
-    <div className="space-y-6">
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map(([label, value]) => (
-          <section key={label} className="rounded-xl border bg-background p-5">
-            <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="mt-3 text-2xl font-semibold tracking-tight">
-              {value}
-            </p>
-          </section>
-        ))}
-      </div>
-      <section className="rounded-xl border bg-background">
-        <div className="border-b px-5 py-4">
-          <h2 className="font-semibold">Recent inquiries</h2>
+    <div className="space-y-7">
+      <section aria-labelledby="activity-heading">
+        <div className="mb-3">
+          <h2
+            id="activity-heading"
+            className="text-sm font-semibold text-emphasis-foreground"
+          >
+            Portfolio activity
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            A direct path to each area that may need your attention.
+          </p>
         </div>
-        <div className="divide-y">
-          {data.inquiries.slice(0, 5).map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-4 text-sm"
+
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {stats.map(({ label, value, detail, to, icon: Icon }) => (
+            <Link
+              key={label}
+              to={to}
+              className="group flex min-h-40 flex-col rounded-xl border bg-background p-5 transition-colors hover:border-emphasis-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
-              <span className="font-semibold">{item.name}</span>
-              <span className="text-muted-foreground">
-                {item.type === "hire" ? item.role : item.projectType}
-              </span>
-              <time className="ml-auto text-xs text-muted-foreground">
-                {formatDate(item.createdAt)}
-              </time>
-            </div>
+              <div className="flex items-start justify-between gap-3">
+                <span className="grid size-9 place-items-center rounded-lg border bg-muted/35 text-emphasis-foreground">
+                  <Icon className="size-4" />
+                </span>
+                <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
+              </div>
+              <p className="mt-5 text-2xl font-semibold tracking-tight text-emphasis-foreground">
+                {value}
+              </p>
+              <p className="mt-1 text-xs font-medium text-emphasis-foreground">
+                {label}
+              </p>
+              <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">
+                {detail}
+              </p>
+            </Link>
           ))}
-          {!data.inquiries.length ? <Empty label="No inquiries yet." /> : null}
         </div>
       </section>
+
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(17rem,1fr)]">
+        <section className="overflow-hidden rounded-xl border bg-background">
+          <div className="flex items-center gap-4 border-b px-5 py-4">
+            <div>
+              <h2 className="font-semibold text-emphasis-foreground">
+                Recent inquiries
+              </h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Latest role and project requests.
+              </p>
+            </div>
+            <Button variant="ghost" size="sm" className="ml-auto" asChild>
+              <Link to="/dashboard/inquiries">
+                View all
+                <ArrowRightIcon />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="divide-y">
+            {data.inquiries.slice(0, 5).map((item) => (
+              <div
+                key={item.id}
+                className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4"
+              >
+                <Avatar className="size-9 ring-1 ring-border">
+                  <AvatarFallback>{initials(item.name)}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-emphasis-foreground">
+                    {item.name}
+                  </p>
+                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                    {item.type === "hire" ? item.role : item.projectType}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <Badge variant="secondary" className="capitalize">
+                    {item.type === "hire" ? "Role" : "Project"}
+                  </Badge>
+                  <time className="mt-1.5 block text-[0.6875rem] text-muted-foreground">
+                    {formatDate(item.createdAt)}
+                  </time>
+                </div>
+              </div>
+            ))}
+            {!data.inquiries.length ? (
+              <Empty label="No inquiries yet. New requests will appear here." />
+            ) : null}
+          </div>
+        </section>
+
+        <section className="overflow-hidden rounded-xl border bg-background">
+          <div className="border-b px-5 py-4">
+            <h2 className="font-semibold text-emphasis-foreground">
+              Public availability
+            </h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              What visitors currently see.
+            </p>
+          </div>
+          <div className="p-5">
+            <div className="flex items-center gap-3">
+              <span
+                className={cn(
+                  "size-2.5 rounded-full",
+                  data.availability.enabled
+                    ? "bg-emerald-500"
+                    : "bg-muted-foreground/45"
+                )}
+                aria-hidden="true"
+              />
+              <p className="text-lg font-semibold text-emphasis-foreground">
+                {data.availability.enabled ? "Visible to visitors" : "Hidden"}
+              </p>
+            </div>
+            <dl className="mt-5 divide-y overflow-hidden rounded-lg border">
+              <Detail
+                label="Availability"
+                value={data.availability.availability}
+              />
+              <Detail label="Work setup" value={data.availability.workSetup} />
+              <Detail label="Location" value={data.availability.location} />
+            </dl>
+            <Button variant="outline" className="mt-4 w-full" asChild>
+              <Link to="/dashboard/availability">
+                Edit availability
+                <ArrowRightIcon />
+              </Link>
+            </Button>
+          </div>
+        </section>
+      </div>
     </div>
   )
 }

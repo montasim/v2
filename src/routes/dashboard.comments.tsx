@@ -1,6 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { z } from "zod"
 
+import { DashboardCommentsSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import { getOwnerComments } from "@/features/owner-dashboard/application/dashboard"
 import { Comments, DashboardHeader, Pagination } from "@/routes/dashboard"
 
@@ -10,6 +11,9 @@ export const Route = createFileRoute("/dashboard/comments")({
   }),
   loaderDeps: ({ search: { page } }) => ({ page }),
   loader: ({ deps }) => getOwnerComments({ data: deps }),
+  pendingComponent: DashboardCommentsSkeleton,
+  pendingMs: 150,
+  pendingMinMs: 300,
   component: DashboardCommentsPage,
 })
 

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 
+import { DashboardInquiriesSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import { InquiryStats } from "@/components/dashboard/inquiry-stats"
 import { getOwnerInquiries } from "@/features/owner-dashboard/application/dashboard"
 import { DashboardHeader, Inquiries, Pagination } from "@/routes/dashboard"
@@ -11,6 +12,9 @@ export const Route = createFileRoute("/dashboard/inquiries")({
   }),
   loaderDeps: ({ search: { page } }) => ({ page }),
   loader: ({ deps }) => getOwnerInquiries({ data: deps }),
+  pendingComponent: DashboardInquiriesSkeleton,
+  pendingMs: 150,
+  pendingMinMs: 300,
   component: DashboardInquiriesPage,
 })
 
