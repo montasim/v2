@@ -34,9 +34,9 @@ import {
   getProjectViewCount,
   recordProjectView,
 } from "@/features/project-views/application/project-views"
+import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
-import { profileCatalog } from "@/lib/content/profile"
 import { cn } from "@/lib/utils"
 
 const coreSectionLinks = [
@@ -75,12 +75,7 @@ function githubRepositoryPath(githubUrl: string) {
     .replace(/\.git$/, "")
 }
 
-function CaseStudyFeedback({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
-  const projectTitle = caseStudy.project.title
-  const emailSubject = `A similar problem to ${projectTitle}`
-  const emailBody = `I read the ${projectTitle} case study and would like to discuss a similar problem.`
-  const emailHref = `mailto:${profileCatalog.profile.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
-
+function CaseStudyFeedback() {
   return (
     <section
       aria-labelledby="case-study-feedback-heading"
@@ -90,20 +85,19 @@ function CaseStudyFeedback({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
         id="case-study-feedback-heading"
         className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
       >
-        Was this relevant to your role?
+        Working through something similar?
       </h2>
       <p className="mt-3 max-w-[62ch] text-sm leading-6 text-muted-foreground">
-        Share a similar challenge and start a focused conversation.
+        Share your challenge, scope, and timeline to start a focused
+        conversation.
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Button
-          asChild
           className="bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
+          onClick={() => requestPortfolioInquiry({ inquiryType: "project" })}
         >
-          <a href={emailHref}>
-            <EnvelopeSimpleIcon />
-            Discuss similar problem
-          </a>
+          <EnvelopeSimpleIcon />
+          Discuss a project
         </Button>
       </div>
     </section>
@@ -487,7 +481,7 @@ export function ProjectCaseStudyPage({
         </div>
       </div>
 
-      <CaseStudyFeedback caseStudy={caseStudy} />
+      <CaseStudyFeedback />
 
       <footer className="mt-8 flex flex-wrap gap-3">
         <Button asChild variant="outline" size="lg" className="w-auto">
