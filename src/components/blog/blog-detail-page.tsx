@@ -21,6 +21,7 @@ import {
   ChatCenteredDotsIcon,
   CheckIcon,
   CircleDashedIcon,
+  EnvelopeSimpleIcon,
   ShareIcon,
 } from "@/components/ui/icons"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -36,6 +37,7 @@ import { blogCommentMessageSchema } from "@/features/blog-comments/domain/commen
 import type { BlogComment } from "@/features/blog-comments/domain/comment"
 import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
+import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import { blogCatalog } from "@/lib/content/blog"
 import type { BlogPost } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
@@ -502,6 +504,35 @@ function BlogDiscussion({
   )
 }
 
+function BlogProjectInquiry() {
+  return (
+    <section
+      aria-labelledby="blog-project-inquiry-heading"
+      className="mt-4 border-y py-8 sm:py-10"
+    >
+      <h2
+        id="blog-project-inquiry-heading"
+        className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+      >
+        Working through a similar challenge?
+      </h2>
+      <p className="mt-3 max-w-[62ch] text-sm leading-6 text-muted-foreground">
+        Share your context, constraints, and timeline to start a focused
+        conversation.
+      </p>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <Button
+          className="bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
+          onClick={() => requestPortfolioInquiry({ inquiryType: "project" })}
+        >
+          <EnvelopeSimpleIcon />
+          Discuss a project
+        </Button>
+      </div>
+    </section>
+  )
+}
+
 export function BlogDetailPage({
   post,
   nextPost,
@@ -761,6 +792,8 @@ export function BlogDetailPage({
               </section>
             ))}
           </article>
+
+          <BlogProjectInquiry />
 
           <BlogDiscussion post={post} onCommentCountChange={setCommentCount} />
 
