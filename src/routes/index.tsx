@@ -5,7 +5,6 @@ import {
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
-  MapPinIcon,
 } from "@/components/ui/icons"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -69,15 +68,8 @@ function OverviewPage() {
                 /
               </span>
               <span className="inline-flex items-center gap-1.5 font-normal text-muted-foreground">
-                <MapPinIcon className="size-3.5" />
-                {profile.location}
-              </span>
-              <span className="text-border" aria-hidden="true">
-                /
-              </span>
-              <span className="inline-flex items-center gap-1.5 font-normal text-muted-foreground">
                 <ClockIcon className="size-3.5" aria-hidden="true" />
-                {profile.workPreferences.timeZone}
+                {profile.location} ({profile.workPreferences.timeZone})
               </span>
             </p>
             <h1
