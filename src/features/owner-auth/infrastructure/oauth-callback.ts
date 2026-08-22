@@ -1,4 +1,4 @@
-export const OWNER_OAUTH_CALLBACK_PATH = "/blog"
+export const OWNER_OAUTH_CALLBACK_PATH = "/dashboard"
 
 export function isOwnerOAuthCallbackRequest(request: Request) {
   const url = new URL(request.url)

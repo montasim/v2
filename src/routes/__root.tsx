@@ -1,4 +1,9 @@
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
+import {
+  HeadContent,
+  Scripts,
+  createRootRoute,
+  useRouterState,
+} from "@tanstack/react-router"
 import type { ErrorComponentProps } from "@tanstack/react-router"
 
 import appCss from "../styles.css?url"
@@ -55,26 +60,40 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-[100dvh] bg-background text-foreground antialiased selection:bg-[#d8aa63] selection:text-[#151614]">
         <ThemeProvider>
-          <ConsoleBanner />
-          <CommandPalette />
-          <PortfolioKeyboardShortcuts />
-          <AppContextMenu>
-            <a
-              href="#main-content"
-              className="fixed top-4 left-4 z-[60] -translate-y-24 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus:translate-y-0 motion-reduce:transition-none"
-            >
-              Skip to content
-            </a>
-            <SiteHeader />
-            <SideRails />
-            <KonamiCommandCenter />
-            <PortfolioAssistant />
-            {children}
-            <SiteFooter />
-          </AppContextMenu>
+          <ApplicationFrame>{children}</ApplicationFrame>
         </ThemeProvider>
         <Scripts />
       </body>
     </html>
+  )
+}
+
+function ApplicationFrame({ children }: { children: React.ReactNode }) {
+  const isDashboard = useRouterState({
+    select: (state) => state.location.pathname.startsWith("/dashboard"),
+  })
+
+  if (isDashboard) return children
+
+  return (
+    <>
+      <ConsoleBanner />
+      <CommandPalette />
+      <PortfolioKeyboardShortcuts />
+      <AppContextMenu>
+        <a
+          href="#main-content"
+          className="fixed top-4 left-4 z-[60] -translate-y-24 rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus:translate-y-0 motion-reduce:transition-none"
+        >
+          Skip to content
+        </a>
+        <SiteHeader />
+        <SideRails />
+        <KonamiCommandCenter />
+        <PortfolioAssistant />
+        {children}
+        <SiteFooter />
+      </AppContextMenu>
+    </>
   )
 }

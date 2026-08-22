@@ -19,8 +19,7 @@ export const Route = createFileRoute("/root")({
 
     if (auth.status === "owner") {
       throw redirect({
-        to: "/blog",
-        search: { topic: "all", q: "" },
+        to: "/dashboard",
       })
     }
 

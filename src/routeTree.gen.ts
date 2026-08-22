@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CertificationsRouteImport } from './routes/certifications'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EducationRouteImport } from './routes/education'
 import { Route as ExperienceRouteImport } from './routes/experience'
 import { Route as ProjectsRouteImport } from './routes/projects'
@@ -21,6 +22,11 @@ import { Route as RootRouteImport } from './routes/root'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardAvailabilityRouteImport } from './routes/dashboard.availability'
+import { Route as DashboardCommentsRouteImport } from './routes/dashboard.comments'
+import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
+import { Route as DashboardInquiriesRouteImport } from './routes/dashboard.inquiries'
 import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 
@@ -37,6 +43,11 @@ const BlogRoute = BlogRouteImport.update({
 const CertificationsRoute = CertificationsRouteImport.update({
   id: '/certifications',
   path: '/certifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EducationRoute = EducationRouteImport.update({
@@ -84,6 +95,31 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAvailabilityRoute = DashboardAvailabilityRouteImport.update({
+  id: '/availability',
+  path: '/availability',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCommentsRoute = DashboardCommentsRouteImport.update({
+  id: '/comments',
+  path: '/comments',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardConversationsRoute = DashboardConversationsRouteImport.update({
+  id: '/conversations',
+  path: '/conversations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInquiriesRoute = DashboardInquiriesRouteImport.update({
+  id: '/inquiries',
+  path: '/inquiries',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/projects_/$slug',
   path: '/projects/$slug',
@@ -99,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRoute
   '/certifications': typeof CertificationsRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
   '/projects': typeof ProjectsRoute
@@ -108,7 +145,12 @@ export interface FileRoutesByFullPath {
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/availability': typeof DashboardAvailabilityRoute
+  '/dashboard/comments': typeof DashboardCommentsRoute
+  '/dashboard/conversations': typeof DashboardConversationsRoute
+  '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -124,7 +166,12 @@ export interface FileRoutesByTo {
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/dashboard/availability': typeof DashboardAvailabilityRoute
+  '/dashboard/comments': typeof DashboardCommentsRoute
+  '/dashboard/conversations': typeof DashboardConversationsRoute
+  '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/projects/$slug': typeof ProjectsSlugRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -132,6 +179,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/blog': typeof BlogRoute
   '/certifications': typeof CertificationsRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
   '/projects': typeof ProjectsRoute
@@ -141,7 +189,12 @@ export interface FileRoutesById {
   '/skills': typeof SkillsRoute
   '/api/chat': typeof ApiChatRoute
   '/blog_/$slug': typeof BlogSlugRoute
+  '/dashboard/availability': typeof DashboardAvailabilityRoute
+  '/dashboard/comments': typeof DashboardCommentsRoute
+  '/dashboard/conversations': typeof DashboardConversationsRoute
+  '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/projects_/$slug': typeof ProjectsSlugRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +203,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/certifications'
+    | '/dashboard'
     | '/education'
     | '/experience'
     | '/projects'
@@ -159,7 +213,12 @@ export interface FileRouteTypes {
     | '/skills'
     | '/api/chat'
     | '/blog/$slug'
+    | '/dashboard/availability'
+    | '/dashboard/comments'
+    | '/dashboard/conversations'
+    | '/dashboard/inquiries'
     | '/projects/$slug'
+    | '/dashboard/'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -175,13 +234,19 @@ export interface FileRouteTypes {
     | '/skills'
     | '/api/chat'
     | '/blog/$slug'
+    | '/dashboard/availability'
+    | '/dashboard/comments'
+    | '/dashboard/conversations'
+    | '/dashboard/inquiries'
     | '/projects/$slug'
+    | '/dashboard'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
     | '/blog'
     | '/certifications'
+    | '/dashboard'
     | '/education'
     | '/experience'
     | '/projects'
@@ -191,7 +256,12 @@ export interface FileRouteTypes {
     | '/skills'
     | '/api/chat'
     | '/blog_/$slug'
+    | '/dashboard/availability'
+    | '/dashboard/comments'
+    | '/dashboard/conversations'
+    | '/dashboard/inquiries'
     | '/projects_/$slug'
+    | '/dashboard/'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -199,6 +269,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRoute: typeof BlogRoute
   CertificationsRoute: typeof CertificationsRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   EducationRoute: typeof EducationRoute
   ExperienceRoute: typeof ExperienceRoute
   ProjectsRoute: typeof ProjectsRoute
@@ -233,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/certifications'
       fullPath: '/certifications'
       preLoaderRoute: typeof CertificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/education': {
@@ -298,6 +376,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/availability': {
+      id: '/dashboard/availability'
+      path: '/availability'
+      fullPath: '/dashboard/availability'
+      preLoaderRoute: typeof DashboardAvailabilityRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/comments': {
+      id: '/dashboard/comments'
+      path: '/comments'
+      fullPath: '/dashboard/comments'
+      preLoaderRoute: typeof DashboardCommentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/conversations': {
+      id: '/dashboard/conversations'
+      path: '/conversations'
+      fullPath: '/dashboard/conversations'
+      preLoaderRoute: typeof DashboardConversationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/inquiries': {
+      id: '/dashboard/inquiries'
+      path: '/inquiries'
+      fullPath: '/dashboard/inquiries'
+      preLoaderRoute: typeof DashboardInquiriesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/projects_/$slug': {
       id: '/projects_/$slug'
       path: '/projects/$slug'
@@ -315,10 +428,31 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardAvailabilityRoute: typeof DashboardAvailabilityRoute
+  DashboardCommentsRoute: typeof DashboardCommentsRoute
+  DashboardConversationsRoute: typeof DashboardConversationsRoute
+  DashboardInquiriesRoute: typeof DashboardInquiriesRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAvailabilityRoute: DashboardAvailabilityRoute,
+  DashboardCommentsRoute: DashboardCommentsRoute,
+  DashboardConversationsRoute: DashboardConversationsRoute,
+  DashboardInquiriesRoute: DashboardInquiriesRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRoute: BlogRoute,
   CertificationsRoute: CertificationsRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   EducationRoute: EducationRoute,
   ExperienceRoute: ExperienceRoute,
   ProjectsRoute: ProjectsRoute,
