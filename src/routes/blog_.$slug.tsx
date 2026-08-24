@@ -20,7 +20,9 @@ export const Route = createFileRoute("/blog_/$slug")({
             type: "article",
             image: loaderData.image.src,
             imageAlt: loaderData.image.alt,
-            publishedTime: `${loaderData.publishedAt}T00:00:00.000Z`,
+            publishedTime: loaderData.publishedAt
+              ? `${loaderData.publishedAt}T00:00:00.000Z`
+              : undefined,
             author: blogCatalog.author.name,
             section: loaderData.category,
           }

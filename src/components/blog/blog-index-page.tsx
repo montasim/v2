@@ -58,8 +58,10 @@ function ArticleCard({ post }: { post: BlogPost }) {
               {post.category}
             </p>
             <span className="shrink-0 text-[0.6875rem] text-muted-foreground">
-              {formatShortDate(post.publishedAt)} · {post.readingMinutes} min
-              read
+              {post.publishedAt
+                ? formatShortDate(post.publishedAt)
+                : "Project case study"}{" "}
+              · {post.readingMinutes} min read
             </span>
           </div>
           <h3 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-emphasis-foreground">
@@ -107,7 +109,10 @@ function FeaturedArticle({ post }: { post: BlogPost }) {
           </div>
           <div className="mt-8 flex items-center justify-between gap-4 text-xs text-muted-foreground">
             <span>
-              {formatShortDate(post.publishedAt)} · {post.readingMinutes} min
+              {post.publishedAt
+                ? formatShortDate(post.publishedAt)
+                : "Project case study"}{" "}
+              · {post.readingMinutes} min
             </span>
             <span className="flex items-center gap-1.5 font-semibold text-emphasis-foreground">
               Read article

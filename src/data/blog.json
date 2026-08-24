@@ -5,6 +5,7 @@
   },
   "posts": [
     {
+      "kind": "authored",
       "slug": "a-routine-is-not-a-timestamp",
       "projectId": "project-routempo",
       "title": "A Routine Is Not a Timestamp: Designing Routempo for Real-World Time",
@@ -73,6 +74,7 @@
       ]
     },
     {
+      "kind": "authored",
       "slug": "the-linkedin-page-is-untrusted-input",
       "projectId": "project-thoughtline",
       "title": "The LinkedIn Page Is Untrusted Input: Building a Safer AI Writing Assistant",
@@ -141,6 +143,7 @@
       ]
     },
     {
+      "kind": "authored",
       "slug": "i-refused-to-make-webgl-the-only-way-in",
       "projectId": "project-foliofarer",
       "title": "I Refused to Make WebGL the Only Way In: The Architecture Behind Foliofarer",
@@ -209,6 +212,7 @@
       ]
     },
     {
+      "kind": "authored",
       "slug": "from-useeffect-chaos-to-deterministic-systems",
       "title": "From useEffect Chaos to Deterministic Systems: Why I Rebuilt Our Biometric Pipeline with a Finite State Machine",
       "excerpt": "I deleted 40+ useEffects and replaced them with a Finite State Machine. That was the best decision I made for our biometric assessment pipeline.",
@@ -272,6 +276,258 @@
           ]
         }
       ]
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-vidquery",
+      "slug": "video-qa-without-processing-video",
+      "title": "I Stopped Treating Video Q&A as a Media-Processing Problem",
+      "category": "AI engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-mulalens",
+      "slug": "workplace-evidence-without-tracking-the-web",
+      "title": "Putting Workplace Evidence Where Job Seekers Need It—Without Tracking the Web",
+      "category": "Browser engineering",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-skillfoliox",
+      "slug": "making-agent-skills-comparable",
+      "title": "How I Made AI Agent Skills Comparable Without Hiding Source Drift",
+      "category": "Agent engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-ship-agent-skill",
+      "slug": "shipping-across-npm-github-and-agent-hosts",
+      "title": "Shipping Across npm, GitHub, and Agent Hosts Without Pretending It Is Atomic",
+      "category": "Release engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-verify-project-release",
+      "slug": "one-green-dashboard-does-not-prove-a-release",
+      "title": "A Release Is Not Done Because One Dashboard Is Green",
+      "category": "Release engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-write-project-readme",
+      "slug": "readme-generation-must-start-with-evidence",
+      "title": "Why I Made README Generation Start With Evidence",
+      "category": "Documentation systems",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-craft-github-release",
+      "slug": "release-notes-users-can-trust",
+      "title": "Turning Commit History Into Release Notes Users Can Trust",
+      "category": "Release engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-sync-project-metadata",
+      "slug": "no-single-source-of-truth-for-project-metadata",
+      "title": "There Is No Single Source of Truth for Project Metadata",
+      "category": "Developer tooling",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-prepare-netlify-deployment",
+      "slug": "local-build-does-not-prove-deployability",
+      "title": "A Successful Local Build Does Not Prove a Deployable System",
+      "category": "Platform engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-audit-frontend-consistency",
+      "slug": "audit-design-systems-before-screenshots",
+      "title": "Why I Audit Design Systems Before Fixing Screenshots",
+      "category": "Frontend architecture",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-prepare-github-project",
+      "slug": "making-a-codebase-public-safely",
+      "title": "Making a Codebase Public Is a Security and Operations Change",
+      "category": "Platform engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-publish-skill-to-skillfolio",
+      "slug": "publishing-one-entry-without-breaking-consumers",
+      "title": "Publishing One Catalog Entry Without Breaking Every Consumer",
+      "category": "Agent engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-ensure-social-preview",
+      "slug": "when-the-page-is-right-but-the-link-card-is-wrong",
+      "title": "The Page Looked Right. The Link Card Was Still Broken",
+      "category": "Web platform",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-bangladesh-location-registry",
+      "slug": "normalizing-location-data-without-erasing-provenance",
+      "title": "Normalizing Bangladesh Location Data Without Erasing Provenance",
+      "category": "Data engineering",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-educanvas",
+      "slug": "one-platform-three-institution-types-zero-forks",
+      "title": "One Education Platform, Three Institution Types, Zero Codebase Forks",
+      "category": "Application architecture",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-content-types-lite",
+      "slug": "a-content-type-library-that-refuses-feature-creep",
+      "title": "I Built a Smaller Content-Type Library by Refusing Feature Creep",
+      "category": "Library design",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-http-status-lite",
+      "slug": "http-status-codes-are-data",
+      "title": "HTTP Status Codes Are Data, Not a Switch Statement",
+      "category": "Library design",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-mime-types-lite",
+      "slug": "mime-lookup-is-not-content-validation",
+      "title": "Filename-to-MIME Lookup Is Useful—Until You Mistake It for Validation",
+      "category": "Library design",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-client-parser",
+      "slug": "designing-an-api-that-admits-user-agent-uncertainty",
+      "title": "User-Agent Parsing Is Heuristic. I Designed the API to Admit It",
+      "category": "Library design",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-b4joinacompany",
+      "slug": "company-research-without-a-fake-score",
+      "title": "How I Modeled Company Research Without Producing a Fake Score",
+      "category": "Evidence systems",
+      "topic": "career",
+      "featured": true
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-book-heaven",
+      "slug": "a-modular-monolith-for-a-book-platform",
+      "title": "Why I Chose a Modular Monolith for a Multi-Sided Book Platform",
+      "category": "System design",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-markdown-typing-svg",
+      "slug": "dynamic-readme-svgs-without-stored-images",
+      "title": "Generating Dynamic README SVGs Without Storing a Single Image",
+      "category": "API design",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-shrnkly",
+      "slug": "one-lifecycle-model-for-links-text-and-qr",
+      "title": "URLs, Text Shares, and QR Codes Needed One Lifecycle Model",
+      "category": "System design",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-github-readme-counter",
+      "slug": "a-readme-counter-measures-requests-not-people",
+      "title": "A README Counter Measures Requests, Not People",
+      "category": "API design",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-ramadan-clock",
+      "slug": "prayer-time-software-needs-provenance",
+      "title": "Prayer-Time Software Needs Provenance, Not False Precision",
+      "category": "Data engineering",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-devtools",
+      "slug": "fifty-developer-tools-without-fifty-architectures",
+      "title": "How I Scaled 50+ Developer Utilities Without 50 Architectures",
+      "category": "Frontend architecture",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-postcraft",
+      "slug": "scheduled-publishing-cannot-depend-on-an-open-tab",
+      "title": "Scheduled Publishing Cannot Depend on an Open Browser Tab",
+      "category": "Distributed systems",
+      "topic": "product",
+      "featured": true
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-tin-audit-checker",
+      "slug": "keeping-tax-id-lookups-out-of-the-server",
+      "title": "I Kept Tax-ID Lookups Out of the Server",
+      "category": "Privacy engineering",
+      "topic": "product",
+      "featured": false
     }
   ]
 }

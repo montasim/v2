@@ -779,14 +779,20 @@ export function BlogDetailPage({
           </div>
           <div className="flex min-w-0 flex-col justify-center py-4 pr-5 sm:border-l sm:px-5 sm:py-4.5">
             <span className="mb-1.5 text-xs font-medium text-muted-foreground">
-              Published
+              {post.publishedAt ? "Published" : "Article type"}
             </span>
-            <time
-              dateTime={post.publishedAt}
-              className="text-sm font-semibold text-foreground"
-            >
-              {formatDate(post.publishedAt)}
-            </time>
+            {post.publishedAt ? (
+              <time
+                dateTime={post.publishedAt}
+                className="text-sm font-semibold text-foreground"
+              >
+                {formatDate(post.publishedAt)}
+              </time>
+            ) : (
+              <span className="text-sm font-semibold text-foreground">
+                Project case study
+              </span>
+            )}
           </div>
           <div className="flex min-w-0 flex-col justify-center border-l py-4 pl-5 sm:px-5 sm:py-4.5">
             <span className="mb-1.5 text-xs font-medium text-muted-foreground">

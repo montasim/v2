@@ -6,6 +6,25 @@ import { projectCatalog } from "./projects"
 import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
+  it("loads authored and case-study-derived posts from one catalog", () => {
+    expect(blogCatalog.posts).toHaveLength(32)
+    expect(blogCatalog.authoredPosts).toHaveLength(4)
+    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(28)
+    expect(
+      blogCatalog.authoredPosts.every((post) => Boolean(post.publishedAt))
+    ).toBe(true)
+    expect(
+      blogCatalog.caseStudyDerivedPosts.every(
+        (post) => post.publishedAt === undefined
+      )
+    ).toBe(true)
+    expect(
+      blogCatalog.posts.every(
+        (post) => post.sections.length > 0 && post.readingMinutes > 0
+      )
+    ).toBe(true)
+  })
+
   it("provides routable featured articles", () => {
     expect(blogCatalog.featured.featured).toBe(true)
     expect(blogCatalog.featuredPosts.map((post) => post.slug)).toEqual([
@@ -75,7 +94,7 @@ describe("blog catalog", () => {
   })
 
   it("builds article-specific social preview metadata", () => {
-    const post = blogCatalog.featured
+    const post = blogCatalog.datedPosts[0]
     const socialImage = post.image.src.replace(/\.webp$/i, ".png")
     const metadata = createMeta(
       post.title,
@@ -111,5 +130,31 @@ describe("blog catalog", () => {
       name: "twitter:image:alt",
       content: post.image.alt,
     })
+  })
+
+  it("omits fabricated publication metadata for project notes", () => {
+    const post = blogCatalog.posts.find(
+      (item) => item.kind === "case-study-derived"
+    )
+    expect(post).toBeDefined()
+
+    const metadata = createMeta(
+      post!.title,
+      post!.excerpt,
+      `/blog/${post!.slug}`,
+      {
+        type: "article",
+        image: post!.image.src,
+        imageAlt: post!.image.alt,
+        author: blogCatalog.author.name,
+        section: post!.category,
+      }
+    )
+
+    expect(metadata.meta).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ property: "article:published_time" }),
+      ])
+    )
   })
 })
