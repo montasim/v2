@@ -21,6 +21,7 @@ import {
   ChatCenteredDotsIcon,
   CheckIcon,
   CircleDashedIcon,
+  ClockIcon,
   EnvelopeSimpleIcon,
   ShareIcon,
   TrashIcon,
@@ -742,11 +743,40 @@ export function BlogDetailPage({
 
       <header className="mt-8.5">
         <div className="flex flex-col items-start gap-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className="font-medium">
-              {post.category}
-            </Badge>
-            <VisitorCountBadge count={viewCount} />
+          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              {post.publishedAt ? (
+                <Badge
+                  variant="secondary"
+                  className="gap-1.5 font-medium tabular-nums"
+                >
+                  <ClockIcon className="size-3.5" />
+                  <time dateTime={post.publishedAt}>
+                    {formatDate(post.publishedAt)}
+                  </time>
+                </Badge>
+              ) : null}
+              <Badge variant="secondary" className="font-medium">
+                {post.category}
+              </Badge>
+              <VisitorCountBadge count={viewCount} />
+            </div>
+            <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+              <Button
+                type="button"
+                onClick={shareArticle}
+                className="bg-emphasis-foreground text-background"
+              >
+                {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
+                {shareStatus === "Link copied" ? "Copied" : "Share article"}
+              </Button>
+              <Button asChild variant="outline">
+                <a href="#discussion">
+                  <ChatCenteredDotsIcon />
+                  {commentCount} {commentCount === 1 ? "comment" : "comments"}
+                </a>
+              </Button>
+            </div>
           </div>
           <h1 className="w-full max-w-none text-3xl leading-tight font-bold tracking-[-0.025em] text-emphasis-foreground">
             {post.title}
@@ -755,69 +785,31 @@ export function BlogDetailPage({
         <p className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground">
           {post.excerpt}
         </p>
-
-        <div className="mt-9.5 grid grid-cols-2 border-y sm:grid-cols-[minmax(230px,1.4fr)_minmax(130px,.7fr)_minmax(120px,.65fr)_auto]">
-          <div className="col-span-2 flex min-w-0 flex-col justify-center py-4 sm:col-span-1 sm:px-5 sm:py-4.5 sm:pl-0">
-            <span className="mb-1.5 text-xs font-medium text-muted-foreground">
-              Written by
-            </span>
-            <div className="flex min-w-0 items-center gap-3 text-[0.8125rem] text-muted-foreground">
-              <img
-                src={blogCatalog.author.avatarUrl}
-                alt=""
-                width="38"
-                height="38"
-                className="size-9.5 rounded-full object-cover"
-              />
+        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-b pb-6 text-xs text-muted-foreground">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <img
+              src={blogCatalog.author.avatarUrl}
+              alt=""
+              width="32"
+              height="32"
+              className="size-8 rounded-full object-cover"
+            />
+            <span>
+              Written by{" "}
               <Link
                 to="/"
-                className="font-bold text-foreground underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="font-semibold text-foreground underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 {blogCatalog.author.name}
               </Link>
-            </div>
-          </div>
-          <div className="flex min-w-0 flex-col justify-center py-4 pr-5 sm:border-l sm:px-5 sm:py-4.5">
-            <span className="mb-1.5 text-xs font-medium text-muted-foreground">
-              {post.publishedAt ? "Published" : "Article type"}
-            </span>
-            {post.publishedAt ? (
-              <time
-                dateTime={post.publishedAt}
-                className="text-sm font-semibold text-foreground"
-              >
-                {formatDate(post.publishedAt)}
-              </time>
-            ) : (
-              <span className="text-sm font-semibold text-foreground">
-                Project case study
-              </span>
-            )}
-          </div>
-          <div className="flex min-w-0 flex-col justify-center border-l py-4 pl-5 sm:px-5 sm:py-4.5">
-            <span className="mb-1.5 text-xs font-medium text-muted-foreground">
-              Reading time
-            </span>
-            <span className="text-sm font-semibold text-foreground">
-              {post.readingMinutes} minutes
             </span>
           </div>
-          <div className="col-span-2 flex flex-wrap items-center gap-2 border-t py-4 sm:col-span-1 sm:justify-end sm:border-t-0 sm:border-l sm:pl-5">
-            <Button
-              type="button"
-              onClick={shareArticle}
-              className="bg-emphasis-foreground text-background"
-            >
-              {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
-              {shareStatus === "Link copied" ? "Copied" : "Share article"}
-            </Button>
-            <Button asChild variant="outline">
-              <a href="#discussion">
-                <ChatCenteredDotsIcon />
-                {commentCount} {commentCount === 1 ? "comment" : "comments"}
-              </a>
-            </Button>
-          </div>
+          <span aria-hidden="true" className="text-border">
+            ·
+          </span>
+          <span className="font-medium text-foreground">
+            {post.readingMinutes} min read
+          </span>
         </div>
         <p className="sr-only" role="status" aria-live="polite">
           {shareStatus}

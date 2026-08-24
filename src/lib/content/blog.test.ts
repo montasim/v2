@@ -15,7 +15,7 @@ describe("blog catalog", () => {
     ).toBe(true)
     expect(
       blogCatalog.caseStudyDerivedPosts.every(
-        (post) => post.publishedAt === undefined
+        (post) => post.publishedAt === blogCatalog.caseStudyPublishedAt
       )
     ).toBe(true)
     expect(
@@ -132,7 +132,7 @@ describe("blog catalog", () => {
     })
   })
 
-  it("omits fabricated publication metadata for project notes", () => {
+  it("publishes dated metadata for project case studies", () => {
     const post = blogCatalog.posts.find(
       (item) => item.kind === "case-study-derived"
     )
@@ -148,13 +148,13 @@ describe("blog catalog", () => {
         imageAlt: post!.image.alt,
         author: blogCatalog.author.name,
         section: post!.category,
+        publishedTime: `${post!.publishedAt}T00:00:00.000Z`,
       }
     )
 
-    expect(metadata.meta).not.toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ property: "article:published_time" }),
-      ])
-    )
+    expect(metadata.meta).toContainEqual({
+      property: "article:published_time",
+      content: `${post!.publishedAt}T00:00:00.000Z`,
+    })
   })
 })

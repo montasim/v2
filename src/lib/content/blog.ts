@@ -62,6 +62,7 @@ const blogSourceSchema = z.object({
     name: z.string().min(1),
     avatarUrl: z.string().startsWith("/"),
   }),
+  caseStudyPublishedAt: z.iso.date(),
   posts: z
     .array(
       z.discriminatedUnion("kind", [
@@ -105,7 +106,8 @@ function estimateReadingMinutes(
 }
 
 function resolveCaseStudyPost(
-  metadata: z.infer<typeof caseStudyDerivedPostSchema>
+  metadata: z.infer<typeof caseStudyDerivedPostSchema>,
+  publishedAt: string
 ) {
   const caseStudy = projectCaseStudyCatalog.findByProjectId(metadata.projectId)
 
@@ -150,6 +152,7 @@ function resolveCaseStudyPost(
   return resolvedPostSchema.parse({
     ...metadata,
     excerpt,
+    publishedAt,
     readingMinutes: estimateReadingMinutes(metadata.title, excerpt, sections),
     image: {
       src: projectImagePath(caseStudy.project.imageUrl, caseStudy.project.type),
@@ -161,8 +164,11 @@ function resolveCaseStudyPost(
 
 const blog = blogSchema.parse({
   author: blogSource.author,
+  caseStudyPublishedAt: blogSource.caseStudyPublishedAt,
   posts: blogSource.posts.map((post) =>
-    post.kind === "authored" ? post : resolveCaseStudyPost(post)
+    post.kind === "authored"
+      ? post
+      : resolveCaseStudyPost(post, blogSource.caseStudyPublishedAt)
   ),
 })
 type ResolvedBlogPost = z.infer<typeof resolvedPostSchema>
