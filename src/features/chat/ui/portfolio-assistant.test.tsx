@@ -337,7 +337,7 @@ describe("PortfolioAssistant chat navigation", () => {
       ).toBe("mailto:montasimmamun@gmail.com")
       expect(
         screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")
-      ).toBe("https://wa.me/8801722815469")
+      ).toBe("https://wa.me/montasimalmamun")
     }
   )
 
