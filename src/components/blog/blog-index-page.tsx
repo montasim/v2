@@ -30,6 +30,7 @@ function formatShortDate(date: string) {
   return new Intl.DateTimeFormat("en", {
     day: "numeric",
     month: "short",
+    year: "numeric",
     timeZone: "UTC",
   }).format(new Date(`${date}T00:00:00.000Z`))
 }
@@ -57,7 +58,8 @@ function ArticleCard({ post }: { post: BlogPost }) {
               {post.category}
             </p>
             <span className="shrink-0 text-[0.6875rem] text-muted-foreground">
-              {post.readingMinutes} min read
+              {formatShortDate(post.publishedAt)} · {post.readingMinutes} min
+              read
             </span>
           </div>
           <h3 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-emphasis-foreground">
