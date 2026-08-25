@@ -8,17 +8,22 @@ import { landingSectionIds } from "@/lib/site"
 let intersectionCallback: IntersectionObserverCallback
 const observe = vi.fn()
 const disconnect = vi.fn()
-const scrollIntoView = vi.fn()
 const scrollTo = vi.fn()
+const cancelAnimationFrame = vi.fn()
+const animationFrames: FrameRequestCallback[] = []
+let currentScrollY = 0
+const sectionTops: Record<string, number> = {}
+const requestAnimationFrame = vi.fn((callback: FrameRequestCallback) => {
+  animationFrames.push(callback)
+  return animationFrames.length
+})
 
 describe("useLandingNavigation", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    animationFrames.length = 0
+    currentScrollY = 0
     window.history.replaceState({}, "", "/")
-    Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
-      configurable: true,
-      value: scrollIntoView,
-    })
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: vi.fn().mockReturnValue({ matches: false }),
@@ -27,12 +32,33 @@ describe("useLandingNavigation", () => {
       configurable: true,
       value: scrollTo,
     })
+    Object.defineProperty(window, "scrollY", {
+      configurable: true,
+      get: () => currentScrollY,
+    })
+    scrollTo.mockImplementation((options: ScrollToOptions) => {
+      currentScrollY = options.top ?? 0
+    })
+    Object.defineProperty(window, "requestAnimationFrame", {
+      configurable: true,
+      value: requestAnimationFrame,
+    })
+    Object.defineProperty(window, "cancelAnimationFrame", {
+      configurable: true,
+      value: cancelAnimationFrame,
+    })
 
-    for (const sectionId of landingSectionIds) {
+    landingSectionIds.forEach((sectionId, index) => {
+      sectionTops[sectionId] = index * 1_000
       const section = document.createElement("section")
       section.id = sectionId
+      Object.defineProperty(section, "getBoundingClientRect", {
+        configurable: true,
+        value: () =>
+          ({ top: sectionTops[sectionId] - currentScrollY }) as DOMRect,
+      })
       document.body.append(section)
-    }
+    })
 
     Object.defineProperty(window, "IntersectionObserver", {
       configurable: true,
@@ -83,19 +109,26 @@ describe("useLandingNavigation", () => {
     expect(window.history.length).toBe(initialHistoryLength)
   })
 
-  it("keeps the destination hash stable during smooth navigation", () => {
+  it("keeps the destination hash stable during bounded smooth navigation", () => {
     const { result } = renderHook(() => useLandingNavigation("/", ""))
     const experience = document.getElementById("experience")!
     const projects = document.getElementById("projects")!
 
     act(() => expect(result.current.navigateToSection("projects")).toBe(true))
 
-    expect(scrollIntoView).toHaveBeenCalledWith({
-      behavior: "smooth",
-      block: "start",
-    })
+    expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
     expect(result.current.activeSection).toBe("projects")
     expect(window.location.hash).toBe("#projects")
+
+    act(() => animationFrames.shift()?.(0))
+    act(() => animationFrames.shift()?.(350))
+
+    expect(currentScrollY).toBeGreaterThan(0)
+    expect(currentScrollY).toBeLessThan(sectionTops.projects)
+
+    act(() => animationFrames.shift()?.(700))
+
+    expect(currentScrollY).toBe(sectionTops.projects)
 
     act(() =>
       intersectionCallback(
@@ -146,10 +179,29 @@ describe("useLandingNavigation", () => {
 
     act(() => result.current.navigateToSection("skills"))
 
-    expect(scrollIntoView).toHaveBeenCalledWith({
-      behavior: "auto",
-      block: "start",
+    expect(scrollTo).toHaveBeenCalledWith({
+      left: 0,
+      top: sectionTops.skills,
+      behavior: "instant",
     })
+  })
+
+  it("finishes a long upward section scroll within a bounded animation", () => {
+    currentScrollY = 5_710
+    const { result } = renderHook(() => useLandingNavigation("/", ""))
+
+    act(() => expect(result.current.navigateToSection("about")).toBe(true))
+
+    act(() => animationFrames.shift()?.(0))
+    act(() => animationFrames.shift()?.(350))
+
+    expect(currentScrollY).toBeGreaterThan(sectionTops.about)
+    expect(currentScrollY).toBeLessThan(5_710)
+
+    act(() => animationFrames.shift()?.(700))
+
+    expect(currentScrollY).toBe(sectionTops.about)
+    expect(window.location.hash).toBe("#about")
   })
 
   it("clears the section hash and keeps the home URL clean when navigating to the top", () => {
@@ -165,7 +217,11 @@ describe("useLandingNavigation", () => {
     expect(result.current.activeSection).toBe("about")
     expect(window.location.pathname).toBe("/")
     expect(window.location.hash).toBe("")
-    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: "smooth" })
+    expect(scrollTo).toHaveBeenCalledWith({
+      left: 0,
+      top: 0,
+      behavior: "instant",
+    })
 
     act(() =>
       intersectionCallback(
@@ -196,5 +252,24 @@ describe("useLandingNavigation", () => {
     )
 
     expect(window.location.hash).toBe("#experience")
+  })
+
+  it("finishes a long upward scroll within a bounded animation", () => {
+    currentScrollY = 5_710
+    window.history.replaceState({}, "", "/#recommendations")
+    const { result } = renderHook(() =>
+      useLandingNavigation("/", "#recommendations")
+    )
+
+    act(() => expect(result.current.navigateToTop()).toBe(true))
+
+    expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
+
+    act(() => animationFrames.shift()?.(0))
+    act(() => animationFrames.shift()?.(350))
+    act(() => animationFrames.shift()?.(700))
+
+    expect(currentScrollY).toBe(0)
+    expect(window.location.hash).toBe("")
   })
 })
