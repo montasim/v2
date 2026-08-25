@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPublicAvailabilitySettings } from "@/features/availability/application/settings"
 import {
+  ChatCircleDotsIcon,
   DownloadSimpleIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   LinkedinLogoIcon,
 } from "@/components/ui/icons"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   ExternalAction,
   MailAction,
@@ -22,6 +24,7 @@ import { ExperienceList } from "@/components/portfolio/experience-list"
 import { ProjectCard } from "@/components/portfolio/project-card"
 import { RecommendationCarousel } from "@/components/portfolio/recommendations"
 import { SkillGroups } from "@/components/portfolio/skill-groups"
+import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import { affiliationCatalog } from "@/lib/content/affiliations"
 import { experienceCatalog } from "@/lib/content/experience"
 import { profileCatalog } from "@/lib/content/profile"
@@ -214,6 +217,33 @@ function OverviewPage() {
         label="View all recommendations"
       >
         <RecommendationCarousel />
+      </PageSection>
+      <PageSection
+        id="contact"
+        headingId="contact-heading"
+        title="Contact"
+        revealVariant="subtle"
+        className="pb-16 sm:pb-20"
+      >
+        <div className="grid gap-7 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-10">
+          <div>
+            <p className="max-w-[60ch] text-xl leading-7 font-semibold text-emphasis-foreground">
+              Have something worth building or discussing?
+            </p>
+            <p className="mt-3 max-w-[60ch] text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
+              Send a role, project, or question. I’ll review the details and
+              reply directly.
+            </p>
+          </div>
+          <Button
+            size="lg"
+            className="w-fit bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80 sm:justify-self-end"
+            onClick={() => requestPortfolioInquiry({ inquiryType: "general" })}
+          >
+            <ChatCircleDotsIcon aria-hidden="true" />
+            Start a conversation
+          </Button>
+        </div>
       </PageSection>
     </PageShell>
   )
