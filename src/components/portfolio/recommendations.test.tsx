@@ -143,6 +143,20 @@ describe("RecommendationCarousel movement", () => {
     )
   })
 
+  it("links each detail card back to the LinkedIn recommendations", () => {
+    const firstRecommendation = recommendationCatalog.records[0]
+
+    render(<RecommendationDetails item={firstRecommendation} index={0} />)
+
+    const linkedInAction = screen.getByRole("link", {
+      name: "View on LinkedIn",
+    })
+    expect(linkedInAction.getAttribute("href")).toBe(
+      "https://www.linkedin.com/in/montasim/details/recommendations/"
+    )
+    expect(linkedInAction.parentElement?.className).toContain("justify-end")
+  })
+
   it("automatically advances cards to the right after seven seconds", async () => {
     render(<RecommendationCarousel />)
     await act(async () => {})

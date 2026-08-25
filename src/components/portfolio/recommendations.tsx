@@ -77,11 +77,11 @@ export function RecommendationDetails({
           </div>
           <p className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground sm:text-sm">
             <span className="inline-flex items-center gap-1.5">
-              <UsersThreeIcon aria-hidden="true" />
+              <UsersThreeIcon className="size-4" aria-hidden="true" />
               {item.relationship}
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <CalendarBlankIcon aria-hidden="true" />
+              <CalendarBlankIcon className="size-4" aria-hidden="true" />
               {item.date}
             </span>
           </p>
@@ -96,6 +96,17 @@ export function RecommendationDetails({
           <blockquote className="space-y-4 border-l-2 border-muted-foreground/40 pl-4 text-sm leading-relaxed text-muted-foreground">
             <RecommendationParagraphs text={item.text} quoted />
           </blockquote>
+        </div>
+        <div className="mt-5 flex justify-end">
+          <ExternalAction
+            href={linkedInRecommendationsUrl}
+            variant="link"
+            size="sm"
+            className="h-auto p-0 text-xs font-medium text-emphasis-foreground"
+          >
+            View on LinkedIn
+            <ArrowUpRightIcon />
+          </ExternalAction>
         </div>
       </article>
     </Card>
