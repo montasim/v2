@@ -173,7 +173,7 @@ export function SkillLink({
       className={cn(
         "gap-1.5 bg-card px-2.5 py-1.5 text-sm focus-within:ring-2 focus-within:ring-ring hover:border-foreground/40 hover:text-foreground",
         selectedSkill === evidence?.slug &&
-          "border-primary bg-primary text-primary-foreground hover:text-primary-foreground"
+          "border-emphasis-foreground bg-emphasis-foreground text-background hover:border-emphasis-foreground/80 hover:bg-emphasis-foreground/80 hover:text-background"
       )}
     >
       <Link
@@ -188,7 +188,7 @@ export function SkillLink({
           <span
             className={cn(
               "ml-0.5 text-[0.6875rem] text-muted-foreground",
-              selectedSkill === evidence.slug && "text-primary-foreground/75"
+              selectedSkill === evidence.slug && "text-background/75"
             )}
             aria-label={`${evidence.total} supporting ${evidence.total === 1 ? "record" : "records"}`}
           >
