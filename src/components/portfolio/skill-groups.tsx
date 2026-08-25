@@ -136,7 +136,7 @@ export function SkillGroups({
               id={`${group.id}-heading`}
               className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground"
             >
-              <GroupIcon aria-hidden="true" />
+              <GroupIcon className="size-5 shrink-0" aria-hidden="true" />
               {group.category}
             </h2>
             <ul className="flex flex-wrap gap-2">
@@ -182,7 +182,7 @@ export function SkillLink({
         hash="evidence"
         aria-current={selectedSkill === evidence?.slug ? "true" : undefined}
       >
-        <SkillIcon className="size-3.5" aria-hidden="true" />
+        <SkillIcon className="size-4 shrink-0" aria-hidden="true" />
         {skill}
         {evidence && evidence.total > 0 ? (
           <span
