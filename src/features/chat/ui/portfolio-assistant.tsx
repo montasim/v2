@@ -2,7 +2,7 @@ import * as React from "react"
 import { useChat } from "@ai-sdk/react"
 import {
   ArrowClockwiseIcon,
-  ArrowLeftIcon,
+  ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
   ArrowUpIcon,
   BracketsCurlyIcon,
@@ -249,7 +249,7 @@ export function PortfolioAssistant() {
                 onClick={returnToAssistant}
                 className="inline-flex min-h-8 items-center gap-1.5 rounded-lg pr-2 text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <ArrowLeftIcon className="size-[15px]" />
+                <ArrowLeftCompactIcon className="size-[15px]" />
                 Back to assistant
               </button>
             </div>
