@@ -28,7 +28,6 @@ import {
   CircleDashedIcon,
   DatabaseIcon,
   EnvelopeSimpleIcon,
-  LogoutIcon,
   MoonIcon,
   SquaresFourIcon,
   SunIcon,
@@ -189,12 +188,10 @@ function OwnerDashboardPage() {
                 disabled={signingOut}
                 aria-label="Sign out"
               >
-                <span className="hidden sm:inline">Sign out</span>
+                <span>Sign out</span>
                 {signingOut ? (
                   <CircleDashedIcon className="size-3.5 animate-spin" />
-                ) : (
-                  <LogoutIcon className="size-3.5" />
-                )}
+                ) : null}
               </Button>
             </div>
           </div>
