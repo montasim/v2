@@ -41,7 +41,7 @@ export async function validateChatRequest(input: unknown): Promise<{
   conversationId: string
   messages: PortfolioUIMessage[]
   question: string
-  clientMessageId?: string
+  clientMessageId: string
 }> {
   const envelope = chatEnvelopeSchema.safeParse(input)
   if (!envelope.success) {
@@ -102,20 +102,16 @@ export async function validateChatRequest(input: unknown): Promise<{
 
   const lastMessage = messages.at(-1)
   if (
-    lastMessage?.id !== undefined &&
-    (!lastMessage.id.trim() || lastMessage.id.length > MAX_CHAT_ID_CHARACTERS)
+    !lastMessage?.id?.trim() ||
+    lastMessage.id.length > MAX_CHAT_ID_CHARACTERS
   ) {
     throw new InvalidChatRequestError("The client message ID is invalid.")
   }
-  const question = lastMessage?.parts
+  const question = lastMessage.parts
     .map((part) => part.text)
     .join("")
     .trim()
-  if (
-    lastMessage?.role !== "user" ||
-    !question ||
-    question.length > MAX_CHAT_MESSAGE_CHARACTERS
-  ) {
+  if (!question || question.length > MAX_CHAT_MESSAGE_CHARACTERS) {
     throw new InvalidChatRequestError(
       `The latest question must be between 1 and ${MAX_CHAT_MESSAGE_CHARACTERS} characters.`
     )

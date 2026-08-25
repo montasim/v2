@@ -2,6 +2,7 @@ import { createUIMessageStreamResponse } from "ai"
 import type { UIMessageChunk } from "ai"
 
 import type { ChatRequestLimiter } from "@/features/chat/application/ports/chat-request-limiter"
+import type { ChatQuestionRecorder } from "@/features/chat/application/ports/chat-question-recorder"
 import type { PortfolioChat } from "@/features/chat/domain/portfolio-chat"
 import {
   ChatDynamicRateLimitError,
@@ -22,10 +23,12 @@ import {
   getChatVisitorHash,
 } from "@/features/chat/infrastructure/chat-rate-limit.server"
 import { DatabaseChatExchangeRecorder } from "@/features/chat/infrastructure/chat-exchanges.server"
+import { DatabaseChatQuestionRecorder } from "@/features/chat/infrastructure/chat-questions.server"
 import { DatabaseChatRequestCoordinator } from "@/features/chat/infrastructure/chat-request-coordinator.server"
 import { DatabaseProviderCircuitStore } from "@/features/chat/infrastructure/provider-circuit.server"
 import { getPortfolioExactAnswerCatalog } from "@/features/chat/knowledge/exact-answer-catalog"
 import { getCompiledPortfolioKnowledge } from "@/features/chat/knowledge/portfolio-knowledge.server"
+import { redactChatText } from "@/features/chat/domain/chat-redaction"
 import { logger } from "@/lib/logger.server"
 
 const MAX_CHAT_BODY_BYTES = 16_000
@@ -36,6 +39,7 @@ const BROAD_REQUEST_LIMIT = 60
 interface ChatHttpDependencies {
   chat?: PortfolioChat
   limiter?: ChatRequestLimiter
+  questionRecorder?: ChatQuestionRecorder
   deadlineMs?: number
 }
 
@@ -61,6 +65,16 @@ export async function handlePortfolioChatRequest(
   try {
     const body = await readLimitedBody(request, MAX_CHAT_BODY_BYTES, signal)
     const validated = await validateChatRequest(JSON.parse(body) as unknown)
+    const questionRecorder =
+      dependencies.questionRecorder ?? new DatabaseChatQuestionRecorder()
+    await withSignal(
+      questionRecorder.recordQuestion({
+        conversationId: validated.conversationId,
+        clientMessageId: validated.clientMessageId,
+        question: redactChatText(validated.question).trim(),
+      }),
+      signal
+    )
     if (await getChatModerationError(validated.question)) {
       return errorResponse(CHAT_MODERATION_ERROR, 400)
     }

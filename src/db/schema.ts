@@ -97,6 +97,22 @@ export const assistantExchanges = pgTable(
   ]
 )
 
+export const assistantChatQuestions = pgTable(
+  "assistant_chat_questions",
+  {
+    conversationId: varchar("conversation_id", { length: 120 }).notNull(),
+    clientMessageId: varchar("client_message_id", { length: 120 }).notNull(),
+    question: text("question").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.conversationId, table.clientMessageId] }),
+    index("assistant_chat_questions_created_idx").on(table.createdAt),
+  ]
+)
+
 export const assistantChatRequests = pgTable(
   "assistant_chat_requests",
   {

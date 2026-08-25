@@ -57,6 +57,13 @@
       "when": 1787584868032,
       "tag": "0008_solid_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787682836366,
+      "tag": "0009_amazing_unus",
+      "breakpoints": true
     }
   ]
 }

@@ -55,12 +55,17 @@ function chat(): PortfolioChat {
   }
 }
 
+const questionRecorder = {
+  recordQuestion: vi.fn(async () => undefined),
+}
+
 describe("portfolio chat HTTP handler", () => {
   it("adapts a fully resolved answer to the existing AI SDK UI protocol", async () => {
     const assistant = chat()
     const response = await handlePortfolioChatRequest(request(), {
       chat: assistant,
       limiter: new InMemoryChatRequestLimiter(),
+      questionRecorder,
     })
     const body = await response.text()
 
@@ -106,6 +111,7 @@ describe("portfolio chat HTTP handler", () => {
     const response = await handlePortfolioChatRequest(request(), {
       chat: assistant,
       limiter: new InMemoryChatRequestLimiter(),
+      questionRecorder,
     })
     const body = await response.text()
 
@@ -119,7 +125,7 @@ describe("portfolio chat HTTP handler", () => {
     const limiter = new InMemoryChatRequestLimiter()
     const crossSite = await handlePortfolioChatRequest(
       request("question", { origin: "https://attacker.example" }),
-      { chat: assistant, limiter }
+      { chat: assistant, limiter, questionRecorder }
     )
     const nonJson = await handlePortfolioChatRequest(
       new Request("https://montasim.dev/api/chat", {
@@ -127,11 +133,11 @@ describe("portfolio chat HTTP handler", () => {
         headers: { "content-type": "text/plain" },
         body: "question",
       }),
-      { chat: assistant, limiter }
+      { chat: assistant, limiter, questionRecorder }
     )
     const oversized = await handlePortfolioChatRequest(
       request("question", { "content-length": "20000" }),
-      { chat: assistant, limiter }
+      { chat: assistant, limiter, questionRecorder }
     )
 
     expect(crossSite.status).toBe(403)
@@ -143,32 +149,56 @@ describe("portfolio chat HTTP handler", () => {
   it("rejects offensive messages before rate limiting or chat resolution", async () => {
     const assistant = chat()
     const limiter = new InMemoryChatRequestLimiter()
+    const recordQuestion = vi.fn(async () => undefined)
 
     const response = await handlePortfolioChatRequest(
       request("You are a fucking idiot."),
-      { chat: assistant, limiter }
+      { chat: assistant, limiter, questionRecorder: { recordQuestion } }
     )
 
     expect(response.status).toBe(400)
     await expect(response.json()).resolves.toEqual({
       error: CHAT_MODERATION_ERROR,
     })
+    expect(recordQuestion).toHaveBeenCalledOnce()
     expect(assistant.answer).not.toHaveBeenCalled()
   })
 
   it("rate-limits repeated traffic before resolving an answer", async () => {
     const assistant = chat()
     const limiter = new InMemoryChatRequestLimiter()
+    const recordQuestion = vi.fn(async () => undefined)
     let response: Response | undefined
     for (let index = 0; index < 61; index += 1) {
       response = await handlePortfolioChatRequest(request(), {
         chat: assistant,
         limiter,
+        questionRecorder: { recordQuestion },
       })
     }
     expect(response?.status).toBe(429)
     expect(response?.headers.get("retry-after")).toBeTruthy()
+    expect(recordQuestion).toHaveBeenCalledTimes(61)
     expect(assistant.answer).toHaveBeenCalledTimes(60)
+  })
+
+  it("does not run limits or AI when the question cannot be stored", async () => {
+    const assistant = chat()
+    const consume = vi.fn()
+
+    const response = await handlePortfolioChatRequest(request(), {
+      chat: assistant,
+      limiter: { consume },
+      questionRecorder: {
+        recordQuestion: vi.fn(async () => {
+          throw new Error("database unavailable")
+        }),
+      },
+    })
+
+    expect(response.status).toBe(503)
+    expect(consume).not.toHaveBeenCalled()
+    expect(assistant.answer).not.toHaveBeenCalled()
   })
 
   it("applies only the broad HTTP limit before deep chat resolution", async () => {
@@ -184,6 +214,7 @@ describe("portfolio chat HTTP handler", () => {
       {
         chat: assistant,
         limiter: { consume },
+        questionRecorder,
       }
     )
 
@@ -196,6 +227,7 @@ describe("portfolio chat HTTP handler", () => {
   })
 
   it("maps a deep dynamic limit to a retryable 429 response", async () => {
+    const recordQuestion = vi.fn(async () => undefined)
     const assistant: PortfolioChat = {
       answer: vi.fn(async () => {
         throw new ChatDynamicRateLimitError(37)
@@ -205,10 +237,16 @@ describe("portfolio chat HTTP handler", () => {
     const response = await handlePortfolioChatRequest(request(), {
       chat: assistant,
       limiter: new InMemoryChatRequestLimiter(),
+      questionRecorder: { recordQuestion },
     })
 
     expect(response.status).toBe(429)
     expect(response.headers.get("retry-after")).toBe("37")
+    expect(recordQuestion).toHaveBeenCalledWith({
+      conversationId: "conversation",
+      clientMessageId: "question",
+      question: "What are Montasim's strongest technical skills?",
+    })
   })
 
   it("ends the whole request before the serverless execution deadline", async () => {
@@ -219,6 +257,7 @@ describe("portfolio chat HTTP handler", () => {
     const response = await handlePortfolioChatRequest(request(), {
       chat: assistant,
       limiter: new InMemoryChatRequestLimiter(),
+      questionRecorder,
       deadlineMs: 10,
     })
 
