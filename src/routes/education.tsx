@@ -38,7 +38,7 @@ function Page() {
           <EntityAvatar
             src={item.logoUrl}
             fallback={item.logo}
-            className="rounded-lg"
+            className="rounded-lg border-0"
           />
           <div>
             <p className="mb-2 text-sm text-muted-foreground">{item.period}</p>
