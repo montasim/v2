@@ -69,7 +69,11 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
                 Try again
               </Button>
             ) : (
-              <InternalAction to="/" size="lg" className={actionClassName}>
+              <InternalAction
+                to="/"
+                size="lg"
+                className={`${actionClassName} bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80`}
+              >
                 <ArrowLeftCompactIcon />
                 Back to overview
               </InternalAction>

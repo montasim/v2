@@ -64,7 +64,7 @@ export function DetailPage({
           to="/"
           variant="outline"
           size="lg"
-          className={`${actionClassName} bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80 hover:text-background`}
+          className={actionClassName}
         >
           <ArrowLeftCompactIcon className="group-hover/action:-translate-x-0.5" />
           Back to overview
