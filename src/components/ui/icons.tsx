@@ -6,8 +6,10 @@ import HugeCaretDownIcon from "@hugeicons/core-free-icons/ArrowDown01Icon"
 import HugeCaretLeftIcon from "@hugeicons/core-free-icons/ArrowLeft01Icon"
 import HugeArrowLeftIcon from "@hugeicons/core-free-icons/ArrowLeft02Icon"
 import HugeArrowLeftCompactIcon from "@hugeicons/core-free-icons/ArrowLeft04Icon"
+import HugeArrowLeftDoubleIcon from "@hugeicons/core-free-icons/ArrowLeftDoubleIcon"
 import HugeArrowRightIcon from "@hugeicons/core-free-icons/ArrowRight02Icon"
 import HugeArrowRightCompactIcon from "@hugeicons/core-free-icons/ArrowRight04Icon"
+import HugeArrowRightDoubleIcon from "@hugeicons/core-free-icons/ArrowRightDoubleIcon"
 import HugeArrowUpIcon from "@hugeicons/core-free-icons/ArrowUp02Icon"
 import HugeArrowUpCompactIcon from "@hugeicons/core-free-icons/ArrowUp04Icon"
 import HugeArrowUpRightIcon from "@hugeicons/core-free-icons/ArrowUpRight02Icon"
@@ -140,10 +142,18 @@ export const ArrowLeftCompactIcon = createIcon(
   HugeArrowLeftCompactIcon,
   "ArrowLeftCompactIcon"
 )
+export const ArrowLeftDoubleIcon = createIcon(
+  HugeArrowLeftDoubleIcon,
+  "ArrowLeftDoubleIcon"
+)
 export const ArrowRightIcon = createIcon(HugeArrowRightIcon, "ArrowRightIcon")
 export const ArrowRightCompactIcon = createIcon(
   HugeArrowRightCompactIcon,
   "ArrowRightCompactIcon"
+)
+export const ArrowRightDoubleIcon = createIcon(
+  HugeArrowRightDoubleIcon,
+  "ArrowRightDoubleIcon"
 )
 export const ArrowsClockwiseIcon = createIcon(
   HugeArrowsClockwiseIcon,
