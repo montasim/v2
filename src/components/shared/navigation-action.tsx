@@ -19,7 +19,6 @@ export type InternalPath =
   | "/education"
   | "/certifications"
   | "/recommendations"
-  | "/resume"
 
 export function InternalAction({
   to,

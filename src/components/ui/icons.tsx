@@ -291,7 +291,6 @@ export const PlugsConnectedIcon = createIcon(
 )
 export const PolygonIcon = createIcon(HugePolygonIcon, "PolygonIcon")
 export const QuotesIcon = createIcon(HugeQuotesIcon, "QuotesIcon")
-export const ReadCvLogoIcon = createIcon(HugeFileDocIcon, "ReadCvLogoIcon")
 export const RulerIcon = createIcon(HugeRulerIcon, "RulerIcon")
 export const SearchIcon = createIcon(HugeSearchIcon, "SearchIcon")
 export const ShareIcon = createIcon(HugeShareIcon, "ShareIcon")

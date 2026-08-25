@@ -2,7 +2,6 @@ import type { ReactNode } from "react"
 import { Link } from "@tanstack/react-router"
 import {
   ArrowLeftCompactIcon,
-  ArrowRightCompactIcon,
   DownloadSimpleIcon,
   EnvelopeSimpleIcon,
 } from "@/components/ui/icons"
@@ -65,19 +64,10 @@ export function DetailPage({
           to="/"
           variant="outline"
           size="lg"
-          className={actionClassName}
+          className={`${actionClassName} bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80 hover:text-background`}
         >
           <ArrowLeftCompactIcon className="group-hover/action:-translate-x-0.5" />
           Back to overview
-        </InternalAction>
-        <InternalAction
-          to="/resume"
-          variant="outline"
-          size="lg"
-          className={actionClassName}
-        >
-          View resume
-          <ArrowRightCompactIcon className="group-hover/action:translate-x-0.5" />
         </InternalAction>
         <DownloadAction
           href={profileCatalog.profile.resumeDownloadUrl}

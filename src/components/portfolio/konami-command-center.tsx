@@ -5,7 +5,6 @@ import {
   BriefcaseIcon,
   CodeIcon,
   GithubLogoIcon,
-  ReadCvLogoIcon,
 } from "@/components/ui/icons"
 
 import { profileCatalog } from "@/lib/content/profile"
@@ -32,13 +31,6 @@ const internalCommands = [
     description: "Review roles, outcomes, and reliability work",
     to: "/experience" as const,
     icon: BriefcaseIcon,
-  },
-  {
-    key: "r",
-    label: "Read the full résumé",
-    description: "See the complete professional profile",
-    to: "/resume" as const,
-    icon: ReadCvLogoIcon,
   },
 ] as const
 
