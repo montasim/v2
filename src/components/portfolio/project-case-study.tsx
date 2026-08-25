@@ -478,25 +478,30 @@ export function ProjectCaseStudyPage({
               className="mt-4"
             />
           </section>
+
+          <CaseStudyFeedback />
+
+          <footer className="mt-8 flex flex-wrap gap-3">
+            <Button asChild variant="outline" size="lg" className="w-auto">
+              <Link to="/projects">
+                <ArrowLeftCompactIcon />
+                All projects
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="lg"
+              className="ml-auto w-auto"
+            >
+              <Link to="/projects/$slug" params={{ slug: nextCaseStudy.slug }}>
+                Next: {nextCaseStudy.project.title}
+                <ArrowRightCompactIcon />
+              </Link>
+            </Button>
+          </footer>
         </div>
       </div>
-
-      <CaseStudyFeedback />
-
-      <footer className="mt-8 flex flex-wrap gap-3">
-        <Button asChild variant="outline" size="lg" className="w-auto">
-          <Link to="/projects">
-            <ArrowLeftCompactIcon />
-            All projects
-          </Link>
-        </Button>
-        <Button asChild variant="outline" size="lg" className="ml-auto w-auto">
-          <Link to="/projects/$slug" params={{ slug: nextCaseStudy.slug }}>
-            Next: {nextCaseStudy.project.title}
-            <ArrowRightCompactIcon />
-          </Link>
-        </Button>
-      </footer>
     </PageShell>
   )
 }
