@@ -29,11 +29,12 @@ import { Dialog } from "radix-ui"
 import { Button } from "@/components/ui/button"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
-import type { PortfolioUIMessage } from "@/features/chat/domain/chat"
+import type {
+  PortfolioContactAction,
+  PortfolioUIMessage,
+} from "@/features/chat/domain/chat"
+import { formatChatResponseProvenance } from "@/features/chat/domain/chat-response-provenance"
 import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
-import { selectPortfolioCitations } from "@/features/chat/domain/portfolio-citations"
-import { getContactGuidance } from "@/features/chat/domain/contact-intent"
-import type { ContactIntent } from "@/features/chat/domain/contact-intent"
 import {
   createInquiryState,
   inquiryReducer,
@@ -41,9 +42,6 @@ import {
   toInquirySubmission,
 } from "@/features/chat/domain/inquiry"
 import type { InquiryState, InquiryType } from "@/features/chat/domain/inquiry"
-import { getPreparedAnswer } from "@/features/chat/domain/prepared-answers"
-import type { PreparedAnswerId } from "@/features/chat/domain/prepared-answers"
-import { getStaticFaqAnswer } from "@/features/chat/domain/static-faq"
 import {
   isPortfolioAssistantInquiryRequest,
   portfolioAssistantInquiryEvent,
@@ -68,27 +66,35 @@ const defaultHeader: AssistantHeaderContent = {
   description: "AI assistant using this portfolio",
 }
 
+type SuggestedQuestionId = "hiring" | "impact" | "expertise"
+
 const suggestedQuestions = [
   {
     answerId: "hiring",
+    question:
+      "Why should a hiring manager consider Montasim for a senior engineering role?",
     title: "Why hire him?",
     description: "Strengths and working style",
     icon: UserFocusIcon,
   },
   {
     answerId: "impact",
+    question:
+      "Which small set of outcomes best represents Montasim's career impact?",
     title: "Project impact",
     description: "Relevant shipped work",
     icon: BriefcaseIcon,
   },
   {
     answerId: "expertise",
+    question: "What is Montasim's core engineering stack?",
     title: "Technical expertise",
     description: "Stack, architecture, and specialties",
     icon: BracketsCurlyIcon,
   },
 ] as const satisfies ReadonlyArray<{
-  answerId: PreparedAnswerId
+  answerId: SuggestedQuestionId
+  question: string
   title: string
   description: string
   icon: typeof UserFocusIcon
@@ -142,66 +148,17 @@ export function PortfolioAssistant() {
   }, [startInquiry])
 
   function ask(question: string) {
-    const staticAnswer = getStaticFaqAnswer(question)
-    if (staticAnswer) {
-      appendStaticAnswer(
-        staticAnswer.question,
-        staticAnswer.answer,
-        staticAnswer.source,
-        "faq"
-      )
-      return
-    }
-    const contactGuidance = getContactGuidance({ question })
-    if (contactGuidance) {
-      appendStaticAnswer(
-        question,
-        contactGuidance.answer,
-        contactGuidance.source,
-        "contact"
-      )
-      return
-    }
     setMode("chat")
     void chat.sendMessage({ text: question })
   }
 
-  function openPreparedAnswer(answerId: PreparedAnswerId) {
-    const prepared = getPreparedAnswer(answerId)
-    appendStaticAnswer(
-      prepared.question,
-      prepared.answer,
-      prepared.source,
-      "prepared"
-    )
-  }
-
-  function appendStaticAnswer(
-    question: string,
-    answer: string,
-    source: string,
-    idPrefix: string
-  ) {
-    preparedMessageSequence.current += 1
-    const sequence = preparedMessageSequence.current
-    chat.setMessages((messages) => [
-      ...messages,
-      {
-        id: `${idPrefix}-question-${sequence}`,
-        role: "user",
-        parts: [{ type: "text", text: question }],
-      },
-      {
-        id: `${idPrefix}-answer-${sequence}`,
-        role: "assistant",
-        metadata: {
-          source,
-          citations: selectPortfolioCitations(question, source),
-        },
-        parts: [{ type: "text", text: answer }],
-      },
-    ])
+  function openPreparedAnswer(answerId: SuggestedQuestionId) {
+    const question = suggestedQuestions.find(
+      (item) => item.answerId === answerId
+    )?.question
+    if (!question) return
     setMode("chat")
+    void chat.sendMessage({ text: question })
   }
 
   function returnToAssistant() {
@@ -335,7 +292,7 @@ function AssistantHome({
   startInquiry,
 }: {
   ask: (question: string) => void
-  openPreparedAnswer: (answerId: PreparedAnswerId) => void
+  openPreparedAnswer: (answerId: SuggestedQuestionId) => void
   startInquiry: (type: InquiryType) => void
 }) {
   return (
@@ -487,12 +444,9 @@ function ChatView({
         {chat.messages.map((message, index) => {
           const text = getMessageText(message)
           if (!text) return null
-          const contactGuidance =
+          const contactAction =
             message.role === "assistant"
-              ? getContactGuidance({
-                  question: findPreviousUserQuestion(chat.messages, index),
-                  source: message.metadata?.source,
-                })
+              ? message.metadata?.contactAction
               : undefined
           return (
             <article
@@ -523,16 +477,16 @@ function ChatView({
                   onNavigate={onCitationNavigate}
                 />
               ) : null}
-              {contactGuidance && (
+              {contactAction && (
                 <MessageContactAction
-                  intent={contactGuidance.intent}
+                  intent={contactAction}
                   startInquiry={startInquiry}
                 />
               )}
               {message.role === "assistant" && (
                 <div className="mt-4 flex items-center gap-2 border-t pt-3 text-[11px] text-muted-foreground">
                   <span className="min-w-0 flex-1 truncate">
-                    Source: {message.metadata?.source ?? "Portfolio"}
+                    {formatChatResponseProvenance(message.metadata)}
                   </span>
                   <button
                     type="button"
@@ -701,7 +655,7 @@ function MessageContactAction({
   intent,
   startInquiry,
 }: {
-  intent: ContactIntent
+  intent: PortfolioContactAction
   startInquiry: (type: InquiryType) => void
 }) {
   if (intent === "funding") {
@@ -737,6 +691,38 @@ function MessageContactAction({
   const isRole = intent === "hire"
   const emailUrl = `mailto:${profileCatalog.profile.email}`
   const whatsappUrl = profileCatalog.socialUrl("whatsapp")
+
+  if (intent === "general") {
+    return (
+      <section className="mt-4 border-t pt-4">
+        <p className="font-semibold text-emphasis-foreground">
+          Need a verified detail?
+        </p>
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+          Contact Montasim directly for information that is not published in
+          this portfolio.
+        </p>
+        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+          <a
+            href={emailUrl}
+            className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
+            <span className="truncate">{profileCatalog.profile.email}</span>
+          </a>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <WhatsappLogoIcon className="size-[17px]" />
+            WhatsApp
+          </a>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="mt-4 border-t pt-4">
@@ -780,17 +766,6 @@ function MessageContactAction({
       </div>
     </section>
   )
-}
-
-function findPreviousUserQuestion(
-  messages: readonly PortfolioUIMessage[],
-  messageIndex: number
-) {
-  for (let index = messageIndex - 1; index >= 0; index -= 1) {
-    const message = messages[index]
-    if (message.role === "user") return getMessageText(message)
-  }
-  return ""
 }
 
 function getMessageText(message: PortfolioUIMessage) {

@@ -1,41 +1,44 @@
 import { createServerFn } from "@tanstack/react-start"
 import { z } from "zod"
 
-import type { InquiryDelivery } from "@/features/chat/application/ports/inquiry-delivery"
+import { submitInquiryOnServer } from "@/features/chat/application/submit-inquiry-runtime.server"
 import { inquirySubmissionSchema } from "@/features/chat/domain/inquiry"
-import type { InquirySubmission } from "@/features/chat/domain/inquiry"
-import { CompositeInquiryDelivery } from "@/features/chat/infrastructure/inquiry/composite.server"
-import { DatabaseInquiryDelivery } from "@/features/chat/infrastructure/inquiry/database.server"
-import { GoogleSheetsInquiryDelivery } from "@/features/chat/infrastructure/inquiry/google-sheets.server"
-import { ResendInquiryDelivery } from "@/features/chat/infrastructure/inquiry/resend.server"
-import { checkInquiryRateLimit } from "@/features/chat/infrastructure/inquiry/rate-limit.server"
-import { requirePermanentEmail } from "@/features/email-verification/infrastructure/disposable-email.server"
+import { INVALID_INQUIRY_REQUEST_ERROR } from "@/features/chat/domain/inquiry-errors"
+
+export {
+  INQUIRY_SUBMISSION_UNAVAILABLE_ERROR,
+  INVALID_INQUIRY_REQUEST_ERROR,
+} from "@/features/chat/domain/inquiry-errors"
 
 export const inquiryRequestSchema = z.object({
   inquiry: inquirySubmissionSchema,
   website: z.string().trim().max(200).default(""),
 })
 
-export async function submitInquiryWith(
-  delivery: InquiryDelivery,
-  inquiry: InquirySubmission
-) {
-  await delivery.deliver(inquiry)
-  return { delivered: true as const }
+export const MAX_INQUIRY_REQUEST_BYTES = 4_096
+export function parseInquiryRequest(input: unknown) {
+  let serialized: string | undefined
+  try {
+    serialized = JSON.stringify(input)
+  } catch {
+    throw new Error("The inquiry request is invalid.")
+  }
+
+  if (
+    new TextEncoder().encode(serialized).byteLength > MAX_INQUIRY_REQUEST_BYTES
+  ) {
+    throw new Error("The inquiry request is too large.")
+  }
+
+  try {
+    return inquiryRequestSchema.parse(input)
+  } catch {
+    throw new Error(INVALID_INQUIRY_REQUEST_ERROR)
+  }
 }
 
+// TanStack Start applies its default CSRF request middleware to server functions.
+// Do not instantiate createCsrfMiddleware here: its browser stub is undefined.
 export const submitInquiry = createServerFn({ method: "POST" })
-  .validator((input: unknown) => inquiryRequestSchema.parse(input))
-  .handler(async ({ data }) => {
-    if (data.website) return { delivered: true as const }
-
-    await requirePermanentEmail(data.inquiry.email)
-    checkInquiryRateLimit(data.inquiry.email)
-    return submitInquiryWith(
-      new CompositeInquiryDelivery(new DatabaseInquiryDelivery(), [
-        new GoogleSheetsInquiryDelivery(),
-        new ResendInquiryDelivery(),
-      ]),
-      data.inquiry
-    )
-  })
+  .validator(parseInquiryRequest)
+  .handler(({ data }) => submitInquiryOnServer(data))

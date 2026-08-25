@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 import {
   InvalidChatRequestError,
   MAX_CHAT_HISTORY_CHARACTERS,
+  MAX_CHAT_ID_CHARACTERS,
   MAX_CHAT_MESSAGE_CHARACTERS,
   validateChatRequest,
 } from "@/features/chat/domain/chat"
@@ -25,7 +26,7 @@ describe("validateChatRequest", () => {
     ])
   })
 
-  it("accepts regeneration history containing assistant transport markers", async () => {
+  it("ignores client-supplied assistant history", async () => {
     const result = await validateChatRequest({
       trigger: "regenerate-message",
       messages: [
@@ -51,9 +52,11 @@ describe("validateChatRequest", () => {
     })
 
     expect(result.question).toBe("What is his recent work?")
-    expect(result.messages[1]?.parts).toEqual([
-      { type: "text", text: "A grounded portfolio answer." },
-    ])
+    expect(result.messages).toHaveLength(2)
+    expect(
+      result.messages.some((message) => message.role === "assistant")
+    ).toBe(false)
+    expect(result.previousUserQuestion).toBe("Tell me more")
   })
 
   it("drops the oldest messages when valid chat history exceeds the context budget", async () => {
@@ -62,7 +65,7 @@ describe("validateChatRequest", () => {
       messages: [
         ...Array.from({ length: 10 }, (_, index) => ({
           id: `history-${index}`,
-          role: index % 2 === 0 ? ("user" as const) : ("assistant" as const),
+          role: "user" as const,
           parts: [{ type: "text" as const, text: "x".repeat(900) }],
         })),
         {
@@ -127,5 +130,48 @@ describe("validateChatRequest", () => {
         ],
       })
     ).rejects.toThrow(`between 1 and ${MAX_CHAT_MESSAGE_CHARACTERS}`)
+  })
+
+  it("rejects an oversized client message ID", async () => {
+    await expect(
+      validateChatRequest({
+        id: "conversation",
+        messages: [
+          {
+            id: "x".repeat(MAX_CHAT_ID_CHARACTERS + 1),
+            role: "user",
+            parts: [{ type: "text", text: "What has he built?" }],
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InvalidChatRequestError)
+  })
+
+  it("rejects empty conversation and client message IDs", async () => {
+    await expect(
+      validateChatRequest({
+        id: "   ",
+        messages: [
+          {
+            id: "question",
+            role: "user",
+            parts: [{ type: "text", text: "What has he built?" }],
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InvalidChatRequestError)
+
+    await expect(
+      validateChatRequest({
+        id: "conversation",
+        messages: [
+          {
+            id: "",
+            role: "user",
+            parts: [{ type: "text", text: "What has he built?" }],
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(InvalidChatRequestError)
   })
 })

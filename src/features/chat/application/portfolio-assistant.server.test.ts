@@ -1,163 +1,214 @@
-import type { UIMessageChunk } from "ai"
 import { describe, expect, it, vi } from "vitest"
 
-import type { AiProviderAdapter } from "@/features/chat/application/ports/ai-provider"
-import { createPortfolioAssistantResponse } from "@/features/chat/application/portfolio-assistant.server"
-import { createProviderAvailability } from "@/features/chat/application/provider-availability"
-import type { PortfolioMessageMetadata } from "@/features/chat/domain/chat"
-import { selectPortfolioEvidence } from "@/features/chat/domain/portfolio-evidence"
+import { handlePortfolioChatRequest } from "@/features/chat/application/portfolio-assistant.server"
+import { ChatDynamicRateLimitError } from "@/features/chat/application/portfolio-chat"
+import type {
+  PortfolioChat,
+  PortfolioChatReply,
+} from "@/features/chat/domain/portfolio-chat"
+import { InMemoryChatRequestLimiter } from "@/features/chat/infrastructure/chat-rate-limit.server"
 
-function stream(...chunks: UIMessageChunk<PortfolioMessageMetadata>[]) {
-  return new ReadableStream<UIMessageChunk<PortfolioMessageMetadata>>({
-    start(controller) {
-      chunks.forEach((chunk) => controller.enqueue(chunk))
-      controller.close()
+function request(
+  question = "What are Montasim's strongest technical skills?",
+  headers: Record<string, string> = {}
+) {
+  return new Request("https://montasim.dev/api/chat", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      origin: "https://montasim.dev",
+      "x-forwarded-for": "203.0.113.4",
+      ...headers,
     },
-  })
-}
-
-function provider(
-  name: "gemini" | "groq",
-  result: () => Promise<
-    ReadableStream<UIMessageChunk<PortfolioMessageMetadata>>
-  >
-): AiProviderAdapter {
-  return { provider: name, modelId: `${name}-model`, stream: vi.fn(result) }
-}
-
-const request = {
-  messages: [
-    {
-      id: "question",
-      role: "user" as const,
-      parts: [
-        { type: "text" as const, text: "What are his strongest skills?" },
-      ],
-    },
-  ],
-}
-
-const evidenceRetriever = {
-  retrieve: vi.fn(async (question: string) =>
-    selectPortfolioEvidence(question)
-  ),
-}
-
-describe("createPortfolioAssistantResponse", () => {
-  it("falls back when the primary provider fails before visible text", async () => {
-    const record = vi.fn().mockResolvedValue(undefined)
-    const primary = provider("gemini", async () => {
-      throw new Error("quota")
-    })
-    const fallback = provider("groq", async () =>
-      stream(
-        { type: "start", messageId: "answer" },
-        { type: "text-start", id: "text" },
-        { type: "text-delta", id: "text", delta: "A grounded answer." },
-        { type: "text-end", id: "text" },
-        { type: "finish" }
-      )
-    )
-
-    const response = await createPortfolioAssistantResponse(
-      request,
-      undefined,
-      [primary, fallback],
-      { record },
-      undefined,
-      evidenceRetriever
-    )
-    const body = await response.text()
-
-    expect(primary.stream).toHaveBeenCalledOnce()
-    expect(fallback.stream).toHaveBeenCalledOnce()
-    expect(body).toContain("A grounded answer.")
-    expect(body).toContain('"usedFallback":true')
-    expect(body).toContain('"provider":"groq"')
-    expect(body).toContain('"citations"')
-    expect(record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        question: "What are his strongest skills?",
-        answer: "A grounded answer.",
-        provider: "groq",
-        usedFallback: true,
-      })
-    )
-  })
-
-  it("does not call fallback after the primary emits visible text", async () => {
-    const primary = provider("gemini", async () => {
-      const chunks: UIMessageChunk<PortfolioMessageMetadata>[] = [
-        { type: "start", messageId: "answer" },
-        { type: "text-start", id: "text" },
-        { type: "text-delta", id: "text", delta: "Partial" },
-      ]
-      let index = 0
-      return new ReadableStream({
-        pull(controller) {
-          if (index < chunks.length) {
-            controller.enqueue(chunks[index])
-            index += 1
-            return
-          }
-          controller.error(new Error("connection lost"))
+    body: JSON.stringify({
+      id: "conversation",
+      messages: [
+        {
+          id: "question",
+          role: "user",
+          parts: [{ type: "text", text: question }],
         },
-      })
-    })
-    const fallback = provider("groq", async () => stream())
+      ],
+    }),
+  })
+}
 
-    const response = await createPortfolioAssistantResponse(
-      request,
-      undefined,
-      [primary, fallback],
-      undefined,
-      undefined,
-      evidenceRetriever
-    )
+function chat(): PortfolioChat {
+  return {
+    answer: vi.fn(async () => ({
+      kind: "exact" as const,
+      messageId: "answer",
+      text: "A reviewed answer.",
+      source: "Skills",
+      evidenceIds: ["skills:frontend"] as const,
+      citations: [
+        {
+          label: "Explore technical skills",
+          href: "/skills",
+          kind: "skill" as const,
+        },
+      ] as const,
+      fallbackDepth: 0,
+      attempts: [],
+    })),
+  }
+}
+
+describe("portfolio chat HTTP handler", () => {
+  it("adapts a fully resolved answer to the existing AI SDK UI protocol", async () => {
+    const assistant = chat()
+    const response = await handlePortfolioChatRequest(request(), {
+      chat: assistant,
+      limiter: new InMemoryChatRequestLimiter(),
+    })
     const body = await response.text()
 
-    expect(body).toContain("Partial")
-    expect(body).toContain("The response was interrupted")
-    expect(fallback.stream).not.toHaveBeenCalled()
+    expect(response.status).toBe(200)
+    expect(body).toContain("A reviewed answer.")
+    expect(body).toContain('"responseKind":"exact"')
+    expect(body).toContain('"href":"/skills"')
+    expect(assistant.answer).toHaveBeenCalledWith(
+      expect.objectContaining({
+        conversationId: "conversation",
+        clientMessageId: "question",
+      }),
+      expect.objectContaining({
+        requestId: expect.any(String),
+        visitorHash: expect.stringMatching(/^[a-f0-9]{64}$/),
+      })
+    )
+    expect(response.headers.get("cache-control")).toBe("no-store")
   })
 
-  it("skips a provider that was rate limited by the previous request", async () => {
-    const primary = provider("gemini", async () => {
-      throw Object.assign(new Error("quota"), {
-        statusCode: 429,
-        responseHeaders: { "retry-after": "60" },
-      })
+  it("streams requested and served model provenance for generated answers", async () => {
+    const assistant: PortfolioChat = {
+      answer: vi.fn(async () => ({
+        kind: "generated" as const,
+        messageId: "answer",
+        text: "A grounded generated answer.",
+        source: "Experience",
+        evidenceIds: ["experience:current"] as const,
+        citations: [
+          {
+            label: "View professional experience",
+            href: "/experience",
+            kind: "experience" as const,
+          },
+        ] as const,
+        provider: "openrouter" as const,
+        requestedModel: "z-ai/glm-5.2:free",
+        servedModel: "z-ai/glm-5.2",
+        fallbackDepth: 0,
+        attempts: [],
+      })),
+    }
+
+    const response = await handlePortfolioChatRequest(request(), {
+      chat: assistant,
+      limiter: new InMemoryChatRequestLimiter(),
     })
-    const fallback = provider("groq", async () =>
-      stream(
-        { type: "start", messageId: "answer" },
-        { type: "text-start", id: "text" },
-        { type: "text-delta", id: "text", delta: "Fallback answer." },
-        { type: "text-end", id: "text" },
-        { type: "finish" }
-      )
-    )
-    const availability = createProviderAvailability()
-    const recorder = { record: vi.fn().mockResolvedValue(undefined) }
+    const body = await response.text()
 
-    await createPortfolioAssistantResponse(
-      request,
-      undefined,
-      [primary, fallback],
-      recorder,
-      availability,
-      evidenceRetriever
+    expect(response.status).toBe(200)
+    expect(body).toContain('"requestedModel":"z-ai/glm-5.2:free"')
+    expect(body).toContain('"servedModel":"z-ai/glm-5.2"')
+  })
+
+  it("rejects cross-site, non-JSON, and oversized requests before chat", async () => {
+    const assistant = chat()
+    const limiter = new InMemoryChatRequestLimiter()
+    const crossSite = await handlePortfolioChatRequest(
+      request("question", { origin: "https://attacker.example" }),
+      { chat: assistant, limiter }
     )
-    await createPortfolioAssistantResponse(
-      request,
-      undefined,
-      [primary, fallback],
-      recorder,
-      availability,
-      evidenceRetriever
+    const nonJson = await handlePortfolioChatRequest(
+      new Request("https://montasim.dev/api/chat", {
+        method: "POST",
+        headers: { "content-type": "text/plain" },
+        body: "question",
+      }),
+      { chat: assistant, limiter }
+    )
+    const oversized = await handlePortfolioChatRequest(
+      request("question", { "content-length": "20000" }),
+      { chat: assistant, limiter }
     )
 
-    expect(primary.stream).toHaveBeenCalledOnce()
-    expect(fallback.stream).toHaveBeenCalledTimes(2)
+    expect(crossSite.status).toBe(403)
+    expect(nonJson.status).toBe(415)
+    expect(oversized.status).toBe(413)
+    expect(assistant.answer).not.toHaveBeenCalled()
+  })
+
+  it("rate-limits repeated traffic before resolving an answer", async () => {
+    const assistant = chat()
+    const limiter = new InMemoryChatRequestLimiter()
+    let response: Response | undefined
+    for (let index = 0; index < 61; index += 1) {
+      response = await handlePortfolioChatRequest(request(), {
+        chat: assistant,
+        limiter,
+      })
+    }
+    expect(response?.status).toBe(429)
+    expect(response?.headers.get("retry-after")).toBeTruthy()
+    expect(assistant.answer).toHaveBeenCalledTimes(60)
+  })
+
+  it("applies only the broad HTTP limit before deep chat resolution", async () => {
+    const assistant = chat()
+    const consume = vi.fn(async () => ({
+      allowed: true,
+      retryAfterSeconds: 0,
+      remaining: 199,
+    }))
+
+    const response = await handlePortfolioChatRequest(
+      request("How does PostCraft preserve idempotency during recovery?"),
+      {
+        chat: assistant,
+        limiter: { consume },
+      }
+    )
+
+    expect(response.status).toBe(200)
+    expect(consume).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ scope: "all-10m", limit: 60 })
+    )
+    expect(consume).toHaveBeenCalledOnce()
+  })
+
+  it("maps a deep dynamic limit to a retryable 429 response", async () => {
+    const assistant: PortfolioChat = {
+      answer: vi.fn(async () => {
+        throw new ChatDynamicRateLimitError(37)
+      }),
+    }
+
+    const response = await handlePortfolioChatRequest(request(), {
+      chat: assistant,
+      limiter: new InMemoryChatRequestLimiter(),
+    })
+
+    expect(response.status).toBe(429)
+    expect(response.headers.get("retry-after")).toBe("37")
+  })
+
+  it("ends the whole request before the serverless execution deadline", async () => {
+    const assistant: PortfolioChat = {
+      answer: vi.fn(() => new Promise<PortfolioChatReply>(() => undefined)),
+    }
+
+    const response = await handlePortfolioChatRequest(request(), {
+      chat: assistant,
+      limiter: new InMemoryChatRequestLimiter(),
+      deadlineMs: 10,
+    })
+
+    expect(response.status).toBe(503)
+    await expect(response.json()).resolves.toEqual({
+      error: "The assistant is temporarily unavailable.",
+    })
   })
 })

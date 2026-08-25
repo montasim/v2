@@ -25,6 +25,11 @@ const chatState = vi.hoisted(
       metadata?: {
         source?: string
         citations?: Array<{ label: string; href: string }>
+        contactAction?: "hire" | "project" | "funding" | "general"
+        provider?: "openrouter" | "gemini" | "groq"
+        model?: string
+        responseKind?: "exact" | "generated" | "handoff"
+        fallbackDepth?: number
       }
     }>
   } => ({
@@ -239,38 +244,53 @@ describe("PortfolioAssistant chat navigation", () => {
     expect(screen.getByText("Supporting evidence")).not.toBeNull()
   })
 
+  it("shows the model that produced a generated answer", () => {
+    chatState.messages = [
+      {
+        id: "generated-answer",
+        role: "assistant",
+        metadata: {
+          source: "Experience",
+          provider: "openrouter",
+          model: "z-ai/glm-5.2:free",
+          responseKind: "generated",
+          fallbackDepth: 0,
+        },
+        parts: [{ type: "text", text: "A validated generated answer." }],
+      },
+    ]
+
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+
+    expect(
+      screen.getByText("openrouter · z-ai/glm-5.2:free · Experience")
+    ).not.toBeNull()
+  })
+
   it.each([
-    ["Why hire him?", "Experience and recommendations"],
-    ["Project impact", "Experience and projects"],
-    ["Technical expertise", "Skills and experience"],
-  ])("uses a prepared answer for %s without calling AI", (title, source) => {
+    [
+      "Why hire him?",
+      "Why should a hiring manager consider Montasim for a senior engineering role?",
+    ],
+    [
+      "Project impact",
+      "Which small set of outcomes best represents Montasim's career impact?",
+    ],
+    ["Technical expertise", "What is Montasim's core engineering stack?"],
+  ])("sends the prepared question for %s to the server", (title, question) => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
     fireEvent.click(screen.getByRole("button", { name: new RegExp(title) }))
 
-    expect(sendMessage).not.toHaveBeenCalled()
-    expect(setMessages).toHaveBeenCalledOnce()
-    const update = setMessages.mock.calls[0]?.[0] as (
-      messages: unknown[]
-    ) => Array<{
-      role: string
-      metadata?: {
-        source?: string
-        citations?: Array<{ label: string; href: string }>
-      }
-      parts: Array<{ text: string }>
-    }>
-    const messages = update([])
-    expect(messages).toHaveLength(2)
-    expect(messages[0]?.role).toBe("user")
-    expect(messages[1]?.role).toBe("assistant")
-    expect(messages[1]?.metadata?.source).toBe(source)
-    expect(messages[1]?.metadata?.citations?.length).toBeGreaterThan(0)
-    expect(messages[1]?.parts[0]?.text.length).toBeGreaterThan(300)
+    expect(sendMessage).toHaveBeenCalledOnce()
+    expect(sendMessage).toHaveBeenCalledWith({ text: question })
+    expect(setMessages).not.toHaveBeenCalled()
   })
 
-  it("answers an approved typed FAQ without calling the AI transport", () => {
+  it("sends an approved typed FAQ to the server", () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
@@ -279,35 +299,29 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).not.toHaveBeenCalled()
-    expect(setMessages).toHaveBeenCalledOnce()
-    const update = setMessages.mock.calls[0]?.[0] as (
-      messages: unknown[]
-    ) => Array<{
-      role: string
-      metadata?: { source?: string }
-      parts: Array<{ text: string }>
-    }>
-    const messages = update([])
-    expect(messages[0]?.parts[0]?.text).toBe("What is Montasim's current role?")
-    expect(messages[1]?.metadata?.source).toBe("Profile and experience")
-    expect(messages[1]?.parts[0]?.text).toContain("Senior Software Engineer")
+    expect(sendMessage).toHaveBeenCalledOnce()
+    expect(sendMessage).toHaveBeenCalledWith({
+      text: "What is Montasim's current role?",
+    })
+    expect(setMessages).not.toHaveBeenCalled()
   })
 
   it.each([
     {
       question: "We would like to hire Montasim for an open position.",
+      contactAction: "hire" as const,
       heading: "Interested in hiring Montasim?",
       action: "Discuss a role",
     },
     {
       question: "Can we discuss a new project with Montasim?",
+      contactAction: "project" as const,
       heading: "Have a project for Montasim?",
       action: "Discuss a project",
     },
   ])(
-    "shows direct contact paths for $action intent",
-    ({ question, heading, action }) => {
+    "shows server-selected direct contact paths for $contactAction intent",
+    ({ question, contactAction, heading, action }) => {
       chatState.messages = [
         {
           id: "intent-question",
@@ -318,7 +332,7 @@ describe("PortfolioAssistant chat navigation", () => {
           id: "intent-answer",
           role: "assistant",
           parts: [{ type: "text", text: "A grounded answer." }],
-          metadata: { source: "Profile" },
+          metadata: { source: "Profile", contactAction },
         },
       ]
 
@@ -341,7 +355,7 @@ describe("PortfolioAssistant chat navigation", () => {
     }
   )
 
-  it("answers hiring intent locally without calling the AI transport", () => {
+  it("sends hiring intent to the server", () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
@@ -350,25 +364,12 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).not.toHaveBeenCalled()
-    expect(setMessages).toHaveBeenCalledOnce()
-    const update = setMessages.mock.calls[0]?.[0] as (
-      messages: unknown[]
-    ) => Array<{
-      role: string
-      metadata?: { source?: string }
-      parts: Array<{ text: string }>
-    }>
-    const messages = update([])
-
-    expect(messages[0]?.parts[0]?.text).toBe("How do I hire him?")
-    expect(messages[1]?.parts[0]?.text).toBe(
-      "Here are the quickest ways to discuss hiring Montasim."
-    )
-    expect(messages[1]?.metadata?.source).toBe("Contact preferences")
+    expect(sendMessage).toHaveBeenCalledOnce()
+    expect(sendMessage).toHaveBeenCalledWith({ text: "How do I hire him?" })
+    expect(setMessages).not.toHaveBeenCalled()
   })
 
-  it("uses the same local intent path for chat follow-up questions", () => {
+  it("sends contact follow-up questions to the server", () => {
     chatState.messages = [
       {
         id: "existing-answer",
@@ -388,11 +389,30 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).not.toHaveBeenCalled()
-    expect(setMessages).toHaveBeenCalledOnce()
+    expect(sendMessage).toHaveBeenCalledOnce()
+    expect(sendMessage).toHaveBeenCalledWith({
+      text: "We have a new job opportunity for him.",
+    })
+    expect(setMessages).not.toHaveBeenCalled()
   })
 
-  it("shows SupportKori directly for funding intent", () => {
+  it("sends funding questions to the server", () => {
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+
+    fireEvent.change(screen.getByLabelText("Message"), {
+      target: { value: "How can I support Montasim?" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }))
+
+    expect(sendMessage).toHaveBeenCalledOnce()
+    expect(sendMessage).toHaveBeenCalledWith({
+      text: "How can I support Montasim?",
+    })
+    expect(setMessages).not.toHaveBeenCalled()
+  })
+
+  it("shows SupportKori for a server-selected funding action", () => {
     chatState.messages = [
       {
         id: "funding-question",
@@ -408,7 +428,10 @@ describe("PortfolioAssistant chat navigation", () => {
             text: "Here is the direct support option for Montasim's independent work.",
           },
         ],
-        metadata: { source: "Support preferences" },
+        metadata: {
+          source: "Support preferences",
+          contactAction: "funding",
+        },
       },
     ]
     render(<PortfolioAssistant />)
@@ -422,6 +445,47 @@ describe("PortfolioAssistant chat navigation", () => {
         .getAttribute("href")
     ).toBe("https://www.supportkori.com/montasim")
     expect(screen.getByText("supportkori.com/montasim")).not.toBeNull()
+  })
+
+  it("shows direct contact paths for a server-selected general action", () => {
+    chatState.messages = [
+      {
+        id: "general-question",
+        role: "user",
+        parts: [
+          { type: "text", text: "What is Montasim's current availability?" },
+        ],
+      },
+      {
+        id: "general-answer",
+        role: "assistant",
+        parts: [
+          {
+            type: "text",
+            text: "Please contact Montasim directly for a verified detail.",
+          },
+        ],
+        metadata: { source: "Portfolio", contactAction: "general" },
+      },
+    ]
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+
+    expect(screen.getByText("Need a verified detail?")).not.toBeNull()
+    expect(
+      screen.getByText(
+        "Contact Montasim directly for information that is not published in this portfolio."
+      )
+    ).not.toBeNull()
+    expect(
+      screen
+        .getByRole("link", { name: "montasimmamun@gmail.com" })
+        .getAttribute("href")
+    ).toBe("mailto:montasimmamun@gmail.com")
+    expect(
+      screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")
+    ).toBe("https://wa.me/montasimalmamun")
   })
 
   it("opens the role inquiry directly from the availability card", () => {

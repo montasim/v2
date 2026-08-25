@@ -27,6 +27,9 @@ const projectSchema = z.object({
   npmUrl: optionalUrlSchema.optional(),
   releaseUrl: optionalUrlSchema.optional(),
   githubUrl: optionalUrlSchema.optional(),
+  githubRepositoryCreatedAt: z.iso.datetime(),
+  githubInitialCommitAt: z.iso.datetime(),
+  githubInitialCommitSha: z.string().regex(/^[0-9a-f]{40}$/),
   emoji: z.string().optional(),
 })
 
@@ -80,6 +83,29 @@ const records = [...parsedRecords].sort(
     (hiringRank.get(left.id) ?? Number.MAX_SAFE_INTEGER) -
     (hiringRank.get(right.id) ?? Number.MAX_SAFE_INTEGER)
 )
+
+// GitHub chronology is evidence of when a project first existed in repository
+// history, not its release or deployment date. Taking the earlier timestamp
+// handles both local-first commits and repositories whose default-branch
+// history was later rewritten. The recruiter-facing records keep their curated
+// order; chronology is exposed separately.
+function githubHistoryStartedAt(project: Project) {
+  return project.githubInitialCommitAt < project.githubRepositoryCreatedAt
+    ? project.githubInitialCommitAt
+    : project.githubRepositoryCreatedAt
+}
+
+const chronological = [...parsedRecords].sort((left, right) => {
+  const historyOrder = githubHistoryStartedAt(right).localeCompare(
+    githubHistoryStartedAt(left)
+  )
+  if (historyOrder) return historyOrder
+
+  const repositoryOrder = right.githubRepositoryCreatedAt.localeCompare(
+    left.githubRepositoryCreatedAt
+  )
+  return repositoryOrder || left.id.localeCompare(right.id)
+})
 const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "all", label: "All work" },
   { value: "website", label: "Web apps" },
@@ -94,6 +120,8 @@ const filters: readonly CatalogFilter<ProjectFilter>[] = [
 
 export const projectCatalog = {
   records,
+  chronological,
+  newestByGitHubHistory: chronological[0],
   featured: records.filter((project) => project.featured),
   filters,
   filterSchema: z.enum([

@@ -30,6 +30,30 @@ export type InquiryStat = {
   count: number
 }
 
+type SerializableJson =
+  | null
+  | boolean
+  | number
+  | string
+  | SerializableJson[]
+  | { [key: string]: SerializableJson }
+
+function serializeJson(value: unknown): SerializableJson | null {
+  if (value === undefined || value === null) return null
+  return JSON.parse(JSON.stringify(value)) as SerializableJson
+}
+
+function serializeExchange(exchange: typeof assistantExchanges.$inferSelect) {
+  return {
+    ...exchange,
+    citations: serializeJson(exchange.citations),
+    evidenceIds: serializeJson(exchange.evidenceIds),
+    retrievalMetadata: serializeJson(exchange.retrievalMetadata),
+    providerAttempts: serializeJson(exchange.providerAttempts),
+    createdAt: exchange.createdAt.toISOString(),
+  }
+}
+
 function normalizeInquiryStats(
   rows: Array<{ label: string | null; count: number }>,
   expectedLabels: readonly string[]
@@ -97,10 +121,7 @@ export async function loadOwnerDashboard() {
       ...comment,
       createdAt: comment.createdAt.toISOString(),
     })),
-    conversations: conversations.map((exchange) => ({
-      ...exchange,
-      createdAt: exchange.createdAt.toISOString(),
-    })),
+    conversations: conversations.map(serializeExchange),
     inquiries: inquiries.map((inquiry) => ({
       ...inquiry,
       createdAt: inquiry.createdAt.toISOString(),
@@ -152,10 +173,7 @@ export async function loadOwnerConversations(page: number) {
   )
   return {
     ...result,
-    items: result.items.map((exchange) => ({
-      ...exchange,
-      createdAt: exchange.createdAt.toISOString(),
-    })),
+    items: result.items.map(serializeExchange),
   }
 }
 

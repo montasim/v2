@@ -13,7 +13,7 @@ The original prototype proved the content and visual direction, but its repeated
 The result is designed for two audiences:
 
 - Visitors can scan experience, projects, skills, education, certifications, and recommendations on any screen size.
-- Contributors can update structured JSON catalogs without adding a database or duplicating page markup.
+- Contributors can update structured JSON catalogs without duplicating page markup; Neon stores only operational application data.
 
 ## Current capabilities
 
@@ -21,8 +21,9 @@ The result is designed for two audiences:
 - Eight typed routes with route-specific titles, descriptions, canonical links, Open Graph tags, and Twitter card metadata
 - Responsive desktop navigation and an accessible shadcn `Sheet` menu on small screens
 - System-aware light and dark themes with a persistent manual toggle
-- Portfolio-grounded streaming AI assistant with Gemini primary and Groq fallback providers
-- Guided role and project inquiry workflows with editable answer review, Google Sheets storage, and Resend delivery
+- Buffered, portfolio-grounded AI assistant with a zero-cost free-model OpenRouter primary, direct Gemini generation fallback, and independent Groq review
+- Complete citation-ready TOON knowledge packets, exact-question answers, claim validation, durable limits, and provider telemetry
+- Guided role and project inquiry workflows with Neon as the source of truth plus idempotent Google Sheets and Resend delivery
 - Shareable, validated URL filters for project, education, certification, and recommendation catalogs
 - Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
 - Zod validation for every JSON content catalog during application startup
@@ -52,7 +53,7 @@ The original approved static pages remain in [`prototypes/`](prototypes/) for vi
 - Node.js 22.12 or newer
 - pnpm 11 or newer
 
-No conventional database is required. The portfolio pages run without external services. The assistant and inquiry workflow require provider credentials; completed inquiries are appended to Google Sheets and delivered by email.
+The public content is version-controlled JSON. Neon Postgres is required for comments, view counts, owner-dashboard data, inquiries, chat telemetry, and limits. Dynamic chat also needs at least one generation provider; the complete portfolio knowledge packet is compiled locally from the public catalogs and does not require an embedding service or database index.
 
 ### Install and run
 
@@ -70,6 +71,11 @@ Copy [`.env.example`](.env.example) to `.env.local` and add the services you wan
 ```dotenv
 GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
 GROQ_API_KEY=your_groq_key
+OPENROUTER_API_KEY=your_openrouter_key
+OPENROUTER_FREE_MODEL=z-ai/glm-5.2:free
+DATABASE_URL=postgresql://user:password@host/database?sslmode=require
+CHAT_RATE_LIMIT_SECRET=generate_a_separate_32_byte_secret
+INQUIRY_RATE_LIMIT_SECRET=generate_a_separate_32_byte_secret
 RESEND_API_KEY=your_resend_key
 FROM_EMAIL="Portfolio <portfolio@your-domain.com>"
 EMAIL_TO=your_inbox@example.com
@@ -81,7 +87,25 @@ GOOGLE_ROLE_INQUIRIES_RANGE="'Role Inquiries'!A:J"
 GOOGLE_PROJECT_INQUIRIES_RANGE="'Project Inquiries'!A:J"
 ```
 
-Gemini `gemini-3.5-flash` is the primary assistant model. Groq `openai/gpt-oss-120b` is attempted once only when Gemini fails before visible text. Both are isolated behind the same application port, so changing a provider does not affect the UI or route contract. Resend requires a verified sender domain outside its testing restrictions. Share the target spreadsheet with the service-account email as an editor. New submissions go to `Role Inquiries` or `Project Inquiries`; both tabs use the columns timestamp, inquiry ID, intent, name, email, role, work arrangement, project type, timeline, and additional context. The inquiry ID makes retries safe to process without adding duplicate rows.
+OpenRouter is attempted first with `z-ai/glm-5.2:free` as the reviewed default. `google/gemma-4-31b-it:free` remains an allowlisted opt-in model; the [Gemma assessment](docs/research/openrouter-gemma-free.md) explains why it is not the current default. The code accepts only exact `:free` model IDs, requires JSON-capable endpoints, disables OpenRouter provider fallback, sends no tools or plugins, sets every price ceiling to zero, and rejects any response whose reported cost is not exactly zero. Direct Gemini `gemini-3.5-flash` is the full-context generation fallback. Groq `openai/gpt-oss-120b` remains an independent small-context quality reviewer; the configured Groq allowance cannot accept the complete portfolio packet and is therefore never presented as a generation fallback. Exact catalog matches use no model request. Every visitor is limited to 60 total chat requests per 10 minutes; dynamic generations also have 180-per-10-minute and 900-per-day safeguards, while OpenRouter receives a separate shared safety budget of 18 requests per minute and 900 per day. A quota or upstream availability response never routes to a paid OpenRouter model. Answers are buffered, fact-checked, and independently reviewed before the existing UI receives them, so a rejected or interrupted provider draft is never shown. If no generation-and-review pair succeeds, the endpoint returns a retryable 503 and does not save a generic contact answer. The code proves zero spend only for OpenRouter; Gemini and Groq billing remain governed by the quotas configured in their own accounts.
+
+Initialize the operational database before using dynamic features:
+
+```bash
+pnpm db:migrate
+```
+
+No chat-indexing step is required. A build validates the public catalogs and compiles their complete facts, derived counts and chronology, relationships, evidence IDs, and direct citation URLs into a deterministic TOON packet. Resend requires a verified sender domain. Share the target spreadsheet with the service-account email as an editor. Neon accepts each inquiry first; Sheets and email are secondary delivery channels.
+
+After changing public portfolio data, regenerate the versioned exact-answer artifact and review its diff:
+
+```bash
+pnpm chat:compile-exact
+pnpm chat:verify-exact
+pnpm test -- src/features/chat/knowledge
+```
+
+The runtime fails closed when the artifact hash does not match the newly compiled knowledge packet. `pnpm build` runs the same non-writing verification and also compares all 450 artifact records with their clean-room source, preventing stale exact questions or prose from being deployed.
 
 ### Production build preview
 
@@ -104,15 +128,19 @@ flowchart LR
     F[Incoming request] --> G[Pino request logger]
     G --> E
     I[Assistant panel] --> J[Chat API]
-    J --> K[Provider adapter]
-    K --> L[Gemini]
-    K --> M[Groq fallback]
+    J --> S[Validated catalogs to complete TOON knowledge]
+    S -->|Exact normalized question| T[Exact cited answer]
+    S -->|Every other safe question| M[OpenRouter exact-free, then Gemini]
+    M --> L[Claim checks plus independent Gemini or Groq review]
+    L --> U[Canonical cited answer]
     I --> N[Inquiry server function]
-    N --> O[Resend adapter]
-    N --> P[Google Sheets adapter]
+    N --> O[Neon source of truth]
+    O --> P[Resend and Google Sheets delivery]
 ```
 
 Route files own metadata and domain-specific record rendering. Domain-local catalog modules validate JSON, normalize classifications, and expose featured records and filters. Reusable catalog and detail-page modules own repeated page workflows, while navigation actions centralize internal, external, download, and email behavior. Malformed content fails during development and builds instead of reaching visitors silently.
+
+The assistant validates all public catalogs, normalizes each record, derives counts and chronology, attaches stable evidence IDs and direct citation URLs, and compiles the complete result into TOON. A clean-room catalog of 450 newly written normalized exact questions can answer without a provider; it references the same evidence ledger and is rejected before build or at runtime if its source or knowledge hash is stale. Every other safe question gives the generation model the complete knowledge packet, so relevant evidence is never excluded by retrieval. Generated claims must cite exact source excerpts, pass deterministic factual checks, and pass an independent relevance and quality review before they are served. Recommendations can support collaboration claims, but not substitute for technical, ranking, count, or career-impact evidence.
 
 The server entry wraps TanStack Start's default handler to record the request method, path, response status, and elapsed time. It redacts authorization and cookie fields from structured logs.
 
@@ -139,19 +167,20 @@ prototypes/           # Approved static reference implementation
 
 ## Technology
 
-| Area         | Technology                                            |
-| ------------ | ----------------------------------------------------- |
-| Application  | TanStack Start, TanStack Router, React 19, TypeScript |
-| AI           | AI SDK, Google Gemini, Groq                           |
-| Email        | Resend                                                |
-| Inquiry data | Google Sheets API                                     |
-| Build        | Vite 8                                                |
-| Interface    | Tailwind CSS 4, shadcn/ui, Radix UI, Phosphor Icons   |
-| Validation   | Zod 4                                                 |
-| Logging      | Pino 10                                               |
-| Content      | Local JSON files                                      |
-| Testing      | Vitest                                                |
-| Quality      | ESLint, Prettier, TypeScript, Lighthouse              |
+| Area             | Technology                                                          |
+| ---------------- | ------------------------------------------------------------------- |
+| Application      | TanStack Start, TanStack Router, React 19, TypeScript               |
+| AI               | AI SDK, zero-cost OpenRouter models, Gemini generation, Groq review |
+| Email            | Resend                                                              |
+| Operational data | Neon Postgres                                                       |
+| Inquiry delivery | Resend, Google Sheets API                                           |
+| Build            | Vite 8                                                              |
+| Interface        | Tailwind CSS 4, shadcn/ui, Radix UI, Hugeicons                      |
+| Validation       | Zod 4                                                               |
+| Logging          | Pino 10                                                             |
+| Content          | Local JSON files                                                    |
+| Testing          | Vitest                                                              |
+| Quality          | ESLint, Prettier, TypeScript, Lighthouse                            |
 
 ## Updating content
 
@@ -168,16 +197,18 @@ Keep public asset paths rooted at `/images` or `/documents`. Run `pnpm test` and
 
 ## Development commands
 
-| Command          | Purpose                                     |
-| ---------------- | ------------------------------------------- |
-| `pnpm dev`       | Start the development server on port 3000   |
-| `pnpm build`     | Create client and server production bundles |
-| `pnpm preview`   | Preview the production build locally        |
-| `pnpm test`      | Run the Vitest suite once                   |
-| `pnpm typecheck` | Check TypeScript without emitting files     |
-| `pnpm lint`      | Run ESLint                                  |
-| `pnpm format`    | Format TypeScript and JavaScript files      |
-| `pnpm check`     | Check TypeScript and JavaScript formatting  |
+| Command                     | Purpose                                               |
+| --------------------------- | ----------------------------------------------------- |
+| `pnpm dev`                  | Start the development server on port 3000             |
+| `pnpm build`                | Verify exact answers and build production bundles     |
+| `pnpm preview`              | Preview the production build locally                  |
+| `pnpm chat:verify-exact`    | Verify all exact-answer source records and their hash |
+| `pnpm chat:evaluate --help` | Inspect the live 300-question evaluation runner       |
+| `pnpm test`                 | Run the Vitest suite once                             |
+| `pnpm typecheck`            | Check TypeScript without emitting files               |
+| `pnpm lint`                 | Run ESLint                                            |
+| `pnpm format`               | Format TypeScript and JavaScript files                |
+| `pnpm check`                | Check TypeScript and JavaScript formatting            |
 
 The verified release gate is:
 
@@ -190,7 +221,9 @@ pnpm build
 
 ## Verified quality
 
-The current implementation passes ESLint, two Vitest content and metadata checks, TypeScript, and a production build. A local Lighthouse run against the warmed production preview reported:
+The release gate validates formatting, ESLint, the complete Vitest suite, TypeScript, exact-answer freshness, and the production build. The chat-specific suite also covers the 450 exact answers, a 300-question paraphrase corpus, claim-to-evidence traceability, provider failover, zero-cost OpenRouter enforcement, and inert Markdown rendering. A local Lighthouse run against the warmed production preview reported:
+
+Run `pnpm chat:evaluate` as a separate provider-backed acceptance gate. It forces all 300 non-exact questions through dynamic generation, uses a third provider as the independent judge, shares the production OpenRouter safety budget, and writes a non-overwriting JSON report under `artifacts/chat-evaluation/`. A smaller cross-category smoke run is available with `pnpm chat:evaluate -- --limit 16`. This network gate requires three configured providers and is intentionally separate from deterministic builds.
 
 | Category       | Score |
 | -------------- | ----: |
@@ -227,7 +260,9 @@ The deployment configuration pins the project's supported Node.js and pnpm
 versions. Verify server-side rendering, static assets, canonical URLs, and the
 social preview after the first deployment.
 
-Configure all eight required assistant and inquiry environment variables in the Netlify site before deployment. The two inquiry-range variables are optional. Provider and service-account credentials remain server-only and must never use a public Vite prefix.
+Configure the server-only variables from [`.env.example`](.env.example) in Netlify; never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The two inquiry-range variables and `OPENROUTER_FREE_MODEL` are optional.
+
+The application no longer reads the legacy portfolio evidence tables. Forward migration `0008_solid_raider` removes both evidence tables and the database vector extension. On an existing deployment, deploy and verify this full-context runtime before applying that cleanup migration; a fresh environment can apply the complete migration chain before receiving traffic.
 
 Do not present `pnpm preview` as the production server.
 
@@ -235,8 +270,8 @@ Do not present `pnpm preview` as the production server.
 
 - This is a portfolio application backed by version-controlled JSON, not a content management system.
 - Content changes require a rebuild and redeployment.
-- AI answers are limited to text-only portfolio questions, 500 characters per question, 12 retained messages, and the evidence available in the version-controlled catalogs.
-- Structured inquiry details are stored in Google Sheets and sent through the separate Resend workflow. They are never inserted into AI prompts or conversation history.
+- AI answers are limited to text-only portfolio questions, 500 characters per question, 12 retained messages, and the complete structured evidence compiled from the version-controlled catalogs.
+- Structured inquiry details are stored authoritatively in Neon, then delivered independently through Google Sheets and Resend. They are never inserted into AI prompts or conversation history.
 - Catalog filters are validated during routing and render correctly during SSR.
 - External project, credential, institution, and social links can change independently of this repository.
 - The canonical production domain is configured but the v2 deployment has not been verified from this repository.
@@ -246,7 +281,7 @@ Do not present `pnpm preview` as the production server.
 
 For portfolio questions, use the email action in the application. Reproducible implementation problems should be reported through the repository's issue tracker after the project is published.
 
-This application has no authentication or general-purpose database; Google Sheets stores only submitted inquiry fields. Its chat and inquiry endpoints validate bounded inputs server-side, reject cross-site chat requests, and return sanitized provider errors. Do not add secrets to JSON catalogs, browser code, or files under `public/`; everything there is shipped to visitors. Report security concerns privately to the maintainer rather than disclosing sensitive details publicly.
+The owner dashboard uses Neon Auth and restricts access to `OWNER_EMAIL`. Neon stores operational records; public portfolio content remains in validated JSON catalogs. Chat and inquiry inputs are bounded and validated server-side, cross-site mutations are rejected, visitor identifiers are HMAC-hashed, and provider errors are sanitized. Do not add secrets to JSON catalogs, browser code, or files under `public/`; everything there is shipped to visitors. Report security concerns privately to the maintainer rather than disclosing sensitive details publicly.
 
 ## Contributing
 

@@ -1,41 +1,42 @@
 import * as React from "react"
-import { MDXViewer, MDXViewerProvider } from "mdx-craft"
-import type { ComponentRegistry } from "mdx-craft"
+import ReactMarkdown from "react-markdown"
+import type { Components } from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 import { cn } from "@/lib/utils"
 
-const markdownComponents: ComponentRegistry = {
+const markdownComponents: Components = {
   h1: createHeading("h1", "text-lg"),
   h2: createHeading("h2", "text-base"),
   h3: createHeading("h3", "text-sm"),
   h4: createHeading("h4", "text-sm"),
   h5: createHeading("h5", "text-sm"),
   h6: createHeading("h6", "text-sm"),
-  p: ({ className, ...props }: React.ComponentProps<"p">) => (
+  p: ({ node: _node, className, ...props }) => (
     <p className={cn("mt-3 first:mt-0", className)} {...props} />
   ),
-  strong: ({ className, ...props }: React.ComponentProps<"strong">) => (
+  strong: ({ node: _node, className, ...props }) => (
     <strong className={cn("font-semibold", className)} {...props} />
   ),
-  em: ({ className, ...props }: React.ComponentProps<"em">) => (
+  em: ({ node: _node, className, ...props }) => (
     <em className={cn("italic", className)} {...props} />
   ),
-  ul: ({ className, ...props }: React.ComponentProps<"ul">) => (
+  ul: ({ node: _node, className, ...props }) => (
     <ul
       className={cn("mt-3 list-disc space-y-1 pl-5 first:mt-0", className)}
       {...props}
     />
   ),
-  ol: ({ className, ...props }: React.ComponentProps<"ol">) => (
+  ol: ({ node: _node, className, ...props }) => (
     <ol
       className={cn("mt-3 list-decimal space-y-1 pl-5 first:mt-0", className)}
       {...props}
     />
   ),
-  li: ({ className, ...props }: React.ComponentProps<"li">) => (
+  li: ({ node: _node, className, ...props }) => (
     <li className={cn("pl-0.5", className)} {...props} />
   ),
-  blockquote: ({ className, ...props }: React.ComponentProps<"blockquote">) => (
+  blockquote: ({ node: _node, className, ...props }) => (
     <blockquote
       className={cn(
         "mt-3 border-l-2 border-border pl-3 text-muted-foreground first:mt-0",
@@ -44,7 +45,7 @@ const markdownComponents: ComponentRegistry = {
       {...props}
     />
   ),
-  table: ({ className, ...props }: React.ComponentProps<"table">) => (
+  table: ({ node: _node, className, ...props }) => (
     <table
       className={cn(
         "mt-3 block w-full border-collapse overflow-x-auto text-left text-xs first:mt-0",
@@ -53,7 +54,7 @@ const markdownComponents: ComponentRegistry = {
       {...props}
     />
   ),
-  th: ({ className, ...props }: React.ComponentProps<"th">) => (
+  th: ({ node: _node, className, ...props }) => (
     <th
       className={cn(
         "border-b border-border px-2 py-1.5 font-semibold",
@@ -62,14 +63,14 @@ const markdownComponents: ComponentRegistry = {
       {...props}
     />
   ),
-  td: ({ className, ...props }: React.ComponentProps<"td">) => (
+  td: ({ node: _node, className, ...props }) => (
     <td
       className={cn("border-b border-border px-2 py-1.5 align-top", className)}
       {...props}
     />
   ),
   a: ChatMarkdownLink,
-  code: ({ className, ...props }: React.ComponentProps<"code">) => (
+  code: ({ node: _node, className, ...props }) => (
     <code
       className={cn(
         "rounded bg-background px-1 py-0.5 font-mono text-[0.8em]",
@@ -78,7 +79,7 @@ const markdownComponents: ComponentRegistry = {
       {...props}
     />
   ),
-  pre: ({ className, ...props }: React.ComponentProps<"pre">) => (
+  pre: ({ node: _node, className, ...props }) => (
     <pre
       className={cn(
         "mt-3 overflow-x-auto rounded-lg bg-primary p-3 font-mono text-xs leading-5 text-primary-foreground first:mt-0 [&>code]:bg-transparent [&>code]:p-0",
@@ -87,50 +88,25 @@ const markdownComponents: ComponentRegistry = {
       {...props}
     />
   ),
-  hr: ({ className, ...props }: React.ComponentProps<"hr">) => (
+  hr: ({ node: _node, className, ...props }) => (
     <hr className={cn("my-4 border-border", className)} {...props} />
   ),
-  img: ({ alt }: React.ComponentProps<"img">) =>
+  img: ({ node: _node, alt }) =>
     alt ? <span className="text-muted-foreground">{alt}</span> : null,
 }
 
 export function ChatMarkdown({ source }: { source: string }) {
   return (
-    <MDXViewerProvider cache={{ enabled: true, maxSize: 24 }}>
-      <div className="min-w-0 wrap-break-word">
-        <MDXViewer
-          source={toSafeMarkdown(source)}
-          components={markdownComponents}
-          loadingComponent={() => <PlainTextFallback source={source} />}
-          errorComponent={() => <PlainTextFallback source={source} />}
-        />
-      </div>
-    </MDXViewerProvider>
+    <div className="min-w-0 wrap-break-word">
+      <ReactMarkdown
+        components={markdownComponents}
+        remarkPlugins={[remarkGfm]}
+        skipHtml
+      >
+        {source}
+      </ReactMarkdown>
+    </div>
   )
-}
-
-function toSafeMarkdown(source: string) {
-  let codeFence: string | undefined
-
-  return source
-    .split("\n")
-    .map((line) => {
-      const fence = line.match(/^\s*(`{3,}|~{3,})/)?.[1]
-
-      if (fence) {
-        if (!codeFence) codeFence = fence[0]
-        else if (fence[0] === codeFence) codeFence = undefined
-        return line
-      }
-
-      if (codeFence) return line
-
-      return line
-        .replace(/<(?!https?:\/\/|mailto:)(\/?[a-z][^>]*)>/gi, "&lt;$1&gt;")
-        .replaceAll("{", "&#123;")
-        .replaceAll("}", "&#125;")
-    })
-    .join("\n")
 }
 
 function createHeading(
@@ -138,9 +114,10 @@ function createHeading(
   sizeClassName: string
 ) {
   return function ChatMarkdownHeading({
+    node: _node,
     className,
     ...props
-  }: React.ComponentProps<typeof element>) {
+  }: React.ComponentProps<typeof element> & { node?: unknown }) {
     return React.createElement(element, {
       ...props,
       className: cn(
@@ -153,11 +130,12 @@ function createHeading(
 }
 
 function ChatMarkdownLink({
+  node: _node,
   href,
   className,
   children,
   ...props
-}: React.ComponentProps<"a">) {
+}: React.ComponentProps<"a"> & { node?: unknown }) {
   if (!href || !isSafeLink(href)) {
     return <span className={className}>{children}</span>
   }
@@ -181,20 +159,5 @@ function ChatMarkdownLink({
 }
 
 function isSafeLink(href: string) {
-  return /^(https?:\/\/|mailto:|\/|#)/i.test(href)
-}
-
-function PlainTextFallback({ source }: { source: string }) {
-  return source
-    .split(/\n{2,}/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean)
-    .map((paragraph, index) => (
-      <p
-        key={`${index}-${paragraph.slice(0, 24)}`}
-        className="mt-3 whitespace-pre-wrap first:mt-0"
-      >
-        {paragraph}
-      </p>
-    ))
+  return /^(?:https?:\/\/|mailto:|#|\/(?![\\/]))/i.test(href)
 }

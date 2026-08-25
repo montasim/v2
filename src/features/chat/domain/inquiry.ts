@@ -3,9 +3,10 @@ import { z } from "zod"
 import { visitorEmailSchema } from "@/features/email-verification/domain/email-verification"
 
 export const inquiryTypeSchema = z.enum(["hire", "project"])
+export const inquiryIdSchema = z.uuid()
 
 const baseInquirySchema = z.object({
-  id: z.string().trim().min(8).max(100),
+  id: inquiryIdSchema,
   name: z.string().trim().min(2).max(80),
   email: visitorEmailSchema,
   context: z.string().trim().max(1_000).optional(),
@@ -280,5 +281,14 @@ export function createInquiryId() {
     return globalThis.crypto.randomUUID()
   }
 
-  return `inquiry-${Date.now()}-${Math.random().toString(36).slice(2)}`
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(16))
+  bytes[6] = (bytes[6] & 0x0f) | 0x40
+  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  const value = Array.from(bytes, (byte) =>
+    byte.toString(16).padStart(2, "0")
+  ).join("")
+  return `${value.slice(0, 8)}-${value.slice(8, 12)}-${value.slice(
+    12,
+    16
+  )}-${value.slice(16, 20)}-${value.slice(20)}`
 }

@@ -14,7 +14,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import {
-  ArrowLeftIcon,
+  ArrowLeftCompactIcon,
+  ArrowLeftDoubleIcon,
+  ArrowRightCompactIcon,
+  ArrowRightDoubleIcon,
   ArrowRightIcon,
   ArrowUpRightIcon,
   BookOpenTextIcon,
@@ -35,6 +38,10 @@ import { useTheme } from "@/components/theme-provider"
 import { updateOwnerAvailabilitySettings } from "@/features/availability/application/settings"
 import { deleteBlogComment } from "@/features/blog-comments/application/comments"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
+import {
+  formatConversationProviderRoute,
+  formatConversationResponseMetadata,
+} from "@/features/owner-dashboard/domain/conversation-metadata"
 import type { OwnerDashboardData } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 import { blogCatalog } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
@@ -505,14 +512,28 @@ export function Conversations({
                 <LazyChatMarkdown source={item.answer} />
               </Suspense>
             </div>
-            <p className="mt-4 border-t pt-3 text-[0.6875rem] text-muted-foreground">
-              {item.provider} · {item.model}
-              {item.usedFallback ? " · fallback" : ""} · {item.source}
-            </p>
+            <ConversationResponseProvenance item={item} />
           </div>
         </article>
       ))}
       {!data.length ? <Empty label="No generated chat exchanges yet." /> : null}
+    </div>
+  )
+}
+
+function ConversationResponseProvenance({
+  item,
+}: {
+  item: DashboardData["conversations"][number]
+}) {
+  const providerRoute = formatConversationProviderRoute(item.providerAttempts)
+
+  return (
+    <div className="mt-4 border-t pt-3 text-[0.6875rem] text-muted-foreground">
+      <p>{formatConversationResponseMetadata(item)}</p>
+      {providerRoute ? (
+        <p className="mt-1 break-words">{providerRoute}</p>
+      ) : null}
     </div>
   )
 }
@@ -698,10 +719,20 @@ export function Pagination({
             variant="outline"
             size="icon-sm"
             disabled={page === 1}
+            onClick={() => onPageChange(1)}
+            aria-label={`First ${label} page`}
+          >
+            <ArrowLeftDoubleIcon />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon-sm"
+            disabled={page === 1}
             onClick={() => onPageChange(page - 1)}
             aria-label={`Previous ${label} page`}
           >
-            <ArrowLeftIcon />
+            <ArrowLeftCompactIcon />
           </Button>
 
           <div className="flex items-center gap-1" aria-label="Page selection">
@@ -741,7 +772,17 @@ export function Pagination({
             onClick={() => onPageChange(page + 1)}
             aria-label={`Next ${label} page`}
           >
-            <ArrowRightIcon />
+            <ArrowRightCompactIcon />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="icon-sm"
+            disabled={page === pageCount}
+            onClick={() => onPageChange(pageCount)}
+            aria-label={`Last ${label} page`}
+          >
+            <ArrowRightDoubleIcon />
           </Button>
         </div>
       ) : null}

@@ -203,24 +203,24 @@
   {
     "slug": "thoughtline",
     "projectId": "project-thoughtline",
-    "summary": "User-controlled Chrome side-panel extension for understanding LinkedIn conversations and shaping replies and posts in your own voice.",
+    "summary": "User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual.",
     "role": "Product design and browser-extension engineering",
     "scope": "Browser integration, provider workflows, and privacy",
     "status": "GitHub release available",
     "verifiedBranch": "main",
-    "verifiedCommit": "64fd8335b8933f51aba1f1b7fd5ce1dc03795a0a",
+    "verifiedCommit": "e06e283aeceabe6037222ac020cdacf5408ff1d2",
     "problem": "Writing a useful LinkedIn reply or post requires understanding the visible conversation while preserving the author's own voice, intent, and control.",
     "constraints": [
       "LinkedIn page content is untrusted and must be bounded before entering prompts.",
-      "Both valid provider keys are currently required although Groq is used only for eligible fallback.",
+      "OpenRouter, Gemini, and Groq keys are all required so the fixed free-only route can fall back without asking during a writing task.",
       "Extension permissions, encrypted local storage, and retention/export behavior must remain understandable to the user."
     ],
     "architecture": {
-      "summary": "LinkedIn content scripts/extraction; React side-panel workflows; typed drafting/source-research ports with Gemini-first and one Groq fallback; encrypted browser storage, migrations, backup/export, and Manifest V3 permissions.",
+      "summary": "LinkedIn content scripts plus manual pasted-post input; React side-panel workflows; typed drafting/source-research ports with free OpenRouter-first routing and Gemini/Groq fallback; encrypted browser storage, migrations, backup/export, and Manifest V3 permissions.",
       "layers": [
         {
           "title": "Page integration",
-          "detail": "LinkedIn content scripts/extraction."
+          "detail": "LinkedIn content scripts/extraction plus bounded manual pasted-post input."
         },
         {
           "title": "Extension interface",
@@ -228,7 +228,7 @@
         },
         {
           "title": "Provider boundary",
-          "detail": "Typed drafting/source-research ports with Gemini-first and one Groq fallback."
+          "detail": "Typed drafting/source-research ports with curated free OpenRouter models, bounded provider timeouts, and Gemini/Groq fallback."
         },
         {
           "title": "Storage and delivery",
@@ -253,13 +253,14 @@
     "contribution": [
       "Implemented reply, idea, refine, history, settings, and onboarding journeys.",
       "Built content extraction and validated prompt envelopes.",
+      "Added manual four-direction replies, model provenance, and visible provider recovery states.",
       "Added encrypted credential storage, migrations/recovery/retention, configuration backup, and data archives.",
       "Established static, unit, packed-extension, Axe, responsive, and visual-regression gates."
     ],
     "outcomes": [
-      "Users can understand a visible conversation and draft replies.",
+      "Users can paste a post or select a visible conversation and draft four reply directions.",
       "Generate/refine post ideas in configured voice.",
-      "Fall back across two providers under defined rules.",
+      "Use a fixed free-only OpenRouter, Gemini, and Groq route under defined fallback rules.",
       "Export and restore validated configurations and history."
     ],
     "screenshot": {

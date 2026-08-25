@@ -1,10 +1,146 @@
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 
 import {
+  ResendAcknowledgementInquiryDelivery,
+  ResendOwnerInquiryDelivery,
   formatAcknowledgement,
   formatOwnerNotification,
   formatOwnerSubject,
 } from "@/features/chat/infrastructure/inquiry/resend.server"
+
+const config = {
+  apiKey: "resend-key",
+  from: "Montasim <portfolio@example.com>",
+  owner: "owner@example.com",
+}
+
+describe("Resend inquiry destinations", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+    vi.unstubAllGlobals()
+  })
+
+  it("passes the repository's stable idempotency key to the owner email", async () => {
+    const sendEmail = vi.fn().mockResolvedValue({ error: null })
+    const delivery = new ResendOwnerInquiryDelivery(config, sendEmail)
+
+    await delivery.deliver({
+      inquiry: {
+        id: "inquiry-role-idempotent",
+        type: "hire",
+        name: "Tanim",
+        email: "tanim@example.com",
+        role: "Senior Frontend Engineer",
+        arrangement: "Remote",
+      },
+      idempotencyKey:
+        "portfolio-inquiry-inquiry-role-idempotent-resend-owner-v1",
+    })
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: "owner@example.com",
+        replyTo: "tanim@example.com",
+      }),
+      {
+        idempotencyKey:
+          "portfolio-inquiry-inquiry-role-idempotent-resend-owner-v1",
+      }
+    )
+  })
+
+  it("tracks acknowledgement delivery independently", async () => {
+    const sendEmail = vi.fn().mockResolvedValue({ error: null })
+    const delivery = new ResendAcknowledgementInquiryDelivery(config, sendEmail)
+
+    await delivery.deliver({
+      inquiry: {
+        id: "inquiry-project-idempotent",
+        type: "project",
+        name: "Amina",
+        email: "amina@example.com",
+        projectType: "SaaS platform",
+        timeline: "Flexible",
+      },
+      idempotencyKey:
+        "portfolio-inquiry-inquiry-project-idempotent-resend-acknowledgement-v1",
+    })
+
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({ to: "amina@example.com" }),
+      {
+        idempotencyKey:
+          "portfolio-inquiry-inquiry-project-idempotent-resend-acknowledgement-v1",
+      }
+    )
+  })
+
+  it("passes cancellation through to the underlying Resend request", async () => {
+    const sendEmail = vi.fn().mockResolvedValue({ error: null })
+    const delivery = new ResendOwnerInquiryDelivery(config, sendEmail)
+    const controller = new AbortController()
+
+    await delivery.deliver({
+      inquiry: {
+        id: "inquiry-role-cancellable",
+        type: "hire",
+        name: "Tanim",
+        email: "tanim@example.com",
+        role: "Senior Frontend Engineer",
+        arrangement: "Remote",
+      },
+      idempotencyKey:
+        "portfolio-inquiry-inquiry-role-cancellable-resend-owner-v1",
+      signal: controller.signal,
+    })
+
+    expect(sendEmail).toHaveBeenCalledWith(expect.any(Object), {
+      idempotencyKey:
+        "portfolio-inquiry-inquiry-role-cancellable-resend-owner-v1",
+      signal: controller.signal,
+    })
+  })
+
+  it("aborts the production Resend fetch when delivery is cancelled", async () => {
+    vi.stubEnv("NODE_ENV", "production")
+    const requestSignals: AbortSignal[] = []
+    const fetcher = vi.fn<typeof fetch>(async (_input, init) => {
+      const requestSignal = init?.signal
+      if (requestSignal) requestSignals.push(requestSignal)
+      return new Promise<Response>((_resolve, reject) => {
+        requestSignal?.addEventListener(
+          "abort",
+          () => reject(requestSignal.reason),
+          { once: true }
+        )
+      })
+    })
+    vi.stubGlobal("fetch", fetcher)
+    const delivery = new ResendOwnerInquiryDelivery(config)
+    const controller = new AbortController()
+    const result = delivery.deliver({
+      inquiry: {
+        id: "inquiry-role-production-cancellable",
+        type: "hire",
+        name: "Tanim",
+        email: "tanim@example.com",
+        role: "Senior Frontend Engineer",
+        arrangement: "Remote",
+      },
+      idempotencyKey:
+        "portfolio-inquiry-inquiry-role-production-cancellable-resend-owner-v1",
+      signal: controller.signal,
+    })
+    const rejection = expect(result).rejects.toThrow("delivery failed")
+
+    await vi.waitFor(() => expect(fetcher).toHaveBeenCalledOnce())
+    controller.abort(new Error("request deadline reached"))
+
+    await rejection
+    expect(requestSignals.at(0)).toBe(controller.signal)
+    expect(requestSignals.at(0)!.aborted).toBe(true)
+  })
+})
 
 describe("inquiry acknowledgement", () => {
   it("writes a personal role acknowledgement without repeating contact data", () => {

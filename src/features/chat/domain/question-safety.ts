@@ -7,33 +7,87 @@ const promptInjectionSignals = [
   "reveal the system prompt",
   "show the developer message",
   "hidden instructions",
-  "private database",
-  "database records",
 ] as const
 
-const unpublishedDetailSignals = [
-  "favorite",
-  "favourite",
-  "hobby",
-  "hobbies",
-  "weekend",
-  "salary",
-  "compensation",
-  "direct reports",
-  "team size",
-  "largest engineering team",
-] as const
+const knownTechnicalAcronyms = new Set([
+  "ai",
+  "api",
+  "aws",
+  "cdn",
+  "ci",
+  "cli",
+  "cd",
+  "csp",
+  "csr",
+  "csrf",
+  "css",
+  "db",
+  "fps",
+  "fsm",
+  "gcp",
+  "html",
+  "isr",
+  "jwt",
+  "llm",
+  "ml",
+  "mfa",
+  "orm",
+  "pwa",
+  "rag",
+  "rbac",
+  "rpc",
+  "sdk",
+  "seo",
+  "sso",
+  "ssg",
+  "ssr",
+  "sql",
+  "tls",
+  "ui",
+  "ux",
+  "xss",
+])
 
 export function isPromptInjectionAttempt(question: string) {
   const normalized = normalizeQuestion(question)
 
-  return promptInjectionSignals.some((signal) => normalized.includes(signal))
+  return (
+    promptInjectionSignals.some((signal) => normalized.includes(signal)) ||
+    /\b(?:dump|export|leak|reveal)\b.{0,40}\b(?:hidden|internal|private)\b.{0,24}\b(?:database|records?|data)\b/.test(
+      normalized
+    ) ||
+    /\bshow (?:me|us)\b.{0,40}\b(?:hidden|internal|private)\b.{0,24}\b(?:database|records?|data)\b/.test(
+      normalized
+    ) ||
+    /\b(?:ignore|disregard|override)\b.{0,40}\b(?:portfolio|evidence|sources?|facts?)\b/.test(
+      normalized
+    ) ||
+    /\b(?:invent|fabricate|make up)\b.{0,40}\b(?:reason|achievement|experience|fact|claim|answer)\b/.test(
+      normalized
+    )
+  )
 }
 
-export function asksForUnpublishedDetail(question: string) {
+export function isLikelyNoisyInput(question: string) {
   const normalized = normalizeQuestion(question)
+  const tokens = normalized.split(" ").filter(Boolean)
+  const opaqueTokens = tokens.filter(
+    (token) =>
+      token.length >= 3 &&
+      !/[aeiouy]/.test(token) &&
+      !knownTechnicalAcronyms.has(token)
+  )
+  const hasStandaloneNumber = tokens.some((token) => /^\d+$/.test(token))
+  const hasRepeatedPunctuation = /[?!#]{3,}/.test(question)
+  const isOpaqueSpam =
+    opaqueTokens.length >= 3 && opaqueTokens.length / tokens.length >= 0.5
+  const hasMixedNoiseSignature =
+    tokens.length >= 6 &&
+    opaqueTokens.length >= 1 &&
+    hasStandaloneNumber &&
+    hasRepeatedPunctuation
 
-  return unpublishedDetailSignals.some((signal) => normalized.includes(signal))
+  return isOpaqueSpam || hasMixedNoiseSignature
 }
 
 function normalizeQuestion(question: string) {

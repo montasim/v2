@@ -1,20 +1,33 @@
-import type { ModelMessage, UIMessageChunk } from "ai"
+import type { ModelMessage } from "ai"
 
-import type {
-  ChatProviderName,
-  PortfolioMessageMetadata,
-} from "@/features/chat/domain/chat"
+import type { ChatProviderName } from "@/features/chat/domain/chat"
 
-export interface AiStreamRequest {
+export interface AiCompletionRequest {
   system: string
   messages: ModelMessage[]
   signal?: AbortSignal
 }
 
+export interface AiCompletionUsage {
+  inputTokens?: number
+  outputTokens?: number
+  totalTokens?: number
+  costUsd?: number
+}
+
+export interface AiCompletionResult {
+  text: string
+  requestedModelId: string
+  servedModelId?: string
+  finishReason?: string
+  generationId?: string
+  usage?: AiCompletionUsage
+}
+
 export interface AiProviderAdapter {
   readonly provider: ChatProviderName
   readonly modelId: string
-  stream: (
-    request: AiStreamRequest
-  ) => Promise<ReadableStream<UIMessageChunk<PortfolioMessageMetadata>>>
+  /** False when this configured provider can review but cannot accept the full knowledge packet. */
+  readonly supportsFullContextGeneration?: boolean
+  complete: (request: AiCompletionRequest) => Promise<AiCompletionResult>
 }

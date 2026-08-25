@@ -1,6 +1,6 @@
 import crypto from "node:crypto"
 
-import type { InquiryDelivery } from "@/features/chat/application/ports/inquiry-delivery"
+import type { InquiryDestination } from "@/features/chat/application/ports/portfolio-inquiry"
 import type { InquirySubmission } from "@/features/chat/domain/inquiry"
 import { logger } from "@/lib/logger.server"
 
@@ -9,6 +9,15 @@ const TOKEN_URL = "https://oauth2.googleapis.com/token"
 const SHEETS_API = "https://sheets.googleapis.com/v4/spreadsheets"
 const DEFAULT_ROLE_RANGE = "'Role Inquiries'!A:J"
 const DEFAULT_PROJECT_RANGE = "'Project Inquiries'!A:J"
+export const GOOGLE_SHEETS_REQUEST_TIMEOUT_MS = 3_500
+const GOOGLE_TOKEN_REFRESH_MARGIN_MS = 60_000
+
+const inFlightDeliveries = new Map<string, Promise<void>>()
+const accessTokenCache = new Map<
+  string,
+  { accessToken: string; expiresAt: number }
+>()
+const accessTokenRequests = new Map<string, Promise<string>>()
 
 interface GoogleSheetsConfig {
   clientEmail: string
@@ -20,21 +29,53 @@ interface GoogleSheetsConfig {
 
 type Fetcher = typeof fetch
 
-export class GoogleSheetsInquiryDelivery implements InquiryDelivery {
+export class GoogleSheetsInquiryDelivery implements InquiryDestination {
+  readonly channel = "google-sheets" as const
+
   constructor(
-    private readonly config: GoogleSheetsConfig = readGoogleSheetsConfig(),
-    private readonly fetcher: Fetcher = fetch
+    private readonly config?: GoogleSheetsConfig,
+    private readonly fetcher: Fetcher = fetch,
+    private readonly requestTimeoutMs = GOOGLE_SHEETS_REQUEST_TIMEOUT_MS
   ) {}
 
-  async deliver(inquiry: InquirySubmission) {
-    const accessToken = await getGoogleAccessToken(this.config, this.fetcher)
+  async deliver(input: Parameters<InquiryDestination["deliver"]>[0]) {
+    const config = this.config ?? readGoogleSheetsConfig()
     const configuredRange =
-      inquiry.type === "hire" ? this.config.roleRange : this.config.projectRange
+      input.inquiry.type === "hire" ? config.roleRange : config.projectRange
+    const deliveryKey = `${config.sheetId}:${configuredRange}:${input.inquiry.id}`
+    const inFlight = inFlightDeliveries.get(deliveryKey)
+    if (inFlight) return inFlight
+
+    const delivery = this.deliverOnce(input, config, configuredRange)
+    inFlightDeliveries.set(deliveryKey, delivery)
+    try {
+      await delivery
+    } finally {
+      if (inFlightDeliveries.get(deliveryKey) === delivery) {
+        inFlightDeliveries.delete(deliveryKey)
+      }
+    }
+  }
+
+  private async deliverOnce(
+    { inquiry, signal }: Parameters<InquiryDestination["deliver"]>[0],
+    config: GoogleSheetsConfig,
+    configuredRange: string
+  ) {
+    const accessToken = await getGoogleAccessToken(
+      config,
+      this.fetcher,
+      signal,
+      this.requestTimeoutMs
+    )
     const range = encodeURIComponent(configuredRange)
     const idRange = encodeURIComponent(inquiryIdRange(configuredRange))
-    const lookupResponse = await this.fetcher(
-      `${SHEETS_API}/${this.config.sheetId}/values/${idRange}?majorDimension=COLUMNS`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
+    const lookupResponse = await fetchWithDeadline(
+      this.fetcher,
+      `${SHEETS_API}/${config.sheetId}/values/${idRange}?majorDimension=COLUMNS`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+      signal,
+      this.requestTimeoutMs
     )
 
     if (!lookupResponse.ok) {
@@ -42,7 +83,8 @@ export class GoogleSheetsInquiryDelivery implements InquiryDelivery {
     }
 
     const lookup: unknown = await lookupResponse.json()
-    if (sheetValues(lookup).some((value) => value === inquiry.id)) {
+    const acceptedIds = new Set([inquiry.id, safeSheetValue(inquiry.id)])
+    if (sheetValues(lookup).some((value) => acceptedIds.has(value))) {
       logger.info(
         { inquiryId: inquiry.id, inquiryType: inquiry.type },
         "Portfolio inquiry already stored"
@@ -50,8 +92,9 @@ export class GoogleSheetsInquiryDelivery implements InquiryDelivery {
       return
     }
 
-    const response = await this.fetcher(
-      `${SHEETS_API}/${this.config.sheetId}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    const response = await fetchWithDeadline(
+      this.fetcher,
+      `${SHEETS_API}/${config.sheetId}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
       {
         method: "POST",
         headers: {
@@ -59,7 +102,9 @@ export class GoogleSheetsInquiryDelivery implements InquiryDelivery {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ values: [inquiryToRow(inquiry)] }),
-      }
+      },
+      signal,
+      this.requestTimeoutMs
     )
 
     if (!response.ok) {
@@ -80,7 +125,7 @@ export function inquiryToRow(
   return inquiry.type === "hire"
     ? [
         timestamp,
-        inquiry.id,
+        safeSheetValue(inquiry.id),
         "hire",
         safeSheetValue(inquiry.name),
         safeSheetValue(inquiry.email),
@@ -92,7 +137,7 @@ export function inquiryToRow(
       ]
     : [
         timestamp,
-        inquiry.id,
+        safeSheetValue(inquiry.id),
         "project",
         safeSheetValue(inquiry.name),
         safeSheetValue(inquiry.email),
@@ -141,17 +186,65 @@ function readGoogleSheetsConfig(): GoogleSheetsConfig {
 
 async function getGoogleAccessToken(
   config: Pick<GoogleSheetsConfig, "clientEmail" | "privateKey">,
-  fetcher: Fetcher
+  fetcher: Fetcher,
+  signal: AbortSignal | undefined,
+  timeoutMs: number
+) {
+  const cacheKey = googleTokenCacheKey(config)
+  const cached = accessTokenCache.get(cacheKey)
+  if (
+    cached &&
+    cached.expiresAt - GOOGLE_TOKEN_REFRESH_MARGIN_MS > Date.now()
+  ) {
+    return cached.accessToken
+  }
+
+  const inFlight = accessTokenRequests.get(cacheKey)
+  if (inFlight) return inFlight
+
+  const request = requestGoogleAccessToken(
+    config,
+    fetcher,
+    signal,
+    timeoutMs
+  ).then(({ accessToken, expiresInSeconds }) => {
+    accessTokenCache.set(cacheKey, {
+      accessToken,
+      expiresAt: Date.now() + expiresInSeconds * 1_000,
+    })
+    return accessToken
+  })
+  accessTokenRequests.set(cacheKey, request)
+  try {
+    return await request
+  } finally {
+    if (accessTokenRequests.get(cacheKey) === request) {
+      accessTokenRequests.delete(cacheKey)
+    }
+  }
+}
+
+async function requestGoogleAccessToken(
+  config: Pick<GoogleSheetsConfig, "clientEmail" | "privateKey">,
+  fetcher: Fetcher,
+  signal: AbortSignal | undefined,
+  timeoutMs: number
 ) {
   const assertion = createServiceAccountJwt(config)
-  const response = await fetcher(TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion,
-    }),
-  })
+  const response = await fetchWithDeadline(
+    fetcher,
+    TOKEN_URL,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        assertion,
+      }),
+    },
+    signal,
+    timeoutMs
+  )
   const data: unknown = await response.json()
 
   if (
@@ -164,7 +257,48 @@ async function getGoogleAccessToken(
     throw new Error(`Google authentication failed (${response.status}).`)
   }
 
-  return data.access_token
+  const expiresInSeconds =
+    "expires_in" in data &&
+    typeof data.expires_in === "number" &&
+    Number.isFinite(data.expires_in)
+      ? Math.max(60, data.expires_in)
+      : 3_600
+
+  return { accessToken: data.access_token, expiresInSeconds }
+}
+
+function googleTokenCacheKey({
+  clientEmail,
+  privateKey,
+}: Pick<GoogleSheetsConfig, "clientEmail" | "privateKey">) {
+  const keyFingerprint = crypto
+    .createHash("sha256")
+    .update(privateKey)
+    .digest("hex")
+  return `${clientEmail}:${keyFingerprint}`
+}
+
+async function fetchWithDeadline(
+  fetcher: Fetcher,
+  input: Parameters<Fetcher>[0],
+  init: RequestInit,
+  parentSignal: AbortSignal | undefined,
+  timeoutMs: number
+) {
+  const controller = new AbortController()
+  const timeoutError = new Error(
+    `Google Sheets request timed out after ${timeoutMs}ms.`
+  )
+  const timeout = setTimeout(() => controller.abort(timeoutError), timeoutMs)
+  const signal = parentSignal
+    ? AbortSignal.any([parentSignal, controller.signal])
+    : controller.signal
+
+  try {
+    return await fetcher(input, { ...init, signal })
+  } finally {
+    clearTimeout(timeout)
+  }
 }
 
 function createServiceAccountJwt({

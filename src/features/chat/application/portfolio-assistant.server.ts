@@ -1,181 +1,277 @@
-import { convertToModelMessages, createUIMessageStreamResponse } from "ai"
+import { createUIMessageStreamResponse } from "ai"
 import type { UIMessageChunk } from "ai"
 
-import type { AiProviderAdapter } from "@/features/chat/application/ports/ai-provider"
-import type { ChatExchangeRecorder } from "@/features/chat/application/ports/chat-exchange-recorder"
-import type { PortfolioEvidenceRetriever } from "@/features/chat/application/ports/portfolio-evidence-retriever"
-import { chatProviderAvailability } from "@/features/chat/application/provider-availability"
-import type { ProviderAvailability } from "@/features/chat/application/provider-availability"
-import { validateChatRequest } from "@/features/chat/domain/chat"
+import type { ChatRequestLimiter } from "@/features/chat/application/ports/chat-request-limiter"
+import type { PortfolioChat } from "@/features/chat/domain/portfolio-chat"
+import {
+  ChatDynamicRateLimitError,
+  createPortfolioChat,
+} from "@/features/chat/application/portfolio-chat"
+import {
+  InvalidChatRequestError,
+  validateChatRequest,
+} from "@/features/chat/domain/chat"
 import type { PortfolioMessageMetadata } from "@/features/chat/domain/chat"
-import { buildAssistantInstruction } from "@/features/chat/domain/portfolio-evidence"
-import { buildPortfolioRetrievalQuery } from "@/features/chat/domain/portfolio-retrieval-query"
 import { createAiProviders } from "@/features/chat/infrastructure/ai/providers.server"
+import {
+  DatabaseChatRequestLimiter,
+  getChatVisitorHash,
+} from "@/features/chat/infrastructure/chat-rate-limit.server"
 import { DatabaseChatExchangeRecorder } from "@/features/chat/infrastructure/chat-exchanges.server"
-import { ResilientPortfolioEvidenceRetriever } from "@/features/chat/infrastructure/evidence/vector-retriever.server"
+import { DatabaseChatRequestCoordinator } from "@/features/chat/infrastructure/chat-request-coordinator.server"
+import { DatabaseProviderCircuitStore } from "@/features/chat/infrastructure/provider-circuit.server"
+import { getPortfolioExactAnswerCatalog } from "@/features/chat/knowledge/exact-answer-catalog"
+import { getCompiledPortfolioKnowledge } from "@/features/chat/knowledge/portfolio-knowledge.server"
 import { logger } from "@/lib/logger.server"
+
+const MAX_CHAT_BODY_BYTES = 16_000
+const CHAT_HTTP_DEADLINE_MS = 48_000
+const TEN_MINUTES_MS = 10 * 60 * 1_000
+const BROAD_REQUEST_LIMIT = 60
+
+interface ChatHttpDependencies {
+  chat?: PortfolioChat
+  limiter?: ChatRequestLimiter
+  deadlineMs?: number
+}
+
+export async function handlePortfolioChatRequest(
+  request: Request,
+  dependencies: ChatHttpDependencies = {}
+) {
+  const signal = deadlineSignal(
+    request.signal,
+    dependencies.deadlineMs ?? CHAT_HTTP_DEADLINE_MS
+  )
+  if (!isSameOrigin(request)) {
+    return errorResponse("Cross-site requests are not allowed.", 403)
+  }
+  if (!isJsonContentType(request.headers.get("content-type"))) {
+    return errorResponse("The chat request must use JSON.", 415)
+  }
+  const declaredSize = Number(request.headers.get("content-length") ?? "0")
+  if (Number.isFinite(declaredSize) && declaredSize > MAX_CHAT_BODY_BYTES) {
+    return errorResponse("The chat request is too large.", 413)
+  }
+
+  try {
+    const body = await readLimitedBody(request, MAX_CHAT_BODY_BYTES, signal)
+    const validated = await validateChatRequest(JSON.parse(body) as unknown)
+    const limiter = dependencies.limiter ?? new DatabaseChatRequestLimiter()
+    const subjectHash = getChatVisitorHash(request)
+    const broadLimit = await withSignal(
+      limiter.consume({
+        scope: "all-10m",
+        subjectHash,
+        limit: BROAD_REQUEST_LIMIT,
+        windowMs: TEN_MINUTES_MS,
+      }),
+      signal
+    )
+    if (!broadLimit.allowed)
+      return rateLimitResponse(broadLimit.retryAfterSeconds)
+
+    const chat = dependencies.chat ?? createDefaultPortfolioChat()
+    const reply = await withSignal(
+      chat.answer(
+        {
+          conversationId: validated.conversationId,
+          clientMessageId: validated.clientMessageId,
+          question: validated.question,
+        },
+        {
+          requestId: request.headers.get("x-request-id") ?? crypto.randomUUID(),
+          visitorHash: subjectHash,
+          signal,
+        }
+      ),
+      signal
+    )
+    return createReplyResponse(reply)
+  } catch (error) {
+    if (error instanceof ChatBodyTooLargeError) {
+      return errorResponse("The chat request is too large.", 413)
+    }
+    if (error instanceof ChatDynamicRateLimitError) {
+      return rateLimitResponse(error.retryAfterSeconds)
+    }
+    if (
+      error instanceof InvalidChatRequestError ||
+      error instanceof SyntaxError
+    ) {
+      return errorResponse("The chat request is invalid.", 400)
+    }
+    logger.error(
+      { errorType: error instanceof Error ? error.name : "UnknownError" },
+      "Portfolio chat request failed"
+    )
+    return errorResponse("The assistant is temporarily unavailable.", 503)
+  }
+}
 
 export async function createPortfolioAssistantResponse(
   input: unknown,
   signal?: AbortSignal,
-  providers: readonly AiProviderAdapter[] = createAiProviders(),
-  recorder: ChatExchangeRecorder = new DatabaseChatExchangeRecorder(),
-  providerAvailability: ProviderAvailability = chatProviderAvailability,
-  evidenceRetriever: PortfolioEvidenceRetriever = new ResilientPortfolioEvidenceRetriever()
+  chat: PortfolioChat = createDefaultPortfolioChat()
 ) {
-  const { conversationId, messages, question } =
-    await validateChatRequest(input)
-  const evidence = await evidenceRetriever.retrieve(
-    buildPortfolioRetrievalQuery(messages, question),
-    signal
+  const validated = await validateChatRequest(input)
+  const reply = await chat.answer(
+    {
+      conversationId: validated.conversationId,
+      clientMessageId: validated.clientMessageId,
+      question: validated.question,
+    },
+    { requestId: crypto.randomUUID(), signal }
   )
-  const modelMessages = await convertToModelMessages(messages)
-  const request = {
-    system: buildAssistantInstruction(evidence),
-    messages: modelMessages,
-    signal,
-  }
+  return createReplyResponse(reply)
+}
 
+export function createDefaultPortfolioChat() {
+  const knowledge = getCompiledPortfolioKnowledge()
+  return createPortfolioChat({
+    knowledge,
+    exactAnswers: getPortfolioExactAnswerCatalog(),
+    providers: createAiProviders(),
+    recorder: new DatabaseChatExchangeRecorder(),
+    requestCoordinator: new DatabaseChatRequestCoordinator(),
+    requestLimiter: new DatabaseChatRequestLimiter(),
+    providerCircuit: new DatabaseProviderCircuitStore(),
+  })
+}
+
+function createReplyResponse(
+  reply: Awaited<ReturnType<PortfolioChat["answer"]>>
+) {
+  const metadata = {
+    source: reply.source,
+    citations: reply.citations,
+    provider: reply.kind === "generated" ? reply.provider : undefined,
+    requestedModel:
+      reply.kind === "generated" ? reply.requestedModel : undefined,
+    servedModel: reply.kind === "generated" ? reply.servedModel : undefined,
+    model:
+      reply.kind === "generated"
+        ? (reply.servedModel ?? reply.requestedModel)
+        : undefined,
+    usedFallback: reply.fallbackDepth > 0,
+    fallbackDepth: reply.fallbackDepth,
+    responseKind: reply.kind,
+    contactAction: reply.contactAction,
+  } satisfies PortfolioMessageMetadata
   const stream = new ReadableStream<UIMessageChunk<PortfolioMessageMetadata>>({
-    async start(controller) {
-      for (const [index, provider] of providers.entries()) {
-        if (!providerAvailability.canAttempt(provider.provider)) {
-          logger.info(
-            { provider: provider.provider, model: provider.modelId },
-            "Portfolio assistant provider is cooling down"
-          )
-          continue
-        }
-
-        try {
-          const providerStream = await provider.stream(request)
-          const metadata = {
-            source: evidence.source,
-            citations: evidence.citations,
-            provider: provider.provider,
-            model: provider.modelId,
-            usedFallback: index > 0,
-          } satisfies PortfolioMessageMetadata
-          const answer = await pipeProviderStream(
-            controller,
-            providerStream,
-            metadata
-          )
-          if (answer !== null) {
-            providerAvailability.recordSuccess(provider.provider)
-            await recorder
-              .record({
-                conversationId,
-                question,
-                answer,
-                source: evidence.source,
-                provider: provider.provider,
-                model: provider.modelId,
-                usedFallback: index > 0,
-              })
-              .catch((error) =>
-                logger.warn(
-                  { errorType: getErrorType(error) },
-                  "Assistant exchange could not be stored"
-                )
-              )
-          }
-          logger.info(
-            {
-              provider: provider.provider,
-              model: provider.modelId,
-              usedFallback: index > 0,
-            },
-            "Portfolio assistant response completed"
-          )
-          controller.close()
-          return
-        } catch (error) {
-          providerAvailability.recordFailure(provider.provider, error)
-          logger.warn(
-            {
-              provider: provider.provider,
-              model: provider.modelId,
-              errorType: getErrorType(error),
-            },
-            "Portfolio assistant provider failed"
-          )
-        }
-      }
-
+    start(controller) {
       controller.enqueue({
-        type: "error",
-        errorText:
-          "The assistant is temporarily unavailable. Please try again shortly.",
+        type: "start",
+        messageId: reply.messageId,
+        messageMetadata: metadata,
       })
+      controller.enqueue({ type: "text-start", id: "answer" })
+      controller.enqueue({
+        type: "text-delta",
+        id: "answer",
+        delta: reply.text,
+      })
+      controller.enqueue({ type: "text-end", id: "answer" })
+      controller.enqueue({ type: "finish", messageMetadata: metadata })
       controller.close()
     },
   })
-
-  return createUIMessageStreamResponse({ stream })
+  const response = createUIMessageStreamResponse({ stream })
+  response.headers.set("Cache-Control", "no-store")
+  response.headers.set("X-Content-Type-Options", "nosniff")
+  return response
 }
 
-async function pipeProviderStream(
-  controller: ReadableStreamDefaultController<
-    UIMessageChunk<PortfolioMessageMetadata>
-  >,
-  stream: ReadableStream<UIMessageChunk<PortfolioMessageMetadata>>,
-  metadata: PortfolioMessageMetadata
+function isSameOrigin(request: Request) {
+  const fetchSite = request.headers.get("sec-fetch-site")
+  if (fetchSite && !["same-origin", "same-site", "none"].includes(fetchSite))
+    return false
+
+  const origin = request.headers.get("origin")
+  if (origin) return origin === new URL(request.url).origin
+  return process.env.NODE_ENV !== "production" || fetchSite === "same-origin"
+}
+
+function errorResponse(error: string, status: number) {
+  return Response.json(
+    { error },
+    {
+      status,
+      headers: {
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff",
+      },
+    }
+  )
+}
+
+function rateLimitResponse(retryAfterSeconds: number) {
+  return Response.json(
+    { error: "Too many requests. Please try again shortly." },
+    {
+      status: 429,
+      headers: {
+        "Retry-After": String(retryAfterSeconds),
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff",
+      },
+    }
+  )
+}
+
+function deadlineSignal(parent: AbortSignal, timeoutMs: number) {
+  return AbortSignal.any([parent, AbortSignal.timeout(timeoutMs)])
+}
+
+function withSignal<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
+  if (signal.aborted) return Promise.reject(signal.reason)
+
+  return new Promise<T>((resolve, reject) => {
+    const onAbort = () => reject(signal.reason)
+    signal.addEventListener("abort", onAbort, { once: true })
+    promise.then(
+      (value) => {
+        signal.removeEventListener("abort", onAbort)
+        resolve(value)
+      },
+      (error: unknown) => {
+        signal.removeEventListener("abort", onAbort)
+        reject(error)
+      }
+    )
+  })
+}
+
+function isJsonContentType(value: string | null) {
+  return value?.split(";", 1)[0]?.trim().toLowerCase() === "application/json"
+}
+
+class ChatBodyTooLargeError extends Error {}
+
+async function readLimitedBody(
+  request: Request,
+  maximumBytes: number,
+  signal: AbortSignal
 ) {
-  const reader = stream.getReader()
-  let visibleText = false
-  const buffered: UIMessageChunk<PortfolioMessageMetadata>[] = []
-  let answer = ""
+  if (!request.body) return ""
+  const reader = request.body.getReader()
+  const decoder = new TextDecoder()
+  let bytes = 0
+  let body = ""
 
   try {
-    let result = await reader.read()
-    while (!result.done) {
-      const chunk = withMetadata(result.value, metadata)
-      const beginsText =
-        chunk.type === "text-start" || chunk.type === "text-delta"
-      if (!visibleText && !beginsText) {
-        buffered.push(chunk)
-        result = await reader.read()
-        continue
+    for (;;) {
+      const { done, value } = await withSignal(reader.read(), signal)
+      if (done) break
+      bytes += value.byteLength
+      if (bytes > maximumBytes) {
+        await reader.cancel("chat body too large")
+        throw new ChatBodyTooLargeError()
       }
-      if (!visibleText) {
-        visibleText = true
-        for (const pending of buffered) controller.enqueue(pending)
-      }
-      controller.enqueue(chunk)
-      if (chunk.type === "text-delta") answer += chunk.delta
-      result = await reader.read()
+      body += decoder.decode(value, { stream: true })
     }
-
-    if (!visibleText) throw new Error("The provider returned no answer.")
-    return answer
-  } catch (error) {
-    if (visibleText) {
-      controller.enqueue({
-        type: "error",
-        errorText: "The response was interrupted. Please try again.",
-      })
-      return null
-    }
-    throw error
+    return body + decoder.decode()
   } finally {
-    try {
-      reader.releaseLock()
-    } catch {
-      // Some runtimes reject releasing a reader after its stream errors.
-    }
+    reader.releaseLock()
   }
-}
-
-function withMetadata(
-  chunk: UIMessageChunk<PortfolioMessageMetadata>,
-  metadata: PortfolioMessageMetadata
-): UIMessageChunk<PortfolioMessageMetadata> {
-  if (chunk.type === "start") return { ...chunk, messageMetadata: metadata }
-  if (chunk.type === "finish") return { ...chunk, messageMetadata: metadata }
-  return chunk
-}
-
-function getErrorType(error: unknown) {
-  return error instanceof Error ? error.name : "UnknownError"
 }

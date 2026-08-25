@@ -1,47 +1,112 @@
 import { Resend } from "resend"
 
-import type { InquiryDelivery } from "@/features/chat/application/ports/inquiry-delivery"
+import type { InquiryDestination } from "@/features/chat/application/ports/portfolio-inquiry"
 import type { InquirySubmission } from "@/features/chat/domain/inquiry"
 import { logger } from "@/lib/logger.server"
 
-export class ResendInquiryDelivery implements InquiryDelivery {
-  async deliver(inquiry: InquirySubmission) {
-    const apiKey = process.env.RESEND_API_KEY
-    const from = process.env.FROM_EMAIL
-    const owner = process.env.EMAIL_TO
-    if (!apiKey || !from || !owner) {
-      throw new Error("Inquiry delivery is not configured.")
-    }
+export interface ResendInquiryConfig {
+  apiKey: string
+  from: string
+  owner: string
+}
 
-    const resend = new Resend(apiKey)
-    const result = await resend.emails.send({
-      from,
-      to: owner,
-      replyTo: inquiry.email,
-      subject: formatOwnerSubject(inquiry),
-      text: formatOwnerNotification(inquiry),
-    })
+interface InquiryEmailMessage {
+  from: string
+  to: string
+  replyTo?: string
+  subject: string
+  text: string
+}
+
+type SendInquiryEmail = (
+  message: InquiryEmailMessage,
+  options: { idempotencyKey: string; signal?: AbortSignal }
+) => Promise<{ error: unknown }>
+
+export class ResendOwnerInquiryDelivery implements InquiryDestination {
+  readonly channel = "resend-owner" as const
+
+  constructor(
+    private readonly config?: ResendInquiryConfig,
+    private readonly sendEmail?: SendInquiryEmail
+  ) {}
+
+  async deliver({
+    inquiry,
+    idempotencyKey,
+    signal,
+  }: Parameters<InquiryDestination["deliver"]>[0]) {
+    const config = this.config ?? readResendInquiryConfig()
+    const result = await (this.sendEmail ?? createEmailSender(config.apiKey))(
+      {
+        from: config.from,
+        to: config.owner,
+        replyTo: inquiry.email,
+        subject: formatOwnerSubject(inquiry),
+        text: formatOwnerNotification(inquiry),
+      },
+      { idempotencyKey, ...(signal ? { signal } : {}) }
+    )
     if (result.error) throw new Error("Inquiry delivery failed.")
 
-    logger.info({ inquiryType: inquiry.type }, "Portfolio inquiry delivered")
+    logger.info(
+      { inquiryId: inquiry.id, inquiryType: inquiry.type },
+      "Portfolio inquiry delivered"
+    )
+  }
+}
 
-    try {
-      const acknowledgement = await resend.emails.send({
-        from,
+export class ResendAcknowledgementInquiryDelivery implements InquiryDestination {
+  readonly channel = "resend-acknowledgement" as const
+
+  constructor(
+    private readonly config?: ResendInquiryConfig,
+    private readonly sendEmail?: SendInquiryEmail
+  ) {}
+
+  async deliver({
+    inquiry,
+    idempotencyKey,
+    signal,
+  }: Parameters<InquiryDestination["deliver"]>[0]) {
+    const config = this.config ?? readResendInquiryConfig()
+    const result = await (this.sendEmail ?? createEmailSender(config.apiKey))(
+      {
+        from: config.from,
         to: inquiry.email,
         subject: "Thanks for reaching out - Montasim",
         text: formatAcknowledgement(inquiry),
-      })
-      if (acknowledgement.error) {
-        throw new Error("Inquiry acknowledgement failed.")
-      }
-    } catch {
-      logger.warn(
-        { inquiryType: inquiry.type },
-        "Inquiry acknowledgement failed"
-      )
-    }
+      },
+      { idempotencyKey, ...(signal ? { signal } : {}) }
+    )
+    if (result.error) throw new Error("Inquiry acknowledgement failed.")
   }
+}
+
+function readResendInquiryConfig(): ResendInquiryConfig {
+  const apiKey = process.env.RESEND_API_KEY
+  const from = process.env.FROM_EMAIL
+  const owner = process.env.EMAIL_TO
+  if (!apiKey || !from || !owner) {
+    throw new Error("Inquiry delivery is not configured.")
+  }
+  return { apiKey, from, owner }
+}
+
+function createEmailSender(apiKey: string): SendInquiryEmail {
+  const resend = new Resend(apiKey)
+  return (message, options) =>
+    resend.post(
+      "/emails",
+      {
+        from: message.from,
+        to: message.to,
+        reply_to: message.replyTo,
+        subject: message.subject,
+        text: message.text,
+      },
+      options
+    )
 }
 
 export function formatAcknowledgement(inquiry: InquirySubmission) {

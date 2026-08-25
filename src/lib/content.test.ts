@@ -124,6 +124,40 @@ describe("portfolio content", () => {
     ).toBe(true)
   })
 
+  it("derives project chronology from verified GitHub history", () => {
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-foliofarer")
+    expect(
+      projectCatalog.chronological.map((project) => project.id)
+    ).toHaveLength(projectCatalog.records.length)
+    expect(
+      new Set(projectCatalog.chronological.map((project) => project.id))
+    ).toEqual(new Set(projectCatalog.records.map((project) => project.id)))
+
+    for (const project of projectCatalog.records) {
+      expect(project.githubRepositoryCreatedAt).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
+      )
+      expect(project.githubInitialCommitAt).toMatch(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
+      )
+      expect(project.githubInitialCommitSha).toMatch(/^[0-9a-f]{40}$/)
+    }
+
+    const firstObservedAt = (
+      project: (typeof projectCatalog.records)[number]
+    ) =>
+      project.githubInitialCommitAt < project.githubRepositoryCreatedAt
+        ? project.githubInitialCommitAt
+        : project.githubRepositoryCreatedAt
+
+    for (let index = 1; index < projectCatalog.chronological.length; index++) {
+      expect(
+        firstObservedAt(projectCatalog.chronological[index - 1]) >=
+          firstObservedAt(projectCatalog.chronological[index])
+      ).toBe(true)
+    }
+  })
+
   it("publishes evidence-backed case studies for every project", () => {
     expect(
       projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.projectId)
