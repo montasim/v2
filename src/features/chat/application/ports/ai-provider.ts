@@ -24,9 +24,12 @@ export interface AiCompletionResult {
   usage?: AiCompletionUsage
 }
 
-export interface AiProviderAdapter {
+export interface AiProviderRoute {
   readonly provider: ChatProviderName
   readonly modelId: string
+}
+
+export interface AiProviderAdapter extends AiProviderRoute {
   /** False when this configured provider can review but cannot accept the full knowledge packet. */
   readonly supportsFullContextGeneration?: boolean
   complete: (request: AiCompletionRequest) => Promise<AiCompletionResult>

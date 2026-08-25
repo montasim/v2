@@ -18,7 +18,12 @@ import type { ChatProviderName } from "@/features/chat/domain/chat"
 
 export const OPENROUTER_FREE_MODEL_IDS = [
   "z-ai/glm-5.2:free",
+  "minimax/minimax-m3:free",
+  "minimax/minimax-m2.7:free",
   "google/gemma-4-31b-it:free",
+  "google/gemma-4-26b-a4b-it:free",
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "dots-studio/dots-3-note-preview:free",
 ] as const
 export type OpenRouterFreeModelId = (typeof OPENROUTER_FREE_MODEL_IDS)[number]
 
@@ -30,7 +35,7 @@ export const OPENROUTER_PROVIDER_OPTIONS = {
   plugins: [],
   usage: { include: true },
   provider: {
-    allow_fallbacks: false,
+    allow_fallbacks: true,
     require_parameters: true,
     max_price: {
       prompt: 0,
@@ -122,6 +127,8 @@ export interface DirectProviderAdapterConfig {
 export interface AiProviderEnvironment {
   OPENROUTER_API_KEY?: string
   OPENROUTER?: string
+  OPENROUTER_FREE_MODELS?: string
+  /** @deprecated Use OPENROUTER_FREE_MODELS for an ordered failover pool. */
   OPENROUTER_FREE_MODEL?: string
   GOOGLE_GENERATIVE_AI_API_KEY?: string
   GROQ_API_KEY?: string
@@ -272,11 +279,11 @@ export function createAiProviders(
     environment.OPENROUTER_API_KEY ?? environment.OPENROUTER
 
   if (hasApiKey(openRouterApiKey)) {
+    const modelIds = configuredOpenRouterModelIds(environment)
     providers.push(
-      createOpenRouterAdapter({
-        apiKey: openRouterApiKey,
-        modelId: environment.OPENROUTER_FREE_MODEL,
-      })
+      ...modelIds.map((modelId) =>
+        createOpenRouterAdapter({ apiKey: openRouterApiKey, modelId })
+      )
     )
   }
   if (hasApiKey(environment.GOOGLE_GENERATIVE_AI_API_KEY)) {
@@ -289,6 +296,29 @@ export function createAiProviders(
   }
 
   return providers
+}
+
+function configuredOpenRouterModelIds(
+  environment: AiProviderEnvironment
+): readonly OpenRouterFreeModelId[] {
+  if (environment.OPENROUTER_FREE_MODELS !== undefined) {
+    const entries = environment.OPENROUTER_FREE_MODELS.split(",")
+    const normalized = entries.map((modelId) => modelId.trim())
+
+    if (normalized.some((modelId) => modelId.length === 0)) {
+      return [validateOpenRouterModelId("")]
+    }
+
+    return Array.from(
+      new Set(normalized.map((modelId) => validateOpenRouterModelId(modelId)))
+    )
+  }
+
+  if (environment.OPENROUTER_FREE_MODEL !== undefined) {
+    return [validateOpenRouterModelId(environment.OPENROUTER_FREE_MODEL)]
+  }
+
+  return OPENROUTER_FREE_MODEL_IDS
 }
 
 export function validateOpenRouterModelId(

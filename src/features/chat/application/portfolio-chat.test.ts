@@ -59,13 +59,14 @@ beforeAll(() => {
 function provider(
   providerName: ChatProviderName,
   outputs: readonly string[],
-  options: { costUsd?: number; failWith?: string } = {}
+  options: { costUsd?: number; failWith?: string; modelId?: string } = {}
 ): AiProviderAdapter {
   let call = 0
   const modelId =
-    providerName === "openrouter"
+    options.modelId ??
+    (providerName === "openrouter"
       ? "z-ai/glm-5.2:free"
-      : `${providerName}-test-model`
+      : `${providerName}-test-model`)
   return {
     provider: providerName,
     modelId,
@@ -303,6 +304,68 @@ describe("PortfolioChat full-context orchestration", () => {
         }),
       ])
     )
+  })
+
+  it("keeps OpenRouter model failures isolated within the curated pool", async () => {
+    const congested = provider("openrouter", [], {
+      failWith: "rate-limited",
+      modelId: "z-ai/glm-5.2:free",
+    })
+    const available = provider("openrouter", [validGeneratedDraft], {
+      costUsd: 0,
+      modelId: "nvidia/nemotron-3-super-120b-a12b:free",
+    })
+    const gemini = provider("gemini", [acceptedReview])
+    const chat = createPortfolioChat({
+      knowledge,
+      exactAnswers: noExactAnswers(),
+      providers: [congested, available, gemini],
+      recorder: recorder().adapter,
+      requestLimiter: allowAllLimiter(),
+      providerCircuit: new InMemoryProviderCircuitStore(),
+    })
+
+    const reply = await chat.answer(
+      { conversationId: "c", question: dynamicQuestion() },
+      { visitorHash: "visitor" }
+    )
+
+    expect(reply).toMatchObject({
+      kind: "generated",
+      provider: "openrouter",
+      requestedModel: "nvidia/nemotron-3-super-120b-a12b:free",
+    })
+    expect(congested.complete).toHaveBeenCalledOnce()
+    expect(available.complete).toHaveBeenCalledOnce()
+  })
+
+  it("tries the complete configured OpenRouter pool before direct fallback", async () => {
+    const openrouter = Array.from({ length: 4 }, (_, index) =>
+      provider("openrouter", [], {
+        failWith: "request-failed",
+        modelId: `reviewed/free-model-${index + 1}:free`,
+      })
+    )
+    const gemini = provider("gemini", [validGeneratedDraft])
+    const groq = provider("groq", [acceptedReview])
+    const chat = createPortfolioChat({
+      knowledge,
+      exactAnswers: noExactAnswers(),
+      providers: [...openrouter, gemini, groq],
+      recorder: recorder().adapter,
+      requestLimiter: allowAllLimiter(),
+      providerCircuit: new InMemoryProviderCircuitStore(),
+    })
+
+    const reply = await chat.answer(
+      { conversationId: "c", question: dynamicQuestion() },
+      { visitorHash: "visitor" }
+    )
+
+    expect(reply).toMatchObject({ kind: "generated", provider: "gemini" })
+    for (const adapter of openrouter) {
+      expect(adapter.complete).toHaveBeenCalledOnce()
+    }
   })
 
   it("reserves time for a fallback when the primary provider stalls", async () => {

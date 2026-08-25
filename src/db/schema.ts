@@ -156,15 +156,20 @@ export const assistantRateLimits = pgTable(
   (table) => [primaryKey({ columns: [table.scope, table.subjectHash] })]
 )
 
-export const assistantProviderStates = pgTable("assistant_provider_states", {
-  provider: varchar("provider", { length: 40 }).primaryKey(),
-  disabledUntil: timestamp("disabled_until", { withTimezone: true }),
-  reason: varchar("reason", { length: 120 }),
-  lastCostUsd: numeric("last_cost_usd", { precision: 16, scale: 10 }),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-})
+export const assistantProviderStates = pgTable(
+  "assistant_provider_states",
+  {
+    provider: varchar("provider", { length: 40 }).notNull(),
+    model: varchar("model", { length: 160 }).notNull(),
+    disabledUntil: timestamp("disabled_until", { withTimezone: true }),
+    reason: varchar("reason", { length: 120 }),
+    lastCostUsd: numeric("last_cost_usd", { precision: 16, scale: 10 }),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.provider, table.model] })]
+)
 
 export const portfolioInquiries = pgTable("portfolio_inquiries", {
   id: varchar("id", { length: 100 }).primaryKey(),

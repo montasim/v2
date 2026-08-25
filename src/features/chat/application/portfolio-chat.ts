@@ -1,6 +1,7 @@
 import type {
   AiCompletionResult,
   AiProviderAdapter,
+  AiProviderRoute,
 } from "@/features/chat/application/ports/ai-provider"
 import {
   createOpenRouterGlobalRateLimitRequests,
@@ -237,7 +238,7 @@ async function generateValidatedReply(
     (provider) => provider.supportsFullContextGeneration !== false
   )
   for (const [fallbackDepth, provider] of generationProviders.entries()) {
-    if (!(await canAttempt(input.providerCircuit, provider.provider))) {
+    if (!(await canAttempt(input.providerCircuit, provider))) {
       attempts.push({
         stage: "generation",
         provider: provider.provider,
@@ -284,7 +285,7 @@ async function generateValidatedReply(
         provider.provider === "openrouter" &&
         completion.usage?.costUsd !== 0
       ) {
-        await safeCircuitFailure(input.providerCircuit, provider.provider, {
+        await safeCircuitFailure(input.providerCircuit, provider, {
           reason: "policy-violation",
           costUsd: completion.usage?.costUsd,
         })
@@ -296,7 +297,7 @@ async function generateValidatedReply(
         continue
       }
 
-      await safeCircuitSuccess(input.providerCircuit, provider.provider)
+      await safeCircuitSuccess(input.providerCircuit, provider)
       const evaluated = generation.evaluate(completion.text)
       if (evaluated.status === "rejected") {
         attempts.push({
@@ -378,7 +379,7 @@ async function generateValidatedReply(
         costUsd,
       })
       if (isCircuitFailure(reason)) {
-        await safeCircuitFailure(input.providerCircuit, provider.provider, {
+        await safeCircuitFailure(input.providerCircuit, provider, {
           reason,
           retryAfterSeconds: readRetryAfter(error),
           costUsd,
@@ -433,7 +434,7 @@ async function reviewGeneratedAnswer(input: {
   const reviewers = reviewerOrder(input.providers, input.generator)
 
   for (const reviewer of reviewers) {
-    if (!(await canAttempt(input.providerCircuit, reviewer.provider))) {
+    if (!(await canAttempt(input.providerCircuit, reviewer))) {
       attempts.push({
         stage: "review",
         provider: reviewer.provider,
@@ -454,7 +455,7 @@ async function reviewGeneratedAnswer(input: {
           input.attemptTimeoutMs("review", reviewer.provider)
         ),
       })
-      await safeCircuitSuccess(input.providerCircuit, reviewer.provider)
+      await safeCircuitSuccess(input.providerCircuit, reviewer)
       const trace = completionTrace(
         "review",
         reviewer,
@@ -493,7 +494,7 @@ async function reviewGeneratedAnswer(input: {
         costUsd: readCostUsd(error),
       })
       if (isCircuitFailure(reason)) {
-        await safeCircuitFailure(input.providerCircuit, reviewer.provider, {
+        await safeCircuitFailure(input.providerCircuit, reviewer, {
           reason,
           retryAfterSeconds: readRetryAfter(error),
           costUsd: readCostUsd(error),
@@ -779,10 +780,10 @@ async function recordReply(input: {
 
 async function canAttempt(
   circuit: ProviderCircuitStore,
-  provider: ChatProviderName
+  route: AiProviderRoute
 ) {
   try {
-    return await circuit.canAttempt(provider)
+    return await circuit.canAttempt(route)
   } catch {
     return true
   }
@@ -790,10 +791,10 @@ async function canAttempt(
 
 async function safeCircuitSuccess(
   circuit: ProviderCircuitStore,
-  provider: ChatProviderName
+  route: AiProviderRoute
 ) {
   try {
-    await circuit.recordSuccess(provider)
+    await circuit.recordSuccess(route)
   } catch {
     // Provider-state telemetry must not hide a validated answer.
   }
@@ -801,11 +802,11 @@ async function safeCircuitSuccess(
 
 async function safeCircuitFailure(
   circuit: ProviderCircuitStore,
-  provider: ChatProviderName,
+  route: AiProviderRoute,
   failure: { reason: string; retryAfterSeconds?: number; costUsd?: number }
 ) {
   try {
-    await circuit.recordFailure(provider, failure)
+    await circuit.recordFailure(route, failure)
   } catch {
     // A local request still falls through when shared state is unavailable.
   }

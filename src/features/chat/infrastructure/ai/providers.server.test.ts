@@ -111,7 +111,12 @@ describe("provider discovery", () => {
   it("contains only the reviewed free OpenRouter model IDs", () => {
     expect(OPENROUTER_FREE_MODEL_IDS).toEqual([
       "z-ai/glm-5.2:free",
+      "minimax/minimax-m3:free",
+      "minimax/minimax-m2.7:free",
       "google/gemma-4-31b-it:free",
+      "google/gemma-4-26b-a4b-it:free",
+      "nvidia/nemotron-3-super-120b-a12b:free",
+      "dots-studio/dots-3-note-preview:free",
     ])
     expect(OPENROUTER_MODEL_ID).toBe("z-ai/glm-5.2:free")
   })
@@ -147,12 +152,12 @@ describe("provider discovery", () => {
     })
 
     expect(providers.map(({ provider }) => provider)).toEqual([
-      "openrouter",
+      ...OPENROUTER_FREE_MODEL_IDS.map(() => "openrouter" as const),
       "gemini",
       "groq",
     ])
     expect(providers.map(({ modelId }) => modelId)).toEqual([
-      OPENROUTER_MODEL_ID,
+      ...OPENROUTER_FREE_MODEL_IDS,
       GEMINI_MODEL_ID,
       GROQ_MODEL_ID,
     ])
@@ -160,7 +165,7 @@ describe("provider discovery", () => {
       providers.map(({ supportsFullContextGeneration }) =>
         Boolean(supportsFullContextGeneration)
       )
-    ).toEqual([true, true, false])
+    ).toEqual([...OPENROUTER_FREE_MODEL_IDS.map(() => true), true, false])
   })
 
   it("omits every provider with a missing or blank key", () => {
@@ -179,10 +184,62 @@ describe("provider discovery", () => {
       createAiProviders({ OPENROUTER: "existing-key" }).map(
         ({ provider }) => provider
       )
-    ).toEqual(["openrouter"])
+    ).toEqual(
+      Array.from(
+        { length: OPENROUTER_FREE_MODEL_IDS.length },
+        () => "openrouter"
+      )
+    )
   })
 
-  it("uses an allowlisted OpenRouter override and fails closed otherwise", () => {
+  it("uses a comma-separated OpenRouter pool in configured failover order", () => {
+    const providers = createAiProviders({
+      OPENROUTER_API_KEY: "openrouter-key",
+      OPENROUTER_FREE_MODELS:
+        " google/gemma-4-31b-it:free, z-ai/glm-5.2:free,google/gemma-4-31b-it:free ",
+    })
+
+    expect(providers.map(({ modelId }) => modelId)).toEqual([
+      "google/gemma-4-31b-it:free",
+      "z-ai/glm-5.2:free",
+    ])
+  })
+
+  it("prefers the model pool over the legacy single-model override", () => {
+    const providers = createAiProviders({
+      OPENROUTER_API_KEY: "openrouter-key",
+      OPENROUTER_FREE_MODELS:
+        "nvidia/nemotron-3-super-120b-a12b:free,minimax/minimax-m3:free",
+      OPENROUTER_FREE_MODEL: "google/gemma-4-31b-it:free",
+    })
+
+    expect(providers.map(({ modelId }) => modelId)).toEqual([
+      "nvidia/nemotron-3-super-120b-a12b:free",
+      "minimax/minimax-m3:free",
+    ])
+  })
+
+  it("fails closed for malformed or unapproved model pools", () => {
+    for (const modelIds of [
+      "z-ai/glm-5.2:free,",
+      " ",
+      "z-ai/glm-5.2:free,anthropic/claude-sonnet-4",
+    ]) {
+      expect(() =>
+        createAiProviders({
+          OPENROUTER_API_KEY: "openrouter-key",
+          OPENROUTER_FREE_MODELS: modelIds,
+        })
+      ).toThrow(
+        expect.objectContaining({
+          code: "invalid-model",
+          provider: "openrouter",
+        })
+      )
+    }
+  })
+
+  it("keeps the legacy single-model override and fails closed otherwise", () => {
     const [provider] = createAiProviders({
       OPENROUTER_API_KEY: "openrouter-key",
       OPENROUTER_FREE_MODEL: "google/gemma-4-31b-it:free",
@@ -267,7 +324,7 @@ describe("OpenRouter adapter", () => {
       plugins: [],
       usage: { include: true },
       provider: {
-        allow_fallbacks: false,
+        allow_fallbacks: true,
         require_parameters: true,
         max_price: {
           prompt: 0,
