@@ -12,6 +12,10 @@ import {
   validateChatRequest,
 } from "@/features/chat/domain/chat"
 import type { PortfolioMessageMetadata } from "@/features/chat/domain/chat"
+import {
+  CHAT_MODERATION_ERROR,
+  getChatModerationError,
+} from "@/features/chat/domain/chat-moderation"
 import { createAiProviders } from "@/features/chat/infrastructure/ai/providers.server"
 import {
   DatabaseChatRequestLimiter,
@@ -57,6 +61,9 @@ export async function handlePortfolioChatRequest(
   try {
     const body = await readLimitedBody(request, MAX_CHAT_BODY_BYTES, signal)
     const validated = await validateChatRequest(JSON.parse(body) as unknown)
+    if (await getChatModerationError(validated.question)) {
+      return errorResponse(CHAT_MODERATION_ERROR, 400)
+    }
     const limiter = dependencies.limiter ?? new DatabaseChatRequestLimiter()
     const subjectHash = getChatVisitorHash(request)
     const broadLimit = await withSignal(

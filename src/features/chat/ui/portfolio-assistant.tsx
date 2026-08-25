@@ -11,6 +11,7 @@ import {
   ChatCenteredDotsIcon,
   ChatCircleDotsIcon,
   CheckIcon,
+  CircleDashedIcon,
   CopyIcon,
   EnvelopeSimpleIcon,
   HeartStraightIcon,
@@ -28,11 +29,17 @@ import { Dialog } from "radix-ui"
 
 import { Button } from "@/components/ui/button"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
+import { getInquiryMessageModerationError } from "@/features/chat/domain/inquiry-moderation"
+import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import type {
   PortfolioContactAction,
   PortfolioUIMessage,
 } from "@/features/chat/domain/chat"
+import {
+  CHAT_MODERATION_ERROR,
+  getChatModerationError,
+} from "@/features/chat/domain/chat-moderation"
 import { formatChatResponseProvenance } from "@/features/chat/domain/chat-response-provenance"
 import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
 import {
@@ -64,6 +71,27 @@ interface AssistantHeaderContent {
 const defaultHeader: AssistantHeaderContent = {
   title: "Ask about Montasim",
   description: "AI assistant using this portfolio",
+}
+
+const inquiryPresentation: Record<
+  InquiryType,
+  { title: string; sentTitle: string; confirmationSubject: string }
+> = {
+  hire: {
+    title: "Discuss a role",
+    sentTitle: "Role inquiry sent",
+    confirmationSubject: "role inquiry",
+  },
+  project: {
+    title: "Discuss a project",
+    sentTitle: "Project inquiry sent",
+    confirmationSubject: "project inquiry",
+  },
+  general: {
+    title: "Send a query",
+    sentTitle: "Query sent",
+    confirmationSubject: "message",
+  },
 }
 
 type SuggestedQuestionId = "hiring" | "impact" | "expertise"
@@ -120,8 +148,8 @@ export function PortfolioAssistant() {
   const startInquiry = React.useCallback((type: InquiryType) => {
     setInquiryType(type)
     setInquiryHeader({
-      title: type === "hire" ? "Discuss a role" : "Discuss a project",
-      description: "Question 1 of 4",
+      title: inquiryPresentation[type].title,
+      description: `Question 1 of ${inquirySteps[type].length}`,
     })
     setInquiryKey((value) => value + 1)
     setMode("inquiry")
@@ -181,7 +209,7 @@ export function PortfolioAssistant() {
         parts: [
           {
             type: "text",
-            text: `Your ${type === "hire" ? "role" : "project"} inquiry is sent. Your contact details remain separate from this conversation. What else would you like to know?`,
+            text: `Your ${inquiryPresentation[type].confirmationSubject} is sent. Your contact details remain separate from this conversation. What else would you like to know?`,
           },
         ],
       },
@@ -343,6 +371,9 @@ function AssistantHome({
             </InquiryEntry>
             <InquiryEntry onClick={() => startInquiry("project")}>
               <SquaresFourIcon className="size-[19px]" /> Discuss a project
+            </InquiryEntry>
+            <InquiryEntry onClick={() => startInquiry("general")}>
+              <ChatCircleDotsIcon className="size-[19px]" /> Something else
             </InquiryEntry>
           </div>
         </div>
@@ -586,15 +617,30 @@ function QuickComposer({
   disabled?: boolean
 }) {
   const [value, setValue] = React.useState("")
+  const [error, setError] = React.useState("")
+  const [isChecking, setIsChecking] = React.useState(false)
+  const errorId = React.useId()
   const localTextareaRef = React.useRef<HTMLTextAreaElement>(null)
   const textareaRef = inputRef ?? localTextareaRef
 
-  function submitQuestion() {
+  async function submitQuestion() {
     const question = value.trim()
-    if (!question || disabled) return
-    onSend(question)
-    setValue("")
-    if (textareaRef.current) textareaRef.current.style.height = "auto"
+    if (!question || disabled || isChecking) return
+
+    setError("")
+    setIsChecking(true)
+    try {
+      if (await getChatModerationError(question)) {
+        setError(CHAT_MODERATION_ERROR)
+        textareaRef.current?.focus()
+        return
+      }
+      onSend(question)
+      setValue("")
+      if (textareaRef.current) textareaRef.current.style.height = "auto"
+    } finally {
+      setIsChecking(false)
+    }
   }
 
   return (
@@ -602,7 +648,7 @@ function QuickComposer({
       className="border-t px-4 py-3"
       onSubmit={(event) => {
         event.preventDefault()
-        submitQuestion()
+        void submitQuestion()
       }}
     >
       <div className="flex items-center justify-between gap-3 text-xs">
@@ -614,14 +660,24 @@ function QuickComposer({
         </label>
         <span className="text-muted-foreground">Enter to send</span>
       </div>
-      <div className="mt-2 flex items-end gap-2 rounded-xl border bg-card p-1.5 focus-within:ring-2 focus-within:ring-ring">
+      <div
+        className={cn(
+          "mt-2 flex items-end gap-2 rounded-xl border bg-card p-1.5 focus-within:ring-2 focus-within:ring-ring",
+          error && "border-destructive focus-within:ring-destructive"
+        )}
+      >
         <textarea
           ref={textareaRef}
           id="assistant-message"
           rows={1}
           maxLength={500}
           value={value}
-          onChange={(event) => setValue(event.target.value)}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? errorId : undefined}
+          onChange={(event) => {
+            setValue(event.target.value)
+            if (error) setError("")
+          }}
           onInput={(event) => {
             const textarea = event.currentTarget
             textarea.style.height = "auto"
@@ -630,23 +686,32 @@ function QuickComposer({
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault()
-              submitQuestion()
+              void submitQuestion()
             }
           }}
           placeholder={placeholder}
-          disabled={disabled}
+          disabled={disabled || isChecking}
           className="max-h-28 min-h-9 min-w-0 flex-1 resize-none bg-transparent px-2 py-2 text-base leading-5 outline-none placeholder:text-muted-foreground sm:text-sm"
         />
         <Button
           type="submit"
           size="icon-lg"
           className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-          disabled={!value.trim() || disabled}
-          aria-label="Send message"
+          disabled={!value.trim() || disabled || isChecking}
+          aria-label={isChecking ? "Checking message" : "Send message"}
         >
-          <ArrowUpIcon className="size-[18px]" />
+          {isChecking ? (
+            <CircleDashedIcon className="size-[18px] animate-spin motion-reduce:animate-none" />
+          ) : (
+            <ArrowUpIcon className="size-[18px]" />
+          )}
         </Button>
       </div>
+      {error ? (
+        <p id={errorId} className="mt-2 text-xs text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
     </form>
   )
 }
@@ -810,8 +875,7 @@ function InquiryFlow({
   )
   const submit = useServerFn(submitInquiry)
   const steps = inquirySteps[state.type]
-  const inquiryTitle =
-    state.type === "hire" ? "Discuss a role" : "Discuss a project"
+  const inquiryTitle = inquiryPresentation[state.type].title
 
   React.useEffect(() => {
     if (state.status !== "submitting") return
@@ -842,8 +906,7 @@ function InquiryFlow({
     let header: AssistantHeaderContent
     if (state.status === "success") {
       header = {
-        title:
-          state.type === "hire" ? "Role inquiry sent" : "Project inquiry sent",
+        title: inquiryPresentation[state.type].sentTitle,
         description: "Confirmation",
       }
     } else if (state.status === "error") {
@@ -932,19 +995,28 @@ function InquiryQuestion({
   const [context, setContext] = React.useState(state.context)
   const [website, setWebsite] = React.useState(state.website)
   const [isCustomOption, setIsCustomOption] = React.useState(false)
+  const [isChecking, setIsChecking] = React.useState(false)
+  const [fieldError, setFieldError] = React.useState("")
+  const [contextError, setContextError] = React.useState("")
+  const verifyEmail = useServerFn(verifyVisitorEmail)
   React.useEffect(() => {
     setValue(state.answers[step.key] ?? "")
     setContext(state.context)
     setWebsite(state.website)
     setIsCustomOption(false)
+    setIsChecking(false)
+    setFieldError("")
+    setContextError("")
   }, [state.stepIndex, step.key, state.answers])
-  const title = state.type === "hire" ? "Discuss a role" : "Discuss a project"
+  const title = inquiryPresentation[state.type].title
   const isEditing = state.editReturnStep !== null
   const progressStep = state.editReturnStep ?? state.stepIndex
   const isEmailValid =
     step.type !== "email" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
   const canContinue =
-    value.trim().length >= (step.type === "email" ? 3 : 2) && isEmailValid
+    value.trim().length >=
+      ("minLength" in step ? step.minLength : step.type === "email" ? 3 : 2) &&
+    isEmailValid
 
   function answer(answerValue: string) {
     dispatch({
@@ -987,7 +1059,7 @@ function InquiryQuestion({
         )}
 
         <section className="mt-5 rounded-2xl bg-muted p-5">
-          <h2 className="text-xl leading-7 font-semibold tracking-tight">
+          <h2 className="text-base leading-6 font-semibold tracking-tight">
             {step.title}
           </h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -1022,9 +1094,45 @@ function InquiryQuestion({
         ) : (
           <form
             className="mt-5"
-            onSubmit={(event) => {
+            aria-busy={isChecking}
+            onSubmit={async (event) => {
               event.preventDefault()
-              if (canContinue) answer(value)
+              if (!canContinue || isChecking) return
+              setFieldError("")
+              setIsChecking(true)
+              try {
+                if (
+                  step.type === "textarea" ||
+                  step.type === "text" ||
+                  isCustomOption
+                ) {
+                  const moderationError =
+                    await getInquiryMessageModerationError(value)
+                  if (moderationError) {
+                    setFieldError(moderationError)
+                    return
+                  }
+                }
+                if (step.type === "email") {
+                  if (context.trim()) {
+                    const moderationError =
+                      await getInquiryMessageModerationError(context)
+                    if (moderationError) {
+                      setContextError(moderationError)
+                      return
+                    }
+                  }
+                  await verifyEmail({ data: value })
+                }
+                answer(value)
+              } catch (error) {
+                setFieldError(
+                  getEmailVerificationError(error) ??
+                    "This value could not be verified. Try again."
+                )
+              } finally {
+                setIsChecking(false)
+              }
             }}
           >
             <label
@@ -1037,54 +1145,99 @@ function InquiryQuestion({
                   : "Project type"
                 : step.label}
             </label>
-            <input
-              id={`inquiry-${step.key}`}
-              type={isCustomOption ? "text" : step.type}
-              autoComplete={step.type === "email" ? "email" : "name"}
-              value={value}
-              onChange={(event) => setValue(event.target.value)}
-              placeholder={
-                isCustomOption
-                  ? step.key === "role"
-                    ? "e.g. Staff Software Engineer"
-                    : "e.g. Design system modernization"
-                  : "placeholder" in step
-                    ? step.placeholder
-                    : undefined
-              }
-              className="mt-2 min-h-12 w-full rounded-xl border bg-card px-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
-            />
+            {step.type === "textarea" ? (
+              <textarea
+                id={`inquiry-${step.key}`}
+                value={value}
+                onChange={(event) => {
+                  setValue(event.target.value)
+                  setFieldError("")
+                }}
+                placeholder={step.placeholder}
+                minLength={step.minLength}
+                maxLength={1_000}
+                rows={5}
+                className="mt-2 w-full resize-y rounded-xl border bg-card px-3 py-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+              />
+            ) : (
+              <input
+                id={`inquiry-${step.key}`}
+                type={isCustomOption ? "text" : step.type}
+                autoComplete={step.type === "email" ? "email" : "name"}
+                value={value}
+                onChange={(event) => {
+                  setValue(event.target.value)
+                  setFieldError("")
+                }}
+                placeholder={
+                  isCustomOption
+                    ? step.key === "role"
+                      ? "e.g. Staff Software Engineer"
+                      : "e.g. Design system modernization"
+                    : "placeholder" in step
+                      ? step.placeholder
+                      : undefined
+                }
+                className="mt-2 min-h-12 w-full rounded-xl border bg-card px-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+              />
+            )}
             <p className="mt-2 min-h-5 text-xs font-medium text-destructive">
-              {step.type === "email" && value && !isEmailValid
-                ? "Enter a valid email address."
-                : ""}
+              {fieldError
+                ? fieldError
+                : step.type === "email" && value && !isEmailValid
+                  ? "Enter a valid email address."
+                  : step.type === "textarea" &&
+                      value &&
+                      value.trim().length < step.minLength
+                    ? `Enter at least ${step.minLength} characters.`
+                    : ""}
             </p>
             {step.type === "email" && (
               <>
-                <label
-                  htmlFor="inquiry-context"
-                  className="mt-3 block text-sm font-semibold text-emphasis-foreground"
-                >
-                  {state.type === "hire"
-                    ? "Company or job link"
-                    : "Project brief or link"}{" "}
-                  <span className="font-normal text-muted-foreground">
-                    (optional)
-                  </span>
-                </label>
-                <textarea
-                  id="inquiry-context"
-                  value={context}
-                  onChange={(event) => setContext(event.target.value)}
-                  maxLength={1_000}
-                  rows={3}
-                  placeholder={
-                    state.type === "hire"
-                      ? "Paste a job link or share brief context"
-                      : "Share a short brief or existing product link"
-                  }
-                  className="mt-2 w-full resize-y rounded-xl border bg-card px-3 py-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
-                />
+                {state.type !== "general" ? (
+                  <>
+                    <label
+                      htmlFor="inquiry-context"
+                      className="mt-3 block text-sm font-semibold text-emphasis-foreground"
+                    >
+                      {state.type === "hire"
+                        ? "Company or job link"
+                        : "Project brief or link"}{" "}
+                      <span className="font-normal text-muted-foreground">
+                        (optional)
+                      </span>
+                    </label>
+                    <textarea
+                      id="inquiry-context"
+                      value={context}
+                      aria-invalid={Boolean(contextError)}
+                      aria-describedby={
+                        contextError ? "inquiry-context-error" : undefined
+                      }
+                      onChange={(event) => {
+                        setContext(event.target.value)
+                        setContextError("")
+                      }}
+                      maxLength={1_000}
+                      rows={3}
+                      placeholder={
+                        state.type === "hire"
+                          ? "Paste a job link or share brief context"
+                          : "Share a short brief or existing product link"
+                      }
+                      className="mt-2 w-full resize-y rounded-xl border bg-card px-3 py-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+                    />
+                    {contextError ? (
+                      <p
+                        id="inquiry-context-error"
+                        className="mt-2 text-xs font-medium text-destructive"
+                        role="alert"
+                      >
+                        {contextError}
+                      </p>
+                    ) : null}
+                  </>
+                ) : null}
                 <input
                   type="text"
                   name="website"
@@ -1101,14 +1254,22 @@ function InquiryQuestion({
               type="submit"
               size="lg"
               className="mt-3 min-h-12 w-full rounded-xl bg-emphasis-foreground text-sm font-semibold text-background hover:bg-emphasis-foreground/80"
-              disabled={!canContinue}
+              disabled={!canContinue || isChecking}
             >
-              {isEditing
-                ? "Save change"
-                : state.stepIndex === steps.length - 1
-                  ? "Send inquiry"
-                  : "Continue"}
-              <ArrowRightCompactIcon className="size-[17px]" />
+              {isChecking
+                ? step.type === "email"
+                  ? "Checking email"
+                  : "Checking message"
+                : isEditing
+                  ? "Save change"
+                  : state.stepIndex === steps.length - 1
+                    ? "Send inquiry"
+                    : "Continue"}
+              {isChecking ? (
+                <CircleDashedIcon className="size-[17px] animate-spin motion-reduce:animate-none" />
+              ) : (
+                <ArrowRightCompactIcon className="size-[17px]" />
+              )}
             </Button>
             {isCustomOption && (
               <Button
@@ -1223,7 +1384,11 @@ function InquirySuccess({
   onRestart: () => void
 }) {
   const context =
-    state.type === "hire" ? state.answers.role : state.answers.projectType
+    state.type === "hire"
+      ? state.answers.role
+      : state.type === "project"
+        ? state.answers.projectType
+        : "General inquiry"
 
   return (
     <div className="motion-view flex min-h-0 flex-1 flex-col">
@@ -1246,7 +1411,9 @@ function InquirySuccess({
             <div className="mt-6 rounded-2xl bg-muted p-4">
               <div className="flex justify-between gap-4 text-sm">
                 <span className="text-muted-foreground">Inquiry</span>
-                <span className="text-right font-medium">{context}</span>
+                <span className="max-w-[65%] text-right font-medium break-words">
+                  {context}
+                </span>
               </div>
               <div className="mt-3 flex justify-between gap-4 text-sm">
                 <span className="text-muted-foreground">Name</span>
@@ -1254,6 +1421,14 @@ function InquirySuccess({
                   {state.answers.name}
                 </span>
               </div>
+              {state.type === "general" ? (
+                <div className="mt-3 border-t pt-3 text-sm">
+                  <span className="text-muted-foreground">Message</span>
+                  <p className="mt-1.5 font-medium break-words whitespace-pre-wrap text-emphasis-foreground">
+                    {state.answers.context}
+                  </p>
+                </div>
+              ) : null}
             </div>
             <Button
               size="lg"

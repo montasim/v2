@@ -4,7 +4,7 @@ import {
   blogCommentDeletionSchema,
   blogCommentRequestSchema,
 } from "@/features/blog-comments/domain/comment"
-import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
+import { getCommentSubmissionModerationError } from "@/features/blog-comments/domain/moderation"
 import {
   createStoredBlogComment,
   deleteStoredBlogComment,
@@ -32,10 +32,10 @@ export const postBlogComment = createServerFn({ method: "POST" })
     assertKnownPost(data.comment.postSlug)
     if (data.website) return null
 
-    const moderationError = await getCommentModerationError(
-      data.comment.message
+    const moderationError = await getCommentSubmissionModerationError(
+      data.comment
     )
-    if (moderationError) throw new Error(moderationError)
+    if (moderationError) throw new Error(moderationError.message)
 
     await requirePermanentEmail(data.comment.email)
     checkBlogCommentRateLimit(data.comment.email)

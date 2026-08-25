@@ -11,6 +11,7 @@ import {
   MAX_INQUIRY_REQUEST_BYTES,
   parseInquiryRequest,
 } from "@/features/chat/application/submit-inquiry"
+import { INQUIRY_MODERATION_ERROR } from "@/features/chat/domain/inquiry-moderation"
 import {
   INQUIRY_SERVER_FN_DEADLINE_MS,
   runInquiryServerOperation,
@@ -105,6 +106,10 @@ describe("inquiry server-function security", () => {
     expect(
       sanitizeInquirySubmissionError(new Error(TEMPORARY_EMAIL_ERROR)).message
     ).toBe(TEMPORARY_EMAIL_ERROR)
+    expect(
+      sanitizeInquirySubmissionError(new Error(INQUIRY_MODERATION_ERROR))
+        .message
+    ).toBe(INQUIRY_MODERATION_ERROR)
   })
 
   it("enforces and sanitizes the outer server-function deadline", async () => {

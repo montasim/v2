@@ -11,10 +11,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { AvailabilityCard } from "@/components/portfolio/availability-card"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
+import { TEMPORARY_EMAIL_ERROR } from "@/features/email-verification/domain/email-verification"
 
 const sendMessage = vi.hoisted(() => vi.fn())
 const setMessages = vi.hoisted(() => vi.fn())
 const submitInquiry = vi.hoisted(() => vi.fn())
+const verifyVisitorEmail = vi.hoisted(() => vi.fn())
 const chatState = vi.hoisted(
   (): {
     status: "submitted" | "streaming" | "ready" | "error"
@@ -55,6 +57,11 @@ vi.mock("@/features/chat/application/submit-inquiry", () => ({
   submitInquiry,
 }))
 
+vi.mock(
+  "@/features/email-verification/application/verify-visitor-email",
+  () => ({ verifyVisitorEmail })
+)
+
 vi.mock("@tanstack/react-start", () => ({
   useServerFn: (serverFn: unknown) => serverFn,
 }))
@@ -65,6 +72,8 @@ describe("PortfolioAssistant chat navigation", () => {
     setMessages.mockClear()
     submitInquiry.mockReset()
     submitInquiry.mockResolvedValue({ delivered: true })
+    verifyVisitorEmail.mockReset()
+    verifyVisitorEmail.mockResolvedValue({ accepted: true })
     chatState.status = "ready"
     chatState.messages = []
     Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
@@ -140,6 +149,27 @@ describe("PortfolioAssistant chat navigation", () => {
 
     expect(composer.hasAttribute("disabled")).toBe(false)
     expect(document.activeElement).toBe(composer)
+  })
+
+  it("blocks offensive assistant messages before sending", async () => {
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+    sendMessage.mockClear()
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Message" }), {
+      target: { value: "You are a fucking idiot." },
+    })
+    fireEvent.click(screen.getByRole("button", { name: "Send message" }))
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          "Please revise your message. Offensive or abusive language is not allowed."
+        )
+      ).not.toBeNull()
+    )
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 
   it("matches the prototype icon sizes", () => {
@@ -290,7 +320,7 @@ describe("PortfolioAssistant chat navigation", () => {
     expect(setMessages).not.toHaveBeenCalled()
   })
 
-  it("sends an approved typed FAQ to the server", () => {
+  it("sends an approved typed FAQ to the server", async () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
@@ -299,7 +329,7 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).toHaveBeenCalledOnce()
+    await waitFor(() => expect(sendMessage).toHaveBeenCalledOnce())
     expect(sendMessage).toHaveBeenCalledWith({
       text: "What is Montasim's current role?",
     })
@@ -355,7 +385,7 @@ describe("PortfolioAssistant chat navigation", () => {
     }
   )
 
-  it("sends hiring intent to the server", () => {
+  it("sends hiring intent to the server", async () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
@@ -364,12 +394,12 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).toHaveBeenCalledOnce()
+    await waitFor(() => expect(sendMessage).toHaveBeenCalledOnce())
     expect(sendMessage).toHaveBeenCalledWith({ text: "How do I hire him?" })
     expect(setMessages).not.toHaveBeenCalled()
   })
 
-  it("sends contact follow-up questions to the server", () => {
+  it("sends contact follow-up questions to the server", async () => {
     chatState.messages = [
       {
         id: "existing-answer",
@@ -389,14 +419,14 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).toHaveBeenCalledOnce()
+    await waitFor(() => expect(sendMessage).toHaveBeenCalledOnce())
     expect(sendMessage).toHaveBeenCalledWith({
       text: "We have a new job opportunity for him.",
     })
     expect(setMessages).not.toHaveBeenCalled()
   })
 
-  it("sends funding questions to the server", () => {
+  it("sends funding questions to the server", async () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
@@ -405,7 +435,7 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
 
-    expect(sendMessage).toHaveBeenCalledOnce()
+    await waitFor(() => expect(sendMessage).toHaveBeenCalledOnce())
     expect(sendMessage).toHaveBeenCalledWith({
       text: "How can I support Montasim?",
     })
@@ -506,7 +536,7 @@ describe("PortfolioAssistant chat navigation", () => {
     ).not.toBeNull()
   })
 
-  it("collects a specific custom project type instead of a generic option", () => {
+  it("collects a specific custom project type instead of a generic option", async () => {
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
     fireEvent.click(screen.getByRole("button", { name: /Discuss a project/ }))
@@ -517,11 +547,112 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
 
-    expect(screen.getByText("When would you like to start?")).not.toBeNull()
+    await waitFor(() =>
+      expect(screen.getByText("When would you like to start?")).not.toBeNull()
+    )
     expect(screen.getByText("Developer tooling")).not.toBeNull()
   })
 
+  it("submits a general query through the Something else flow", async () => {
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: "Something else" }))
+
+    expect(screen.getByText("Question 1 of 3")).not.toBeNull()
+    expect(screen.getByText("What would you like to discuss?")).not.toBeNull()
+    fireEvent.change(screen.getByLabelText("Your query"), {
+      target: { value: "Could you review my architecture proposal?" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+    await waitFor(() =>
+      expect(screen.getByText("Who should Montasim reply to?")).not.toBeNull()
+    )
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Nadia Ahmed" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+    await waitFor(() => expect(screen.getByLabelText("Email")).not.toBeNull())
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "nadia@example.com" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Send inquiry/ }))
+
+    await waitFor(() =>
+      expect(submitInquiry).toHaveBeenCalledWith({
+        data: {
+          inquiry: expect.objectContaining({
+            type: "general",
+            context: "Could you review my architecture proposal?",
+            name: "Nadia Ahmed",
+            email: "nadia@example.com",
+          }),
+          website: "",
+        },
+      })
+    )
+    await waitFor(() => expect(screen.getByText("Query sent")).not.toBeNull())
+    expect(screen.getByText("General inquiry")).not.toBeNull()
+    expect(
+      screen.getByText("Could you review my architecture proposal?")
+    ).not.toBeNull()
+  })
+
+  it("blocks offensive language before advancing a general query", async () => {
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: "Something else" }))
+    fireEvent.change(screen.getByLabelText("Your query"), {
+      target: { value: "You are a fucking idiot." },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          "Please revise this field. Offensive or abusive language is not allowed."
+        )
+      ).not.toBeNull()
+    )
+    expect(screen.getByText("Question 1 of 3")).not.toBeNull()
+    expect(submitInquiry).not.toHaveBeenCalled()
+  })
+
+  it("blocks a temporary email before submitting a general query", async () => {
+    verifyVisitorEmail.mockRejectedValueOnce(new Error(TEMPORARY_EMAIL_ERROR))
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: "Something else" }))
+    fireEvent.change(screen.getByLabelText("Your query"), {
+      target: { value: "Could we discuss an engineering question?" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+    await waitFor(() =>
+      expect(screen.getByText("Who should Montasim reply to?")).not.toBeNull()
+    )
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Nadia Ahmed" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+    await waitFor(() => expect(screen.getByLabelText("Email")).not.toBeNull())
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "nadia@temporary.example" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Send inquiry/ }))
+
+    await waitFor(() =>
+      expect(screen.getByText(TEMPORARY_EMAIL_ERROR)).not.toBeNull()
+    )
+    expect(submitInquiry).not.toHaveBeenCalled()
+  })
+
   it("matches the prototype through a successful role inquiry", async () => {
+    let resolveSubmission!: (value: { delivered: true }) => void
+    submitInquiry.mockImplementationOnce(
+      () =>
+        new Promise<{ delivered: true }>((resolve) => {
+          resolveSubmission = resolve
+        })
+    )
     render(<PortfolioAssistant />)
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
 
@@ -554,6 +685,9 @@ describe("PortfolioAssistant chat navigation", () => {
       target: { value: "Montasim Mamun" },
     })
     fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+    await waitFor(() =>
+      expect(screen.getByLabelText("Work email")).not.toBeNull()
+    )
     fireEvent.change(screen.getByLabelText("Work email"), {
       target: { value: "mamun@yopmail.com" },
     })
@@ -569,22 +703,25 @@ describe("PortfolioAssistant chat navigation", () => {
     })
     fireEvent.click(screen.getByRole("button", { name: /Send inquiry/ }))
 
-    expect(submitInquiry).toHaveBeenCalledWith({
-      data: {
-        inquiry: expect.objectContaining({
-          id: expect.any(String),
-          context: "https://example.com/jobs/senior-frontend",
-          role: "Senior Frontend Engineer",
-        }),
-        website: "",
-      },
-    })
+    await waitFor(() =>
+      expect(submitInquiry).toHaveBeenCalledWith({
+        data: {
+          inquiry: expect.objectContaining({
+            id: expect.any(String),
+            context: "https://example.com/jobs/senior-frontend",
+            role: "Senior Frontend Engineer",
+          }),
+          website: "",
+        },
+      })
+    )
 
     expect(screen.getByText("Sending inquiry")).not.toBeNull()
     expect(
       screen.getByText("Please keep this window open for a moment.")
     ).not.toBeNull()
 
+    resolveSubmission({ delivered: true })
     await waitFor(() =>
       expect(screen.getByText("Role inquiry sent")).not.toBeNull()
     )
@@ -614,6 +751,7 @@ describe("PortfolioAssistant chat navigation", () => {
       target: { value: "Amina Rahman" },
     })
     fireEvent.click(screen.getByRole("button", { name: /Continue/ }))
+    await waitFor(() => expect(screen.getByLabelText("Email")).not.toBeNull())
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "amina@example.com" },
     })

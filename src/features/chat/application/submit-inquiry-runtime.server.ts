@@ -5,6 +5,10 @@ import { resolveInquiryVisitorAddress } from "@/features/chat/application/inquir
 import { createDefaultPortfolioInquiry } from "@/features/chat/application/portfolio-inquiry-runtime.server"
 import type { InquirySubmission } from "@/features/chat/domain/inquiry"
 import {
+  getInquiryModerationError,
+  INQUIRY_MODERATION_ERROR,
+} from "@/features/chat/domain/inquiry-moderation"
+import {
   EMAIL_RATE_LIMIT_ERROR,
   INQUIRY_SUBMISSION_UNAVAILABLE_ERROR,
   VISITOR_RATE_LIMIT_ERROR,
@@ -22,7 +26,10 @@ export async function submitInquiryOnServer(data: {
   if (data.website) return { delivered: true as const }
 
   return runInquiryServerOperation(
-    (signal) => {
+    async (signal) => {
+      const moderationError = await getInquiryModerationError(data.inquiry)
+      if (moderationError) throw new Error(moderationError)
+
       const subjectHasher = createInquirySubjectHasher()
       const portfolioInquiry = createDefaultPortfolioInquiry(subjectHasher)
       return portfolioInquiry.submit({
@@ -71,7 +78,8 @@ export function sanitizeInquirySubmissionError(error: unknown) {
   if (
     error instanceof Error &&
     (error.message === VISITOR_RATE_LIMIT_ERROR ||
-      error.message === EMAIL_RATE_LIMIT_ERROR)
+      error.message === EMAIL_RATE_LIMIT_ERROR ||
+      error.message === INQUIRY_MODERATION_ERROR)
   ) {
     return new Error(error.message)
   }

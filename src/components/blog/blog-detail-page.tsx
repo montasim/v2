@@ -38,7 +38,8 @@ import {
 } from "@/features/blog-views/application/blog-views"
 import { blogCommentMessageSchema } from "@/features/blog-comments/domain/comment"
 import type { BlogComment } from "@/features/blog-comments/domain/comment"
-import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
+import { getCommentSubmissionModerationError } from "@/features/blog-comments/domain/moderation"
+import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
@@ -89,11 +90,14 @@ function BlogDiscussion({
   onCommentCountChange: (count: number) => void
 }) {
   const nameId = useId()
+  const nameErrorId = useId()
   const emailId = useId()
+  const emailErrorId = useId()
   const messageId = useId()
   const messageErrorId = useId()
   const getComments = useServerFn(getBlogComments)
   const createComment = useServerFn(postBlogComment)
+  const verifyEmail = useServerFn(verifyVisitorEmail)
   const removeComment = useServerFn(deleteBlogComment)
   const getOwnerAuth = useServerFn(getPortfolioOwnerAuth)
   const [comments, setComments] = useState<BlogComment[]>([])
@@ -106,6 +110,8 @@ function BlogDiscussion({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [loadError, setLoadError] = useState("")
   const [submissionError, setSubmissionError] = useState("")
+  const [nameError, setNameError] = useState("")
+  const [emailError, setEmailError] = useState("")
   const [messageError, setMessageError] = useState("")
   const [canManageComments, setCanManageComments] = useState(false)
   const [pendingDeletionId, setPendingDeletionId] = useState<string | null>(
@@ -401,6 +407,8 @@ function BlogDiscussion({
           onSubmit={async (event) => {
             event.preventDefault()
             setSubmissionError("")
+            setNameError("")
+            setEmailError("")
             setMessageError("")
 
             const messageResult = blogCommentMessageSchema.safeParse(message)
@@ -416,12 +424,21 @@ function BlogDiscussion({
             setIsSubmitting(true)
 
             try {
-              const moderationError = await getCommentModerationError(message)
+              const moderationError = await getCommentSubmissionModerationError(
+                { name, message }
+              )
               if (moderationError) {
-                setMessageError(moderationError)
-                document.getElementById(messageId)?.focus()
+                if (moderationError.field === "name") {
+                  setNameError(moderationError.message)
+                  document.getElementById(nameId)?.focus()
+                } else {
+                  setMessageError(moderationError.message)
+                  document.getElementById(messageId)?.focus()
+                }
                 return
               }
+
+              await verifyEmail({ data: email })
 
               const nextComment = await createComment({
                 data: {
@@ -442,10 +459,15 @@ function BlogDiscussion({
               setMessage("")
               setReplyTo(null)
             } catch (error) {
-              setSubmissionError(
-                getEmailVerificationError(error) ??
+              const verificationError = getEmailVerificationError(error)
+              if (verificationError) {
+                setEmailError(verificationError)
+                document.getElementById(emailId)?.focus()
+              } else {
+                setSubmissionError(
                   "Your comment could not be posted. Your draft is still here."
-              )
+                )
+              }
             } finally {
               setIsSubmitting(false)
             }
@@ -494,10 +516,27 @@ function BlogDiscussion({
                 maxLength={80}
                 autoComplete="name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                aria-invalid={Boolean(nameError)}
+                aria-describedby={nameError ? nameErrorId : undefined}
+                onChange={(event) => {
+                  setName(event.target.value)
+                  if (nameError) setNameError("")
+                }}
                 placeholder="Your name"
-                className="min-h-9 w-full rounded-xl border bg-card px-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+                className={cn(
+                  "min-h-9 w-full rounded-xl border bg-card px-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-2 focus:outline-offset-1 focus:outline-ring",
+                  nameError && "border-destructive focus:outline-destructive"
+                )}
               />
+              {nameError ? (
+                <p
+                  id={nameErrorId}
+                  className="text-xs text-destructive"
+                  role="alert"
+                >
+                  {nameError}
+                </p>
+              ) : null}
             </div>
             <div className="grid gap-1.5">
               <label
@@ -514,10 +553,27 @@ function BlogDiscussion({
                 maxLength={320}
                 autoComplete="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                aria-invalid={Boolean(emailError)}
+                aria-describedby={emailError ? emailErrorId : undefined}
+                onChange={(event) => {
+                  setEmail(event.target.value)
+                  if (emailError) setEmailError("")
+                }}
                 placeholder="you@example.com"
-                className="min-h-9 w-full rounded-xl border bg-card px-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+                className={cn(
+                  "min-h-9 w-full rounded-xl border bg-card px-3 text-sm outline-none placeholder:text-muted-foreground focus:outline-2 focus:outline-offset-1 focus:outline-ring",
+                  emailError && "border-destructive focus:outline-destructive"
+                )}
               />
+              {emailError ? (
+                <p
+                  id={emailErrorId}
+                  className="text-xs text-destructive"
+                  role="alert"
+                >
+                  {emailError}
+                </p>
+              ) : null}
             </div>
           </div>
           <div className="flex items-center justify-between gap-4">

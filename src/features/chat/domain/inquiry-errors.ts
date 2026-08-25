@@ -9,3 +9,5 @@ export const INVALID_INQUIRY_REQUEST_ERROR =
 
 export const INQUIRY_SUBMISSION_UNAVAILABLE_ERROR =
   "The inquiry could not be submitted right now. Please try again."
+
+export { INQUIRY_MODERATION_ERROR } from "@/features/chat/domain/inquiry-moderation"

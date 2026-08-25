@@ -1,28 +1,30 @@
-import type { RegExpMatcher } from "obscenity"
+import { containsOffensiveLanguage } from "@/lib/content-moderation"
 
 const MODERATION_ERROR =
   "Please revise your comment. Offensive or abusive language is not allowed."
+const NAME_MODERATION_ERROR =
+  "Please revise your name. Offensive or abusive language is not allowed."
 
-let matcherPromise: Promise<RegExpMatcher> | undefined
-
-async function loadMatcher() {
-  const { RegExpMatcher, englishDataset, englishRecommendedTransformers } =
-    await import("obscenity")
-
-  return new RegExpMatcher({
-    ...englishDataset.build(),
-    ...englishRecommendedTransformers,
-  })
-}
-
-async function getMatcher() {
-  matcherPromise ??= loadMatcher()
-  return matcherPromise
+export interface CommentModerationInput {
+  name: string
+  message: string
 }
 
 export async function getCommentModerationError(message: string) {
-  const matcher = await getMatcher()
-  return matcher.hasMatch(message) ? MODERATION_ERROR : null
+  return (await containsOffensiveLanguage(message)) ? MODERATION_ERROR : null
 }
 
-export { MODERATION_ERROR }
+export async function getCommentSubmissionModerationError({
+  name,
+  message,
+}: CommentModerationInput) {
+  if (await containsOffensiveLanguage(name)) {
+    return { field: "name" as const, message: NAME_MODERATION_ERROR }
+  }
+  if (await containsOffensiveLanguage(message)) {
+    return { field: "message" as const, message: MODERATION_ERROR }
+  }
+  return null
+}
+
+export { MODERATION_ERROR, NAME_MODERATION_ERROR }

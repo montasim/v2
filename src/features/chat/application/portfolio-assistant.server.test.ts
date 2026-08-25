@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest"
 
 import { handlePortfolioChatRequest } from "@/features/chat/application/portfolio-assistant.server"
 import { ChatDynamicRateLimitError } from "@/features/chat/application/portfolio-chat"
+import { CHAT_MODERATION_ERROR } from "@/features/chat/domain/chat-moderation"
 import type {
   PortfolioChat,
   PortfolioChatReply,
@@ -136,6 +137,22 @@ describe("portfolio chat HTTP handler", () => {
     expect(crossSite.status).toBe(403)
     expect(nonJson.status).toBe(415)
     expect(oversized.status).toBe(413)
+    expect(assistant.answer).not.toHaveBeenCalled()
+  })
+
+  it("rejects offensive messages before rate limiting or chat resolution", async () => {
+    const assistant = chat()
+    const limiter = new InMemoryChatRequestLimiter()
+
+    const response = await handlePortfolioChatRequest(
+      request("You are a fucking idiot."),
+      { chat: assistant, limiter }
+    )
+
+    expect(response.status).toBe(400)
+    await expect(response.json()).resolves.toEqual({
+      error: CHAT_MODERATION_ERROR,
+    })
     expect(assistant.answer).not.toHaveBeenCalled()
   })
 

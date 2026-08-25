@@ -5,7 +5,11 @@ import {
   blogCommentSchema,
   blogCommentSubmissionSchema,
 } from "@/features/blog-comments/domain/comment"
-import { getCommentModerationError } from "@/features/blog-comments/domain/moderation"
+import {
+  getCommentModerationError,
+  getCommentSubmissionModerationError,
+  NAME_MODERATION_ERROR,
+} from "@/features/blog-comments/domain/moderation"
 
 describe("blog comments", () => {
   it("normalizes a valid submission", () => {
@@ -77,5 +81,14 @@ describe("blog comments", () => {
     "I disagree with this architecture.",
   ])("does not block constructive language: %s", async (message) => {
     await expect(getCommentModerationError(message)).resolves.toBeNull()
+  })
+
+  it("blocks offensive language in the public author name", async () => {
+    await expect(
+      getCommentSubmissionModerationError({
+        name: "Fucking idiot",
+        message: "I have a question about this architecture.",
+      })
+    ).resolves.toEqual({ field: "name", message: NAME_MODERATION_ERROR })
   })
 })
