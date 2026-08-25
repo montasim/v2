@@ -2,6 +2,73 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { landingNavigation, landingSectionIds } from "@/lib/site"
 
 const landingTopSectionId = landingNavigation[0].sectionId
+const scrollAnimationDurationMs = 700
+const instantScrollBehavior = "instant" as ScrollBehavior
+
+function setWindowScrollTop(top: number) {
+  window.scrollTo({ left: 0, top, behavior: instantScrollBehavior })
+}
+
+function getSectionScrollTop(section: HTMLElement) {
+  const scrollMarginTop = Number.parseFloat(
+    window.getComputedStyle(section).scrollMarginTop
+  )
+
+  return Math.max(
+    0,
+    window.scrollY +
+      section.getBoundingClientRect().top -
+      (Number.isNaN(scrollMarginTop) ? 0 : scrollMarginTop)
+  )
+}
+
+function animateWindowScrollTo(targetY: number) {
+  const startY = window.scrollY
+  const distance = targetY - startY
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches
+
+  if (Math.abs(distance) < 1 || prefersReducedMotion) {
+    setWindowScrollTop(targetY)
+    return () => undefined
+  }
+
+  let animationFrame = 0
+  let startedAt: number | undefined
+  let settled = false
+
+  const settle = () => {
+    if (settled) return
+    settled = true
+  }
+
+  const step = (timestamp: number) => {
+    startedAt ??= timestamp
+    const progress = Math.min(
+      (timestamp - startedAt) / scrollAnimationDurationMs,
+      1
+    )
+    const easedProgress = 1 - Math.pow(1 - progress, 4)
+
+    setWindowScrollTop(Math.round(startY + distance * easedProgress))
+
+    if (progress < 1) {
+      animationFrame = window.requestAnimationFrame(step)
+      return
+    }
+
+    settle()
+  }
+
+  animationFrame = window.requestAnimationFrame(step)
+
+  return () => {
+    if (settled) return
+    window.cancelAnimationFrame(animationFrame)
+    settle()
+  }
+}
 
 function replaceHash(sectionId: string) {
   if (window.location.hash === `#${sectionId}`) return
@@ -34,6 +101,7 @@ export function useLandingNavigation(pathname: string, hash: string) {
   const activeSectionRef = useRef(activeSection)
   const scrollTargetRef = useRef<string | null>(null)
   const keepHomeUrlHashlessRef = useRef(false)
+  const cancelScrollAnimationRef = useRef<(() => void) | null>(null)
 
   const updateActiveSection = useCallback((sectionId: string) => {
     if (keepHomeUrlHashlessRef.current) {
@@ -64,15 +132,13 @@ export function useLandingNavigation(pathname: string, hash: string) {
       const section = document.getElementById(sectionId)
       if (!section) return false
 
+      cancelScrollAnimationRef.current?.()
       keepHomeUrlHashlessRef.current = false
       scrollTargetRef.current = sectionId
       updateActiveSection(sectionId)
-      section.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-        block: "start",
-      })
+      cancelScrollAnimationRef.current = animateWindowScrollTo(
+        getSectionScrollTop(section)
+      )
 
       return true
     },
@@ -82,17 +148,13 @@ export function useLandingNavigation(pathname: string, hash: string) {
   const navigateToTop = useCallback(() => {
     if (pathname !== "/") return false
 
+    cancelScrollAnimationRef.current?.()
     keepHomeUrlHashlessRef.current = true
     scrollTargetRef.current = landingTopSectionId
     activeSectionRef.current = landingTopSectionId
     setActiveSection(landingTopSectionId)
     clearHash()
-    window.scrollTo({
-      top: 0,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-    })
+    cancelScrollAnimationRef.current = animateWindowScrollTo(0)
 
     return true
   }, [pathname])
@@ -138,6 +200,8 @@ export function useLandingNavigation(pathname: string, hash: string) {
     }
 
     const cancelProgrammaticScroll = () => {
+      cancelScrollAnimationRef.current?.()
+      cancelScrollAnimationRef.current = null
       scrollTargetRef.current = null
     }
     const cancelProgrammaticScrollFromKeyboard = (event: KeyboardEvent) => {
@@ -165,6 +229,8 @@ export function useLandingNavigation(pathname: string, hash: string) {
     window.addEventListener("keydown", cancelProgrammaticScrollFromKeyboard)
 
     return () => {
+      cancelScrollAnimationRef.current?.()
+      cancelScrollAnimationRef.current = null
       observer.disconnect()
       window.removeEventListener("wheel", cancelProgrammaticScroll)
       window.removeEventListener("touchstart", cancelProgrammaticScroll)
