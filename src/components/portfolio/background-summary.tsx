@@ -1,5 +1,5 @@
 import {
-  ArrowRightIcon,
+  ArrowRightCompactIcon,
   ArrowUpRightIcon,
   CalendarBlankIcon,
   CertificateIcon,
@@ -61,7 +61,7 @@ export function BackgroundSummary() {
           className="group mt-6 h-auto w-fit p-0 font-medium text-foreground"
         >
           View all education
-          <ArrowRightIcon className="group-hover:translate-x-1" />
+          <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />
         </InternalAction>
       </CardContent>
 
@@ -99,7 +99,7 @@ export function BackgroundSummary() {
             className="group h-auto p-0 font-medium text-foreground"
           >
             View all certifications
-            <ArrowRightIcon className="group-hover:translate-x-1" />
+            <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />
           </InternalAction>
         </div>
       </CardContent>

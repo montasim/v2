@@ -125,8 +125,8 @@ export function ProjectCard({ project }: { project: Project }) {
                 variant="link"
                 className="group/action h-auto p-0 font-bold text-emphasis-foreground"
               >
-                Source
                 <GithubLogoIcon className="group-hover/action:-translate-y-0.5" />
+                Source
               </ExternalAction>
             ) : null}
           </div>
