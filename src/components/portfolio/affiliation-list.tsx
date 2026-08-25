@@ -16,7 +16,7 @@ function AffiliationItem({ item }: { item: Affiliation }) {
       <EntityAvatar
         src={item.logoUrl}
         fallback={item.logo}
-        className="size-11"
+        className="size-11 border-0"
       />
       <div className="min-w-0">
         <h3 className="text-sm font-semibold">{title}</h3>

@@ -35,7 +35,7 @@ export function BackgroundSummary() {
           <EntityAvatar
             src={summaryEducation.logoUrl}
             fallback={summaryEducation.logo}
-            className="size-16 shrink-0 rounded-lg bg-card sm:size-20"
+            className="size-16 shrink-0 rounded-lg border-0 bg-card sm:size-20"
             imageClassName="p-1.5"
           />
           <div className="mt-5 min-w-0 sm:mt-0">
