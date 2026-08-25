@@ -8,7 +8,7 @@ import {
 } from "@/features/chat/infrastructure/inquiry/google-sheets.server"
 
 describe("GoogleSheetsInquiryDelivery", () => {
-  it("maps role and project inquiries to the v2 sheet schema", () => {
+  it("maps role, project, and general inquiries to the sheet schema", () => {
     const timestamp = "2026-08-20T10:00:00.000Z"
 
     expect(
@@ -34,6 +34,30 @@ describe("GoogleSheetsInquiryDelivery", () => {
       "",
       "",
       "",
+    ])
+
+    expect(
+      inquiryToRow(
+        {
+          id: "inquiry-general-1",
+          type: "general",
+          name: "Nadia",
+          email: "nadia@example.com",
+          context: "Could you review my architecture proposal?",
+        },
+        timestamp
+      )
+    ).toEqual([
+      timestamp,
+      "inquiry-general-1",
+      "general",
+      "Nadia",
+      "nadia@example.com",
+      "",
+      "",
+      "",
+      "",
+      "Could you review my architecture proposal?",
     ])
 
     expect(
@@ -84,6 +108,17 @@ describe("GoogleSheetsInquiryDelivery", () => {
         email: "amina@example.com",
         projectType: "SaaS platform",
         timeline: "Flexible",
+      },
+      expectedRange: "Project%20Inquiries!A%3AJ",
+    },
+    {
+      label: "general",
+      inquiry: {
+        id: "inquiry-general-2",
+        type: "general" as const,
+        name: "Nadia",
+        email: "nadia@example.com",
+        context: "Could you review my architecture proposal?",
       },
       expectedRange: "Project%20Inquiries!A%3AJ",
     },

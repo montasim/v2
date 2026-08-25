@@ -229,7 +229,7 @@ function InquiryCardSkeleton() {
 
 export function DashboardInquiriesSkeleton() {
   return (
-    <LoadingRegion label="Loading role and project inquiries">
+    <LoadingRegion label="Loading inquiries">
       <HeaderSkeleton width="w-44" />
       <div className="space-y-7">
         <InquiryStatsSkeleton />

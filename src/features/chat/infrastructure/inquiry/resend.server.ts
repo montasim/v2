@@ -110,19 +110,8 @@ function createEmailSender(apiKey: string): SendInquiryEmail {
 }
 
 export function formatAcknowledgement(inquiry: InquirySubmission) {
-  const introduction =
-    inquiry.type === "hire"
-      ? `Thanks for reaching out about the ${inquiry.role} role. I appreciate you taking the time to share what you are looking for.`
-      : "Thanks for reaching out about your project. I appreciate you taking the time to share the initial details."
-
-  const details =
-    inquiry.type === "hire"
-      ? [`Role: ${inquiry.role}`, `Work arrangement: ${inquiry.arrangement}`]
-      : [
-          `Project type: ${inquiry.projectType}`,
-          `Preferred timeline: ${inquiry.timeline}`,
-        ]
-  if (inquiry.context) details.push(`Additional context: ${inquiry.context}`)
+  const introduction = acknowledgementIntroduction(inquiry)
+  const details = inquiryEmailDetails(inquiry)
 
   return [
     `Hi ${inquiry.name},`,
@@ -134,24 +123,18 @@ export function formatAcknowledgement(inquiry: InquirySubmission) {
 }
 
 export function formatOwnerSubject(inquiry: InquirySubmission) {
-  return inquiry.type === "hire"
-    ? `${inquiry.name} wants to discuss a ${inquiry.role} role`
-    : `${inquiry.name} wants to discuss ${describeProject(inquiry.projectType)}`
+  if (inquiry.type === "hire") {
+    return `${inquiry.name} wants to discuss a ${inquiry.role} role`
+  }
+  if (inquiry.type === "project") {
+    return `${inquiry.name} wants to discuss ${describeProject(inquiry.projectType)}`
+  }
+  return `${inquiry.name} sent a portfolio inquiry`
 }
 
 export function formatOwnerNotification(inquiry: InquirySubmission) {
-  const summary =
-    inquiry.type === "hire"
-      ? `${inquiry.name} is interested in discussing a ${inquiry.role} opportunity with you. They indicated that the role would be ${inquiry.arrangement.toLowerCase()}.`
-      : `${inquiry.name} would like to discuss ${describeProject(inquiry.projectType)} with you. Their preferred timeline is ${inquiry.timeline.toLowerCase()}.`
-  const details =
-    inquiry.type === "hire"
-      ? [`Role: ${inquiry.role}`, `Work arrangement: ${inquiry.arrangement}`]
-      : [
-          `Project type: ${inquiry.projectType}`,
-          `Preferred timeline: ${inquiry.timeline}`,
-        ]
-  if (inquiry.context) details.push(`Additional context: ${inquiry.context}`)
+  const summary = ownerInquirySummary(inquiry)
+  const details = inquiryEmailDetails(inquiry)
 
   return [
     "Hi Montasim,",
@@ -160,6 +143,46 @@ export function formatOwnerNotification(inquiry: InquirySubmission) {
     `Inquiry details\nName: ${inquiry.name}\n${details.join("\n")}`,
     "This inquiry was submitted through your portfolio.",
   ].join("\n\n")
+}
+
+function acknowledgementIntroduction(inquiry: InquirySubmission) {
+  if (inquiry.type === "hire") {
+    return `Thanks for reaching out about the ${inquiry.role} role. I appreciate you taking the time to share what you are looking for.`
+  }
+  if (inquiry.type === "project") {
+    return "Thanks for reaching out about your project. I appreciate you taking the time to share the initial details."
+  }
+  return "Thanks for reaching out. I appreciate you taking the time to send your question."
+}
+
+function inquiryEmailDetails(inquiry: InquirySubmission) {
+  if (inquiry.type === "hire") {
+    const details = [
+      `Role: ${inquiry.role}`,
+      `Work arrangement: ${inquiry.arrangement}`,
+    ]
+    if (inquiry.context) details.push(`Additional context: ${inquiry.context}`)
+    return details
+  }
+  if (inquiry.type === "project") {
+    const details = [
+      `Project type: ${inquiry.projectType}`,
+      `Preferred timeline: ${inquiry.timeline}`,
+    ]
+    if (inquiry.context) details.push(`Additional context: ${inquiry.context}`)
+    return details
+  }
+  return [`Query: ${inquiry.context}`]
+}
+
+function ownerInquirySummary(inquiry: InquirySubmission) {
+  if (inquiry.type === "hire") {
+    return `${inquiry.name} is interested in discussing a ${inquiry.role} opportunity with you. They indicated that the role would be ${inquiry.arrangement.toLowerCase()}.`
+  }
+  if (inquiry.type === "project") {
+    return `${inquiry.name} would like to discuss ${describeProject(inquiry.projectType)} with you. Their preferred timeline is ${inquiry.timeline.toLowerCase()}.`
+  }
+  return `${inquiry.name} sent a question through your portfolio.`
 }
 
 function describeProject(projectType: string) {

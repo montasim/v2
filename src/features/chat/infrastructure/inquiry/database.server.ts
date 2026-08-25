@@ -417,19 +417,23 @@ function acceptedStoredInquiry(
 }
 
 function inquiryDetails(inquiry: InquirySubmission) {
-  return inquiry.type === "hire"
-    ? {
-        role: inquiry.role,
-        arrangement: inquiry.arrangement,
-        projectType: null,
-        timeline: null,
-      }
-    : {
-        role: null,
-        arrangement: null,
-        projectType: inquiry.projectType,
-        timeline: inquiry.timeline,
-      }
+  if (inquiry.type === "hire") {
+    return {
+      role: inquiry.role,
+      arrangement: inquiry.arrangement,
+      projectType: null,
+      timeline: null,
+    }
+  }
+  if (inquiry.type === "project") {
+    return {
+      role: null,
+      arrangement: null,
+      projectType: inquiry.projectType,
+      timeline: inquiry.timeline,
+    }
+  }
+  return { role: null, arrangement: null, projectType: null, timeline: null }
 }
 
 function sameInquiry(first: InquirySubmission, second: InquirySubmission) {
@@ -454,5 +458,5 @@ function sameInquiry(first: InquirySubmission, second: InquirySubmission) {
       first.timeline === second.timeline
     )
   }
-  return false
+  return first.type === "general" && second.type === "general"
 }

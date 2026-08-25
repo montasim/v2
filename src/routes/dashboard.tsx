@@ -69,7 +69,7 @@ export const Route = createFileRoute("/dashboard")({
 
 const navigation = [
   { to: "/dashboard", label: "Overview", icon: SquaresFourIcon },
-  { to: "/dashboard/inquiries", label: "Role & projects", icon: BriefcaseIcon },
+  { to: "/dashboard/inquiries", label: "Inquiries", icon: BriefcaseIcon },
   {
     to: "/dashboard/conversations",
     label: "Chat history",
@@ -312,7 +312,7 @@ export function Overview({ data }: { data: DashboardData }) {
                 Recent inquiries
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                Latest role and project requests.
+                Latest messages, role inquiries, and project requests.
               </p>
             </div>
             <Button variant="ghost" size="sm" className="ml-auto" asChild>
@@ -337,12 +337,16 @@ export function Overview({ data }: { data: DashboardData }) {
                     {item.name}
                   </p>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {item.type === "hire" ? item.role : item.projectType}
+                    {item.type === "hire"
+                      ? item.role
+                      : item.type === "project"
+                        ? item.projectType
+                        : item.context}
                   </p>
                 </div>
                 <div className="text-right">
                   <Badge variant="secondary" className="capitalize">
-                    {item.type === "hire" ? "Role" : "Project"}
+                    {inquiryTypeLabel(item.type)}
                   </Badge>
                   <time className="mt-1.5 block text-[0.6875rem] text-muted-foreground">
                     {formatDate(item.createdAt)}
@@ -429,21 +433,23 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
               </a>
             </div>
             <Badge variant="secondary" className="shrink-0 capitalize">
-              {item.type === "hire" ? "Role" : "Project"}
+              {inquiryTypeLabel(item.type)}
             </Badge>
           </header>
 
           <div className="p-5 sm:p-6">
-            <dl className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-              <Detail
-                label={item.type === "hire" ? "Role" : "Project type"}
-                value={item.role ?? item.projectType ?? "—"}
-              />
-              <Detail
-                label={item.type === "hire" ? "Arrangement" : "Timeline"}
-                value={item.arrangement ?? item.timeline ?? "—"}
-              />
-            </dl>
+            {item.type !== "general" ? (
+              <dl className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+                <Detail
+                  label={item.type === "hire" ? "Role" : "Project type"}
+                  value={item.role ?? item.projectType ?? "—"}
+                />
+                <Detail
+                  label={item.type === "hire" ? "Arrangement" : "Timeline"}
+                  value={item.arrangement ?? item.timeline ?? "—"}
+                />
+              </dl>
+            ) : null}
 
             {item.context ? (
               <section className="mt-4 rounded-lg bg-muted/45 p-4">
@@ -474,11 +480,15 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
           </div>
         </article>
       ))}
-      {!data.length ? (
-        <Empty label="No role or project inquiries yet." />
-      ) : null}
+      {!data.length ? <Empty label="No inquiries yet." /> : null}
     </div>
   )
+}
+
+function inquiryTypeLabel(type: string) {
+  if (type === "hire") return "Role"
+  if (type === "project") return "Project"
+  return "General"
 }
 
 export function Conversations({

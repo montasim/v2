@@ -178,6 +178,19 @@ describe("inquiry acknowledgement", () => {
     expect(email).toContain("Project type: SaaS platform")
     expect(email).toContain("Preferred timeline: Within 1-3 months")
   })
+
+  it("adapts the acknowledgement for a general inquiry", () => {
+    const email = formatAcknowledgement({
+      id: "inquiry-general-1",
+      type: "general",
+      name: "Nadia",
+      email: "nadia@example.com",
+      context: "Could you review my architecture proposal?",
+    })
+
+    expect(email).toContain("Thanks for reaching out.")
+    expect(email).toContain("Query: Could you review my architecture proposal?")
+  })
 })
 
 describe("owner inquiry notification", () => {
@@ -223,6 +236,24 @@ describe("owner inquiry notification", () => {
     )
     expect(formatOwnerNotification(inquiry)).toContain(
       "Their preferred timeline is within 1-3 months."
+    )
+  })
+
+  it("adapts the summary and subject for a general inquiry", () => {
+    const inquiry = {
+      id: "inquiry-general-2",
+      type: "general" as const,
+      name: "Nadia",
+      email: "nadia@example.com",
+      context: "Could you review my architecture proposal?",
+    }
+
+    expect(formatOwnerSubject(inquiry)).toBe("Nadia sent a portfolio inquiry")
+    expect(formatOwnerNotification(inquiry)).toContain(
+      "Nadia sent a question through your portfolio."
+    )
+    expect(formatOwnerNotification(inquiry)).toContain(
+      "Query: Could you review my architecture proposal?"
     )
   })
 })

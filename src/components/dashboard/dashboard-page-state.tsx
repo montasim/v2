@@ -76,7 +76,7 @@ export function DashboardPageHeader({
 const emptyStates = {
   inquiries: {
     icon: BriefcaseIcon,
-    title: "No role or project inquiries",
+    title: "No inquiries yet",
     description:
       "New requests submitted through the portfolio assistant will appear here.",
   },

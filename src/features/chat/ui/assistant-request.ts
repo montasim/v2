@@ -1,7 +1,10 @@
+import { inquiryTypeSchema } from "@/features/chat/domain/inquiry"
+import type { InquiryType } from "@/features/chat/domain/inquiry"
+
 export const portfolioAssistantInquiryEvent = "portfolio:assistant-inquiry"
 
 export interface PortfolioAssistantInquiryRequest {
-  inquiryType: "hire" | "project"
+  inquiryType: InquiryType
 }
 
 export function requestPortfolioInquiry(
@@ -22,6 +25,6 @@ export function isPortfolioAssistantInquiryRequest(
     typeof value === "object" &&
     value !== null &&
     "inquiryType" in value &&
-    (value.inquiryType === "hire" || value.inquiryType === "project")
+    inquiryTypeSchema.safeParse(value.inquiryType).success
   )
 }

@@ -4,7 +4,9 @@ import {
   ArrowLeftIcon,
   ArrowRightIcon,
   DownloadSimpleIcon,
+  EnvelopeSimpleIcon,
 } from "@/components/ui/icons"
+import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,6 +20,7 @@ import {
   InternalAction,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
+import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import { profileCatalog } from "@/lib/content/profile"
 
 export function DetailPage({
@@ -85,6 +88,16 @@ export function DetailPage({
           <DownloadSimpleIcon />
           Download resume
         </DownloadAction>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className={actionClassName}
+          onClick={() => requestPortfolioInquiry({ inquiryType: "general" })}
+        >
+          <EnvelopeSimpleIcon />
+          Contact me
+        </Button>
       </footer>
     </PageShell>
   )

@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { visitorEmailSchema } from "@/features/email-verification/domain/email-verification"
 
-export const inquiryTypeSchema = z.enum(["hire", "project"])
+export const inquiryTypeSchema = z.enum(["hire", "project", "general"])
 export const inquiryIdSchema = z.uuid()
 
 const baseInquirySchema = z.object({
@@ -23,20 +23,31 @@ export const inquirySubmissionSchema = z.discriminatedUnion("type", [
     projectType: z.string().trim().min(1).max(100),
     timeline: z.string().trim().min(1).max(100),
   }),
+  baseInquirySchema.extend({
+    type: z.literal("general"),
+    context: z.string().trim().min(10).max(1_000),
+  }),
 ])
 
 export type InquiryType = z.infer<typeof inquiryTypeSchema>
 export type InquirySubmission = z.infer<typeof inquirySubmissionSchema>
 
 export type InquiryAnswerKey =
-  "role" | "arrangement" | "projectType" | "timeline" | "name" | "email"
+  | "role"
+  | "arrangement"
+  | "projectType"
+  | "timeline"
+  | "context"
+  | "name"
+  | "email"
 
 export interface InquiryStep {
   key: InquiryAnswerKey
   label: string
   title: string
   help: string
-  type: "options" | "text" | "email"
+  type: "options" | "text" | "textarea" | "email"
+  minLength?: number
   placeholder?: string
   options?: readonly string[]
 }
@@ -116,6 +127,33 @@ export const inquirySteps = {
         "Within 3-6 months",
         "Flexible",
       ],
+    },
+    {
+      key: "name",
+      label: "Name",
+      title: "Who should Montasim reply to?",
+      help: "Enter your name.",
+      type: "text",
+      placeholder: "Your name",
+    },
+    {
+      key: "email",
+      label: "Email",
+      title: "Where should he reply?",
+      help: "Used only for this inquiry. It is not added to AI chat history.",
+      type: "email",
+      placeholder: "you@company.com",
+    },
+  ],
+  general: [
+    {
+      key: "context",
+      label: "Your query",
+      title: "What would you like to discuss?",
+      help: "Share the question or request Montasim should respond to.",
+      type: "textarea",
+      minLength: 10,
+      placeholder: "Write your question or request",
     },
     {
       key: "name",

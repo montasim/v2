@@ -123,6 +123,26 @@ describe("inquiryReducer", () => {
     )
   })
 
+  it("collects a general query and prepares a valid submission", () => {
+    let state = createInquiryState("general")
+    for (const value of [
+      "Could you review my architecture proposal?",
+      "Nadia Ahmed",
+      "nadia@example.com",
+    ]) {
+      state = inquiryReducer(state, { type: "answer", value })
+    }
+
+    expect(state.status).toBe("submitting")
+    expect(toInquirySubmission(state)).toEqual({
+      id: expect.any(String),
+      type: "general",
+      context: "Could you review my architecture proposal?",
+      name: "Nadia Ahmed",
+      email: "nadia@example.com",
+    })
+  })
+
   it("accepts only UUID inquiry identifiers", () => {
     expect(() =>
       inquirySubmissionSchema.parse({

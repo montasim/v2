@@ -25,6 +25,7 @@ interface GoogleSheetsConfig {
   sheetId: string
   roleRange: string
   projectRange: string
+  generalRange?: string
 }
 
 type Fetcher = typeof fetch
@@ -41,7 +42,11 @@ export class GoogleSheetsInquiryDelivery implements InquiryDestination {
   async deliver(input: Parameters<InquiryDestination["deliver"]>[0]) {
     const config = this.config ?? readGoogleSheetsConfig()
     const configuredRange =
-      input.inquiry.type === "hire" ? config.roleRange : config.projectRange
+      input.inquiry.type === "hire"
+        ? config.roleRange
+        : input.inquiry.type === "project"
+          ? config.projectRange
+          : (config.generalRange ?? config.projectRange)
     const deliveryKey = `${config.sheetId}:${configuredRange}:${input.inquiry.id}`
     const inFlight = inFlightDeliveries.get(deliveryKey)
     if (inFlight) return inFlight
@@ -122,31 +127,46 @@ export function inquiryToRow(
   inquiry: InquirySubmission,
   timestamp = new Date().toISOString()
 ) {
-  return inquiry.type === "hire"
-    ? [
-        timestamp,
-        safeSheetValue(inquiry.id),
-        "hire",
-        safeSheetValue(inquiry.name),
-        safeSheetValue(inquiry.email),
-        safeSheetValue(inquiry.role),
-        safeSheetValue(inquiry.arrangement),
-        "",
-        "",
-        safeSheetValue(inquiry.context ?? ""),
-      ]
-    : [
-        timestamp,
-        safeSheetValue(inquiry.id),
-        "project",
-        safeSheetValue(inquiry.name),
-        safeSheetValue(inquiry.email),
-        "",
-        "",
-        safeSheetValue(inquiry.projectType),
-        safeSheetValue(inquiry.timeline),
-        safeSheetValue(inquiry.context ?? ""),
-      ]
+  if (inquiry.type === "hire") {
+    return [
+      timestamp,
+      safeSheetValue(inquiry.id),
+      "hire",
+      safeSheetValue(inquiry.name),
+      safeSheetValue(inquiry.email),
+      safeSheetValue(inquiry.role),
+      safeSheetValue(inquiry.arrangement),
+      "",
+      "",
+      safeSheetValue(inquiry.context ?? ""),
+    ]
+  }
+  if (inquiry.type === "project") {
+    return [
+      timestamp,
+      safeSheetValue(inquiry.id),
+      "project",
+      safeSheetValue(inquiry.name),
+      safeSheetValue(inquiry.email),
+      "",
+      "",
+      safeSheetValue(inquiry.projectType),
+      safeSheetValue(inquiry.timeline),
+      safeSheetValue(inquiry.context ?? ""),
+    ]
+  }
+  return [
+    timestamp,
+    safeSheetValue(inquiry.id),
+    "general",
+    safeSheetValue(inquiry.name),
+    safeSheetValue(inquiry.email),
+    "",
+    "",
+    "",
+    "",
+    safeSheetValue(inquiry.context),
+  ]
 }
 
 export function inquiryIdRange(range: string) {
@@ -174,13 +194,17 @@ function readGoogleSheetsConfig(): GoogleSheetsConfig {
     throw new Error("Google Sheets inquiry storage is not configured.")
   }
 
+  const roleRange =
+    process.env.GOOGLE_ROLE_INQUIRIES_RANGE || DEFAULT_ROLE_RANGE
+  const projectRange =
+    process.env.GOOGLE_PROJECT_INQUIRIES_RANGE || DEFAULT_PROJECT_RANGE
   return {
     clientEmail,
     privateKey,
     sheetId,
-    roleRange: process.env.GOOGLE_ROLE_INQUIRIES_RANGE || DEFAULT_ROLE_RANGE,
-    projectRange:
-      process.env.GOOGLE_PROJECT_INQUIRIES_RANGE || DEFAULT_PROJECT_RANGE,
+    roleRange,
+    projectRange,
+    generalRange: process.env.GOOGLE_GENERAL_INQUIRIES_RANGE || projectRange,
   }
 }
 

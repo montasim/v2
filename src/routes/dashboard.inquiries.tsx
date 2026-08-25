@@ -29,7 +29,7 @@ function DashboardInquiriesPage() {
   return (
     <>
       <DashboardPageHeader
-        title="Role & projects"
+        title="Inquiries"
         onRefresh={() => router.invalidate()}
       />
       {data.items.length ? (
