@@ -56,7 +56,6 @@ describe("validateChatRequest", () => {
     expect(
       result.messages.some((message) => message.role === "assistant")
     ).toBe(false)
-    expect(result.previousUserQuestion).toBe("Tell me more")
   })
 
   it("drops the oldest messages when valid chat history exceeds the context budget", async () => {

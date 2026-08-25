@@ -13,7 +13,6 @@ export interface PortfolioChatInput {
   conversationId: string
   clientMessageId?: string
   question: string
-  previousUserQuestion?: string
 }
 
 export interface ProviderAttemptTrace {
@@ -71,7 +70,6 @@ export interface PortfolioChat {
   answer: (
     input: PortfolioChatInput,
     context: {
-      requestId: string
       visitorHash?: string
       signal?: AbortSignal
     }

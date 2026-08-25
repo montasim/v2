@@ -14,17 +14,6 @@ import {
 
 export const OWNER_DASHBOARD_PAGE_SIZE = 6
 
-export type OwnerPagination = {
-  page: number
-  pageCount: number
-  pageSize: number
-  total: number
-}
-
-export type OwnerPaginatedResult<T> = OwnerPagination & {
-  items: T[]
-}
-
 export type InquiryStat = {
   label: string
   count: number

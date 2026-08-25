@@ -73,7 +73,6 @@ describe("portfolio chat HTTP handler", () => {
         clientMessageId: "question",
       }),
       expect.objectContaining({
-        requestId: expect.any(String),
         visitorHash: expect.stringMatching(/^[a-f0-9]{64}$/),
       })
     )

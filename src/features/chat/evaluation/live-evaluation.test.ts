@@ -92,7 +92,7 @@ describe("live portfolio chat evaluation", () => {
           conversationId: "forced-dynamic-test",
           question: "What is Montasim's current role?",
         },
-        { requestId: "forced-dynamic-test" }
+        {}
       )
     ).rejects.toThrow("No provider produced a fully validated portfolio answer")
   })

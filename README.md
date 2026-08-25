@@ -241,7 +241,7 @@ Every route uses TanStack Router document-head management for deduplicated metad
 - Unique route titles and descriptions
 - Canonical URLs rooted at `https://montasim.dev`
 - Open Graph and Twitter large-card metadata
-- A 1200 by 630 PNG preview at `public/images/social-preview.png`
+- A 1200 by 630 PNG preview at `public/images/social-preview-v2.png`
 - Crawl directives in `public/robots.txt`
 - All public routes in `public/sitemap.xml`
 - A web app manifest with an optimized icon

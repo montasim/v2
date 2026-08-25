@@ -80,7 +80,6 @@ export async function handlePortfolioChatRequest(
           question: validated.question,
         },
         {
-          requestId: request.headers.get("x-request-id") ?? crypto.randomUUID(),
           visitorHash: subjectHash,
           signal,
         }
@@ -107,23 +106,6 @@ export async function handlePortfolioChatRequest(
     )
     return errorResponse("The assistant is temporarily unavailable.", 503)
   }
-}
-
-export async function createPortfolioAssistantResponse(
-  input: unknown,
-  signal?: AbortSignal,
-  chat: PortfolioChat = createDefaultPortfolioChat()
-) {
-  const validated = await validateChatRequest(input)
-  const reply = await chat.answer(
-    {
-      conversationId: validated.conversationId,
-      clientMessageId: validated.clientMessageId,
-      question: validated.question,
-    },
-    { requestId: crypto.randomUUID(), signal }
-  )
-  return createReplyResponse(reply)
 }
 
 export function createDefaultPortfolioChat() {

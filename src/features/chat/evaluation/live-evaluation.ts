@@ -253,7 +253,6 @@ async function evaluateCase(input: {
         question: input.evaluationCase.question,
       },
       {
-        requestId: `quality-eval:${input.runId}:${input.caseIndex}`,
         signal: input.signal,
       }
     )

@@ -42,7 +42,6 @@ export async function validateChatRequest(input: unknown): Promise<{
   messages: PortfolioUIMessage[]
   question: string
   clientMessageId?: string
-  previousUserQuestion?: string
 }> {
   const envelope = chatEnvelopeSchema.safeParse(input)
   if (!envelope.success) {
@@ -127,10 +126,5 @@ export async function validateChatRequest(input: unknown): Promise<{
     messages,
     question,
     clientMessageId: lastMessage.id.trim(),
-    previousUserQuestion: messages
-      .at(-2)
-      ?.parts.map((part) => part.text)
-      .join("")
-      .trim(),
   }
 }

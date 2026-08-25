@@ -23,7 +23,3 @@ export function checkBlogCommentRateLimit(email: string, now = Date.now()) {
 
   current.count += 1
 }
-
-export function resetBlogCommentRateLimitsForTests() {
-  entries.clear()
-}

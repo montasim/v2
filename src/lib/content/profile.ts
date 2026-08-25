@@ -41,5 +41,3 @@ export const profileCatalog = {
     return link.url
   },
 } as const
-
-export type Profile = typeof profile

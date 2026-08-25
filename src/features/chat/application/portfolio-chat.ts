@@ -669,37 +669,20 @@ function resolveSafetyHandoff(
   createId: () => string
 ): PortfolioHandoffReply | undefined {
   if (isPromptInjectionAttempt(question) || isLikelyNoisyInput(question)) {
-    return handoff(createId(), "unsafe-question", "general", [])
+    return {
+      kind: "handoff",
+      messageId: createId(),
+      text: "I can help with Montasim's published work, skills, achievements, and professional fit. For private, unpublished, or unclear details, please contact Montasim directly.",
+      source: "Portfolio contact",
+      citations: [],
+      evidenceIds: [],
+      contactAction: "general",
+      reason: "unsafe-question",
+      fallbackDepth: 0,
+      attempts: [],
+    }
   }
   return undefined
-}
-
-function handoff(
-  messageId: string,
-  reason: PortfolioHandoffReply["reason"],
-  contactAction: PortfolioHandoffReply["contactAction"],
-  attempts: readonly ProviderAttemptTrace[]
-): PortfolioHandoffReply {
-  const text =
-    reason === "unsafe-question"
-      ? "I can help with Montasim's published work, skills, achievements, and professional fit. For private, unpublished, or unclear details, please contact Montasim directly."
-      : reason === "insufficient-evidence"
-        ? "The complete public portfolio does not establish that detail clearly enough for a reliable answer. Montasim can provide the relevant context directly."
-        : "The portfolio contains relevant evidence, but a fully validated answer could not be prepared right now. Montasim can provide the right context directly."
-  return {
-    kind: "handoff",
-    messageId,
-    text,
-    source: "Portfolio contact",
-    citations: [],
-    evidenceIds: [],
-    contactAction,
-    reason,
-    fallbackDepth: attempts.filter(
-      (attempt) => attempt.stage !== "review" && attempt.outcome !== "skipped"
-    ).length,
-    attempts,
-  }
 }
 
 async function enforceVisitorDynamicLimits(

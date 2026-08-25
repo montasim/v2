@@ -7,7 +7,6 @@ const skillGroupSchema = z.object({
   items: z.array(z.string().min(1)),
 })
 
-export type SkillGroup = z.infer<typeof skillGroupSchema>
 export const skillCatalog = {
   records: z.array(skillGroupSchema).parse(skillsJson),
 } as const
