@@ -9,6 +9,7 @@ let intersectionCallback: IntersectionObserverCallback
 const observe = vi.fn()
 const disconnect = vi.fn()
 const scrollIntoView = vi.fn()
+const scrollTo = vi.fn()
 
 describe("useLandingNavigation", () => {
   beforeEach(() => {
@@ -21,6 +22,10 @@ describe("useLandingNavigation", () => {
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
       value: vi.fn().mockReturnValue({ matches: false }),
+    })
+    Object.defineProperty(window, "scrollTo", {
+      configurable: true,
+      value: scrollTo,
     })
 
     for (const sectionId of landingSectionIds) {
@@ -145,5 +150,51 @@ describe("useLandingNavigation", () => {
       behavior: "auto",
       block: "start",
     })
+  })
+
+  it("clears the section hash and keeps the home URL clean when navigating to the top", () => {
+    window.history.replaceState({}, "", "/#recommendations")
+    const { result } = renderHook(() =>
+      useLandingNavigation("/", "#recommendations")
+    )
+    const about = document.getElementById("about")!
+    const experience = document.getElementById("experience")!
+
+    act(() => expect(result.current.navigateToTop()).toBe(true))
+
+    expect(result.current.activeSection).toBe("about")
+    expect(window.location.pathname).toBe("/")
+    expect(window.location.hash).toBe("")
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: "smooth" })
+
+    act(() =>
+      intersectionCallback(
+        [
+          {
+            isIntersecting: true,
+            target: about,
+            boundingClientRect: { top: 56 },
+          } as unknown as IntersectionObserverEntry,
+        ],
+        {} as IntersectionObserver
+      )
+    )
+
+    expect(window.location.hash).toBe("")
+
+    act(() =>
+      intersectionCallback(
+        [
+          {
+            isIntersecting: true,
+            target: experience,
+            boundingClientRect: { top: 56 },
+          } as unknown as IntersectionObserverEntry,
+        ],
+        {} as IntersectionObserver
+      )
+    )
+
+    expect(window.location.hash).toBe("#experience")
   })
 })

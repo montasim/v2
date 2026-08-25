@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { landingNavigation, landingSectionIds } from "@/lib/site"
 
+const landingTopSectionId = landingNavigation[0].sectionId
+
 function replaceHash(sectionId: string) {
   if (window.location.hash === `#${sectionId}`) return
 
@@ -13,14 +15,38 @@ function replaceHash(sectionId: string) {
   )
 }
 
+function clearHash() {
+  if (!window.location.hash) return
+
+  const url = new URL(window.location.href)
+  url.hash = ""
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${url.pathname}${url.search}`
+  )
+}
+
 export function useLandingNavigation(pathname: string, hash: string) {
   const [activeSection, setActiveSection] = useState(
     hash.replace(/^#/, "") || landingNavigation[0].sectionId
   )
   const activeSectionRef = useRef(activeSection)
   const scrollTargetRef = useRef<string | null>(null)
+  const keepHomeUrlHashlessRef = useRef(false)
 
   const updateActiveSection = useCallback((sectionId: string) => {
+    if (keepHomeUrlHashlessRef.current) {
+      if (sectionId === landingTopSectionId) {
+        activeSectionRef.current = sectionId
+        setActiveSection(sectionId)
+        clearHash()
+        return
+      }
+
+      keepHomeUrlHashlessRef.current = false
+    }
+
     if (activeSectionRef.current === sectionId) {
       replaceHash(sectionId)
       return
@@ -38,6 +64,7 @@ export function useLandingNavigation(pathname: string, hash: string) {
       const section = document.getElementById(sectionId)
       if (!section) return false
 
+      keepHomeUrlHashlessRef.current = false
       scrollTargetRef.current = sectionId
       updateActiveSection(sectionId)
       section.scrollIntoView({
@@ -52,10 +79,29 @@ export function useLandingNavigation(pathname: string, hash: string) {
     [pathname, updateActiveSection]
   )
 
+  const navigateToTop = useCallback(() => {
+    if (pathname !== "/") return false
+
+    keepHomeUrlHashlessRef.current = true
+    scrollTargetRef.current = landingTopSectionId
+    activeSectionRef.current = landingTopSectionId
+    setActiveSection(landingTopSectionId)
+    clearHash()
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+    })
+
+    return true
+  }, [pathname])
+
   useEffect(() => {
     if (pathname !== "/" || !hash) return
 
     const sectionId = hash.replace(/^#/, "")
+    keepHomeUrlHashlessRef.current = false
     activeSectionRef.current = sectionId
     setActiveSection(sectionId)
   }, [hash, pathname])
@@ -129,5 +175,10 @@ export function useLandingNavigation(pathname: string, hash: string) {
     }
   }, [pathname, updateActiveSection])
 
-  return { activeSection, items: landingNavigation, navigateToSection }
+  return {
+    activeSection,
+    items: landingNavigation,
+    navigateToSection,
+    navigateToTop,
+  }
 }

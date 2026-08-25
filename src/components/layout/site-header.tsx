@@ -16,10 +16,30 @@ import { useLandingNavigation } from "@/components/layout/use-landing-navigation
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { cn } from "@/lib/utils"
 
-function Brand({ isOwner }: { isOwner: boolean }) {
+function Brand({
+  isOwner,
+  navigateToTop,
+}: {
+  isOwner: boolean
+  navigateToTop: () => boolean
+}) {
   return (
     <Link
       to="/"
+      onClick={(event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return
+        }
+        if (!navigateToTop()) return
+        event.preventDefault()
+      }}
       aria-label={isOwner ? "Montasim — owner signed in" : "Montasim"}
       className="flex items-center gap-2 rounded-md font-semibold tracking-tight text-emphasis-foreground"
     >
@@ -64,10 +84,8 @@ export function SiteHeader() {
   const hash = useRouterState({
     select: (state) => state.location.hash,
   })
-  const { activeSection, items, navigateToSection } = useLandingNavigation(
-    pathname,
-    hash
-  )
+  const { activeSection, items, navigateToSection, navigateToTop } =
+    useLandingNavigation(pathname, hash)
 
   useEffect(() => {
     let active = true
@@ -99,7 +117,7 @@ export function SiteHeader() {
     <header className="site-header-enter sticky top-0 z-40 border-b bg-background/98">
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
-          <Brand isOwner={isOwner} />
+          <Brand isOwner={isOwner} navigateToTop={navigateToTop} />
           <div className="hidden items-center gap-1 lg:flex">
             {items.map((item) => {
               const isActive =
@@ -151,7 +169,7 @@ export function SiteHeader() {
               </SheetTrigger>
               <SheetContent closeLabel="Close navigation">
                 <SheetTitle className="mb-6">
-                  <Brand isOwner={isOwner} />
+                  <Brand isOwner={isOwner} navigateToTop={navigateToTop} />
                 </SheetTitle>
                 <nav className="grid gap-1" aria-label="Mobile navigation">
                   {items.map((item) => {
