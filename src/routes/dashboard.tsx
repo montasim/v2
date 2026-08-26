@@ -124,6 +124,32 @@ function OwnerDashboardPage() {
             </span>
             Montasim
           </Link>
+          <div className="ml-auto flex items-center lg:hidden">
+            <Button
+              variant="ghost"
+              size="icon-lg"
+              onClick={toggleTheme}
+              aria-label={`Use ${theme === "dark" ? "light" : "dark"} theme`}
+            >
+              {theme === "dark" ? (
+                <SunIcon className="size-4" />
+              ) : (
+                <MoonIcon className="size-4" />
+              )}
+            </Button>
+            <Button
+              variant="outline"
+              className="ml-1 h-9 font-medium text-foreground"
+              onClick={signOut}
+              disabled={signingOut}
+              aria-label="Sign out"
+            >
+              <span>Sign out</span>
+              {signingOut ? (
+                <CircleDashedIcon className="size-3.5 animate-spin" />
+              ) : null}
+            </Button>
+          </div>
         </div>
         <div className="flex items-center gap-2 overflow-x-auto p-3 lg:block lg:space-y-1 lg:p-4">
           {navigation.map(({ to, label, icon: Icon }) => (
@@ -150,7 +176,7 @@ function OwnerDashboardPage() {
       </aside>
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b bg-background/95 px-4 backdrop-blur-sm sm:px-6 lg:px-10">
+        <header className="sticky top-0 z-30 hidden h-16 items-center border-b bg-background/95 px-10 backdrop-blur-sm lg:flex">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-4">
             <div
               className="flex min-w-0 items-center gap-2 text-xs text-emphasis-foreground"
