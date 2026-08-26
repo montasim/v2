@@ -276,6 +276,89 @@ export function DashboardConversationsSkeleton() {
   )
 }
 
+export function DashboardStaticAnswersSkeleton() {
+  return (
+    <LoadingRegion label="Loading static questions and answers">
+      <HeaderSkeleton width="w-64" description />
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 rounded-xl border bg-background px-4 py-3">
+          <Skeleton className="size-9 shrink-0 rounded-lg" />
+          <div className="min-w-0 flex-1">
+            <Skeleton className="h-4 w-44" />
+            <Skeleton className="mt-2 h-3 w-80 max-w-full" />
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div className="min-w-0 flex-1">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="mt-2 h-3 w-64 max-w-full" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-20 rounded-md" />
+              <Skeleton className="h-3 w-36" />
+            </div>
+          </div>
+          <div className="grid items-center gap-6 rounded-xl border bg-background p-5 sm:p-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
+            <div className="grid place-items-center">
+              <Skeleton className="grid size-52 place-items-center rounded-full">
+                <span className="size-28 rounded-full bg-background" />
+              </Skeleton>
+            </div>
+            <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {[0, 1, 2, 3, 4, 5].map((item) => (
+                <div
+                  key={item}
+                  className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2"
+                >
+                  <Skeleton className="size-2.5 shrink-0 rounded-sm" />
+                  <Skeleton
+                    className={cn("h-3", item % 2 === 0 ? "w-24" : "w-32")}
+                  />
+                  <div className="ml-auto">
+                    <Skeleton className="h-3 w-7" />
+                    <Skeleton className="mt-1.5 h-2 w-6" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-3 rounded-xl border bg-background p-5 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)]">
+          <div>
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
+          </div>
+          <div>
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {[0, 1, 2].map((item) => (
+            <div
+              key={item}
+              className="rounded-xl border bg-background px-5 py-6"
+            >
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-24 rounded-md" />
+                <Skeleton className="h-3 w-10" />
+              </div>
+              <Skeleton className="mt-4 h-4 w-4/5" />
+              <Skeleton className="mt-4 h-3 w-full" />
+              <Skeleton className="mt-2 h-3 w-11/12" />
+              <Skeleton className="mt-2 h-3 w-2/3" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </LoadingRegion>
+  )
+}
+
 function CommentCardSkeleton() {
   return (
     <article className="overflow-hidden rounded-xl border bg-background">

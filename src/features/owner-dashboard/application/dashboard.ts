@@ -8,6 +8,7 @@ import {
   loadOwnerInquiries,
   loadOwnerSubscribers,
 } from "@/features/owner-dashboard/infrastructure/dashboard.server"
+import { loadOwnerStaticAnswers } from "@/features/owner-dashboard/infrastructure/static-answers.server"
 import { loadAvailabilitySettings } from "@/features/availability/infrastructure/settings.server"
 import { requirePortfolioOwner } from "@/features/owner-auth/infrastructure/neon-auth.server"
 
@@ -49,5 +50,12 @@ export const getOwnerAvailability = createServerFn({ method: "GET" }).handler(
   async () => {
     await requirePortfolioOwner()
     return loadAvailabilitySettings()
+  }
+)
+
+export const getOwnerStaticAnswers = createServerFn({ method: "GET" }).handler(
+  async () => {
+    await requirePortfolioOwner()
+    return loadOwnerStaticAnswers()
   }
 )

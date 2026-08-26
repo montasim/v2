@@ -28,6 +28,7 @@ import { Route as DashboardAvailabilityRouteImport } from './routes/dashboard.av
 import { Route as DashboardCommentsRouteImport } from './routes/dashboard.comments'
 import { Route as DashboardConversationsRouteImport } from './routes/dashboard.conversations'
 import { Route as DashboardInquiriesRouteImport } from './routes/dashboard.inquiries'
+import { Route as DashboardStaticAnswersRouteImport } from './routes/dashboard.static-answers'
 import { Route as DashboardSubscribersRouteImport } from './routes/dashboard.subscribers'
 import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
@@ -127,6 +128,11 @@ const DashboardInquiriesRoute = DashboardInquiriesRouteImport.update({
   path: '/inquiries',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardStaticAnswersRoute = DashboardStaticAnswersRouteImport.update({
+  id: '/static-answers',
+  path: '/static-answers',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSubscribersRoute = DashboardSubscribersRouteImport.update({
   id: '/subscribers',
   path: '/subscribers',
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRoute
+  '/dashboard/static-answers': typeof DashboardStaticAnswersRoute
   '/dashboard/subscribers': typeof DashboardSubscribersRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRoute
+  '/dashboard/static-answers': typeof DashboardStaticAnswersRoute
   '/dashboard/subscribers': typeof DashboardSubscribersRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -210,6 +218,7 @@ export interface FileRoutesById {
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
   '/dashboard/inquiries': typeof DashboardInquiriesRoute
+  '/dashboard/static-answers': typeof DashboardStaticAnswersRoute
   '/dashboard/subscribers': typeof DashboardSubscribersRoute
   '/projects_/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -236,6 +245,7 @@ export interface FileRouteTypes {
     | '/dashboard/comments'
     | '/dashboard/conversations'
     | '/dashboard/inquiries'
+    | '/dashboard/static-answers'
     | '/dashboard/subscribers'
     | '/projects/$slug'
     | '/dashboard/'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/dashboard/comments'
     | '/dashboard/conversations'
     | '/dashboard/inquiries'
+    | '/dashboard/static-answers'
     | '/dashboard/subscribers'
     | '/projects/$slug'
     | '/dashboard'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/dashboard/comments'
     | '/dashboard/conversations'
     | '/dashboard/inquiries'
+    | '/dashboard/static-answers'
     | '/dashboard/subscribers'
     | '/projects_/$slug'
     | '/dashboard/'
@@ -443,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInquiriesRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/static-answers': {
+      id: '/dashboard/static-answers'
+      path: '/static-answers'
+      fullPath: '/dashboard/static-answers'
+      preLoaderRoute: typeof DashboardStaticAnswersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/subscribers': {
       id: '/dashboard/subscribers'
       path: '/subscribers'
@@ -472,6 +491,7 @@ interface DashboardRouteChildren {
   DashboardCommentsRoute: typeof DashboardCommentsRoute
   DashboardConversationsRoute: typeof DashboardConversationsRoute
   DashboardInquiriesRoute: typeof DashboardInquiriesRoute
+  DashboardStaticAnswersRoute: typeof DashboardStaticAnswersRoute
   DashboardSubscribersRoute: typeof DashboardSubscribersRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
@@ -481,6 +501,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardCommentsRoute: DashboardCommentsRoute,
   DashboardConversationsRoute: DashboardConversationsRoute,
   DashboardInquiriesRoute: DashboardInquiriesRoute,
+  DashboardStaticAnswersRoute: DashboardStaticAnswersRoute,
   DashboardSubscribersRoute: DashboardSubscribersRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }

@@ -131,6 +131,43 @@ describe("portfolio exact answers", () => {
     }
   })
 
+  it("keeps reusable answers useful to hiring teams, developers, and clients", () => {
+    const reusableCategories = new Set<ExactAnswer["category"]>([
+      "project",
+      "case-study",
+      "blog",
+      "certification",
+      "experience",
+      "skill",
+      "recommendation",
+      "affiliation",
+    ])
+    const reusableAnswers = getExactAnswerCatalog().filter((record) =>
+      reusableCategories.has(record.category)
+    )
+
+    for (const record of reusableAnswers) {
+      expect(record.text, record.id).toMatch(
+        /hiring|client|reviewer|developer|interviewer|production|applied ability|paid engineering/i
+      )
+    }
+
+    for (const record of reusableAnswers.filter(
+      (answer) => answer.category === "project"
+    )) {
+      expect(record.factIds, record.id).toEqual(
+        expect.arrayContaining([expect.stringMatching(/^case-study:/)])
+      )
+    }
+
+    const fullStackAnswer = reusableAnswerById(
+      "hiring-fit-due-diligence:full-stack-fit"
+    )
+    expect(fullStackAnswer.text).toContain(
+      "does not claim production Laravel experience"
+    )
+  })
+
   it("answers recommendation questions with attributed insight, not endorsement", () => {
     const recommendations = getExactAnswerCatalog().filter(
       (record) => record.category === "recommendation"
@@ -254,3 +291,9 @@ describe("portfolio exact answers", () => {
     ).toThrow()
   })
 })
+
+function reusableAnswerById(id: string): ExactAnswer {
+  const record = getExactAnswerCatalog().find((answer) => answer.id === id)
+  expect(record, id).toBeDefined()
+  return record as ExactAnswer
+}

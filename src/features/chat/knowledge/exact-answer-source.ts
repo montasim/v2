@@ -270,18 +270,26 @@ function slug(value: string): string {
 function buildProjectAnswers(): readonly ExactAnswer[] {
   return projectCatalog.records.flatMap((project) => {
     const type = projectTypeLabel(project.type)
+    const caseStudy = requiredCaseStudy(project.id)
     return [
       answer("project", {
         id: `${project.id}:overview`,
         question: `What is Montasim's ${project.title} project?`,
-        text: `${project.title} is documented as ${indefiniteArticle(type)} ${type} project built by Montasim. The project description states: ${sentence(project.description)} Its recorded stack includes ${project.technologies.slice(0, 6).join(", ")}. The related case study lets a hiring reviewer examine the problem, architecture, contribution, and outcomes behind this concise project record.`,
-        evidence: [projectReference(project)],
+        text: `Montasim built ${project.title}, ${indefiniteArticle(type)} ${type} project. ${sentence(project.description)} His role covered ${lowercaseFirst(caseStudy.role)}, with scope spanning ${lowercaseFirst(caseStudy.scope)}. ${sentence(caseStudy.outcomes[0])} A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary.`,
+        evidence: [
+          projectReference(project),
+          caseStudyReference(caseStudy, "problem"),
+          caseStudyReference(caseStudy, "outcomes"),
+        ],
       }),
       answer("project", {
         id: `${project.id}:technology`,
         question: `Which technologies did Montasim use for ${project.title}?`,
-        text: `The documented stack for ${project.title} includes ${project.technologies.join(", ")}. Those technologies support the project's recorded purpose: ${sentence(project.description)} This ties the stack to a concrete product scope instead of presenting it as an isolated keyword list.`,
-        evidence: [projectReference(project)],
+        text: `Montasim built ${project.title} with ${project.technologies.join(", ")}. The product goal is clear: ${sentence(project.description)} More importantly, the architecture is explicit: ${sentence(caseStudy.architecture.summary)} That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords.`,
+        evidence: [
+          projectReference(project),
+          caseStudyReference(caseStudy, "architecture"),
+        ],
       }),
     ]
   })
@@ -292,19 +300,19 @@ function buildCaseStudyAnswers(): readonly ExactAnswer[] {
     answer("case-study", {
       id: `${caseStudy.slug}:problem`,
       question: `What problem did Montasim address in the ${caseStudy.project.title} case study?`,
-      text: `${sentence(caseStudy.problem)} Montasim's documented role covered ${lowercaseFirst(caseStudy.role)}, with scope spanning ${lowercaseFirst(caseStudy.scope)}. Two representative constraints were ${quotedList(caseStudy.constraints.slice(0, 2))}. These conditions show what the solution had to respect beyond the visible feature request.`,
+      text: `${sentence(caseStudy.problem)} Montasim owned ${lowercaseFirst(caseStudy.role)}, covering ${lowercaseFirst(caseStudy.scope)}. The solution also had to respect ${quotedList(caseStudy.constraints.slice(0, 2))}. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request.`,
       evidence: [caseStudyReference(caseStudy, "problem")],
     }),
     answer("case-study", {
       id: `${caseStudy.slug}:architecture`,
       question: `How did Montasim structure the ${caseStudy.project.title} solution?`,
-      text: `${sentence(caseStudy.architecture.summary)} One key decision, “${caseStudy.decisions[0].title},” is documented as follows: ${sentence(caseStudy.decisions[0].detail)} This shows how Montasim converts a stated constraint into an explicit system boundary instead of treating architecture as a collection of tools.`,
+      text: `${sentence(caseStudy.architecture.summary)} A representative decision was “${caseStudy.decisions[0].title}”: ${sentence(caseStudy.decisions[0].detail)} The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve.`,
       evidence: [caseStudyReference(caseStudy, "architecture")],
     }),
     answer("case-study", {
       id: `${caseStudy.slug}:delivery`,
       question: `What did Montasim deliver and achieve with ${caseStudy.project.title}?`,
-      text: `${attributedContributionSentences(caseStudy.contribution)} The case study records these outcomes: ${quotedList(caseStudy.outcomes)}. Together, those sections distinguish Montasim's stated contribution from the capabilities and limits recorded for the resulting system.`,
+      text: `${attributedContributionSentences(caseStudy.contribution)} The resulting capabilities and outcomes are ${quotedList(caseStudy.outcomes)}. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed.`,
       evidence: [
         caseStudyReference(caseStudy, "contribution"),
         caseStudyReference(caseStudy, "outcomes"),
@@ -336,7 +344,7 @@ function buildBlogAnswers(): readonly ExactAnswer[] {
     return answer("blog", {
       id: post.slug,
       question: `What engineering insight does Montasim share in “${post.title}”?`,
-      text: `In “${post.title},” Montasim opens with the section “${section.title}.” It begins: ${sentence(section.paragraphs[0])} The article gives readers his documented reasoning about an implementation trade-off rather than only repeating the project's feature summary.`,
+      text: `Montasim's opening insight in “${post.title}” is framed as “${section.title}”: ${sentence(section.paragraphs[0])} The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply.`,
       evidence: [overview, ...sectionEvidence],
     })
   })
@@ -352,7 +360,7 @@ function buildCertificationAnswers(): readonly ExactAnswer[] {
     return answer("certification", {
       id: credential.id,
       question: `What does Montasim's “${credential.title}” credential document?`,
-      text: `Montasim completed “${credential.title},” ${issuer} in ${credential.year}. The portfolio describes its focus as follows: ${sentence(credential.description)} This credential documents that stated learning activity and should not be treated as evidence beyond its published scope.`,
+      text: `Montasim completed “${credential.title},” ${issuer} in ${credential.year}. Its stated focus was ${lowercaseFirst(sentence(credential.description))} For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability.`,
       evidence: [
         reference(
           `certification:${credential.id}`,
@@ -372,13 +380,13 @@ function buildExperienceAnswers(): readonly ExactAnswer[] {
       answer("experience", {
         id: `${experience.id}:responsibility`,
         question: `What did Montasim do as ${experience.role} at ${experience.company}?`,
-        text: `Montasim held the ${experience.role} role at ${experience.company} (${experience.period}). ${work} This record scopes the stated responsibilities and outcomes to that specific stage of his career.`,
+        text: `As ${experience.role} at ${experience.company} (${experience.period}), Montasim ${work.replace(/^Montasim /, "")} For a hiring manager, this is role-specific evidence of what he owned, delivered, or improved at that stage of his career—not a title-only claim.`,
         evidence: [experienceReference(experience)],
       }),
       answer("experience", {
         id: `${experience.id}:stack`,
         question: `What skills did Montasim apply in his ${experience.role} role at ${experience.company}?`,
-        text: `The role documents work with ${experience.technologies.join(", ")}. ${work} This ties the listed technologies to a specific role rather than presenting them as an isolated keyword list.`,
+        text: `Montasim applied ${experience.technologies.join(", ")} in this role. ${work} A technical interviewer can therefore discuss the stack through the actual responsibilities and outcomes attached to it, rather than treating each technology as an unsupported proficiency claim.`,
         evidence: [experienceReference(experience)],
       }),
     ]
@@ -390,7 +398,7 @@ function buildSkillAnswers(): readonly ExactAnswer[] {
     answer("skill", {
       id: group.id,
       question: `Which ${group.category} skills does Montasim document?`,
-      text: `Montasim's ${group.category} catalog includes ${group.items.join(", ")}. These are the skills explicitly published in the portfolio for this category; individual experience, projects, and case studies provide the separate evidence of where particular technologies were applied.`,
+      text: `Montasim lists ${group.items.join(", ")} under ${group.category}. Use this as a map of his working toolkit; the role records and project case studies show which skills he has applied to production outcomes, architecture decisions, or independently reviewable work.`,
       evidence: [skillReference(group)],
     })
   )
@@ -436,7 +444,7 @@ function buildRecommendationAnswers(): readonly ExactAnswer[] {
     answer("recommendation", {
       id: `${index}:${slug(recommendation.name)}`,
       question: `What professional feedback did ${recommendation.name} give about Montasim?`,
-      text: `The portfolio records that ${recommendation.name} ${recommendation.relationship}. In attributed feedback, ${requiredItem(recommendationInsights[recommendation.name], `Recommendation insight for ${recommendation.name}`)} This is qualitative evidence about observed work and collaboration; it is not used to prove unrelated technical claims.`,
+      text: `${recommendation.name} ${recommendation.relationship}. In attributed feedback, ${requiredItem(recommendationInsights[recommendation.name], `Recommendation insight for ${recommendation.name}`)} This helps a hiring manager assess Montasim's observed working style and collaboration; technical ability is supported separately by his roles and project evidence.`,
       evidence: [recommendationReference(recommendation.name)],
     })
   )
@@ -463,7 +471,7 @@ function buildAffiliationAnswers(): readonly ExactAnswer[] {
     answer("affiliation", {
       id: record.id,
       question: `What did Montasim study at ${record.institution}?`,
-      text: `Montasim's education record lists a ${record.degree} at ${record.institution} (${record.period}). It records that he ${lowercaseFirst(record.details)} ${record.highlights.join(" ")} This establishes the educational foundation documented by the portfolio.`,
+      text: `Montasim studied for a ${record.degree} at ${record.institution} (${record.period}). He ${lowercaseFirst(record.details)} ${record.highlights.join(" ")} This gives hiring teams the educational context behind his later software, leadership, and continuous-learning record.`,
       evidence: [
         reference(
           `education:${record.id}`,
@@ -477,7 +485,7 @@ function buildAffiliationAnswers(): readonly ExactAnswer[] {
     answer("affiliation", {
       id: record.id,
       question: `How was Montasim involved with ${record.name}?`,
-      text: `Montasim's documented role with ${record.name} was ${record.role}, associated with ${record.associatedWith}, during ${record.period || "the period documented in the portfolio"}. ${requiredItem(organizationInsights[record.id], `Organization insight for ${record.id}`)} This adds evidence of his activities beyond formal software roles.`,
+      text: `Montasim served as ${record.role} with ${record.name}, associated with ${record.associatedWith}, during ${record.period || "the period published in the portfolio"}. ${requiredItem(organizationInsights[record.id], `Organization insight for ${record.id}`)} This adds bounded evidence of leadership, teamwork, or technical initiative outside paid engineering roles.`,
       evidence: [
         reference(
           `organization:${record.id}`,
@@ -491,7 +499,7 @@ function buildAffiliationAnswers(): readonly ExactAnswer[] {
     answer("affiliation", {
       id: record.id,
       question: `What volunteering did Montasim do with ${record.organization}?`,
-      text: `Montasim volunteered as ${record.role} with ${record.organization} during ${record.period} in ${record.location}. ${requiredItem(volunteeringInsights[record.id], `Volunteering insight for ${record.id}`)} This documents hands-on coordination, teamwork, and delivery outside his paid engineering experience.`,
+      text: `Montasim volunteered as ${record.role} with ${record.organization} during ${record.period} in ${record.location}. ${requiredItem(volunteeringInsights[record.id], `Volunteering insight for ${record.id}`)} For hiring teams, it is practical evidence of coordination, resource responsibility, and follow-through outside paid software work.`,
       evidence: [
         reference(
           `volunteering:${record.id}`,
@@ -612,7 +620,7 @@ function buildIdentityAnswers(): readonly ExactAnswer[] {
     {
       id: "introduction",
       question: "How would you introduce Montasim to a hiring team?",
-      text: `Montasim is a Dhaka-based Senior Software Engineer with 3+ years of documented experience building real-time, AI-driven, multi-tenant SaaS across React, Next.js, Node.js, and TypeScript. He has been promoted twice at MyMedicalHub and now owns frontend architecture, leads PR reviews, and mentors engineers.`,
+      text: `Montasim is a Dhaka-based Senior Software Engineer with 3+ years of experience building real-time, AI-driven, multi-tenant SaaS with React, Next.js, Node.js, and TypeScript. After two promotions at MyMedicalHub, he now owns frontend architecture, leads PR reviews, and mentors engineers. His strongest results include 99.9% reliable AI analysis at 60 FPS, 40% better application performance, and 70% lower cloud cost—making him most relevant to teams that need senior product ownership as well as implementation depth.`,
       evidence: [profileReference, current],
     },
     {
@@ -707,7 +715,7 @@ function buildIdentityAnswers(): readonly ExactAnswer[] {
     {
       id: "contact",
       question: "How can a recruiter contact Montasim?",
-      text: `Recruiters can contact Montasim through the portfolio's email, LinkedIn, WhatsApp, or inquiry flow. The published email is ${profile.email}; using a direct channel is especially appropriate for role-specific questions that the public portfolio does not document.`,
+      text: `Recruiters and prospective clients can contact Montasim through email, LinkedIn, WhatsApp, or the portfolio inquiry flow. His published email is ${profile.email}. A useful first message should include the role or project scope, core technical problem, working arrangement, and expected timeline so he can respond with the most relevant experience.`,
       evidence: [profileReference],
     },
   ]
@@ -915,11 +923,12 @@ function buildHiringFitAnswers(): readonly ExactAnswer[] {
     {
       id: "full-stack-fit",
       question: "What supports hiring Montasim for a full-stack position?",
-      text: `Montasim's strongest depth is frontend architecture, while his documented stack also covers Node.js, Express, PostgreSQL, MongoDB, authentication, REST APIs, queues, cloud deployment, and CI/CD. Projects such as PostCraft add scheduled publishing, provider integration, persistent workflows, and multi-platform product logic to that full-stack profile.`,
+      text: `Montasim's deepest evidence is frontend architecture, but his delivered work also covers PHP, Node.js, Express, PostgreSQL, MongoDB, authentication, REST APIs, queues, cloud deployment, and CI/CD. PostCraft adds scheduled publishing, provider integration, persistent workflows, and multi-platform product logic, while his Codez role proves earlier client-driven PHP delivery. For Laravel teams, those backend foundations are transferable, but the current portfolio does not claim production Laravel experience; framework-specific depth should be assessed directly.`,
       evidence: [
         profileReference,
         skillReference(backendSkills),
         skillReference(databaseSkills),
+        experienceReference(codezExperience),
         projectReference(postcraft),
         caseStudyReference(postcraftCaseStudy, "architecture"),
       ],
@@ -1050,7 +1059,7 @@ function buildHiringFitAnswers(): readonly ExactAnswer[] {
     {
       id: "client-project-fit",
       question: "Why might a client choose Montasim for a complex web product?",
-      text: `Montasim can show product records that cover discovery constraints, architecture, implementation, and verifiable outcomes across SaaS, AI, browser extensions, data products, packages, and developer tools. His earlier Codez role also explicitly records analyzing client needs, implementing functionality, and executing test scenarios.`,
+      text: `A client would get an engineer who can move from requirements and hidden constraints into architecture, implementation, testing, and reviewable outcomes. Montasim can demonstrate that process across SaaS, AI, browser extensions, data products, packages, and developer tools; his Codez role also directly records analyzing client needs, implementing the required functionality, and executing test scenarios. The best fit is a project that values clear technical boundaries and dependable delivery, not just rapid screen production.`,
       evidence: [
         experienceReference(codezExperience),
         projectReference(postcraft),
@@ -1207,7 +1216,7 @@ function buildHiringFitAnswers(): readonly ExactAnswer[] {
     {
       id: "hiring-summary",
       question: "Give a concise evidence-based hiring summary for Montasim.",
-      text: `Montasim is a Senior Software Engineer with two promotions, production healthcare SaaS depth, and measurable results across reliability, real-time AI, frontend performance, cloud cost, and diagnosis workflows. He adds architecture ownership, mentoring, cross-functional credibility, and a broad documented project catalog. The next step is a role-specific technical conversation.`,
+      text: `Montasim is a Senior Software Engineer with two promotions, production healthcare SaaS depth, and measured results across reliability, real-time AI, frontend performance, cloud cost, and diagnosis workflows. He adds architecture ownership, mentoring, cross-functional credibility, and reviewable full-stack project work. Teams hiring for senior product engineering, frontend architecture, or AI-enabled SaaS should invite him to a role-specific technical conversation.`,
       evidence: [
         profileReference,
         senior,
@@ -1220,7 +1229,7 @@ function buildHiringFitAnswers(): readonly ExactAnswer[] {
       id: "next-step",
       question:
         "What is the best next step if Montasim looks relevant to an opening?",
-      text: `Contact Montasim with the role's scope, seniority, core technical problems, work arrangement, time-zone expectations, and interview process. His portfolio lists active availability and an immediate earliest-start entry, while a direct conversation can validate the organizational and domain context not contained in public records.`,
+      text: `Contact Montasim with the role's scope, seniority, core technical problems, work arrangement, time-zone expectations, and interview process. He is actively looking and lists an immediate earliest start, so a focused message can move directly into fit: ask him to relate the role to the closest production result or project case study and use the conversation to validate team and domain context.`,
       evidence: [profileReference],
     },
   ]
@@ -2012,7 +2021,7 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       id: "end-to-end-delivery",
       question:
         "What evidence shows Montasim can deliver a product end to end?",
-      text: `His case studies connect a defined problem to constraints, architecture, implementation, and outcomes across AI SaaS, extensions, data products, packages, and developer tools. PostCraft is a strong full-path example, covering generation, brand controls, previews, scheduling, durable delivery, and provider integration.`,
+      text: `Montasim's case studies trace delivery from a defined problem through constraints, architecture, implementation, and outcomes across AI SaaS, extensions, data products, packages, and developer tools. PostCraft is a strong full-path example: he handled generation, brand controls, previews, scheduling, durable delivery, and provider integration. For a client, that is evidence he can reason about the whole product lifecycle rather than hand off responsibility at the UI boundary.`,
       evidence: [
         projectReference(postcraft),
         caseStudyReference(postcraftCaseStudy, "problem"),
@@ -2023,7 +2032,7 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
     {
       id: "client-needs",
       question: "Has Montasim worked directly from client requirements?",
-      text: `Yes. His Web Developer role at Codez explicitly documents analyzing client needs, developing appropriate functionality, and creating and executing test scenarios. His later project case studies add more detailed evidence of translating user and business constraints into technical boundaries.`,
+      text: `Yes. As a Web Developer at Codez, Montasim analyzed client needs, implemented the appropriate functionality, and created and executed test scenarios. His later case studies show the same skill at greater depth by turning user and business constraints into explicit technical boundaries. A prospective client can ask him to apply that process to their users, risks, integrations, and definition of success.`,
       evidence: [
         experienceReference(codezExperience),
         caseStudyReference(postcraftCaseStudy, "problem"),
@@ -2148,7 +2157,7 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
     {
       id: "working-style",
       question: "What working style could a client expect from Montasim?",
-      text: `Attributed feedback describes Montasim as proactive, clear, collaborative, attentive to detail, and committed to high-quality delivery. His case studies reinforce a habit of making scope, constraints, technical decisions, and limitations explicit, which can support transparent client communication.`,
+      text: `Clients can expect a proactive, clear, collaborative, and detail-conscious working style, based on attributed feedback from managers and teammates. His case studies reinforce the same pattern: he makes scope, constraints, technical decisions, outcomes, and limitations explicit. In practice, that supports transparent trade-off conversations and reduces the risk of discovering important assumptions only after implementation.`,
       evidence: [
         recommendationReference("Tabbi Quadir"),
         recommendationReference("Shahriar Iqbal"),
@@ -2159,7 +2168,7 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       id: "scope-conversation",
       question:
         "What should a potential client discuss with Montasim before starting work?",
-      text: `Discuss the target users, business outcome, privacy and security constraints, reliability expectations, integrations, delivery environment, ownership after launch, and what evidence will prove success. Montasim's portfolio supports complex product delivery, but price, capacity, timeline, and engagement terms are not publicly documented.`,
+      text: `Discuss the target users, business outcome, privacy and security constraints, reliability expectations, integrations, delivery environment, ownership after launch, and the evidence that will prove success. Then align price, current capacity, timeline, milestones, communication cadence, and engagement terms, which are not published in the portfolio. This gives Montasim enough context to recommend a bounded first phase instead of estimating a product whose scope is still unclear.`,
       evidence: [
         profileReference,
         caseStudyReference(postcraftCaseStudy, "problem"),
@@ -2168,7 +2177,7 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
     {
       id: "proof-of-work",
       question: "What proof can a client review before contacting Montasim?",
-      text: `Clients can review ${projectCatalog.records.length} project records, ${projectCaseStudyCatalog.records.length} structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. That material supports a focused conversation about the closest comparable work.`,
+      text: `Before making contact, a client can review ${projectCatalog.records.length} project records, ${projectCaseStudyCatalog.records.length} structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project.`,
       evidence: [
         catalogCountReference("projects", projectCatalog.records.length),
         catalogCountReference(

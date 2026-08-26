@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react"
+import { lazy, Suspense, useEffect, useRef, useState } from "react"
 import { createAuthClient } from "@neondatabase/auth"
 import {
   createFileRoute,
@@ -77,6 +77,11 @@ const navigation = [
     icon: ChatCenteredDotsIcon,
   },
   {
+    to: "/dashboard/static-answers",
+    label: "Static answers",
+    icon: BookOpenTextIcon,
+  },
+  {
     to: "/dashboard/comments",
     label: "Blog comments",
     icon: ChatCircleDotsIcon,
@@ -100,8 +105,23 @@ function OwnerDashboardPage() {
   })
   const { theme, toggleTheme } = useTheme()
   const [signingOut, setSigningOut] = useState(false)
+  const navigationRef = useRef<HTMLDivElement>(null)
   const activeNavigation =
     navigation.find(({ to }) => pathname === to)?.label ?? "Dashboard"
+
+  useEffect(() => {
+    function revealActiveNavigation() {
+      const activeLink = navigationRef.current?.querySelector<HTMLElement>(
+        '[data-active-navigation="true"]'
+      )
+      if (activeLink && typeof activeLink.scrollIntoView === "function") {
+        activeLink.scrollIntoView({ block: "nearest", inline: "center" })
+      }
+    }
+
+    const frame = window.requestAnimationFrame(revealActiveNavigation)
+    return () => window.cancelAnimationFrame(frame)
+  }, [pathname])
 
   async function signOut() {
     setSigningOut(true)
@@ -157,11 +177,15 @@ function OwnerDashboardPage() {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2 overflow-x-auto p-3 lg:block lg:space-y-1 lg:p-4">
+        <div
+          ref={navigationRef}
+          className="flex items-center gap-2 overflow-x-auto p-3 lg:block lg:space-y-1 lg:p-4"
+        >
           {navigation.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
               to={to}
+              data-active-navigation={pathname === to ? "true" : undefined}
               className={cn(
                 "flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:w-full",
                 pathname === to &&
