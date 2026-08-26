@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   ArrowClockwiseIcon,
   BriefcaseIcon,
@@ -110,18 +111,23 @@ export function DashboardEmptyState({
   const Icon = state.icon
 
   return (
-    <section className="grid min-h-64 place-items-center rounded-xl border border-dashed bg-background px-6 py-12 text-center">
-      <div className="max-w-sm">
-        <span className="mx-auto grid size-11 place-items-center rounded-xl border bg-muted/35 text-muted-foreground">
-          <Icon className="size-5" />
-        </span>
-        <h2 className="mt-4 text-sm font-semibold text-strong-foreground">
-          {state.title}
-        </h2>
-        <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
-          {state.description}
-        </p>
-      </div>
-    </section>
+    <Card
+      asChild
+      className="grid min-h-64 place-items-center border-dashed bg-background px-6 py-12 text-center"
+    >
+      <section>
+        <div className="max-w-sm">
+          <span className="mx-auto grid size-11 place-items-center rounded-xl border bg-muted/35 text-muted-foreground">
+            <Icon className="size-5" />
+          </span>
+          <h2 className="mt-4 text-sm font-semibold text-strong-foreground">
+            {state.title}
+          </h2>
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+            {state.description}
+          </p>
+        </div>
+      </section>
+    </Card>
   )
 }

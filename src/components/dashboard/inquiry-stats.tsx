@@ -1,47 +1,45 @@
-import type { CSSProperties } from "react"
+import { Label, Pie, PieChart } from "recharts"
 
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
+import type { ChartConfig } from "@/components/ui/chart"
+import { Card } from "@/components/ui/card"
 import type { InquiryStat } from "@/features/owner-dashboard/infrastructure/dashboard.server"
+import { cn } from "@/lib/utils"
 
-type ColorToken = { solid: string; soft: string }
-
-const categoricalPalette = [
-  { solid: "#4f5f5a", soft: "#4f5f5a1f" },
-  { solid: "#6b6673", soft: "#6b66731f" },
-  { solid: "#8a704f", soft: "#8a704f1f" },
-  { solid: "#68727a", soft: "#68727a1f" },
-  { solid: "#74746d", soft: "#74746d1f" },
+const hiringChartThemes = [
+  {
+    light: "var(--chart-5)",
+    dark: "var(--chart-1)",
+    swatch: "bg-chart-5 dark:bg-chart-1",
+  },
+  {
+    light: "var(--chart-4)",
+    dark: "var(--chart-2)",
+    swatch: "bg-chart-4 dark:bg-chart-2",
+  },
+  {
+    light: "var(--chart-3)",
+    dark: "var(--chart-3)",
+    swatch: "bg-chart-3",
+  },
+  {
+    light: "var(--chart-2)",
+    dark: "var(--chart-4)",
+    swatch: "bg-chart-2 dark:bg-chart-4",
+  },
+  {
+    light: "var(--chart-1)",
+    dark: "var(--chart-5)",
+    swatch: "bg-chart-1 dark:bg-chart-5",
+  },
 ] as const
 
-const roleColors: Record<string, ColorToken> = {
-  "Senior Frontend Engineer": categoricalPalette[0],
-  "Senior Full-Stack Engineer": categoricalPalette[1],
-  "Technical Lead": categoricalPalette[2],
-  "Another role": categoricalPalette[3],
-  "Not specified": categoricalPalette[4],
-}
-
-const arrangementColors: Record<string, ColorToken> = {
-  Remote: categoricalPalette[0],
-  Hybrid: categoricalPalette[1],
-  "On-site": categoricalPalette[2],
-  Flexible: categoricalPalette[3],
-  "Not specified": categoricalPalette[4],
-}
-
-function fallbackColor(label: string) {
-  const index = [...label].reduce(
-    (total, character) => total + character.codePointAt(0)!,
-    0
-  )
-  return categoricalPalette[index % categoricalPalette.length]
-}
-
-function roleColor(label: string) {
-  return roleColors[label] ?? fallbackColor(label)
-}
-
-function arrangementColor(label: string) {
-  return arrangementColors[label] ?? fallbackColor(label)
+function paletteAt(index: number) {
+  return hiringChartThemes[index % hiringChartThemes.length]
 }
 
 function totalOf(data: InquiryStat[]) {
@@ -67,146 +65,174 @@ function EmptyState() {
   )
 }
 
-function RoleRanking({ data }: { data: InquiryStat[] }) {
+function DistributionLegend({
+  data,
+  description,
+  title,
+}: {
+  data: InquiryStat[]
+  description: string
+  title: string
+}) {
   const total = totalOf(data)
-  const maximum = Math.max(...data.map((item) => item.count), 1)
+  const legendId = `inquiry-${title.toLowerCase().replaceAll(" ", "-")}`
 
   return (
-    <figure aria-labelledby="role-demand-title">
-      <figcaption className="mb-5">
-        <h3 id="role-demand-title" className="text-sm font-semibold">
-          Role demand
+    <section aria-labelledby={legendId}>
+      <div className="mb-2">
+        <h3
+          id={legendId}
+          className="text-xs font-semibold text-strong-foreground"
+        >
+          {title}
         </h3>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Ranked by inquiries received
+        <p className="mt-1 text-[0.6875rem] text-muted-foreground">
+          {description}
         </p>
-      </figcaption>
-
-      <div
-        className="space-y-4"
-        role="img"
-        aria-label={`Ranked bar chart of ${total} role inquiries: ${data
-          .map((item) => `${item.label}, ${item.count}`)
-          .join("; ")}`}
-      >
-        {data.map((item, index) => {
-          const color = roleColor(item.label)
-          const share = percentage(item.count, total)
-          const width = (item.count / maximum) * 100
-
-          return (
-            <div
-              key={item.label}
-              className="grid grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-x-3"
-            >
-              <span className="font-mono text-[0.6875rem] text-muted-foreground tabular-nums">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0">
-                <div className="mb-2 flex items-center gap-2">
-                  <span
-                    className="size-2 shrink-0 rounded-sm"
-                    style={{ backgroundColor: color.solid }}
-                    aria-hidden="true"
-                  />
-                  <span className="truncate text-xs font-medium text-strong-foreground">
-                    {item.label}
-                  </span>
-                </div>
-                <div
-                  className="h-2 overflow-hidden rounded-full"
-                  style={{ backgroundColor: color.soft }}
-                >
-                  <div
-                    className="h-full rounded-full transition-[width] duration-500 ease-out motion-reduce:transition-none"
-                    style={{
-                      backgroundColor: color.solid,
-                      width: `${width}%`,
-                    }}
-                  />
-                </div>
-              </div>
-              <span className="min-w-14 text-right">
-                <strong className="block font-mono text-xs tabular-nums">
-                  {item.count}
-                </strong>
-                <span className="mt-0.5 block text-[0.625rem] text-muted-foreground tabular-nums">
-                  {share}%
-                </span>
-              </span>
-            </div>
-          )
-        })}
       </div>
-    </figure>
+
+      <ul
+        className="grid gap-x-6 sm:grid-cols-2"
+        aria-label={`${title} legend`}
+      >
+        {data.map((item, index) => (
+          <li
+            key={item.label}
+            className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2 last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0"
+          >
+            <span
+              className={cn(
+                "size-2.5 shrink-0 rounded-sm",
+                paletteAt(index).swatch
+              )}
+              aria-hidden="true"
+            />
+            <span className="min-w-0 flex-1 truncate text-xs font-medium text-strong-foreground">
+              {item.label}
+            </span>
+            <span className="shrink-0 text-right">
+              <strong className="block font-mono text-xs tabular-nums">
+                {item.count}
+              </strong>
+              <span className="mt-0.5 block text-[0.625rem] text-muted-foreground tabular-nums">
+                {percentage(item.count, total)}%
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
-function ArrangementDistribution({ data }: { data: InquiryStat[] }) {
-  const total = totalOf(data)
-  const activeData = data.filter((item) => item.count > 0)
+function HiringSignalChart({
+  arrangements,
+  roles,
+}: {
+  arrangements: InquiryStat[]
+  roles: InquiryStat[]
+}) {
+  const total = totalOf(roles)
+  const activeRoles = roles.filter((item) => item.count > 0)
+  const chartData = roles
+    .map((item, index) => ({
+      count: item.count,
+      fill: `var(--color-role-${index})`,
+      key: `role-${index}`,
+      label: item.label,
+    }))
+    .filter((item) => item.count > 0)
+  const chartConfig = Object.fromEntries(
+    roles.map((item, index) => [
+      `role-${index}`,
+      {
+        label: item.label,
+        theme: {
+          light: paletteAt(index).light,
+          dark: paletteAt(index).dark,
+        },
+      },
+    ])
+  ) as ChartConfig
 
   return (
-    <figure aria-labelledby="arrangement-title">
-      <figcaption className="mb-5">
-        <h3 id="arrangement-title" className="text-sm font-semibold">
-          Work setup
-        </h3>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Share of role inquiries
-        </p>
-      </figcaption>
-
-      <div
-        className="flex h-5 gap-0.5 overflow-hidden rounded-md bg-muted/60 p-0.5"
+    <div className="grid items-center gap-8 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
+      <ChartContainer
+        config={chartConfig}
+        className="mx-auto aspect-square h-60 w-full max-w-72"
+        initialDimension={{ width: 288, height: 240 }}
         role="img"
-        aria-label={`Segmented chart of ${total} arrangement preferences: ${data
+        aria-label={`Donut chart of ${total} role inquiries: ${activeRoles
           .map((item) => `${item.label}, ${item.count}`)
           .join("; ")}`}
       >
-        {activeData.map((item) => (
-          <div
-            key={item.label}
-            className="h-full min-w-1 first:rounded-l last:rounded-r"
-            style={
-              {
-                backgroundColor: arrangementColor(item.label).solid,
-                width: `${percentage(item.count, total)}%`,
-              } satisfies CSSProperties
-            }
+        <PieChart accessibilityLayer>
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel nameKey="key" />}
           />
-        ))}
-      </div>
+          <Pie
+            data={chartData}
+            dataKey="count"
+            nameKey="key"
+            innerRadius={72}
+            outerRadius={108}
+            paddingAngle={1.5}
+            cornerRadius={2}
+            stroke="var(--background)"
+            strokeWidth={2}
+            isAnimationActive={false}
+          >
+            <Label
+              content={({ viewBox }) => {
+                if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                  return null
+                }
 
-      <div className="mt-5 grid gap-2 sm:grid-cols-2">
-        {data.map((item) => {
-          const color = arrangementColor(item.label)
-          return (
-            <div
-              key={item.label}
-              className="flex items-center gap-3 rounded-lg border bg-muted/10 px-3 py-2.5"
-            >
-              <span
-                className="h-8 w-1 shrink-0 rounded-full"
-                style={{ backgroundColor: color.solid }}
-                aria-hidden="true"
-              />
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-xs font-medium text-strong-foreground">
-                  {item.label}
-                </span>
-                <span className="mt-0.5 block text-[0.625rem] text-muted-foreground">
-                  {percentage(item.count, total)}% of inquiries
-                </span>
-              </span>
-              <strong className="font-mono text-sm tabular-nums">
-                {item.count}
-              </strong>
-            </div>
-          )
-        })}
+                return (
+                  <text
+                    x={viewBox.cx}
+                    y={viewBox.cy}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    <tspan
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                      className="fill-strong-foreground text-3xl font-semibold tabular-nums"
+                    >
+                      {total}
+                    </tspan>
+                    <tspan
+                      x={viewBox.cx}
+                      y={viewBox.cy + 22}
+                      className="fill-muted-foreground text-[0.6875rem]"
+                    >
+                      {total === 1 ? "inquiry" : "inquiries"}
+                    </tspan>
+                  </text>
+                )
+              }}
+            />
+          </Pie>
+        </PieChart>
+      </ChartContainer>
+
+      <div className="grid gap-6">
+        <DistributionLegend
+          data={roles}
+          title="Role demand"
+          description="Share of role inquiries"
+        />
+        <div className="border-t border-border/70 pt-6">
+          <DistributionLegend
+            data={arrangements}
+            title="Work setup"
+            description="Preferred arrangement across role inquiries"
+          />
+        </div>
       </div>
-    </figure>
+    </div>
   )
 }
 
@@ -221,39 +247,25 @@ export function InquiryStats({
 
   return (
     <section aria-labelledby="inquiry-stats-heading">
-      <div className="mb-3 flex items-end justify-between gap-4">
-        <div>
-          <h2
-            id="inquiry-stats-heading"
-            className="text-sm font-semibold text-strong-foreground"
-          >
-            Hiring signals
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Role demand and preferred work setup across all inquiries.
-          </p>
-        </div>
-        <span className="shrink-0 rounded-full border bg-background px-2.5 py-1 font-mono text-xs font-semibold tabular-nums">
-          {total} {total === 1 ? "inquiry" : "inquiries"}
-        </span>
+      <div className="mb-3">
+        <h2
+          id="inquiry-stats-heading"
+          className="text-sm font-semibold text-strong-foreground"
+        >
+          Hiring signals
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Role demand and preferred work setup across all inquiries.
+        </p>
       </div>
 
-      <div className="overflow-hidden rounded-xl border bg-background">
-        {!total ? (
-          <div className="p-5 sm:p-6">
-            <EmptyState />
-          </div>
+      <Card className="bg-background p-5 sm:p-6">
+        {total ? (
+          <HiringSignalChart roles={roles} arrangements={arrangements} />
         ) : (
-          <div className="grid xl:grid-cols-2 xl:divide-x">
-            <div className="p-5 sm:p-6 xl:p-7">
-              <RoleRanking data={roles} />
-            </div>
-            <div className="border-t p-5 sm:p-6 xl:border-t-0 xl:p-7">
-              <ArrangementDistribution data={arrangements} />
-            </div>
-          </div>
+          <EmptyState />
         )}
-      </div>
+      </Card>
     </section>
   )
 }

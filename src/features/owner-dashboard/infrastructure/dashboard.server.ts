@@ -1,4 +1,4 @@
-import { count, desc, eq } from "drizzle-orm"
+import { and, count, desc, eq, ilike, inArray, or, sql } from "drizzle-orm"
 
 import { getDatabase } from "@/db/client.server"
 import {
@@ -12,6 +12,19 @@ import {
   arrangementInquiryOptions,
   roleInquiryOptions,
 } from "@/features/chat/domain/inquiry"
+import {
+  CONVERSATION_MODEL_ALL,
+  CONVERSATION_MODEL_NON_MODEL,
+  CONVERSATION_MODEL_UNKNOWN,
+} from "@/features/owner-dashboard/domain/conversation-filters"
+import type { OwnerConversationFilters } from "@/features/owner-dashboard/domain/conversation-filters"
+import {
+  EMAIL_DOMAIN_ALL,
+  EMAIL_DOMAIN_UNKNOWN,
+} from "@/features/owner-dashboard/domain/email-domain-filters"
+import type { OwnerEmailDomainFilters } from "@/features/owner-dashboard/domain/email-domain-filters"
+import type { OwnerInquiryFilters } from "@/features/owner-dashboard/domain/inquiry-filters"
+import { blogCatalog } from "@/lib/content/blog"
 
 export const OWNER_DASHBOARD_PAGE_SIZE = 6
 
@@ -61,37 +74,164 @@ function normalizeInquiryStats(
     .sort((left, right) => right.count - left.count)
 }
 
-async function loadPage<T>(
-  requestedPage: number,
-  table:
-    | typeof portfolioInquiries
-    | typeof assistantExchanges
-    | typeof blogComments
-    | typeof newsletterSubscribers,
-  createdAt:
-    | typeof portfolioInquiries.createdAt
-    | typeof assistantExchanges.createdAt
-    | typeof blogComments.createdAt
-    | typeof newsletterSubscribers.createdAt
-) {
-  const database = getDatabase()
-  const [{ total }] = await database.select({ total: count() }).from(table)
-  const pageCount = Math.max(1, Math.ceil(total / OWNER_DASHBOARD_PAGE_SIZE))
-  const page = Math.min(Math.max(1, requestedPage), pageCount)
-  const items = (await database
-    .select()
-    .from(table)
-    .orderBy(desc(createdAt))
-    .limit(OWNER_DASHBOARD_PAGE_SIZE)
-    .offset((page - 1) * OWNER_DASHBOARD_PAGE_SIZE)) as T[]
+function dashboardSearchPattern(query: string) {
+  const escaped = query
+    .replaceAll("\\", "\\\\")
+    .replaceAll("%", "\\%")
+    .replaceAll("_", "\\_")
+  return `%${escaped}%`
+}
 
-  return {
-    items,
-    page,
-    pageCount,
-    pageSize: OWNER_DASHBOARD_PAGE_SIZE,
-    total,
-  }
+function inquiryFilters({ query, type }: OwnerInquiryFilters) {
+  const trimmedQuery = query.trim()
+  const pattern = trimmedQuery ? dashboardSearchPattern(trimmedQuery) : null
+  const search = pattern
+    ? or(
+        ilike(portfolioInquiries.name, pattern),
+        ilike(portfolioInquiries.email, pattern),
+        ilike(portfolioInquiries.context, pattern),
+        ilike(portfolioInquiries.role, pattern),
+        ilike(portfolioInquiries.arrangement, pattern),
+        ilike(portfolioInquiries.projectType, pattern),
+        ilike(portfolioInquiries.timeline, pattern)
+      )
+    : undefined
+  const inquiryType =
+    type === "all" ? undefined : eq(portfolioInquiries.type, type)
+
+  return and(inquiryType, search)
+}
+
+const conversationModelKey = sql<string>`
+  case
+    when ${assistantExchanges.responseKind} <> 'generated'
+      then '__non_model__'
+    when nullif(trim(${assistantExchanges.servedModel}), '') is not null
+      then ${assistantExchanges.servedModel}
+    when nullif(trim(${assistantExchanges.model}), '') is not null
+      then ${assistantExchanges.model}
+    else '__unknown_model__'
+  end
+`
+
+function conversationModelLabel(key: string) {
+  if (key === CONVERSATION_MODEL_NON_MODEL) return "Non-model responses"
+  if (key === CONVERSATION_MODEL_UNKNOWN) return "Unknown model"
+  return key
+}
+
+function conversationFilters({ model, query }: OwnerConversationFilters) {
+  const trimmedQuery = query.trim()
+  const pattern = trimmedQuery ? dashboardSearchPattern(trimmedQuery) : null
+  const search = pattern
+    ? or(
+        ilike(assistantExchanges.question, pattern),
+        ilike(assistantExchanges.answer, pattern),
+        ilike(assistantExchanges.source, pattern),
+        ilike(assistantExchanges.conversationId, pattern),
+        ilike(assistantExchanges.provider, pattern),
+        ilike(assistantExchanges.model, pattern),
+        ilike(assistantExchanges.servedModel, pattern),
+        ilike(assistantExchanges.responseKind, pattern)
+      )
+    : undefined
+  const modelFilter =
+    model === CONVERSATION_MODEL_ALL
+      ? undefined
+      : eq(conversationModelKey, model)
+
+  return and(modelFilter, search)
+}
+
+const commentEmailDomainKey = sql<string>`
+  coalesce(
+    nullif(lower(split_part(${blogComments.email}, '@', 2)), ''),
+    '__unknown_domain__'
+  )
+`
+const subscriberEmailDomainKey = sql<string>`
+  coalesce(
+    nullif(lower(split_part(${newsletterSubscribers.email}, '@', 2)), ''),
+    '__unknown_domain__'
+  )
+`
+const subscriberConfirmationLabel = sql<string>`
+  case ${newsletterSubscribers.confirmationState}
+    when 'sent' then 'Email sent'
+    when 'failed' then 'Email failed'
+    when 'sending' then 'Sending'
+    else 'Pending'
+  end
+`
+
+function emailDomainLabel(key: string) {
+  return key === EMAIL_DOMAIN_UNKNOWN ? "Unknown domain" : key
+}
+
+function emailDomainFacets(rows: Array<{ key: string; count: number }>) {
+  return rows
+    .map((item) => ({
+      key: item.key,
+      label: emailDomainLabel(item.key),
+      count: item.count,
+    }))
+    .sort(
+      (left, right) =>
+        right.count - left.count || left.label.localeCompare(right.label)
+    )
+}
+
+function commentFilters({ domain, query }: OwnerEmailDomainFilters) {
+  const trimmedQuery = query.trim()
+  const pattern = trimmedQuery ? dashboardSearchPattern(trimmedQuery) : null
+  const normalizedQuery = trimmedQuery.toLocaleLowerCase()
+  const matchingPostSlugs = normalizedQuery
+    ? blogCatalog.posts
+        .filter((post) =>
+          [post.title, post.category].some((value) =>
+            value.toLocaleLowerCase().includes(normalizedQuery)
+          )
+        )
+        .map((post) => post.slug)
+    : []
+  const search = pattern
+    ? matchingPostSlugs.length
+      ? or(
+          ilike(blogComments.name, pattern),
+          ilike(blogComments.email, pattern),
+          ilike(blogComments.message, pattern),
+          ilike(blogComments.postSlug, pattern),
+          inArray(blogComments.postSlug, matchingPostSlugs)
+        )
+      : or(
+          ilike(blogComments.name, pattern),
+          ilike(blogComments.email, pattern),
+          ilike(blogComments.message, pattern),
+          ilike(blogComments.postSlug, pattern)
+        )
+    : undefined
+  const domainFilter =
+    domain === EMAIL_DOMAIN_ALL ? undefined : eq(commentEmailDomainKey, domain)
+
+  return and(domainFilter, search)
+}
+
+function subscriberFilters({ domain, query }: OwnerEmailDomainFilters) {
+  const trimmedQuery = query.trim()
+  const pattern = trimmedQuery ? dashboardSearchPattern(trimmedQuery) : null
+  const search = pattern
+    ? or(
+        ilike(newsletterSubscribers.email, pattern),
+        ilike(subscriberConfirmationLabel, pattern),
+        ilike(newsletterSubscribers.confirmationLastError, pattern)
+      )
+    : undefined
+  const domainFilter =
+    domain === EMAIL_DOMAIN_ALL
+      ? undefined
+      : eq(subscriberEmailDomainKey, domain)
+
+  return and(domainFilter, search)
 }
 
 export async function loadOwnerDashboard() {
@@ -123,14 +263,11 @@ export async function loadOwnerDashboard() {
   }
 }
 
-export async function loadOwnerInquiries(page: number) {
+export async function loadOwnerInquiries(filters: OwnerInquiryFilters) {
   const database = getDatabase()
-  const [result, roles, arrangements] = await Promise.all([
-    loadPage<typeof portfolioInquiries.$inferSelect>(
-      page,
-      portfolioInquiries,
-      portfolioInquiries.createdAt
-    ),
+  const where = inquiryFilters(filters)
+  const [filteredCount, roles, arrangements, inquiryTypes] = await Promise.all([
+    database.select({ total: count() }).from(portfolioInquiries).where(where),
     database
       .select({ label: portfolioInquiries.role, count: count() })
       .from(portfolioInquiries)
@@ -141,10 +278,38 @@ export async function loadOwnerInquiries(page: number) {
       .from(portfolioInquiries)
       .where(eq(portfolioInquiries.type, "hire"))
       .groupBy(portfolioInquiries.arrangement),
+    database
+      .select({ label: portfolioInquiries.type, count: count() })
+      .from(portfolioInquiries)
+      .groupBy(portfolioInquiries.type),
   ])
 
+  const total = filteredCount[0]?.total ?? 0
+  const pageCount = Math.max(1, Math.ceil(total / OWNER_DASHBOARD_PAGE_SIZE))
+  const page = Math.min(Math.max(1, filters.page), pageCount)
+  const items = await database
+    .select()
+    .from(portfolioInquiries)
+    .where(where)
+    .orderBy(desc(portfolioInquiries.createdAt))
+    .limit(OWNER_DASHBOARD_PAGE_SIZE)
+    .offset((page - 1) * OWNER_DASHBOARD_PAGE_SIZE)
+  const inquiryTypeCounts = new Map(
+    inquiryTypes.map((item) => [item.label, item.count])
+  )
+
   return {
-    ...result,
+    allTotal: inquiryTypes.reduce((sum, item) => sum + item.count, 0),
+    facets: {
+      types: ["hire", "project", "general"].map((label) => ({
+        label,
+        count: inquiryTypeCounts.get(label) ?? 0,
+      })),
+    },
+    page,
+    pageCount,
+    pageSize: OWNER_DASHBOARD_PAGE_SIZE,
+    total,
     stats: {
       roles: normalizeInquiryStats(roles, roleInquiryOptions),
       arrangements: normalizeInquiryStats(
@@ -152,50 +317,127 @@ export async function loadOwnerInquiries(page: number) {
         arrangementInquiryOptions
       ),
     },
-    items: result.items.map((inquiry) => ({
+    items: items.map((inquiry) => ({
       ...inquiry,
       createdAt: inquiry.createdAt.toISOString(),
     })),
   }
 }
 
-export async function loadOwnerConversations(page: number) {
-  const result = await loadPage<typeof assistantExchanges.$inferSelect>(
-    page,
-    assistantExchanges,
-    assistantExchanges.createdAt
-  )
+export async function loadOwnerConversations(
+  filters: OwnerConversationFilters
+) {
+  const database = getDatabase()
+  const where = conversationFilters(filters)
+  const [filteredCount, modelCounts] = await Promise.all([
+    database.select({ total: count() }).from(assistantExchanges).where(where),
+    database
+      .select({ key: conversationModelKey, count: count() })
+      .from(assistantExchanges)
+      .groupBy(conversationModelKey),
+  ])
+
+  const total = filteredCount[0]?.total ?? 0
+  const pageCount = Math.max(1, Math.ceil(total / OWNER_DASHBOARD_PAGE_SIZE))
+  const page = Math.min(Math.max(1, filters.page), pageCount)
+  const items = await database
+    .select()
+    .from(assistantExchanges)
+    .where(where)
+    .orderBy(desc(assistantExchanges.createdAt))
+    .limit(OWNER_DASHBOARD_PAGE_SIZE)
+    .offset((page - 1) * OWNER_DASHBOARD_PAGE_SIZE)
+  const models = modelCounts
+    .map((item) => ({
+      key: item.key,
+      label: conversationModelLabel(item.key),
+      count: item.count,
+    }))
+    .sort(
+      (left, right) =>
+        right.count - left.count || left.label.localeCompare(right.label)
+    )
+
   return {
-    ...result,
-    items: result.items.map(serializeExchange),
+    allTotal: modelCounts.reduce((sum, item) => sum + item.count, 0),
+    facets: { models },
+    page,
+    pageCount,
+    pageSize: OWNER_DASHBOARD_PAGE_SIZE,
+    total,
+    items: items.map(serializeExchange),
   }
 }
 
-export async function loadOwnerComments(page: number) {
-  const result = await loadPage<typeof blogComments.$inferSelect>(
-    page,
-    blogComments,
-    blogComments.createdAt
-  )
+export async function loadOwnerComments(filters: OwnerEmailDomainFilters) {
+  const database = getDatabase()
+  const where = commentFilters(filters)
+  const [filteredCount, domainCounts] = await Promise.all([
+    database.select({ total: count() }).from(blogComments).where(where),
+    database
+      .select({ key: commentEmailDomainKey, count: count() })
+      .from(blogComments)
+      .groupBy(commentEmailDomainKey),
+  ])
+
+  const total = filteredCount[0]?.total ?? 0
+  const pageCount = Math.max(1, Math.ceil(total / OWNER_DASHBOARD_PAGE_SIZE))
+  const page = Math.min(Math.max(1, filters.page), pageCount)
+  const items = await database
+    .select()
+    .from(blogComments)
+    .where(where)
+    .orderBy(desc(blogComments.createdAt))
+    .limit(OWNER_DASHBOARD_PAGE_SIZE)
+    .offset((page - 1) * OWNER_DASHBOARD_PAGE_SIZE)
+
   return {
-    ...result,
-    items: result.items.map((comment) => ({
+    allTotal: domainCounts.reduce((sum, item) => sum + item.count, 0),
+    facets: { domains: emailDomainFacets(domainCounts) },
+    page,
+    pageCount,
+    pageSize: OWNER_DASHBOARD_PAGE_SIZE,
+    total,
+    items: items.map((comment) => ({
       ...comment,
       createdAt: comment.createdAt.toISOString(),
     })),
   }
 }
 
-export async function loadOwnerSubscribers(page: number) {
-  const result = await loadPage<typeof newsletterSubscribers.$inferSelect>(
-    page,
-    newsletterSubscribers,
-    newsletterSubscribers.createdAt
-  )
+export async function loadOwnerSubscribers(filters: OwnerEmailDomainFilters) {
+  const database = getDatabase()
+  const where = subscriberFilters(filters)
+  const [filteredCount, domainCounts] = await Promise.all([
+    database
+      .select({ total: count() })
+      .from(newsletterSubscribers)
+      .where(where),
+    database
+      .select({ key: subscriberEmailDomainKey, count: count() })
+      .from(newsletterSubscribers)
+      .groupBy(subscriberEmailDomainKey),
+  ])
+
+  const total = filteredCount[0]?.total ?? 0
+  const pageCount = Math.max(1, Math.ceil(total / OWNER_DASHBOARD_PAGE_SIZE))
+  const page = Math.min(Math.max(1, filters.page), pageCount)
+  const items = await database
+    .select()
+    .from(newsletterSubscribers)
+    .where(where)
+    .orderBy(desc(newsletterSubscribers.createdAt))
+    .limit(OWNER_DASHBOARD_PAGE_SIZE)
+    .offset((page - 1) * OWNER_DASHBOARD_PAGE_SIZE)
 
   return {
-    ...result,
-    items: result.items.map((subscriber) => ({
+    allTotal: domainCounts.reduce((sum, item) => sum + item.count, 0),
+    facets: { domains: emailDomainFacets(domainCounts) },
+    page,
+    pageCount,
+    pageSize: OWNER_DASHBOARD_PAGE_SIZE,
+    total,
+    items: items.map((subscriber) => ({
       ...subscriber,
       confirmationSentAt: subscriber.confirmationSentAt?.toISOString() ?? null,
       createdAt: subscriber.createdAt.toISOString(),

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Label, Pie, PieChart } from "recharts"
+import { Label as RechartsLabel, Pie, PieChart } from "recharts"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
@@ -25,6 +26,15 @@ import {
   SearchIcon,
   XIcon,
 } from "@/components/ui/icons"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Pagination,
+  PaginationButton,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+} from "@/components/ui/pagination"
 import type { OwnerStaticAnswerCatalog } from "@/features/owner-dashboard/infrastructure/static-answers.server"
 import { cn } from "@/lib/utils"
 
@@ -140,32 +150,34 @@ export function StaticAnswerCatalog({
       />
 
       <section aria-label="Filter static answers">
-        <div className="grid gap-3 rounded-xl border bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
-          <label className="min-w-0">
+        <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
+          <Label className="block min-w-0">
             <span className="mb-2 block text-xs font-medium text-strong-foreground">
               Search catalog
             </span>
             <span className="relative block">
               <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-              <input
+              <Input
                 type="search"
                 value={query}
                 onChange={(event) => updateQuery(event.currentTarget.value)}
                 placeholder="Search questions, answers, or record IDs"
-                className="h-10 w-full rounded-lg border bg-background pr-10 pl-9 text-sm text-strong-foreground outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20"
+                className="pr-10 pl-9"
               />
               {query ? (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon-sm"
                   onClick={() => updateQuery("")}
-                  className="absolute top-1/2 right-1.5 grid size-7 -translate-y-1/2 place-items-center rounded-md text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                  className="absolute top-1/2 right-1.5 -translate-y-1/2 text-muted-foreground"
                   aria-label="Clear search"
                 >
                   <XIcon className="size-3.5" />
-                </button>
+                </Button>
               ) : null}
             </span>
-          </label>
+          </Label>
 
           <div>
             <span
@@ -191,7 +203,7 @@ export function StaticAnswerCatalog({
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </Card>
       </section>
 
       <section id="static-answer-results" className="space-y-4">
@@ -216,7 +228,7 @@ export function StaticAnswerCatalog({
             ))}
           </ol>
         ) : (
-          <div className="grid min-h-64 place-items-center rounded-xl border bg-background px-6 py-12 text-center">
+          <Card className="grid min-h-64 place-items-center bg-background px-6 py-12 text-center">
             <div className="max-w-sm">
               <SearchIcon className="mx-auto size-6 text-muted-foreground" />
               <h2 className="mt-4 text-sm font-semibold text-strong-foreground">
@@ -235,7 +247,7 @@ export function StaticAnswerCatalog({
                 Clear filters
               </Button>
             </div>
-          </div>
+          </Card>
         )}
       </section>
 
@@ -325,7 +337,7 @@ function AnswerDistribution({
         </div>
       </div>
 
-      <div className="rounded-xl border bg-background p-5 sm:p-6">
+      <Card className="bg-background p-5 sm:p-6">
         {categories.length ? (
           <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
             <ChartContainer
@@ -354,7 +366,7 @@ function AnswerDistribution({
                   strokeWidth={2}
                   isAnimationActive={false}
                 >
-                  <Label
+                  <RechartsLabel
                     content={({ viewBox }) => {
                       if (
                         !viewBox ||
@@ -445,7 +457,7 @@ function AnswerDistribution({
             </div>
           </div>
         )}
-      </div>
+      </Card>
     </section>
   )
 }
@@ -458,43 +470,45 @@ function StaticAnswer({
   record: StaticAnswerRecord
 }) {
   return (
-    <li className="rounded-xl border bg-background px-5 py-5 sm:px-6 sm:py-6">
-      <article aria-labelledby={`static-answer-${number}`}>
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="secondary">{categoryLabel(record.category)}</Badge>
-          <span className="text-[0.6875rem] text-muted-foreground tabular-nums">
-            #{String(number).padStart(3, "0")}
-          </span>
-          <code
-            className="w-full min-w-0 pt-1 text-[0.6875rem] break-all text-muted-foreground sm:ml-auto sm:w-auto sm:max-w-80 sm:truncate sm:pt-0"
-            title={record.id}
+    <Card asChild className="bg-background px-5 py-5 sm:px-6 sm:py-6">
+      <li>
+        <article aria-labelledby={`static-answer-${number}`}>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary">{categoryLabel(record.category)}</Badge>
+            <span className="text-[0.6875rem] text-muted-foreground tabular-nums">
+              #{String(number).padStart(3, "0")}
+            </span>
+            <code
+              className="w-full min-w-0 pt-1 text-[0.6875rem] break-all text-muted-foreground sm:ml-auto sm:w-auto sm:max-w-80 sm:truncate sm:pt-0"
+              title={record.id}
+            >
+              {record.id}
+            </code>
+          </div>
+
+          <h3
+            id={`static-answer-${number}`}
+            className="mt-4 max-w-3xl text-[0.9375rem] leading-6 font-semibold text-strong-foreground"
           >
-            {record.id}
-          </code>
-        </div>
+            {record.question}
+          </h3>
+          <p className="mt-3 w-full max-w-none text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
+            {record.text}
+          </p>
 
-        <h3
-          id={`static-answer-${number}`}
-          className="mt-4 max-w-3xl text-[0.9375rem] leading-6 font-semibold text-strong-foreground"
-        >
-          {record.question}
-        </h3>
-        <p className="mt-3 w-full max-w-none text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
-          {record.text}
-        </p>
-
-        <footer className="mt-4 flex items-center gap-2 border-t pt-3 text-[0.6875rem] text-muted-foreground">
-          <span className="font-medium text-strong-foreground">Answer</span>
-          <span aria-hidden="true">·</span>
-          <span className="tabular-nums">
-            {record.evidenceCount}{" "}
-            {record.evidenceCount === 1
-              ? "evidence reference"
-              : "evidence references"}
-          </span>
-        </footer>
-      </article>
-    </li>
+          <footer className="mt-4 flex items-center gap-2 border-t pt-3 text-[0.6875rem] text-muted-foreground">
+            <span className="font-medium text-strong-foreground">Answer</span>
+            <span aria-hidden="true">·</span>
+            <span className="tabular-nums">
+              {record.evidenceCount}{" "}
+              {record.evidenceCount === 1
+                ? "evidence reference"
+                : "evidence references"}
+            </span>
+          </footer>
+        </article>
+      </li>
+    </Card>
   )
 }
 
@@ -514,7 +528,7 @@ function CatalogPagination({
   const pages = paginationItems(page, pageCount)
 
   return (
-    <nav
+    <Pagination
       className="flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center"
       aria-label="Static answers pagination"
     >
@@ -531,84 +545,87 @@ function CatalogPagination({
       </p>
 
       {pageCount > 1 ? (
-        <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:ml-auto sm:pb-0">
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="size-11 sm:size-8"
-            disabled={page === 1}
-            onClick={() => onPageChange(1)}
-            aria-label="First answers page"
-          >
-            <ArrowLeftDoubleIcon />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="size-11 sm:size-8"
-            disabled={page === 1}
-            onClick={() => onPageChange(page - 1)}
-            aria-label="Previous answers page"
-          >
-            <ArrowLeftCompactIcon />
-          </Button>
+        <PaginationContent className="overflow-x-auto pb-1 sm:ml-auto sm:pb-0">
+          <PaginationItem>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-11 sm:size-8"
+              disabled={page === 1}
+              onClick={() => onPageChange(1)}
+              aria-label="First answers page"
+            >
+              <ArrowLeftDoubleIcon />
+            </Button>
+          </PaginationItem>
+          <PaginationItem>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-11 sm:size-8"
+              disabled={page === 1}
+              onClick={() => onPageChange(page - 1)}
+              aria-label="Previous answers page"
+            >
+              <ArrowLeftCompactIcon />
+            </Button>
+          </PaginationItem>
 
           {pages.map((item, index) =>
             item === "ellipsis" ? (
-              <span
-                key={`ellipsis-${index}`}
-                className="flex size-7 shrink-0 items-center justify-center text-xs text-muted-foreground"
-                aria-hidden="true"
-              >
-                …
-              </span>
+              <PaginationItem key={`ellipsis-${index}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
             ) : (
-              <Button
-                key={item}
-                type="button"
-                variant={item === page ? "default" : "ghost"}
-                size="icon"
-                className={cn(
-                  "size-11 shrink-0 text-xs tabular-nums sm:size-8",
-                  item === page &&
-                    "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/85"
-                )}
-                onClick={() => onPageChange(item)}
-                aria-label={`Page ${item}`}
-                aria-current={item === page ? "page" : undefined}
-              >
-                {item}
-              </Button>
+              <PaginationItem key={item}>
+                <PaginationButton
+                  type="button"
+                  isActive={item === page}
+                  className={cn(
+                    "size-11 shrink-0 text-xs tabular-nums sm:size-8",
+                    item === page &&
+                      "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/85"
+                  )}
+                  onClick={() => onPageChange(item)}
+                  aria-label={`Page ${item}`}
+                >
+                  {item}
+                </PaginationButton>
+              </PaginationItem>
             )
           )}
 
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="size-11 sm:size-8"
-            disabled={page === pageCount}
-            onClick={() => onPageChange(page + 1)}
-            aria-label="Next answers page"
-          >
-            <ArrowRightCompactIcon />
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="size-11 sm:size-8"
-            disabled={page === pageCount}
-            onClick={() => onPageChange(pageCount)}
-            aria-label="Last answers page"
-          >
-            <ArrowRightDoubleIcon />
-          </Button>
-        </div>
+          <PaginationItem>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-11 sm:size-8"
+              disabled={page === pageCount}
+              onClick={() => onPageChange(page + 1)}
+              aria-label="Next answers page"
+            >
+              <ArrowRightCompactIcon />
+            </Button>
+          </PaginationItem>
+          <PaginationItem>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-11 sm:size-8"
+              disabled={page === pageCount}
+              onClick={() => onPageChange(pageCount)}
+              aria-label="Last answers page"
+            >
+              <ArrowRightDoubleIcon />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
       ) : null}
-    </nav>
+    </Pagination>
   )
 }
 

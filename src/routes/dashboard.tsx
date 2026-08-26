@@ -10,8 +10,19 @@ import {
 import { useServerFn } from "@tanstack/react-start"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Pagination as PaginationRoot,
+  PaginationButton,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+} from "@/components/ui/pagination"
 import { Switch } from "@/components/ui/switch"
 import {
   ArrowLeftCompactIcon,
@@ -335,127 +346,135 @@ export function Overview({ data }: { data: DashboardData }) {
 
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map(({ label, value, detail, to, icon: Icon }) => (
-            <Link
-              key={label}
-              to={to}
-              className="group flex min-h-40 flex-col rounded-xl border bg-background p-5 transition-colors hover:border-emphasis-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <span className="grid size-9 place-items-center rounded-lg border bg-muted/35 text-strong-foreground">
-                  <Icon className="size-4" />
-                </span>
-                <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
-              </div>
-              <p className="mt-5 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
-                {value}
-              </p>
-              <p className="mt-1 text-xs font-medium text-strong-foreground">
-                {label}
-              </p>
-              <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">
-                {detail}
-              </p>
-            </Link>
+            <Card key={label} asChild className="bg-background">
+              <Link
+                to={to}
+                className="group flex min-h-40 flex-col p-5 transition-colors hover:border-emphasis-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <span className="grid size-9 place-items-center rounded-lg border bg-muted/35 text-strong-foreground">
+                    <Icon className="size-4" />
+                  </span>
+                  <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
+                </div>
+                <p className="mt-5 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
+                  {value}
+                </p>
+                <p className="mt-1 text-xs font-medium text-strong-foreground">
+                  {label}
+                </p>
+                <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">
+                  {detail}
+                </p>
+              </Link>
+            </Card>
           ))}
         </div>
       </section>
 
       <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(17rem,1fr)]">
-        <section className="overflow-hidden rounded-xl border bg-background">
-          <div className="flex items-center gap-4 border-b px-5 py-4">
-            <div>
+        <Card asChild className="overflow-hidden bg-background">
+          <section>
+            <div className="flex items-center gap-4 border-b px-5 py-4">
+              <div>
+                <h2 className="font-semibold text-strong-foreground">
+                  Recent inquiries
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Latest messages, role inquiries, and project requests.
+                </p>
+              </div>
+              <Button variant="ghost" size="sm" className="ml-auto" asChild>
+                <Link to="/dashboard/inquiries">
+                  View all
+                  <ArrowRightIcon />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="divide-y">
+              {data.inquiries.slice(0, 5).map((item) => (
+                <div
+                  key={item.id}
+                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4"
+                >
+                  <Avatar className="size-9 ring-1 ring-border">
+                    <AvatarFallback>{initials(item.name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-strong-foreground">
+                      {item.name}
+                    </p>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {item.type === "hire"
+                        ? item.role
+                        : item.type === "project"
+                          ? item.projectType
+                          : item.context}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <Badge variant="secondary" className="capitalize">
+                      {inquiryTypeLabel(item.type)}
+                    </Badge>
+                    <time className="mt-1.5 block text-[0.6875rem] text-muted-foreground">
+                      {formatDate(item.createdAt)}
+                    </time>
+                  </div>
+                </div>
+              ))}
+              {!data.inquiries.length ? (
+                <Empty label="No inquiries yet. New requests will appear here." />
+              ) : null}
+            </div>
+          </section>
+        </Card>
+
+        <Card asChild className="overflow-hidden bg-background">
+          <section>
+            <div className="border-b px-5 py-4">
               <h2 className="font-semibold text-strong-foreground">
-                Recent inquiries
+                Public availability
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                Latest messages, role inquiries, and project requests.
+                What visitors currently see.
               </p>
             </div>
-            <Button variant="ghost" size="sm" className="ml-auto" asChild>
-              <Link to="/dashboard/inquiries">
-                View all
-                <ArrowRightIcon />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="divide-y">
-            {data.inquiries.slice(0, 5).map((item) => (
-              <div
-                key={item.id}
-                className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4"
-              >
-                <Avatar className="size-9 ring-1 ring-border">
-                  <AvatarFallback>{initials(item.name)}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-strong-foreground">
-                    {item.name}
-                  </p>
-                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {item.type === "hire"
-                      ? item.role
-                      : item.type === "project"
-                        ? item.projectType
-                        : item.context}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <Badge variant="secondary" className="capitalize">
-                    {inquiryTypeLabel(item.type)}
-                  </Badge>
-                  <time className="mt-1.5 block text-[0.6875rem] text-muted-foreground">
-                    {formatDate(item.createdAt)}
-                  </time>
-                </div>
+            <div className="p-5">
+              <div className="flex items-center gap-3">
+                <span
+                  className={cn(
+                    "size-2.5 rounded-full",
+                    data.availability.enabled
+                      ? "bg-emerald-500"
+                      : "bg-muted-foreground/45"
+                  )}
+                  aria-hidden="true"
+                />
+                <p className="text-lg font-semibold text-strong-foreground">
+                  {data.availability.enabled ? "Visible to visitors" : "Hidden"}
+                </p>
               </div>
-            ))}
-            {!data.inquiries.length ? (
-              <Empty label="No inquiries yet. New requests will appear here." />
-            ) : null}
-          </div>
-        </section>
-
-        <section className="overflow-hidden rounded-xl border bg-background">
-          <div className="border-b px-5 py-4">
-            <h2 className="font-semibold text-strong-foreground">
-              Public availability
-            </h2>
-            <p className="mt-1 text-xs text-muted-foreground">
-              What visitors currently see.
-            </p>
-          </div>
-          <div className="p-5">
-            <div className="flex items-center gap-3">
-              <span
-                className={cn(
-                  "size-2.5 rounded-full",
-                  data.availability.enabled
-                    ? "bg-emerald-500"
-                    : "bg-muted-foreground/45"
-                )}
-                aria-hidden="true"
-              />
-              <p className="text-lg font-semibold text-strong-foreground">
-                {data.availability.enabled ? "Visible to visitors" : "Hidden"}
-              </p>
+              <dl className="mt-5 divide-y overflow-hidden rounded-lg border">
+                <Detail
+                  label="Availability"
+                  value={data.availability.availability}
+                />
+                <Detail
+                  label="Work setup"
+                  value={data.availability.workSetup}
+                />
+                <Detail label="Location" value={data.availability.location} />
+              </dl>
+              <Button variant="outline" className="mt-4 w-full" asChild>
+                <Link to="/dashboard/availability">
+                  Edit availability
+                  <ArrowRightIcon />
+                </Link>
+              </Button>
             </div>
-            <dl className="mt-5 divide-y overflow-hidden rounded-lg border">
-              <Detail
-                label="Availability"
-                value={data.availability.availability}
-              />
-              <Detail label="Work setup" value={data.availability.workSetup} />
-              <Detail label="Location" value={data.availability.location} />
-            </dl>
-            <Button variant="outline" className="mt-4 w-full" asChild>
-              <Link to="/dashboard/availability">
-                Edit availability
-                <ArrowRightIcon />
-              </Link>
-            </Button>
-          </div>
-        </section>
+          </section>
+        </Card>
       </div>
     </div>
   )
@@ -465,76 +484,74 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
   return (
     <div className="grid gap-4">
       {data.map((item) => (
-        <article
-          key={item.id}
-          className="overflow-hidden rounded-xl border bg-background"
-          aria-labelledby={`inquiry-${item.id}`}
-        >
-          <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
-            <Avatar className="size-10 ring-1 ring-border">
-              <AvatarFallback>{initials(item.name)}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <h2
-                id={`inquiry-${item.id}`}
-                className="truncate text-sm font-semibold text-strong-foreground"
-              >
-                {item.name}
-              </h2>
-              <a
-                href={`mailto:${item.email}`}
-                className="mt-0.5 block w-fit truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                {item.email}
-              </a>
-            </div>
-            <Badge variant="secondary" className="shrink-0 capitalize">
-              {inquiryTypeLabel(item.type)}
-            </Badge>
-          </header>
-
-          <div className="p-5 sm:p-6">
-            {item.type !== "general" ? (
-              <dl className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-                <Detail
-                  label={item.type === "hire" ? "Role" : "Project type"}
-                  value={item.role ?? item.projectType ?? "—"}
-                />
-                <Detail
-                  label={item.type === "hire" ? "Arrangement" : "Timeline"}
-                  value={item.arrangement ?? item.timeline ?? "—"}
-                />
-              </dl>
-            ) : null}
-
-            {item.context ? (
-              <section className="mt-4 rounded-lg bg-muted/45 p-4">
-                <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                  <ChatCenteredDotsIcon className="size-3.5" />
-                  Message
-                </p>
-                <p className="mt-2 text-sm leading-6 text-strong-foreground">
-                  {item.context}
-                </p>
-              </section>
-            ) : null}
-
-            <footer className="mt-5 flex flex-wrap items-center gap-3 border-t pt-4">
-              <time
-                dateTime={item.createdAt}
-                className="text-xs text-muted-foreground"
-              >
-                Received {formatDate(item.createdAt)}
-              </time>
-              <Button variant="outline" size="sm" className="ml-auto" asChild>
-                <a href={`mailto:${item.email}`}>
-                  <EnvelopeSimpleIcon />
-                  Reply
+        <Card key={item.id} asChild className="overflow-hidden bg-background">
+          <article aria-labelledby={`inquiry-${item.id}`}>
+            <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
+              <Avatar className="size-10 ring-1 ring-border">
+                <AvatarFallback>{initials(item.name)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <h2
+                  id={`inquiry-${item.id}`}
+                  className="truncate text-sm font-semibold text-strong-foreground"
+                >
+                  {item.name}
+                </h2>
+                <a
+                  href={`mailto:${item.email}`}
+                  className="mt-0.5 block w-fit truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                >
+                  {item.email}
                 </a>
-              </Button>
-            </footer>
-          </div>
-        </article>
+              </div>
+              <Badge variant="secondary" className="shrink-0 capitalize">
+                {inquiryTypeLabel(item.type)}
+              </Badge>
+            </header>
+
+            <div className="p-5 sm:p-6">
+              {item.type !== "general" ? (
+                <dl className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+                  <Detail
+                    label={item.type === "hire" ? "Role" : "Project type"}
+                    value={item.role ?? item.projectType ?? "—"}
+                  />
+                  <Detail
+                    label={item.type === "hire" ? "Arrangement" : "Timeline"}
+                    value={item.arrangement ?? item.timeline ?? "—"}
+                  />
+                </dl>
+              ) : null}
+
+              {item.context ? (
+                <section className="mt-4 rounded-lg bg-muted/45 p-4">
+                  <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                    <ChatCenteredDotsIcon className="size-3.5" />
+                    Message
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-strong-foreground">
+                    {item.context}
+                  </p>
+                </section>
+              ) : null}
+
+              <footer className="mt-5 flex flex-wrap items-center gap-3 border-t pt-4">
+                <time
+                  dateTime={item.createdAt}
+                  className="text-xs text-muted-foreground"
+                >
+                  Received {formatDate(item.createdAt)}
+                </time>
+                <Button variant="outline" size="sm" className="ml-auto" asChild>
+                  <a href={`mailto:${item.email}`}>
+                    <EnvelopeSimpleIcon />
+                    Reply
+                  </a>
+                </Button>
+              </footer>
+            </div>
+          </article>
+        </Card>
       ))}
       {!data.length ? <Empty label="No inquiries yet." /> : null}
     </div>
@@ -555,29 +572,30 @@ export function Conversations({
   return (
     <div className="grid gap-4">
       {data.map((item) => (
-        <article
-          key={item.id}
-          className="overflow-hidden rounded-xl border bg-background"
-        >
-          <div className="border-b bg-muted/35 px-5 py-4">
-            <p className="text-xs text-muted-foreground">
-              Visitor question · {formatDate(item.createdAt)}
-            </p>
-            <h2 className="mt-2 text-sm leading-6 font-semibold">
-              {item.question}
-            </h2>
-          </div>
-          <div className="px-5 py-4">
-            <div className="text-sm leading-6 text-muted-foreground">
-              <Suspense
-                fallback={<p className="whitespace-pre-wrap">{item.answer}</p>}
-              >
-                <LazyChatMarkdown source={item.answer} />
-              </Suspense>
+        <Card key={item.id} asChild className="overflow-hidden bg-background">
+          <article>
+            <div className="border-b bg-muted/35 px-5 py-4">
+              <p className="text-xs text-muted-foreground">
+                Visitor question · {formatDate(item.createdAt)}
+              </p>
+              <h2 className="mt-2 text-sm leading-6 font-semibold">
+                {item.question}
+              </h2>
             </div>
-            <ConversationResponseProvenance item={item} />
-          </div>
-        </article>
+            <div className="px-5 py-4">
+              <div className="text-sm leading-6 text-muted-foreground">
+                <Suspense
+                  fallback={
+                    <p className="whitespace-pre-wrap">{item.answer}</p>
+                  }
+                >
+                  <LazyChatMarkdown source={item.answer} />
+                </Suspense>
+              </div>
+              <ConversationResponseProvenance item={item} />
+            </div>
+          </article>
+        </Card>
       ))}
       {!data.length ? <Empty label="No generated chat exchanges yet." /> : null}
     </div>
@@ -632,109 +650,104 @@ export function Comments({
           blogCatalog.find(item.postSlug)?.title ?? item.postSlug
 
         return (
-          <article
-            key={item.id}
-            className="overflow-hidden rounded-xl border bg-background"
-            aria-labelledby={`comment-${item.id}`}
-          >
-            <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
-              <Avatar className="size-10 ring-1 ring-border">
-                <AvatarFallback>{initials(item.name)}</AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <h2
-                  id={`comment-${item.id}`}
-                  className="truncate text-sm font-semibold text-strong-foreground"
-                >
-                  {item.name}
-                </h2>
-                <a
-                  href={`mailto:${item.email}`}
-                  className="mt-0.5 block w-fit truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-                >
-                  {item.email}
-                </a>
-              </div>
+          <Card key={item.id} asChild className="overflow-hidden bg-background">
+            <article aria-labelledby={`comment-${item.id}`}>
+              <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
+                <Avatar className="size-10 ring-1 ring-border">
+                  <AvatarFallback>{initials(item.name)}</AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 flex-1">
+                  <h2
+                    id={`comment-${item.id}`}
+                    className="truncate text-sm font-semibold text-strong-foreground"
+                  >
+                    {item.name}
+                  </h2>
+                  <a
+                    href={`mailto:${item.email}`}
+                    className="mt-0.5 block w-fit truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  >
+                    {item.email}
+                  </a>
+                </div>
 
-              {confirming === item.id ? (
-                <div className="flex shrink-0 items-center gap-1">
+                {confirming === item.id ? (
+                  <div className="flex shrink-0 items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={pending === item.id}
+                      onClick={() => setConfirming(null)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      disabled={pending === item.id}
+                      onClick={() => deleteComment(item.id, item.postSlug)}
+                    >
+                      {pending === item.id ? (
+                        <CircleDashedIcon className="animate-spin" />
+                      ) : (
+                        <TrashIcon />
+                      )}
+                      Delete
+                    </Button>
+                  </div>
+                ) : (
                   <Button
                     variant="ghost"
-                    size="sm"
-                    disabled={pending === item.id}
-                    onClick={() => setConfirming(null)}
+                    size="icon-sm"
+                    className="shrink-0 text-muted-foreground hover:text-destructive"
+                    onClick={() => setConfirming(item.id)}
+                    aria-label={`Delete comment by ${item.name}`}
                   >
-                    Cancel
+                    <TrashIcon />
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    disabled={pending === item.id}
-                    onClick={() => deleteComment(item.id, item.postSlug)}
-                  >
-                    {pending === item.id ? (
-                      <CircleDashedIcon className="animate-spin" />
-                    ) : (
-                      <TrashIcon />
-                    )}
-                    Delete
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="shrink-0 text-muted-foreground hover:text-destructive"
-                  onClick={() => setConfirming(item.id)}
-                  aria-label={`Delete comment by ${item.name}`}
-                >
-                  <TrashIcon />
-                </Button>
-              )}
-            </header>
+                )}
+              </header>
 
-            <div className="p-5 sm:p-6">
-              <section className="rounded-lg bg-muted/45 p-4">
-                <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                  <ChatCircleDotsIcon className="size-3.5" />
-                  Comment
-                </p>
-                <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-strong-foreground">
-                  {item.message}
-                </p>
-              </section>
+              <div className="p-5 sm:p-6">
+                <section className="rounded-lg bg-muted/45 p-4">
+                  <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                    <ChatCircleDotsIcon className="size-3.5" />
+                    Comment
+                  </p>
+                  <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-strong-foreground">
+                    {item.message}
+                  </p>
+                </section>
 
-              <footer className="mt-5 grid gap-3 border-t pt-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">Article</p>
-                  <Link
-                    to="/blog/$slug"
-                    params={{ slug: item.postSlug }}
-                    className="mt-1 flex w-fit max-w-full items-center gap-2 text-sm font-medium text-strong-foreground underline-offset-4 hover:underline"
+                <footer className="mt-5 grid gap-3 border-t pt-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+                  <div className="min-w-0">
+                    <p className="text-xs text-muted-foreground">Article</p>
+                    <Link
+                      to="/blog/$slug"
+                      params={{ slug: item.postSlug }}
+                      className="mt-1 flex w-fit max-w-full items-center gap-2 text-sm font-medium text-strong-foreground underline-offset-4 hover:underline"
+                    >
+                      <BookOpenTextIcon className="size-4 shrink-0" />
+                      <span className="truncate">{postTitle}</span>
+                    </Link>
+                  </div>
+                  <time
+                    dateTime={item.createdAt}
+                    className="text-xs text-muted-foreground"
                   >
-                    <BookOpenTextIcon className="size-4 shrink-0" />
-                    <span className="truncate">{postTitle}</span>
-                  </Link>
-                </div>
-                <time
-                  dateTime={item.createdAt}
-                  className="text-xs text-muted-foreground"
-                >
-                  {formatDate(item.createdAt)}
-                </time>
-              </footer>
-            </div>
-          </article>
+                    {formatDate(item.createdAt)}
+                  </time>
+                </footer>
+              </div>
+            </article>
+          </Card>
         )
       })}
       {!data.length ? <Empty label="No blog comments yet." /> : null}
       {error ? (
-        <p
-          className="rounded-lg border border-destructive/25 bg-destructive/5 px-4 py-3 text-xs text-destructive"
-          role="alert"
-        >
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription className="text-xs">{error}</AlertDescription>
+        </Alert>
       ) : null}
     </div>
   )
@@ -764,7 +777,7 @@ export function Pagination({
   const pages = paginationItems(page, pageCount)
 
   return (
-    <nav
+    <PaginationRoot
       className="mt-6 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center"
       aria-label={`${label} pagination`}
     >
@@ -778,42 +791,41 @@ export function Pagination({
       </p>
 
       {pageCount > 1 ? (
-        <div className="flex items-center gap-1 sm:ml-auto">
-          <Button
-            variant="outline"
-            size="icon-sm"
-            disabled={page === 1}
-            onClick={() => onPageChange(1)}
-            aria-label={`First ${label} page`}
-          >
-            <ArrowLeftDoubleIcon />
-          </Button>
+        <PaginationContent className="sm:ml-auto">
+          <PaginationItem>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              disabled={page === 1}
+              onClick={() => onPageChange(1)}
+              aria-label={`First ${label} page`}
+            >
+              <ArrowLeftDoubleIcon />
+            </Button>
+          </PaginationItem>
 
-          <Button
-            variant="outline"
-            size="icon-sm"
-            disabled={page === 1}
-            onClick={() => onPageChange(page - 1)}
-            aria-label={`Previous ${label} page`}
-          >
-            <ArrowLeftCompactIcon />
-          </Button>
+          <PaginationItem>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              disabled={page === 1}
+              onClick={() => onPageChange(page - 1)}
+              aria-label={`Previous ${label} page`}
+            >
+              <ArrowLeftCompactIcon />
+            </Button>
+          </PaginationItem>
 
-          <div className="flex items-center gap-1" aria-label="Page selection">
-            {pages.map((item, index) =>
-              item === "ellipsis" ? (
-                <span
-                  key={`ellipsis-${index}`}
-                  className="flex size-7 items-center justify-center text-xs text-muted-foreground"
-                  aria-hidden="true"
-                >
-                  …
-                </span>
-              ) : (
-                <Button
+          {pages.map((item, index) =>
+            item === "ellipsis" ? (
+              <PaginationItem key={`ellipsis-${index}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            ) : (
+              <PaginationItem key={item}>
+                <PaginationButton
                   key={item}
-                  variant={item === page ? "default" : "ghost"}
-                  size="icon-sm"
+                  isActive={item === page}
                   className={cn(
                     "text-xs",
                     item === page &&
@@ -821,36 +833,39 @@ export function Pagination({
                   )}
                   onClick={() => onPageChange(item)}
                   aria-label={`Page ${item}`}
-                  aria-current={item === page ? "page" : undefined}
                 >
                   {item}
-                </Button>
-              )
-            )}
-          </div>
+                </PaginationButton>
+              </PaginationItem>
+            )
+          )}
 
-          <Button
-            variant="outline"
-            size="icon-sm"
-            disabled={page === pageCount}
-            onClick={() => onPageChange(page + 1)}
-            aria-label={`Next ${label} page`}
-          >
-            <ArrowRightCompactIcon />
-          </Button>
+          <PaginationItem>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              disabled={page === pageCount}
+              onClick={() => onPageChange(page + 1)}
+              aria-label={`Next ${label} page`}
+            >
+              <ArrowRightCompactIcon />
+            </Button>
+          </PaginationItem>
 
-          <Button
-            variant="outline"
-            size="icon-sm"
-            disabled={page === pageCount}
-            onClick={() => onPageChange(pageCount)}
-            aria-label={`Last ${label} page`}
-          >
-            <ArrowRightDoubleIcon />
-          </Button>
-        </div>
+          <PaginationItem>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              disabled={page === pageCount}
+              onClick={() => onPageChange(pageCount)}
+              aria-label={`Last ${label} page`}
+            >
+              <ArrowRightDoubleIcon />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
       ) : null}
-    </nav>
+    </PaginationRoot>
   )
 }
 
@@ -906,67 +921,69 @@ export function AvailabilityForm({
     ["relocationVisa", "Relocation and visa"],
   ] as const
   return (
-    <form onSubmit={submit} className="rounded-xl border bg-background">
-      <div className="flex items-center gap-4 border-b p-5">
-        <div className="min-w-0 flex-1">
-          <h2 className="font-semibold">Public availability section</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Control whether the section is visible and edit its public copy.
-          </p>
-        </div>
-        <label
-          htmlFor="availability-enabled"
-          className="flex cursor-pointer items-center gap-2 text-sm font-medium"
-        >
-          <Switch
-            id="availability-enabled"
-            name="enabled"
-            defaultChecked={settings.enabled}
-            aria-label="Enable public availability section"
-          />
-          Enabled
-        </label>
-      </div>
-      <div className="grid gap-5 p-5 sm:grid-cols-2">
-        {fields.map(([name, label]) => (
-          <label
-            key={name}
-            className={cn(
-              "grid gap-2 text-xs font-medium",
-              name === "description" && "sm:col-span-2"
-            )}
+    <Card asChild className="bg-background">
+      <form onSubmit={submit}>
+        <div className="flex items-center gap-4 border-b p-5">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-semibold">Public availability section</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Control whether the section is visible and edit its public copy.
+            </p>
+          </div>
+          <Label
+            htmlFor="availability-enabled"
+            className="flex cursor-pointer items-center gap-2 text-sm font-medium"
           >
-            {label}
-            <input
-              name={name}
-              defaultValue={settings[name]}
-              maxLength={name === "description" ? 240 : 160}
-              required
-              className="h-10 rounded-lg border bg-background px-3 text-sm font-normal outline-none focus:ring-2 focus:ring-ring"
+            <Switch
+              id="availability-enabled"
+              name="enabled"
+              defaultChecked={settings.enabled}
+              aria-label="Enable public availability section"
             />
-          </label>
-        ))}
-      </div>
-      <div className="flex items-center gap-3 border-t px-5 py-4">
-        <Button
-          disabled={saving}
-          className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-        >
-          {saving ? <CircleDashedIcon className="animate-spin" /> : null}
-          {saving ? "Saving" : "Save changes"}
-        </Button>
-        {status === "saved" ? (
-          <span className="text-xs text-emerald-700 dark:text-emerald-400">
-            Changes saved
-          </span>
-        ) : null}
-        {status === "error" ? (
-          <span className="text-xs text-destructive" role="alert">
-            Changes could not be saved. Check the fields and try again.
-          </span>
-        ) : null}
-      </div>
-    </form>
+            Enabled
+          </Label>
+        </div>
+        <div className="grid gap-5 p-5 sm:grid-cols-2">
+          {fields.map(([name, label]) => (
+            <Label
+              key={name}
+              className={cn(
+                "grid gap-2 text-xs font-medium",
+                name === "description" && "sm:col-span-2"
+              )}
+            >
+              {label}
+              <Input
+                name={name}
+                defaultValue={settings[name]}
+                maxLength={name === "description" ? 240 : 160}
+                required
+                className="bg-background font-normal"
+              />
+            </Label>
+          ))}
+        </div>
+        <div className="flex items-center gap-3 border-t px-5 py-4">
+          <Button
+            disabled={saving}
+            className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+          >
+            {saving ? <CircleDashedIcon className="animate-spin" /> : null}
+            {saving ? "Saving" : "Save changes"}
+          </Button>
+          {status === "saved" ? (
+            <span className="text-xs text-emerald-700 dark:text-emerald-400">
+              Changes saved
+            </span>
+          ) : null}
+          {status === "error" ? (
+            <span className="text-xs text-destructive" role="alert">
+              Changes could not be saved. Check the fields and try again.
+            </span>
+          ) : null}
+        </div>
+      </form>
+    </Card>
   )
 }
 
