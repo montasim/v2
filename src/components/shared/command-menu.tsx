@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
   BriefcaseIcon,
+  BookOpenTextIcon,
   CertificateIcon,
   ChatCenteredDotsIcon,
   CodeIcon,
@@ -49,6 +50,7 @@ const sectionIconMap: Record<PortfolioSection["label"], Icon> = {
   Certifications: CertificateIcon,
   Volunteering: HandHeartIcon,
   Organizations: UsersThreeIcon,
+  "Case studies": BookOpenTextIcon,
 }
 
 const actionIconMap: Record<PortfolioAction, Icon> = {

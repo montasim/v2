@@ -254,6 +254,7 @@ describe("portfolio content", () => {
 
     expect(robots).toContain("https://montasim.dev/sitemap.xml")
     expect(sitemap).toContain("<loc>https://montasim.dev/</loc>")
+    expect(sitemap).toContain("<loc>https://montasim.dev/case-studies</loc>")
     expect(`${robots}\n${sitemap}`).not.toContain("montasim.vercel.app")
   })
 })

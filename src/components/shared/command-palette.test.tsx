@@ -116,6 +116,24 @@ describe("CommandPalette", () => {
     expect(screen.queryByRole("dialog")).toBeNull()
   })
 
+  it("navigates to the case-study index", () => {
+    render(<CommandPalette />)
+    openCommandMenu()
+
+    fireEvent.change(
+      screen.getByPlaceholderText("Type a command or search..."),
+      {
+        target: { value: "Case studies" },
+      }
+    )
+    fireEvent.click(screen.getByRole("option", { name: /Case studies/ }))
+
+    expect(navigate).toHaveBeenCalledWith({
+      to: "/case-studies",
+      hash: undefined,
+    })
+  })
+
   it("runs the current theme action", () => {
     render(<CommandPalette />)
     openCommandMenu()

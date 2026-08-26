@@ -1,6 +1,7 @@
 import { z } from "zod"
 import caseStudiesJson from "@/data/casestudy.json"
 import { projectCatalog } from "@/lib/content/projects"
+import type { ProjectFilter } from "@/lib/content/projects"
 
 export const projectCaseStudySlugSchema = z
   .string()
@@ -82,6 +83,27 @@ records.sort(
 )
 
 export type ProjectCaseStudy = (typeof records)[number]
+export type ProjectCaseStudyFilter = ProjectFilter
+
+function searchableText(caseStudy: ProjectCaseStudy) {
+  const { project } = caseStudy
+  return [
+    project.title,
+    project.description,
+    project.type,
+    ...project.technologies,
+    ...project.topics,
+    caseStudy.summary,
+    caseStudy.role,
+    caseStudy.scope,
+    caseStudy.status,
+    caseStudy.problem,
+    ...caseStudy.constraints,
+    ...caseStudy.outcomes,
+  ]
+    .join(" ")
+    .toLocaleLowerCase()
+}
 
 const recordsBySlug = new Map(records.map((record) => [record.slug, record]))
 const recordsByProjectId = new Map(
@@ -90,6 +112,17 @@ const recordsByProjectId = new Map(
 
 export const projectCaseStudyCatalog = {
   records,
+  featured: records.filter((record) => record.project.featured),
+  filters: projectCatalog.filters,
+  filterSchema: projectCatalog.filterSchema,
+  filter(filter: ProjectCaseStudyFilter, query: string) {
+    const normalizedQuery = query.trim().toLocaleLowerCase()
+    return records.filter(
+      (record) =>
+        projectCatalog.matches(record.project, filter) &&
+        (!normalizedQuery || searchableText(record).includes(normalizedQuery))
+    )
+  },
   findBySlug(slug: string) {
     return recordsBySlug.get(slug)
   },

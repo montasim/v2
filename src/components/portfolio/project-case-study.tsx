@@ -188,7 +188,9 @@ export function ProjectCaseStudyPage({
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/projects">Projects</Link>
+                <Link to="/case-studies" search={{ filter: "all", q: "" }}>
+                  Case studies
+                </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
@@ -483,9 +485,9 @@ export function ProjectCaseStudyPage({
 
           <footer className="mt-8 flex flex-wrap gap-3">
             <Button asChild variant="outline" size="lg" className="w-auto">
-              <Link to="/projects">
+              <Link to="/case-studies" search={{ filter: "all", q: "" }}>
                 <ArrowLeftCompactIcon />
-                All projects
+                All case studies
               </Link>
             </Button>
             <Button

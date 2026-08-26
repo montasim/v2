@@ -13,6 +13,7 @@ export const sectionShortcuts = [
 ] as const
 
 export const additionalSections = [
+  { label: "Case studies", to: "/case-studies" },
   { label: "Certifications", to: "/certifications" },
   { label: "Volunteering", to: "/", hash: "volunteering" },
   { label: "Organizations", to: "/", hash: "organizations" },
