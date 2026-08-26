@@ -47,7 +47,7 @@ export function ProjectCard({ project }: { project: Project }) {
         id={project.id}
         className="scroll-mt-20 target:ring-2 target:ring-primary/40"
       >
-        <div className="relative min-h-64 overflow-hidden border-b bg-muted p-3 sm:p-4 lg:border-r lg:border-b-0">
+        <div className="relative min-h-64 overflow-hidden border-b bg-muted/35 p-3 sm:p-4 lg:border-r lg:border-b-0">
           {image ? (
             caseStudy ? (
               <Link
