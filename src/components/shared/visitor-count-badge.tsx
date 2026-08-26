@@ -29,16 +29,15 @@ export function VisitorCountBadge({
         count === null
           ? "Loading visitor count"
           : isUnavailable
-            ? "Visitor count unavailable"
+            ? "0 views"
             : `${count} ${count === 1 ? "visitor" : "visitors"}`
       }
-      title={isUnavailable ? "Visitor count unavailable" : undefined}
     >
       <ViewIcon className="size-3.5" />
       {count === null ? (
         <Skeleton className="h-3 w-10 bg-foreground/10" />
       ) : isUnavailable ? (
-        <span aria-hidden="true">—</span>
+        <span aria-hidden="true">0 views</span>
       ) : (
         `${formatVisitorCount(count)} ${count === 1 ? "visitor" : "visitors"}`
       )}

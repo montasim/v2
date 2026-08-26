@@ -967,7 +967,7 @@ export function BlogDetailPage({
               search={{ topic: "all", q: "" }}
               className="group flex min-h-18.5 items-center gap-3 rounded-xl border bg-background p-4 hover:-translate-y-px hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2"
             >
-              <ArrowLeftCompactIcon className="group-hover:-translate-x-0.5" />
+              <ArrowLeftCompactIcon className="size-4 group-hover:-translate-x-0.5" />
               <span>
                 <span className="block text-[0.6875rem] text-muted-foreground">
                   Back
@@ -990,7 +990,7 @@ export function BlogDetailPage({
                   {nextPost.title}
                 </strong>
               </span>
-              <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />
+              <ArrowRightCompactIcon className="size-4 group-hover:translate-x-0.5" />
             </Link>
           </nav>
         </div>
