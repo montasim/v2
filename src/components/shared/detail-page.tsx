@@ -15,7 +15,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import {
-  DownloadAction,
+  ExternalAction,
   InternalAction,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
@@ -71,15 +71,15 @@ export function DetailPage({
           <ArrowLeftCompactIcon className="group-hover/action:-translate-x-0.5" />
           Back to overview
         </InternalAction>
-        <DownloadAction
-          href={profileCatalog.profile.resumeDownloadUrl}
+        <ExternalAction
+          href={profileCatalog.profile.resumeUrl}
           variant="outline"
           size="lg"
           className={`${actionClassName} sm:ml-auto`}
         >
           <DownloadSimpleIcon />
           Download resume
-        </DownloadAction>
+        </ExternalAction>
         <Button
           type="button"
           variant="outline"

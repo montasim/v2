@@ -9,7 +9,7 @@ const profileSchema = z.object({
   email: z.email(),
   avatarUrl: z.string().startsWith("/"),
   resumeUrl: z.url(),
-  resumeDownloadUrl: z.string().startsWith("/"),
+  resumeDownloadUrl: z.url(),
   supportUrl: z.url(),
   workPreferences: z.object({
     availability: z.string().min(1).nullable(),
