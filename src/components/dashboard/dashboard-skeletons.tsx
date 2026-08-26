@@ -281,14 +281,6 @@ export function DashboardStaticAnswersSkeleton() {
     <LoadingRegion label="Loading static questions and answers">
       <HeaderSkeleton width="w-64" description />
       <div className="space-y-6">
-        <div className="flex items-center gap-3 rounded-xl border bg-background px-4 py-3">
-          <Skeleton className="size-9 shrink-0 rounded-lg" />
-          <div className="min-w-0 flex-1">
-            <Skeleton className="h-4 w-44" />
-            <Skeleton className="mt-2 h-3 w-80 max-w-full" />
-          </div>
-        </div>
-
         <div>
           <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end">
             <div className="min-w-0 flex-1">

@@ -4,6 +4,13 @@ import { Label, Pie, PieChart } from "recharts"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -14,8 +21,6 @@ import {
   ArrowLeftDoubleIcon,
   ArrowRightCompactIcon,
   ArrowRightDoubleIcon,
-  BookOpenTextIcon,
-  CaretDownIcon,
   FunnelSimpleIcon,
   SearchIcon,
   XIcon,
@@ -77,6 +82,11 @@ export function StaticAnswerCatalog({
       ),
     [categories]
   )
+  const selectedCategory = categories.find((item) => item.category === category)
+  const selectedCategoryLabel =
+    category === ALL_CATEGORIES
+      ? `All categories (${catalog.records.length})`
+      : `${selectedCategory?.label ?? categoryLabel(category)} (${selectedCategory?.count ?? 0})`
   const filtered = useMemo(
     () => filterStaticAnswers(catalog.records, query, category),
     [catalog, category, query]
@@ -123,26 +133,6 @@ export function StaticAnswerCatalog({
 
   return (
     <div className="space-y-6">
-      <section
-        className="flex items-center gap-3 rounded-xl border bg-background px-4 py-3"
-        aria-label="Static answer catalog source"
-      >
-        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-strong-foreground">
-          <BookOpenTextIcon className="size-4" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-strong-foreground">
-            Compiled answer source
-          </p>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            Read-only content loaded from{" "}
-            <code className="text-[0.6875rem] break-all text-strong-foreground">
-              src/features/chat/knowledge/exact-answers.toon
-            </code>
-          </p>
-        </div>
-      </section>
-
       <AnswerDistribution
         categories={rankedCategories}
         knowledgeHash={catalog.knowledgeHash}
@@ -177,29 +167,30 @@ export function StaticAnswerCatalog({
             </span>
           </label>
 
-          <label>
-            <span className="mb-2 flex items-center gap-1.5 text-xs font-medium text-strong-foreground">
+          <div>
+            <span
+              id="static-answer-category-label"
+              className="mb-2 flex items-center gap-1.5 text-xs font-medium text-strong-foreground"
+            >
               <FunnelSimpleIcon className="size-3.5" />
               Category
             </span>
-            <span className="relative block">
-              <select
-                value={category}
-                onChange={(event) => updateCategory(event.currentTarget.value)}
-                className="h-10 w-full appearance-none rounded-lg border bg-background pr-10 pl-3 text-sm text-strong-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20"
-              >
-                <option value={ALL_CATEGORIES}>
+            <Select value={category} onValueChange={updateCategory}>
+              <SelectTrigger aria-labelledby="static-answer-category-label">
+                <SelectValue>{selectedCategoryLabel}</SelectValue>
+              </SelectTrigger>
+              <SelectContent align="start">
+                <SelectItem value={ALL_CATEGORIES}>
                   All categories ({catalog.records.length})
-                </option>
+                </SelectItem>
                 {categories.map((item) => (
-                  <option key={item.category} value={item.category}>
+                  <SelectItem key={item.category} value={item.category}>
                     {item.label} ({item.count})
-                  </option>
+                  </SelectItem>
                 ))}
-              </select>
-              <CaretDownIcon className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground" />
-            </span>
-          </label>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </section>
 

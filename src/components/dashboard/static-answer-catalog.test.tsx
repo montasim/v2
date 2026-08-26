@@ -39,6 +39,10 @@ describe("StaticAnswerCatalog", () => {
     render(<StaticAnswerCatalog catalog={catalog} />)
 
     expect(screen.getByText("Read only")).not.toBeNull()
+    expect(screen.getByText("Knowledge aaaaaaaaaaaa")).not.toBeNull()
+    expect(
+      screen.queryByRole("region", { name: "Static answer catalog source" })
+    ).toBeNull()
     expect(
       screen.getByText("What is Montasim's PostCraft project?")
     ).not.toBeNull()
@@ -96,14 +100,19 @@ describe("StaticAnswerCatalog", () => {
   it("filters by category and recovers from an empty result", () => {
     render(<StaticAnswerCatalog catalog={catalog} />)
 
-    const categorySelect = screen.getByLabelText("Category")
-    expect(categorySelect.className).toContain("appearance-none")
-    expect(categorySelect.className).toContain("pl-3")
-    expect(categorySelect.className).toContain("pr-10")
+    const categorySelect = screen.getByRole("combobox", { name: "Category" })
+    expect(categorySelect.tagName).toBe("BUTTON")
+    expect(document.querySelector("select")).toBeNull()
 
-    fireEvent.change(categorySelect, {
-      target: { value: "technical-depth" },
+    fireEvent.click(categorySelect)
+    const technicalDepthOption = screen.getByRole("option", {
+      name: "Technical depth (1)",
     })
+    expect(technicalDepthOption.className).toContain("focus:bg-accent")
+    expect(technicalDepthOption.className).toContain(
+      "data-[state=checked]:bg-accent"
+    )
+    fireEvent.click(technicalDepthOption)
     expect(
       screen.getByText(
         "How does Montasim design durable asynchronous workflows?"
