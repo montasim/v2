@@ -31,6 +31,8 @@ export function ProjectCard({ project }: { project: Project }) {
     project.npmUrl && project.npmUrl !== primaryUrl ? project.npmUrl : undefined
   let primaryActionLabel = "Live site"
   if (project.npmUrl && !project.liveUrl) primaryActionLabel = "Package"
+  else if (project.type === "skill" && project.liveUrl)
+    primaryActionLabel = "Get started"
   else if (project.type === "package" && project.liveUrl)
     primaryActionLabel = "Homepage"
   const caseStudy = projectCaseStudyCatalog.findByProjectId(project.id)
