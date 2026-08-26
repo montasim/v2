@@ -52,7 +52,9 @@ export function DetailPage({
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight">{title}</h1>
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-emphasis-foreground">
+          {title}
+        </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {description}
         </p>
