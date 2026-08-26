@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge"
 import { ViewIcon } from "@/components/ui/icons"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { VisitorCount } from "@/features/visitor-count/use-visitor-count"
+import { cn } from "@/lib/utils"
 
 function formatVisitorCount(count: number) {
   return new Intl.NumberFormat("en", {
@@ -11,13 +12,19 @@ function formatVisitorCount(count: number) {
   }).format(count)
 }
 
-export function VisitorCountBadge({ count }: { count: VisitorCount }) {
+export function VisitorCountBadge({
+  count,
+  className,
+}: {
+  count: VisitorCount
+  className?: string
+}) {
   const isUnavailable = count === "unavailable"
 
   return (
     <Badge
       variant="secondary"
-      className="gap-1.5 font-medium tabular-nums"
+      className={cn("gap-1.5 font-medium tabular-nums", className)}
       aria-label={
         count === null
           ? "Loading visitor count"

@@ -802,20 +802,16 @@ export function BlogDetailPage({
           <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
               {post.publishedAt ? (
-                <Badge
-                  variant="secondary"
-                  className="gap-1.5 font-medium tabular-nums"
-                >
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground tabular-nums">
                   <ClockIcon className="size-3.5" />
                   <time dateTime={post.publishedAt}>
                     {formatDate(post.publishedAt)}
                   </time>
-                </Badge>
+                </span>
               ) : null}
               <Badge variant="secondary" className="font-medium">
                 {post.category}
               </Badge>
-              <VisitorCountBadge count={viewCount} />
             </div>
             <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
               <Button
@@ -826,12 +822,6 @@ export function BlogDetailPage({
                 {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
                 {shareStatus === "Link copied" ? "Copied" : "Share article"}
               </Button>
-              <Button asChild variant="outline">
-                <a href="#discussion">
-                  <ChatCenteredDotsIcon />
-                  {commentCount} {commentCount === 1 ? "comment" : "comments"}
-                </a>
-              </Button>
             </div>
           </div>
           <h1 className="w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-emphasis-foreground sm:text-3xl">
@@ -841,31 +831,49 @@ export function BlogDetailPage({
         <p className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground">
           {post.excerpt}
         </p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 border-b pb-6 text-xs text-muted-foreground">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <img
-              src={blogCatalog.author.avatarUrl}
-              alt=""
-              width="32"
-              height="32"
-              className="size-8 rounded-full object-cover"
-            />
-            <span>
-              Written by{" "}
-              <Link
-                to="/"
-                className="font-semibold text-foreground underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2"
-              >
-                {blogCatalog.author.name}
-              </Link>
+        <div className="mt-5 flex flex-col gap-3 border-b pb-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <img
+                src={blogCatalog.author.avatarUrl}
+                alt=""
+                width="32"
+                height="32"
+                className="size-8 rounded-full object-cover"
+              />
+              <span>
+                Written by{" "}
+                <Link
+                  to="/"
+                  className="font-medium text-muted-foreground underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  {blogCatalog.author.name}
+                </Link>
+              </span>
+            </div>
+            <span aria-hidden="true" className="text-border">
+              ·
+            </span>
+            <span className="font-medium text-muted-foreground">
+              {post.readingMinutes} min read
             </span>
           </div>
-          <span aria-hidden="true" className="text-border">
-            ·
-          </span>
-          <span className="font-medium text-foreground">
-            {post.readingMinutes} min read
-          </span>
+          <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end">
+            <VisitorCountBadge
+              count={viewCount}
+              className="border-0 bg-transparent"
+            />
+            <Button
+              asChild
+              variant="ghost"
+              className="border-0 bg-transparent text-xs hover:bg-transparent"
+            >
+              <a href="#discussion">
+                <ChatCenteredDotsIcon />
+                {commentCount} {commentCount === 1 ? "comment" : "comments"}
+              </a>
+            </Button>
+          </div>
         </div>
         <p className="sr-only" role="status" aria-live="polite">
           {shareStatus}
