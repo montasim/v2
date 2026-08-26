@@ -1,0 +1,1734 @@
+{
+  "schemaVersion": "portfolio-chat-evaluation/v1",
+  "runId": "c69adf2f-adb9-44a9-b3dd-5358fb88333f",
+  "knowledgeHash": "2360b6161555a133b9b9bdf12a0d62c9b2067beba096fec42bed3276d9b555d1",
+  "startedAt": "2026-08-25T20:28:20.938Z",
+  "completedAt": "2026-08-25T20:47:00.370Z",
+  "controls": {
+    "concurrency": 1,
+    "caseStartsPerMinute": 18
+  },
+  "providerUsage": {
+    "totalCalls": 185,
+    "succeeded": 27,
+    "failed": 158,
+    "inputTokens": 2015231,
+    "outputTokens": 7813,
+    "totalTokens": 2023044,
+    "costUsd": 0,
+    "openRouterZeroCostVerified": false,
+    "byProvider": {
+      "openrouter": {
+        "calls": 173,
+        "succeeded": 23,
+        "failed": 150,
+        "inputTokens": 1993721,
+        "outputTokens": 7013,
+        "totalTokens": 2000734,
+        "costUsd": 0
+      },
+      "gemini": {
+        "calls": 8,
+        "succeeded": 0,
+        "failed": 8,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0,
+        "costUsd": 0
+      },
+      "groq": {
+        "calls": 4,
+        "succeeded": 4,
+        "failed": 0,
+        "inputTokens": 21510,
+        "outputTokens": 800,
+        "totalTokens": 22310,
+        "costUsd": 0
+      }
+    }
+  },
+  "summary": {
+    "total": 50,
+    "passed": 0,
+    "failed": 50,
+    "passRate": 0,
+    "byCategory": {
+      "project": {
+        "total": 4,
+        "passed": 0,
+        "failed": 4
+      },
+      "case-study": {
+        "total": 4,
+        "passed": 0,
+        "failed": 4
+      },
+      "blog": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "certification": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "experience": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "skill": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "recommendation": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "affiliation": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "identity-current-availability": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "career-impact-metrics": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "hiring-fit-due-diligence": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "leadership-collaboration": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "technical-depth": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "catalog-chronology-comparison": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "client-delivery-product-thinking": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      },
+      "contributions-learning": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3
+      }
+    },
+    "hardFailures": {
+      "evaluation-error": 50
+    }
+  },
+  "cases": [
+    {
+      "id": "dynamic-eval:project:project-github-readme-counter:technology:client-due-diligence",
+      "category": "project",
+      "audience": "potential-client",
+      "question": "Which technology choices support GitHub README Counter?",
+      "referenceAnswerId": "project:project-github-readme-counter:technology",
+      "referenceAnswer": "The documented stack for GitHub README Counter includes Node.js, Express.js, JavaScript, SVG, System Design. Those technologies support the project's recorded purpose: Express service that increments a file-backed counter and returns the current value as a customizable SVG image. This ties the stack to a concrete product scope instead of presenting it as an isolated keyword list.",
+      "expectedFactIds": [
+        "project:project-github-readme-counter"
+      ],
+      "supportingExcerpts": [
+        "Express service that increments a file-backed counter and returns the current value as a customizable SVG image.\n\nfalse\n2024-06-25T12:31:13Z\n9e56d4f2204c5ec6366c5306f20404219739290c\n2024-06-25T10:48:55Z\nhttps://github.com/montasim/github-readme-counter\nproject-github-readme-counter\nhttps://github-readme-counter.onrender.com/count.svg\n\nNode.js\nExpress.js\nJavaScript\nSVG\nSystem Design\nGitHub README"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 34450,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:case-study:github-readme-counter:architecture:peer-evidence",
+      "category": "case-study",
+      "audience": "technical-peer",
+      "question": "What are the main technical boundaries in GitHub README Counter?",
+      "referenceAnswerId": "case-study:github-readme-counter:architecture",
+      "referenceAnswer": "Express routes and query validation; in-memory/file counter store; escaped dynamic SVG renderer plus JSON health endpoint. One key decision, “Return SVG,” is documented as follows: Return SVG so the result embeds in standard Markdown. This shows how Montasim converts a stated constraint into an explicit system boundary instead of treating architecture as a collection of tools.",
+      "expectedFactIds": [
+        "case-study:github-readme-counter:architecture"
+      ],
+      "supportingExcerpts": [
+        "Express routes and query validation.\nHTTP service\nIn-memory/file counter store.\nState\nEscaped dynamic SVG renderer plus JSON health endpoint.\nSVG response\nExpress routes and query validation; in-memory/file counter store; escaped dynamic SVG renderer plus JSON health endpoint.\nReturn SVG so the result embeds in standard Markdown.\nReturn SVG\nUse simple file persistence, trading horizontal scalability/durability for easy self-hosting.\nUse simple file persistence\nDescribe the value as request count rather than"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 25201,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:blog:keeping-tax-id-lookups-out-of-the-server:senior-shortlist",
+      "category": "blog",
+      "audience": "hiring-manager",
+      "question": "What does “I Kept Tax-ID Lookups Out of the Server” reveal about his engineering judgment?",
+      "referenceAnswerId": "blog:keeping-tax-id-lookups-out-of-the-server",
+      "referenceAnswer": "In “I Kept Tax-ID Lookups Out of the Server,” Montasim opens with the section “The visible feature was only the surface.” It begins: A static historical audit list is inconvenient to search manually, especially on mobile, while submitting a tax identifier to another application server creates avoidable query exposure. The article gives readers his documented reasoning about an implementation trade-off rather than only repeating the project's feature summary.",
+      "expectedFactIds": [
+        "blog:keeping-tax-id-lookups-out-of-the-server",
+        "case-study:tin-audit-checker:problem"
+      ],
+      "supportingExcerpts": [
+        "Privacy engineering\nfalse\ncase-study-derived\nproject-tin-audit-checker\nkeeping-tax-id-lookups-out-of-the-server\nI Kept Tax-ID Lookups Out of the Server\nproduct",
+        "A static historical audit list is inconvenient to search manually, especially on mobile, while submitting a tax identifier to another application server creates avoidable query exposure.\nThe data is historical, not live audit/compliance status.\nClaimed NBR provenance, accuracy, completeness, and redistribution rights are not established.\nShipping the dataset to browsers makes records retrievable even though lookup queries stay client-side."
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 22727,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:certification:certification-resume-cover-letter:architecture-review",
+      "category": "certification",
+      "audience": "engineering-leader",
+      "question": "Which technical subject does “Create a Resume and Cover Letter with Google Docs” validate?",
+      "referenceAnswerId": "certification:certification-resume-cover-letter",
+      "referenceAnswer": "Montasim completed “Create a Resume and Cover Letter with Google Docs,” issued by Coursera Project Network through Coursera in 2020. The portfolio describes its focus as follows: Guided Project · Grade 100%. This credential documents that stated learning activity and should not be treated as evidence beyond its published scope.",
+      "expectedFactIds": [
+        "certification:certification-resume-cover-letter"
+      ],
+      "supportingExcerpts": [
+        "2020-08-24\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/WHYQWEQVH7XH\ncertification-resume-cover-letter\n/images/certifications/resume-cover-letter.jpg\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nCreate a Resume and Cover Letter with Google Docs\nhttps://www.coursera.org/account/accomplishments/verify/WHYQWEQVH7XH\n2020"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 27054,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:experience:experience-codez-web-developer:stack:client-due-diligence",
+      "category": "experience",
+      "audience": "potential-client",
+      "question": "Which capabilities did he put into practice in his Web Developer role at Codez Info Tech.?",
+      "referenceAnswerId": "experience:experience-codez-web-developer:stack",
+      "referenceAnswer": "The role documents work with PHP, JavaScript, HTML, CSS. Montasim developed and maintained web applications with PHP and JavaScript. He analyzed client needs and developed appropriate functionality. He created and executed test scenarios to ensure quality deliverables. This ties the listed technologies to a specific role rather than presenting them as an isolated keyword list.",
+      "expectedFactIds": [
+        "experience:experience-codez-web-developer"
+      ],
+      "supportingExcerpts": [
+        "Codez Info Tech.\n\nDeveloped and maintained **web applications with PHP and JavaScript**. Analyzed **client needs** and developed appropriate functionality. Created and executed **test scenarios** to ensure quality deliverables.\nexperience-codez-web-developer\nNorth Badda, Dhaka, Bangladesh\nC\n/images/organizations/codez.png\nMay 2021 - Nov 2021\nWeb Developer\nPHP\nJavaScript\nHTML\nCSS"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 25267,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:skill:skills-architecture-security:peer-evidence",
+      "category": "skill",
+      "audience": "technical-peer",
+      "question": "What does his published toolkit cover in Architecture & Security?",
+      "referenceAnswerId": "skill:skills-architecture-security",
+      "referenceAnswer": "Montasim's Architecture & Security catalog includes System Design, Microservices, SSO. These are the skills explicitly published in the portfolio for this category; individual experience, projects, and case studies provide the separate evidence of where particular technologies were applied.",
+      "expectedFactIds": [
+        "skills:skills-architecture-security"
+      ],
+      "supportingExcerpts": [
+        "Architecture & Security\nskills-architecture-security\nSystem Design\nMicroservices\nSSO"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 35000,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:recommendation:15:md-mahmudul-haque-joy:interview-preparation",
+      "category": "recommendation",
+      "audience": "interviewer",
+      "question": "How did Md. Mahmudul Haque Joy describe working with him?",
+      "referenceAnswerId": "recommendation:15:md-mahmudul-haque-joy",
+      "referenceAnswer": "The portfolio records that Md. Mahmudul Haque Joy was Mohammad Montasim Al Mamun’s teacher. In attributed feedback, the reviewer describes Montasim as hardworking, a fast learner, and technically inclined. This is qualitative evidence about observed work and collaboration; it is not used to prove unrelated technical claims.",
+      "expectedFactIds": [
+        "recommendation:15:md-mahmudul-haque-joy"
+      ],
+      "supportingExcerpts": [
+        "January 31, 2021\nMd. Mahmudul Haque Joy\nwas Mohammad Montasim Al Mamun’s teacher\nAssistant Programmer\nHardworking,fast learner & technical geek"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 32922,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:affiliation:volunteering-rangpur-zilla-school-event-organizer:interview-preparation",
+      "category": "affiliation",
+      "audience": "interviewer",
+      "question": "How did he contribute as a volunteer with Rangpur Zilla School?",
+      "referenceAnswerId": "affiliation:volunteering-rangpur-zilla-school-event-organizer",
+      "referenceAnswer": "Montasim volunteered as Event Organizer with Rangpur Zilla School during 2011 - 2013 in Rangpur, Bangladesh. The record covers annual Iftar and class events, event-budget responsibility, and coordination with volunteer teams. This documents hands-on coordination, teamwork, and delivery outside his paid engineering experience.",
+      "expectedFactIds": [
+        "volunteering:volunteering-rangpur-zilla-school-event-organizer"
+      ],
+      "supportingExcerpts": [
+        "Organized vibrant and memorable events bringing the school community together. Planned annual iftar parties promoting unity and cultural exchange, executed engaging class parties fostering social cohesion, managed event budgets with fiscal responsibility, and collaborated with volunteer teams for seamless execution.\nvolunteering-rangpur-zilla-school-event-organizer\nRangpur, Bangladesh\nR\n/images/organizations/rangpur-zilla-school.png\nRangpur Zilla School\n\n2011 - 2013\nEvent Organizer"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 13506,
+      "reply": {
+        "kind": "generated",
+        "messageId": "d6e58eaf-9ecc-4fbd-bc62-265c17c19039",
+        "text": "Montasim volunteered as an Event Organizer at Rangpur Zilla School from 2011 to 2013, where he organized vibrant and memorable events bringing the school community together, including annual iftar parties promoting unity and cultural exchange, engaging class parties fostering social cohesion, and he managed event budgets with fiscal responsibility while collaborating with volunteer teams for seamless execution. This is documented as affiliation-level evidence, reflecting extracurricular participation during his secondary school years rather than professional technical delivery.",
+        "source": "Volunteering and Education",
+        "citations": [
+          {
+            "label": "Event Organizer at Rangpur Zilla School",
+            "href": "/#volunteering",
+            "kind": "page"
+          },
+          {
+            "label": "Secondary School Certificate (SSC), Science Group at Rangpur Zilla School",
+            "href": "http://www.rangpurzillaschool.edu.bd/",
+            "kind": "page"
+          }
+        ],
+        "evidenceIds": [
+          "volunteering:volunteering-rangpur-zilla-school-event-organizer",
+          "education:education-rangpur-zilla-school"
+        ],
+        "provider": "openrouter",
+        "requestedModel": "minimax/minimax-m3:free",
+        "servedModel": "minimax/minimax-m3:free",
+        "fallbackDepth": 1,
+        "attempts": [
+          {
+            "stage": "generation",
+            "provider": "openrouter",
+            "requestedModel": "z-ai/glm-5.2:free",
+            "outcome": "failed",
+            "reason": "rate-limited",
+            "latencyMs": 1680
+          },
+          {
+            "stage": "generation",
+            "provider": "openrouter",
+            "requestedModel": "minimax/minimax-m3:free",
+            "servedModel": "minimax/minimax-m3:free",
+            "latencyMs": 7710,
+            "inputTokens": 85735,
+            "outputTokens": 219,
+            "costUsd": 0,
+            "generationId": "gen-1787689907-LG540SvtQwYWb5HrpLjG",
+            "finishReason": "stop",
+            "outcome": "accepted"
+          },
+          {
+            "stage": "review",
+            "provider": "gemini",
+            "requestedModel": "gemini-3.5-flash",
+            "outcome": "skipped",
+            "reason": "provider-circuit-open",
+            "latencyMs": 0
+          },
+          {
+            "stage": "review",
+            "provider": "groq",
+            "requestedModel": "openai/gpt-oss-120b",
+            "servedModel": "openai/gpt-oss-120b",
+            "latencyMs": 3662,
+            "inputTokens": 4858,
+            "outputTokens": 148,
+            "generationId": "chatcmpl-810f288e-e6d4-46d2-b962-e6f22fdbeb23",
+            "finishReason": "stop",
+            "outcome": "accepted"
+          }
+        ]
+      },
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "gemini generation failed."
+        ]
+      },
+      "error": "gemini generation failed."
+    },
+    {
+      "id": "dynamic-eval:identity-current-availability:introduction:client-due-diligence",
+      "category": "identity-current-availability",
+      "audience": "potential-client",
+      "question": "Introduce him.",
+      "referenceAnswerId": "identity-current-availability:introduction",
+      "referenceAnswer": "Montasim is a Dhaka-based Senior Software Engineer with 3+ years of documented experience building real-time, AI-driven, multi-tenant SaaS across React, Next.js, Node.js, and TypeScript. He has been promoted twice at MyMedicalHub and now owns frontend architecture, leads PR reviews, and mentors engineers.",
+      "expectedFactIds": [
+        "profile",
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 33154,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:career-impact-metrics:top-tenth-interpretation:client-due-diligence",
+      "category": "career-impact-metrics",
+      "audience": "potential-client",
+      "question": "What falls within the top 10% of his lifetime work?",
+      "referenceAnswerId": "career-impact-metrics:top-tenth-interpretation",
+      "referenceAnswer": "The portfolio does not publish a formal percentile ranking, but the most defensible highlights are the FSM biometric engine at 99.9% reliability and 60 FPS, the 70% Azure-cost reduction, the 40% performance improvement, and the 25% diagnosis-time reduction at 95% accuracy. Those are his clearest measured production outcomes.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer",
+        "experience:experience-mymedicalhub-software-engineer",
+        "experience:experience-mymedicalhub-junior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nBoosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.\nexperience-mymedicalhub-software-engineer\nMohakhali, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nOct 2023",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nReduced patient diagnosis time by **25%** and achieved **95% accuracy** by integrating **real-time AI analysis** and custom algorithms. Integrated a **WebRTC video pipeline** stabilizing remote consultations and reducing call latency. Developed a **JWT-based REST API client layer** with built-in XSS and CSRF protection.\nexperience-mymedicalhub-junior-software-engineer\nUttara, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nSep 2022 - Sep"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 29637,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:hiring-fit-due-diligence:weakness-due-diligence:senior-shortlist",
+      "category": "hiring-fit-due-diligence",
+      "audience": "hiring-manager",
+      "question": "What is his weakness?",
+      "referenceAnswerId": "hiring-fit-due-diligence:weakness-due-diligence",
+      "referenceAnswer": "The public portfolio does not document a verified personal weakness, so inventing one would be misleading. Useful interview diligence is to calibrate the scale of his architecture ownership, the team and stakeholder scope behind current leadership, and how he would transfer his healthcare and frontend depth into the hiring team's domain.",
+      "expectedFactIds": [
+        "profile",
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 25307,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:leadership-collaboration:leadership-style:client-due-diligence",
+      "category": "leadership-collaboration",
+      "audience": "potential-client",
+      "question": "How does his record show the leadership style described by colleagues in delivery work?",
+      "referenceAnswerId": "leadership-collaboration:leadership-style",
+      "referenceAnswer": "The recommendations consistently describe an approachable, explanation-led style: he helps engineers understand the reason behind decisions, supports them through blockers, invites learning in both directions, and keeps delivery and user experience in view. The portfolio does not publish a formal management philosophy, so this synthesis stays tied to observed collaboration.",
+      "expectedFactIds": [
+        "recommendation:4:mahmudul-ahsan",
+        "recommendation:5:syed-mahedi-hasen",
+        "recommendation:2:md-tamim-tanvir-mba"
+      ],
+      "supportingExcerpts": [
+        "May 12, 2026\nMahmudul Ahsan\nworked with Mohammad Montasim Al Mamun on the same team\nSoftware Engineer @MyMedicalHub | ITEE-FE Certified\nI’ve had the opportunity to work under Montasim bhai as my Front-End Team Lead at MyMedicalHub International, and it has been a great learning experience for me.\n\nAs my first team lead in the software industry, he made my journey as a beginner much easier and more comfortable. He is always supportive and approachable whenever I face challenges in my tasks, which helped me grow",
+        "May 11, 2026\nSyed Mahedi Hasen\nreported to Mohammad Montasim Al Mamun directly\nSWE @MyMedicalHub | Scalable SaaS | Cybersecurity Research Enthusiast\nI had the privilege of working with Montasim Bhai while contributing to the Patient Portal at My Medical Hub. As a Junior Software Engineer, I worked on the chatbot and dashboard modules under his guidance.\n\nMontasim Bhai consistently helped me understand complex business requirements and translate them into practical technical solutions. Whenever I faced challenges",
+        "May 18, 2026\nMd. Tamim Tanvir, MBA\nworked with Mohammad Montasim Al Mamun but on different teams\nSenior Product Designer | Healthcare SaaS & Telemedicine | HIPAA-aware, WCAG accessible | 8+ yrs\nI had the opportunity to work closely with Montasim at MyMedicalHub International Ltd., where I led UX/UI design for our telemedicine and SaaS healthcare platforms while he led frontend engineering.\n\nFrom a designer’s perspective, what makes Montasim different is that he understands frontend development as a systems"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 25158,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:technical-depth:developer-tool-scale:client-due-diligence",
+      "category": "technical-depth",
+      "audience": "potential-client",
+      "question": "What delivery evidence shows he can apply scalable developer tooling?",
+      "referenceAnswerId": "technical-depth:developer-tool-scale",
+      "referenceAnswer": "The DevTools case study defines shared contracts for tool metadata, validation, execution, state, and presentation, while keeping local transformations distinct from server-backed features. That lets more than 50 workflows share platform behavior without forcing unrelated tools into one implementation.",
+      "expectedFactIds": [
+        "project:project-devtools",
+        "case-study:devtools:architecture",
+        "case-study:devtools:outcomes"
+      ],
+      "supportingExcerpts": [
+        "A comprehensive suite of 30+ free developer tools for formatting, validating, generating, and transforming data. All tools run entirely in your browser.\n\ntrue\n2026-04-08T05:59:03Z\n88e28b53c9c618f016edbaada4918442f070d25e\n2026-04-12T09:19:56Z\nhttps://github.com/montasim/devtools\nproject-devtools\nassets/projects/devtools.png\nhttps://devtoolsn.vercel.app\n\nNext.js\nReact\nTypeScript\nCodeMirror 6\nTanStack Query\nPostgreSQL\nPrisma\nBetter Auth\nTailwind CSS\nshadcn/ui\nRadix UI\nZod\nVitest\nGitHub Actions\nCI/CD\nSystem",
+        "Searchable navigation, routes, labels, and keyboard discovery\nTool registry\nFocused formatters, generators, testers, inspectors, and references\nFeature modules\nLocal transforms, preferences, input history, and reusable state\nBrowser boundary\nNext.js APIs, Better Auth, PostgreSQL, Prisma, and target services\nServer boundary\nA navigation registry acts as the catalog source of truth. Tool features own their tabs and logic, shared app infrastructure handles auth and storage, and route handlers isolate network and",
+        "More than 50 workflows are available through one catalog and command-search model.\nCommon transformations can run without an account and without sending their current input to the server.\nServer-backed features add reuse and sharing without obscuring when data leaves the browser.\nThe architecture supports both small local utilities and stateful workflows without forcing them through one execution path."
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 35003,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:catalog-chronology-comparison:newest-project:peer-evidence",
+      "category": "catalog-chronology-comparison",
+      "audience": "technical-peer",
+      "question": "Using repository history, which project is the newest?",
+      "referenceAnswerId": "catalog-chronology-comparison:newest-project",
+      "referenceAnswer": "Foliofarer is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-08-11, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date.",
+      "expectedFactIds": [
+        "derived:newest-project-by-github-history",
+        "project:project-foliofarer"
+      ],
+      "supportingExcerpts": [
+        "project-foliofarer\nFoliofarer\n2026-08-11T04:54:55Z\nearlier of repository creation and initial commit\nFoliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL",
+        "Foliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL rendering.\n\nfalse\n2026-08-11T04:55:39Z\n358c8036ebd35b75398baa5463b6acd445356533\n2026-08-11T04:54:55Z\nhttps://github.com/montasim/foliofarer\nproject-foliofarer\nassets/projects/foliofarer.png\nhttps://foliofarer.netlify.app\n\nNext.js\nReact\nTypeScript\nReact Three Fiber\nThree.js\nDrei\nReact Three Rapier\nTailwind"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 28540,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:client-delivery-product-thinking:proof-of-work:interview-preparation",
+      "category": "client-delivery-product-thinking",
+      "audience": "interviewer",
+      "question": "Which case would help an interviewer assess reviewable proof of work?",
+      "referenceAnswerId": "client-delivery-product-thinking:proof-of-work",
+      "referenceAnswer": "Clients can review 31 project records, 31 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. That material supports a focused conversation about the closest comparable work.",
+      "expectedFactIds": [
+        "derived:catalog-count:projects",
+        "derived:catalog-count:casestudy",
+        "derived:catalog-count:recommendations"
+      ],
+      "supportingExcerpts": [
+        "projects\n31",
+        "casestudy\n31",
+        "recommendations\n16"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 33627,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:contributions-learning:activity-interpretation:interview-preparation",
+      "category": "contributions-learning",
+      "audience": "interviewer",
+      "question": "What can a recruiter responsibly infer from the contribution snapshot?",
+      "referenceAnswerId": "contributions-learning:activity-interpretation",
+      "referenceAnswer": "A recruiter can infer sustained visible development activity during the recorded window, with 1,824 contributions across 32 active weeks. The graph cannot establish code quality, ownership, or business impact by itself, so those judgments should come from the role, project, and case-study evidence.",
+      "expectedFactIds": [
+        "derived:contribution-activity-summary"
+      ],
+      "supportingExcerpts": [
+        "1824\n53\n32\n366\n99\n2025-08-11\n2026-08-11\n2026-08-04\n364\n1824\n0\n2025-08-11\n0\n2025-08-12\n0\n2025-08-13\n0\n2025-08-14\n0\n2025-08-15\n0\n2025-08-16\n0\n2025-08-17\n0\n2025-08-18\n0\n2025-08-19\n0\n2025-08-20\n0\n2025-08-21\n0\n2025-08-22\n0\n2025-08-23\n0\n2025-08-24\n0\n2025-08-25\n0\n2025-08-26\n2\n2025-08-27\n0\n2025-08-28\n0\n2025-08-29\n0\n2025-08-30\n0\n2025-08-31\n0\n2025-09-01\n0\n2025-09-02\n0\n2025-09-03\n0\n2025-09-04\n0\n2025-09-05\n0\n2025-09-06\n0\n2025-09-07\n0\n2025-09-08\n0\n2025-09-09\n0\n2025-09-10\n0\n2025-09-11\n0\n2025-09-12\n0\n2025-09-13\n0\n2025-09-14\n0\n202"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 32921,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:project:project-postcraft:overview:senior-shortlist",
+      "category": "project",
+      "audience": "hiring-manager",
+      "question": "What does PostCraft reveal about his product-engineering range?",
+      "referenceAnswerId": "project:project-postcraft:overview",
+      "referenceAnswer": "PostCraft is documented as a website project built by Montasim. The project description states: AI-powered social media manager to generate, preview, score, and auto-publish engaging posts for LinkedIn, X, and Facebook using Gemini AI and custom brand guardrails. Its recorded stack includes Next.js, React, TypeScript, MongoDB, Mongoose, Redux Toolkit. The related case study lets a hiring reviewer examine the problem, architecture, contribution, and outcomes behind this concise project record.",
+      "expectedFactIds": [
+        "project:project-postcraft"
+      ],
+      "supportingExcerpts": [
+        "AI-powered social media manager to generate, preview, score, and auto-publish engaging posts for LinkedIn, X, and Facebook using Gemini AI and custom brand guardrails.\n\ntrue\n2026-05-21T22:57:30Z\n664e1557c35eebde3bdb3a106447b4716e103b2c\n2026-05-26T16:29:25Z\nhttps://github.com/montasim/PostCraft\nproject-postcraft\nassets/projects/postcraft.png\nhttps://aipostcraft.vercel.app\n\nNext.js\nReact\nTypeScript\nMongoDB\nMongoose\nRedux Toolkit\nBetter Auth\nOpenRouter\nGemini API\nGroq API\nZhipuAI\nInngest\nREST APIs\nTailwind"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 33193,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:case-study:postcraft:problem:architecture-review",
+      "category": "case-study",
+      "audience": "engineering-leader",
+      "question": "Which system constraints defined the problem behind PostCraft?",
+      "referenceAnswerId": "case-study:postcraft:problem",
+      "referenceAnswer": "Creators and small teams repeat the same editorial work for every social platform. They rewrite one idea for different limits, compare weak AI variants, check brand language, and then move the result into separate publishing tools. Montasim's documented role covered product design and full-stack engineering, with scope spanning AI workflow, publishing integrations, and background jobs. Two representative constraints were “AI providers vary in availability, rate limits, model behavior, and key quotas”; “LinkedIn, X, and Facebook each impose different OAuth, account, content, and API requirements”. These conditions show what the solution had to respect beyond the visible feature request.",
+      "expectedFactIds": [
+        "case-study:postcraft:problem"
+      ],
+      "supportingExcerpts": [
+        "Creators and small teams repeat the same editorial work for every social platform. They rewrite one idea for different limits, compare weak AI variants, check brand language, and then move the result into separate publishing tools.\nAI providers vary in availability, rate limits, model behavior, and key quotas.\nLinkedIn, X, and Facebook each impose different OAuth, account, content, and API requirements.\nScheduled publishing must survive beyond the request that created it and retain a reviewable status."
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 32118,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:blog:a-routine-is-not-a-timestamp:interview-preparation",
+      "category": "blog",
+      "audience": "interviewer",
+      "question": "Which discussion point from “A Routine Is Not a Timestamp: Designing Routempo for Real-World Time” belongs in a technical interview?",
+      "referenceAnswerId": "blog:a-routine-is-not-a-timestamp",
+      "referenceAnswer": "In “A Routine Is Not a Timestamp: Designing Routempo for Real-World Time,” Montasim opens with the section “A recurring task was the wrong domain model.” It begins: Routempo started with a familiar product idea: let people define repeatable routines, remind them at the right time, and show their progress. The interface looked like a scheduling problem. The data quickly proved otherwise. The article gives readers his documented reasoning about an implementation trade-off rather than only repeating the project's feature summary.",
+      "expectedFactIds": [
+        "blog:a-routine-is-not-a-timestamp",
+        "blog:a-routine-is-not-a-timestamp:false-model"
+      ],
+      "supportingExcerpts": [
+        "System design\nThe hard part of a routine planner was not recurrence. It was preserving user intent across timezones, actual outcomes, reminders, and external calendars.\nfalse\nRoutempo timezone-aware routine planner interface\n/images/projects/routempo.webp\nauthored\nproject-routempo\n2026-08-22\n7\na-routine-is-not-a-timestamp\nA Routine Is Not a Timestamp: Designing Routempo for Real-World Time\nproduct",
+        "Time was not a formatting concern. It was part of the product's domain language.\nfalse-model\nThe real problem\nRoutempo started with a familiar product idea: let people define repeatable routines, remind them at the right time, and show their progress. The interface looked like a scheduling problem. The data quickly proved otherwise.\nA schedule records intention. It does not tell me whether the person started, completed, skipped, or changed the routine. If I store all of that on one recurring record, every edit"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 33368,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:certification:certification-claude-101:client-due-diligence",
+      "category": "certification",
+      "audience": "potential-client",
+      "question": "Which relevant learning is documented by “Claude 101”?",
+      "referenceAnswerId": "certification:certification-claude-101",
+      "referenceAnswer": "Montasim completed “Claude 101,” issued by Anthropic Education through Anthropic Academy in 2026. The portfolio describes its focus as follows: Course certificate. This credential documents that stated learning activity and should not be treated as evidence beyond its published scope.",
+      "expectedFactIds": [
+        "certification:certification-claude-101"
+      ],
+      "supportingExcerpts": [
+        "2026-05-16\nCourse certificate\nhttps://verify.skilljar.com/c/r4jtg8jgebd4\ncertification-claude-101\n/images/certifications/claude-101.jpg\nAnthropic Education\nAnthropic Academy\n/images/certifications/platforms/anthropic.svg\nClaude 101\nhttps://verify.skilljar.com/c/r4jtg8jgebd4\n2026"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 31614,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:experience:experience-mymedicalhub-senior-software-engineer:responsibility:peer-evidence",
+      "category": "experience",
+      "audience": "technical-peer",
+      "question": "What hands-on work is documented from his role as Senior Software Engineer at MyMedicalHub International Ltd.?",
+      "referenceAnswerId": "experience:experience-mymedicalhub-senior-software-engineer:responsibility",
+      "referenceAnswer": "Montasim held the Senior Software Engineer role at MyMedicalHub International Ltd. (Oct 2025 - Present). Montasim architected an FSM-based biometric engine replacing unstable React hooks with deterministic state transitions for 99.9% reliability during AI analysis. He optimized AI pipelines to support 60 FPS pose estimation and real-time rep counting via adaptive frame rate logic. He led a full rewrite of the medical assessment chatbot with Redux Toolkit and refactored 54+ modules into Presentational/Container pattern. This record scopes the stated responsibilities and outcomes to that specific stage of his career.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 34531,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:skill:skills-frontend:architecture-review",
+      "category": "skill",
+      "audience": "engineering-leader",
+      "question": "What does his published toolkit cover in Frontend?",
+      "referenceAnswerId": "skill:skills-frontend",
+      "referenceAnswer": "Montasim's Frontend catalog includes React.js, Next.js, TypeScript, JavaScript, HTML5, CSS, Tailwind CSS, Redux.js, TanStack Start, TanStack Query, React Three Fiber, Three.js, Drei, React Three Rapier, shadcn/ui, Radix UI, React Hook Form, React Markdown, CodeMirror 6, next-intl, Vite, Bootstrap, jQuery, Responsive Web Design, Konva.js. These are the skills explicitly published in the portfolio for this category; individual experience, projects, and case studies provide the separate evidence of where particular technologies were applied.",
+      "expectedFactIds": [
+        "skills:skills-frontend"
+      ],
+      "supportingExcerpts": [
+        "Frontend\nskills-frontend\nReact.js\nNext.js\nTypeScript\nJavaScript\nHTML5\nCSS\nTailwind CSS\nRedux.js\nTanStack Start\nTanStack Query\nReact Three Fiber\nThree.js\nDrei\nReact Three Rapier\nshadcn/ui\nRadix UI\nReact Hook Form\nReact Markdown\nCodeMirror 6\nnext-intl\nVite\nBootstrap\njQuery\nResponsive Web Design\nKonva.js"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 31956,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:recommendation:0:shoriful-islam:interview-preparation",
+      "category": "recommendation",
+      "audience": "interviewer",
+      "question": "How did Shoriful Islam describe working with him?",
+      "referenceAnswerId": "recommendation:0:shoriful-islam",
+      "referenceAnswer": "The portfolio records that Shoriful Islam managed Mohammad Montasim Al Mamun directly. In attributed feedback, the reviewer describes Montasim as detail-oriented, reliable, collaborative with backend engineers, proactive about optimization, and committed to automated testing. This is qualitative evidence about observed work and collaboration; it is not used to prove unrelated technical claims.",
+      "expectedFactIds": [
+        "recommendation:0:shoriful-islam"
+      ],
+      "supportingExcerpts": [
+        "September 22, 2023\nShoriful Islam\nmanaged Mohammad Montasim Al Mamun directly\n2× Successful Exit Founder | Entrepreneur | CEO & Investor | AI & Healthcare Innovation | AI Agents | Microsoft Power Platform | Copilot | Mentor\nShuvo, with whom I've had the pleasure of working closely at MyMedicalHub International for the past year. Montasim has consistently demonstrated exceptional skills and dedication as a Junior Frontend Developer.\n\nMontasim's contributions to our team have been invaluable. He played a pivotal"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 35000,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:affiliation:education-baust:senior-shortlist",
+      "category": "affiliation",
+      "audience": "hiring-manager",
+      "question": "What educational focus is recorded for his time at Bangladesh Army University of Science and Technology (BAUST)?",
+      "referenceAnswerId": "affiliation:education-baust",
+      "referenceAnswer": "Montasim's education record lists a Bachelor of Science in Computer Science and Engineering at Bangladesh Army University of Science and Technology (BAUST) (Nov 2016 - Mar 2021). It records that he studied core computer science fundamentals including data structures, algorithms, software engineering, database systems, and web technologies. This establishes the educational foundation documented by the portfolio.",
+      "expectedFactIds": [
+        "education:education-baust"
+      ],
+      "supportingExcerpts": [
+        "Bachelor of Science in Computer Science and Engineering\nStudied core computer science fundamentals including data structures, algorithms, software engineering, database systems, and web technologies.\n\neducation-baust\nBangladesh Army University of Science and Technology (BAUST)\nhttps://baust.edu.bd\nB\n/images/organizations/baust.png\nNov 2016 - Mar 2021\nbsc"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 34280,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:identity-current-availability:current-role:senior-shortlist",
+      "category": "identity-current-availability",
+      "audience": "hiring-manager",
+      "question": "What position does he hold now, and what does its scope involve?",
+      "referenceAnswerId": "identity-current-availability:current-role",
+      "referenceAnswer": "Montasim is currently a Senior Software Engineer at MyMedicalHub International Ltd., a role documented from October 2025 to the present. His current work includes deterministic biometric analysis, 60 FPS pose estimation, real-time rep counting, and a large medical-chatbot refactor, giving the title concrete production scope.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 9584,
+      "reply": {
+        "kind": "generated",
+        "messageId": "235b5b08-44f7-4566-8a34-0bf801f3182c",
+        "text": "Mohammad Montasim Al Mamun Shuvo currently holds the position of Senior Software Engineer at MyMedicalHub International Ltd., a role he has occupied since October 2025. In this capacity, he architected an FSM-based biometric engine that replaced unstable React hooks with deterministic state transitions to deliver 99.9% reliability during AI analysis, optimized AI pipelines to sustain 60 FPS pose estimation with adaptive frame-rate logic, and led a full rewrite of the medical assessment chatbot while refactoring 54+ modules into a Presentational/Container pattern. For hiring managers and clients, the scope signals that his work blends frontend architecture ownership with reliability engineering on real-time, AI-driven healthcare surfaces, supported by promotions twice at the same company.",
+        "source": "Experience and Profile",
+        "citations": [
+          {
+            "label": "Senior Software Engineer at MyMedicalHub International Ltd.",
+            "href": "/experience#experience-mymedicalhub-senior-software-engineer",
+            "kind": "experience"
+          },
+          {
+            "label": "Mohammad Montasim Al Mamun Shuvo",
+            "href": "/#about",
+            "kind": "page"
+          }
+        ],
+        "evidenceIds": [
+          "experience:experience-mymedicalhub-senior-software-engineer",
+          "profile"
+        ],
+        "provider": "openrouter",
+        "requestedModel": "minimax/minimax-m3:free",
+        "servedModel": "minimax/minimax-m3:free",
+        "fallbackDepth": 1,
+        "attempts": [
+          {
+            "stage": "generation",
+            "provider": "openrouter",
+            "requestedModel": "z-ai/glm-5.2:free",
+            "outcome": "failed",
+            "reason": "rate-limited",
+            "latencyMs": 1186
+          },
+          {
+            "stage": "generation",
+            "provider": "openrouter",
+            "requestedModel": "minimax/minimax-m3:free",
+            "servedModel": "minimax/minimax-m3:free",
+            "latencyMs": 6941,
+            "inputTokens": 85735,
+            "outputTokens": 322,
+            "costUsd": 0,
+            "generationId": "gen-1787690430-dKjgz93L6Q4DyyHd9v9j",
+            "finishReason": "stop",
+            "outcome": "accepted"
+          },
+          {
+            "stage": "review",
+            "provider": "gemini",
+            "requestedModel": "gemini-3.5-flash",
+            "outcome": "skipped",
+            "reason": "provider-circuit-open",
+            "latencyMs": 0
+          },
+          {
+            "stage": "review",
+            "provider": "groq",
+            "requestedModel": "openai/gpt-oss-120b",
+            "servedModel": "openai/gpt-oss-120b",
+            "latencyMs": 1179,
+            "inputTokens": 5533,
+            "outputTokens": 223,
+            "generationId": "chatcmpl-280bf7b2-296b-440a-adf1-d00eb4dd76d7",
+            "finishReason": "stop",
+            "outcome": "accepted"
+          }
+        ]
+      },
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "gemini generation failed."
+        ]
+      },
+      "error": "gemini generation failed."
+    },
+    {
+      "id": "dynamic-eval:career-impact-metrics:latest-professional-work:client-due-diligence",
+      "category": "career-impact-metrics",
+      "audience": "potential-client",
+      "question": "What is his latest work?",
+      "referenceAnswerId": "career-impact-metrics:latest-professional-work",
+      "referenceAnswer": "The latest professional record is his Senior Software Engineer role at MyMedicalHub, beginning in October 2025 and continuing at present. Its documented work combines deterministic biometric state management, real-time computer vision, rep counting, Redux Toolkit, and a 54+ module architecture refactor.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 32256,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:hiring-fit-due-diligence:senior-case:client-due-diligence",
+      "category": "hiring-fit-due-diligence",
+      "audience": "potential-client",
+      "question": "Why should a company hire him?",
+      "referenceAnswerId": "hiring-fit-due-diligence:senior-case",
+      "referenceAnswer": "Montasim combines documented progression with measurable production ownership: two promotions at MyMedicalHub, frontend architecture leadership, PR reviews, mentoring, 99.9% reliable real-time AI at 60 FPS, a 40% performance gain, and a 70% cloud-cost reduction. That mix makes him a strong evidence-backed senior candidate for complex product teams.",
+      "expectedFactIds": [
+        "profile",
+        "experience:experience-mymedicalhub-senior-software-engineer",
+        "experience:experience-mymedicalhub-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nBoosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.\nexperience-mymedicalhub-software-engineer\nMohakhali, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nOct 2023"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 33273,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:leadership-collaboration:current-scope:interview-preparation",
+      "category": "leadership-collaboration",
+      "audience": "interviewer",
+      "question": "What should an interviewer ask about leadership in his current engineering scope?",
+      "referenceAnswerId": "leadership-collaboration:current-scope",
+      "referenceAnswer": "Montasim's profile says he owns frontend architecture across a multi-service platform, leads PR reviews, and mentors engineers. His current role adds leadership of a full medical-chatbot rewrite and a 54+ module Presentational/Container refactor.",
+      "expectedFactIds": [
+        "profile",
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 15308,
+      "reply": {
+        "kind": "generated",
+        "messageId": "27e102f1-ceb8-4a33-bc24-390d5d364d49",
+        "text": "In his current Senior Software Engineer role at MyMedicalHub International Ltd., he owns frontend architecture across a multi-service platform, leads PR reviews, and mentors the engineers behind him. Interviewers should ask how he scopes that architectural ownership, how he decides which boundaries belong in code versus which belong in process, how he sequences PR review feedback so junior engineers grow rather than stall, and how he measures whether his mentoring translates into teammates operating independently. Useful probes include asking for a specific recent boundary he decided not to enforce, a time he coached an engineer through a senior-level decision, and how he balances hands-on coding against review and mentorship load. The public evidence establishes the role and mentorship expectation but does not specify the size of the team he leads, his formal management responsibilities, or how his leadership is reviewed, so interviewers should clarify those unknowns directly with him.",
+        "source": "Profile, Experience, and Recommendations",
+        "citations": [
+          {
+            "label": "Mohammad Montasim Al Mamun Shuvo",
+            "href": "/#about",
+            "kind": "page"
+          },
+          {
+            "label": "Senior Software Engineer at MyMedicalHub International Ltd.",
+            "href": "/experience#experience-mymedicalhub-senior-software-engineer",
+            "kind": "experience"
+          },
+          {
+            "label": "Recommendation from Mahmudul Ahsan",
+            "href": "https://www.linkedin.com/in/montasim/details/recommendations/",
+            "kind": "page"
+          },
+          {
+            "label": "Recommendation from Syed Mahedi Hasen",
+            "href": "https://www.linkedin.com/in/montasim/details/recommendations/",
+            "kind": "page"
+          }
+        ],
+        "evidenceIds": [
+          "profile",
+          "experience:experience-mymedicalhub-senior-software-engineer",
+          "recommendation:4:mahmudul-ahsan",
+          "recommendation:5:syed-mahedi-hasen"
+        ],
+        "provider": "openrouter",
+        "requestedModel": "minimax/minimax-m3:free",
+        "servedModel": "minimax/minimax-m3:free",
+        "fallbackDepth": 1,
+        "attempts": [
+          {
+            "stage": "generation",
+            "provider": "openrouter",
+            "requestedModel": "z-ai/glm-5.2:free",
+            "servedModel": "z-ai/glm-5.2:free",
+            "latencyMs": 6681,
+            "inputTokens": 87094,
+            "outputTokens": 206,
+            "costUsd": 0,
+            "generationId": "gen-1787690502-l5CophhnGyOLYNWXM0rw",
+            "finishReason": "stop",
+            "outcome": "rejected",
+            "reason": "invalid-schema"
+          },
+          {
+            "stage": "generation",
+            "provider": "openrouter",
+            "requestedModel": "minimax/minimax-m3:free",
+            "servedModel": "minimax/minimax-m3:free",
+            "latencyMs": 6884,
+            "inputTokens": 85734,
+            "outputTokens": 376,
+            "costUsd": 0,
+            "generationId": "gen-1787690509-PsWcHPhdgvXMMEbMhAGY",
+            "finishReason": "stop",
+            "outcome": "accepted"
+          },
+          {
+            "stage": "review",
+            "provider": "gemini",
+            "requestedModel": "gemini-3.5-flash",
+            "outcome": "skipped",
+            "reason": "provider-circuit-open",
+            "latencyMs": 0
+          },
+          {
+            "stage": "review",
+            "provider": "groq",
+            "requestedModel": "openai/gpt-oss-120b",
+            "servedModel": "openai/gpt-oss-120b",
+            "latencyMs": 1224,
+            "inputTokens": 6171,
+            "outputTokens": 169,
+            "generationId": "chatcmpl-94082284-d3b1-4d4a-8605-a0f36459e528",
+            "finishReason": "stop",
+            "outcome": "accepted"
+          }
+        ]
+      },
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "gemini generation failed."
+        ]
+      },
+      "error": "gemini generation failed."
+    },
+    {
+      "id": "dynamic-eval:technical-depth:frontend-architecture:architecture-review",
+      "category": "technical-depth",
+      "audience": "engineering-leader",
+      "question": "How has he applied frontend architecture in production systems?",
+      "referenceAnswerId": "technical-depth:frontend-architecture",
+      "referenceAnswer": "His healthcare biometric engine is the strongest professional example: Montasim replaced more than 40 unstable effect-driven interactions with a finite-state machine, creating deterministic transitions and reaching 99.9% reliability. The same role includes Redux Toolkit and a Presentational/Container refactor across 54+ chatbot modules.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer",
+        "profile",
+        "blog:from-useeffect-chaos-to-deterministic-systems"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container",
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with",
+        "Architecture\nI deleted 40+ useEffects and replaced them with a Finite State Machine. That was the best decision I made for our biometric assessment pipeline.\nfalse\nA deterministic state machine coordinating a real-time biometric assessment pipeline\n/images/blog/deterministic-systems.png\nauthored\n2026-05-16\n3\nfrom-useeffect-chaos-to-deterministic-systems\nFrom useEffect Chaos to Deterministic Systems: Why I Rebuilt Our Biometric Pipeline with a Finite State Machine\nproduct"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 33233,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:catalog-chronology-comparison:project-count:architecture-review",
+      "category": "catalog-chronology-comparison",
+      "audience": "engineering-leader",
+      "question": "How many total projects does he have?",
+      "referenceAnswerId": "catalog-chronology-comparison:project-count",
+      "referenceAnswer": "The portfolio currently publishes 31 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work.",
+      "expectedFactIds": [
+        "derived:catalog-count:projects"
+      ],
+      "supportingExcerpts": [
+        "projects\n31"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 30864,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:client-delivery-product-thinking:end-to-end-delivery:senior-shortlist",
+      "category": "client-delivery-product-thinking",
+      "audience": "hiring-manager",
+      "question": "Which portfolio evidence demonstrates end-to-end product delivery?",
+      "referenceAnswerId": "client-delivery-product-thinking:end-to-end-delivery",
+      "referenceAnswer": "His case studies connect a defined problem to constraints, architecture, implementation, and outcomes across AI SaaS, extensions, data products, packages, and developer tools. PostCraft is a strong full-path example, covering generation, brand controls, previews, scheduling, durable delivery, and provider integration.",
+      "expectedFactIds": [
+        "project:project-postcraft",
+        "case-study:postcraft:problem",
+        "case-study:postcraft:contribution",
+        "case-study:postcraft:outcomes"
+      ],
+      "supportingExcerpts": [
+        "AI-powered social media manager to generate, preview, score, and auto-publish engaging posts for LinkedIn, X, and Facebook using Gemini AI and custom brand guardrails.\n\ntrue\n2026-05-21T22:57:30Z\n664e1557c35eebde3bdb3a106447b4716e103b2c\n2026-05-26T16:29:25Z\nhttps://github.com/montasim/PostCraft\nproject-postcraft\nassets/projects/postcraft.png\nhttps://aipostcraft.vercel.app\n\nNext.js\nReact\nTypeScript\nMongoDB\nMongoose\nRedux Toolkit\nBetter Auth\nOpenRouter\nGemini API\nGroq API\nZhipuAI\nInngest\nREST APIs\nTailwind",
+        "Creators and small teams repeat the same editorial work for every social platform. They rewrite one idea for different limits, compare weak AI variants, check brand language, and then move the result into separate publishing tools.\nAI providers vary in availability, rate limits, model behavior, and key quotas.\nLinkedIn, X, and Facebook each impose different OAuth, account, content, and API requirements.\nScheduled publishing must survive beyond the request that created it and retain a reviewable status.",
+        "Defined the end-to-end product flow from topic input to platform-ready output.\nBuilt the Next.js interface, API routes, domain services, and MongoDB repositories.\nImplemented multi-provider AI selection, reusable guardrails, scoring, and platform previews.\nIntegrated authentication, account recovery, social OAuth, Inngest scheduling, and publishing records.",
+        "One workspace now covers generation, comparison, refinement, preview, and delivery.\nProvider and key fallback reduce the workflow's dependency on a single AI endpoint.\nPublishing state is persisted for library and insights views instead of ending at generation.\nOperational limits remain explicit: publishing still depends on platform approval, scopes, account type, and API access."
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 33033,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:contributions-learning:total:senior-shortlist",
+      "category": "contributions-learning",
+      "audience": "hiring-manager",
+      "question": "What total contribution activity is published in the current snapshot?",
+      "referenceAnswerId": "contributions-learning:total",
+      "referenceAnswer": "The portfolio's contribution snapshot records 1,824 contributions. This is an activity measure for the published window, not a quality score; project, case-study, and professional records provide the evidence of what the work accomplished.",
+      "expectedFactIds": [
+        "derived:contribution-activity-summary"
+      ],
+      "supportingExcerpts": [
+        "1824\n53\n32\n366\n99\n2025-08-11\n2026-08-11\n2026-08-04\n364\n1824\n0\n2025-08-11\n0\n2025-08-12\n0\n2025-08-13\n0\n2025-08-14\n0\n2025-08-15\n0\n2025-08-16\n0\n2025-08-17\n0\n2025-08-18\n0\n2025-08-19\n0\n2025-08-20\n0\n2025-08-21\n0\n2025-08-22\n0\n2025-08-23\n0\n2025-08-24\n0\n2025-08-25\n0\n2025-08-26\n2\n2025-08-27\n0\n2025-08-28\n0\n2025-08-29\n0\n2025-08-30\n0\n2025-08-31\n0\n2025-09-01\n0\n2025-09-02\n0\n2025-09-03\n0\n2025-09-04\n0\n2025-09-05\n0\n2025-09-06\n0\n2025-09-07\n0\n2025-09-08\n0\n2025-09-09\n0\n2025-09-10\n0\n2025-09-11\n0\n2025-09-12\n0\n2025-09-13\n0\n2025-09-14\n0\n202"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 27964,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:project:project-content-types-lite:overview:senior-shortlist",
+      "category": "project",
+      "audience": "hiring-manager",
+      "question": "What does content-types-lite reveal about his product-engineering range?",
+      "referenceAnswerId": "project:project-content-types-lite:overview",
+      "referenceAnswer": "content-types-lite is documented as a package project built by Montasim. The project description states: Tiny, type-safe HTTP media type constants and utilities for parsing, formatting, matching, and validation. Its recorded stack includes TypeScript, ESM, CommonJS, tsup, TanStack Start, React. The related case study lets a hiring reviewer examine the problem, architecture, contribution, and outcomes behind this concise project record.",
+      "expectedFactIds": [
+        "project:project-content-types-lite"
+      ],
+      "supportingExcerpts": [
+        "Tiny, type-safe HTTP media type constants and utilities for parsing, formatting, matching, and validation.\n\nfalse\n2025-01-29T13:00:26Z\n78eeb6ca02149b23e1486078e8b02ac009faf0b5\n2025-01-29T11:05:22Z\nhttps://github.com/montasim/content-types-lite\nproject-content-types-lite\nassets/projects/content-types-lite.png\nhttps://content-types-lite.netlify.app\nhttps://www.npmjs.com/package/content-types-lite\nTypeScript\nESM\nCommonJS\ntsup\nTanStack Start\nReact\nTailwind CSS\nVite\nVitest\nNetlify\nGitHub"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 32441,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:case-study:content-types-lite:problem:architecture-review",
+      "category": "case-study",
+      "audience": "engineering-leader",
+      "question": "Which system constraints defined the problem behind content-types-lite?",
+      "referenceAnswerId": "case-study:content-types-lite:problem",
+      "referenceAnswer": "Applications repeatedly implement subtly different Content-Type parsing and negotiation logic or import larger dependency trees for a focused HTTP-header task. Montasim's documented role covered library design and package engineering, with scope spanning typed APIs, compatibility, and package distribution. Two representative constraints were “Quoted parameters and malformed header values need predictable parsing”; “Package output must work across ESM and CommonJS consumers”. These conditions show what the solution had to respect beyond the visible feature request.",
+      "expectedFactIds": [
+        "case-study:content-types-lite:problem"
+      ],
+      "supportingExcerpts": [
+        "Applications repeatedly implement subtly different Content-Type parsing and negotiation logic or import larger dependency trees for a focused HTTP-header task.\nQuoted parameters and malformed header values need predictable parsing.\nPackage output must work across ESM and CommonJS consumers.\nThe public API must stay small and type-safe without runtime dependencies."
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 35001,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:blog:publishing-one-entry-without-breaking-consumers:interview-preparation",
+      "category": "blog",
+      "audience": "interviewer",
+      "question": "Which discussion point from “Publishing One Catalog Entry Without Breaking Every Consumer” belongs in a technical interview?",
+      "referenceAnswerId": "blog:publishing-one-entry-without-breaking-consumers",
+      "referenceAnswer": "In “Publishing One Catalog Entry Without Breaking Every Consumer,” Montasim opens with the section “The visible feature was only the surface.” It begins: Adding a skill to a catalog touches duplicated consumers and can import stale package/repository facts or mistake \"publish\" for permission to deploy. The article gives readers his documented reasoning about an implementation trade-off rather than only repeating the project's feature summary.",
+      "expectedFactIds": [
+        "blog:publishing-one-entry-without-breaking-consumers",
+        "case-study:publish-skill-to-skillfolio:problem"
+      ],
+      "supportingExcerpts": [
+        "Agent engineering\nfalse\ncase-study-derived\nproject-publish-skill-to-skillfolio\npublishing-one-entry-without-breaking-consumers\nPublishing One Catalog Entry Without Breaking Every Consumer\ntools",
+        "Adding a skill to a catalog touches duplicated consumers and can import stale package/repository facts or mistake \"publish\" for permission to deploy.\nCatalog schemas and consumers vary by target app.\nRepository/package/version/compatibility facts require primary-source verification.\nLocal catalog editing does not authorize commit, push, npm publication, pull requests, or deployment."
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 34180,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:certification:certification-az-900-exam-prep:client-due-diligence",
+      "category": "certification",
+      "audience": "potential-client",
+      "question": "Which relevant learning is documented by “Preparing for the AZ-900 Microsoft Azure Fundamentals Exam”?",
+      "referenceAnswerId": "certification:certification-az-900-exam-prep",
+      "referenceAnswer": "Montasim completed “Preparing for the AZ-900 Microsoft Azure Fundamentals Exam,” issued by Microsoft through Coursera in 2023. The portfolio describes its focus as follows: Course certificate · Grade 94.15%. This credential documents that stated learning activity and should not be treated as evidence beyond its published scope.",
+      "expectedFactIds": [
+        "certification:certification-az-900-exam-prep"
+      ],
+      "supportingExcerpts": [
+        "2023-10-26\nCourse certificate · Grade 94.15%\nhttps://www.coursera.org/account/accomplishments/certificate/B8C8BR3TRLQ3\ncertification-az-900-exam-prep\n/images/certifications/az-900-exam-prep.jpg\nMicrosoft\nCoursera\n/images/certifications/platforms/coursera.svg\nPreparing for the AZ-900 Microsoft Azure Fundamentals Exam\nhttps://www.coursera.org/account/accomplishments/verify/B8C8BR3TRLQ3\n2023"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 33407,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:experience:experience-multiversal-junior-frontend-developer:stack:architecture-review",
+      "category": "experience",
+      "audience": "engineering-leader",
+      "question": "Which capabilities did he put into practice in his Junior Frontend Developer role at Multiversal Software Ltd.?",
+      "referenceAnswerId": "experience:experience-multiversal-junior-frontend-developer:stack",
+      "referenceAnswer": "The role documents work with React.js, JavaScript, HTML5, CSS3, jQuery. Montasim built and maintained UI components for a telemedicine platform using React.js, JavaScript, HTML5, and CSS3, improving user experience across devices. He debugged and optimized front-end code, reducing page load time and enhancing performance stability. This ties the listed technologies to a specific role rather than presenting them as an isolated keyword list.",
+      "expectedFactIds": [
+        "experience:experience-multiversal-junior-frontend-developer"
+      ],
+      "supportingExcerpts": [
+        "Multiversal Software Ltd.\n\nBuilt and maintained **UI components** for a telemedicine platform using React.js, JavaScript, HTML5, and CSS3, improving user experience across devices. Debugged and optimized front-end code, **reducing page load time** and enhancing performance stability.\nexperience-multiversal-junior-frontend-developer\nUttara, Dhaka, Bangladesh\nM\n/images/organizations/multiversal.jpg\nAug 2022 - Oct 2022\nJunior Frontend Developer\nReact.js\nJavaScript\nHTML5\nCSS3\njQuery"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 175,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:skill:skills-cloud-devops:senior-shortlist",
+      "category": "skill",
+      "audience": "hiring-manager",
+      "question": "What does his published toolkit cover in Cloud & DevOps?",
+      "referenceAnswerId": "skill:skills-cloud-devops",
+      "referenceAnswer": "Montasim's Cloud & DevOps catalog includes Microsoft Azure, Docker, GitHub Actions, CI/CD, Git, Netlify, npm, tsup, esbuild, IT Operations. These are the skills explicitly published in the portfolio for this category; individual experience, projects, and case studies provide the separate evidence of where particular technologies were applied.",
+      "expectedFactIds": [
+        "skills:skills-cloud-devops"
+      ],
+      "supportingExcerpts": [
+        "Cloud & DevOps\nskills-cloud-devops\nMicrosoft Azure\nDocker\nGitHub Actions\nCI/CD\nGit\nNetlify\nnpm\ntsup\nesbuild\nIT Operations"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 1,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:recommendation:8:md-rashedul-islam:interview-preparation",
+      "category": "recommendation",
+      "audience": "interviewer",
+      "question": "How did Md. Rashedul Islam describe working with him?",
+      "referenceAnswerId": "recommendation:8:md-rashedul-islam",
+      "referenceAnswer": "The portfolio records that Md. Rashedul Islam worked with Mohammad Montasim Al Mamun but on different teams. In attributed feedback, the reviewer credits Montasim's telemedicine frontend and AI integration, automated testing, and optimization work, including a stated 25% reduction in average diagnosis time. This is qualitative evidence about observed work and collaboration; it is not used to prove unrelated technical claims.",
+      "expectedFactIds": [
+        "recommendation:8:md-rashedul-islam"
+      ],
+      "supportingExcerpts": [
+        "November 28, 2023\nMd. Rashedul Islam\nworked with Mohammad Montasim Al Mamun but on different teams\nC#, ASP.NET Core, SQL Server, React, Microservices\nI enjoyed working closely with Shuvo during our time together at MyMedicalHub International Ltd. I am thoroughly impressed with his skills and dedication as a Software Engineer. He is a highly talented, results-driven professional who consistently delivers exceptional work.\n\nShuvo played a pivotal role in the success of our projects, particularly his significant"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:affiliation:organization-baust-career-club:architecture-review",
+      "category": "affiliation",
+      "audience": "engineering-leader",
+      "question": "Which responsibilities did he hold with BAUST Career Club?",
+      "referenceAnswerId": "affiliation:organization-baust-career-club",
+      "referenceAnswer": "Montasim's documented role with BAUST Career Club was Member, associated with Bangladesh Army University of Science and Technology (BAUST), during the period documented in the portfolio. The record notes participation in career programs, workshops, and professional networking, along with collaboration on career-focused student activities. It connects that involvement to communication, leadership, and teamwork. This adds evidence of his activities beyond formal software roles.",
+      "expectedFactIds": [
+        "organization:organization-baust-career-club"
+      ],
+      "supportingExcerpts": [
+        "Bangladesh Army University of Science and Technology (BAUST)\nParticipated in career development programs, workshops, and professional networking events. Collaborated with peers in organizing career-oriented activities and student engagement initiatives. Developed communication, leadership, and teamwork skills through active organizational involvement.\norganization-baust-career-club\nB\n/images/organizations/baust.png\nBAUST Career Club\n\nMember"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:identity-current-availability:contact:interview-preparation",
+      "category": "identity-current-availability",
+      "audience": "interviewer",
+      "question": "Which published channel should a recruiter use to reach him?",
+      "referenceAnswerId": "identity-current-availability:contact",
+      "referenceAnswer": "Recruiters can contact Montasim through the portfolio's email, LinkedIn, WhatsApp, or inquiry flow. The published email is montasimmamun@gmail.com; using a direct channel is especially appropriate for role-specific questions that the public portfolio does not document.",
+      "expectedFactIds": [
+        "profile"
+      ],
+      "supportingExcerpts": [
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 1,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:career-impact-metrics:complex-professional-work:interview-preparation",
+      "category": "career-impact-metrics",
+      "audience": "interviewer",
+      "question": "What is his most complex work?",
+      "referenceAnswerId": "career-impact-metrics:complex-professional-work",
+      "referenceAnswer": "His current healthcare biometric work is the clearest documented example: he replaced unstable hooks with a deterministic finite-state machine, reached 99.9% reliability, sustained 60 FPS pose estimation with rep counting, and restructured a medical chatbot across more than 54 modules. It combines state, real-time AI, performance, and maintainability.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:hiring-fit-due-diligence:candidate-comparison:architecture-review",
+      "category": "hiring-fit-due-diligence",
+      "audience": "engineering-leader",
+      "question": "How can a hiring manager compare him fairly without unsupported rankings?",
+      "referenceAnswerId": "hiring-fit-due-diligence:candidate-comparison",
+      "referenceAnswer": "The portfolio cannot support a fair ranking against someone whose evidence is not provided. What it can establish is Montasim's documented value: senior progression, real-time AI and healthcare depth, measurable reliability, performance and cost outcomes, architecture ownership, mentoring, and a substantial catalog of technical work.",
+      "expectedFactIds": [
+        "profile",
+        "experience:experience-mymedicalhub-senior-software-engineer",
+        "experience:experience-mymedicalhub-software-engineer",
+        "experience:experience-mymedicalhub-junior-software-engineer"
+      ],
+      "supportingExcerpts": [
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nBoosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.\nexperience-mymedicalhub-software-engineer\nMohakhali, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nOct 2023",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nReduced patient diagnosis time by **25%** and achieved **95% accuracy** by integrating **real-time AI analysis** and custom algorithms. Integrated a **WebRTC video pipeline** stabilizing remote consultations and reducing call latency. Developed a **JWT-based REST API client layer** with built-in XSS and CSRF protection.\nexperience-mymedicalhub-junior-software-engineer\nUttara, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nSep 2022 - Sep"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 1,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:leadership-collaboration:proactivity:senior-shortlist",
+      "category": "leadership-collaboration",
+      "audience": "hiring-manager",
+      "question": "Which evidence demonstrates proactive problem-solving?",
+      "referenceAnswerId": "leadership-collaboration:proactivity",
+      "referenceAnswer": "Yes. A manager describes him as proactive in addressing challenges, quick to take on new responsibilities, and committed to high-quality work. Other recommendations describe proactive performance optimization, troubleshooting, learning, and product improvement.",
+      "expectedFactIds": [
+        "recommendation:1:tabbi-quadir",
+        "recommendation:11:md-azharul-sharif"
+      ],
+      "supportingExcerpts": [
+        "May 25, 2025\nTabbi Quadir\nmanaged Mohammad Montasim Al Mamun directly\nProud contributor in accelerating digital transformation in Bangladesh\nI highly recommend Montasim Al Mamun as a skilled and dedicated software engineer. I had the pleasure of working with Montasim at MMHI.\n\nDuring our time together, I was consistently impressed by his technical abilities and commitment to delivering high-quality work. He demonstrated strong problem-solving skills and took a proactive approach to addressing challenges.\n\nMontasim",
+        "October 31, 2022\nMd. Azharul Sharif\nmanaged Mohammad Montasim Al Mamun directly\nSenior Microsoft Dynamics 365 Technical Consultant | Dynamics 365 CE | Dataverse | Power Platform | Business Central Integration | C#/.NET\nMohammad Montasim-Al-Mamun Shuvo worked as a Frontend Web Developer at MyMedicalHUB under my supervision. His essential skills, dedication and good humor consistently impressed me. He is an innovator who always thinks to improve the product's quality. He is a talented, hard-working young man and"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:technical-depth:performance-engineering:client-due-diligence",
+      "category": "technical-depth",
+      "audience": "potential-client",
+      "question": "What delivery evidence shows he can apply performance engineering?",
+      "referenceAnswerId": "technical-depth:performance-engineering",
+      "referenceAnswer": "He has optimized React rendering and dependencies for a 40% application gain, reached Lighthouse scores above 90, sustained 60 FPS pose estimation, reduced page-load time, stabilized WebRTC calls, and cut Azure cost by 70%. That is evidence across browser, real-time pipeline, network, and infrastructure layers.",
+      "expectedFactIds": [
+        "experience:experience-mymedicalhub-senior-software-engineer",
+        "experience:experience-mymedicalhub-software-engineer",
+        "experience:experience-mymedicalhub-junior-software-engineer",
+        "experience:experience-multiversal-junior-frontend-developer",
+        "profile"
+      ],
+      "supportingExcerpts": [
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nArchitected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nBoosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.\nexperience-mymedicalhub-software-engineer\nMohakhali, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nOct 2023",
+        "MyMedicalHub International Ltd.\nhttps://mymedicalhub.com\nReduced patient diagnosis time by **25%** and achieved **95% accuracy** by integrating **real-time AI analysis** and custom algorithms. Integrated a **WebRTC video pipeline** stabilizing remote consultations and reducing call latency. Developed a **JWT-based REST API client layer** with built-in XSS and CSRF protection.\nexperience-mymedicalhub-junior-software-engineer\nUttara, Dhaka, Bangladesh\nM\n/images/organizations/mymedicalhub.png\nSep 2022 - Sep",
+        "Multiversal Software Ltd.\n\nBuilt and maintained **UI components** for a telemedicine platform using React.js, JavaScript, HTML5, and CSS3, improving user experience across devices. Debugged and optimized front-end code, **reducing page load time** and enhancing performance stability.\nexperience-multiversal-junior-frontend-developer\nUttara, Dhaka, Bangladesh\nM\n/images/organizations/multiversal.jpg\nAug 2022 - Oct 2022\nJunior Frontend Developer\nReact.js\nJavaScript\nHTML5\nCSS3\njQuery",
+        "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 1,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:catalog-chronology-comparison:case-study-count:peer-evidence",
+      "category": "catalog-chronology-comparison",
+      "audience": "technical-peer",
+      "question": "How many total case studies are there?",
+      "referenceAnswerId": "catalog-chronology-comparison:case-study-count",
+      "referenceAnswer": "Montasim has 31 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone.",
+      "expectedFactIds": [
+        "derived:catalog-count:casestudy"
+      ],
+      "supportingExcerpts": [
+        "casestudy\n31"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:client-delivery-product-thinking:release-confidence:interview-preparation",
+      "category": "client-delivery-product-thinking",
+      "audience": "interviewer",
+      "question": "Which case would help an interviewer assess release confidence?",
+      "referenceAnswerId": "client-delivery-product-thinking:release-confidence",
+      "referenceAnswer": "His release-oriented agent skills validate builds, packages, tags, CI, install instructions, metadata, deployments, and public documentation as separate verifiable states. That approach makes partial failure visible and reduces the risk of declaring a release complete based on one system alone.",
+      "expectedFactIds": [
+        "case-study:ship-agent-skill:architecture",
+        "case-study:verify-project-release:outcomes",
+        "case-study:prepare-netlify-deployment:architecture"
+      ],
+      "supportingExcerpts": [
+        "Agent-facing orchestration in SKILL.md.\nSkill workflow\nDeterministic preflight/release-gate references.\nAutomation\nNpm installer/package contract and consumer-side tests.\nVerification\nAgent-facing orchestration in SKILL.md; deterministic preflight/release-gate references; npm installer/package contract and consumer-side tests.\nModel release stages separately rather than treating \"ship\" as blanket permission.\nModel release stages separately\nValidate host portability before creating immutable artifacts.\nValidate",
+        "Agents can detect version/tag drift.\nDistinguish missing artifacts from blocked verification.\nReport exact failing surfaces.\nProvide evidence links without claiming an install was executed.",
+        "Project/framework/lockfile detection.\nSkill workflow\nDeterministic netlify.toml and output audit using documented patterns.\nAutomation\nLocal build/route verification and authorization-gated remote handoff.\nVerification\nProject/framework/lockfile detection; deterministic netlify.toml and output audit using documented patterns; local build/route verification and authorization-gated remote handoff.\nDerive an explicit build contract before changing configuration.\nDerive an explicit build contract before changing"
+      ],
+      "evidenceRequirement": "reference-guidance",
+      "durationMs": 1,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:contributions-learning:active-weeks:architecture-review",
+      "category": "contributions-learning",
+      "audience": "engineering-leader",
+      "question": "How consistently does the snapshot show weekly activity?",
+      "referenceAnswerId": "contributions-learning:active-weeks",
+      "referenceAnswer": "32 of the 53 recorded weeks contain at least one contribution. This is useful activity context, while the portfolio's professional metrics and case-study outcomes remain stronger signals of impact and decision quality.",
+      "expectedFactIds": [
+        "derived:contribution-activity-summary"
+      ],
+      "supportingExcerpts": [
+        "1824\n53\n32\n366\n99\n2025-08-11\n2026-08-11\n2026-08-04\n364\n1824\n0\n2025-08-11\n0\n2025-08-12\n0\n2025-08-13\n0\n2025-08-14\n0\n2025-08-15\n0\n2025-08-16\n0\n2025-08-17\n0\n2025-08-18\n0\n2025-08-19\n0\n2025-08-20\n0\n2025-08-21\n0\n2025-08-22\n0\n2025-08-23\n0\n2025-08-24\n0\n2025-08-25\n0\n2025-08-26\n2\n2025-08-27\n0\n2025-08-28\n0\n2025-08-29\n0\n2025-08-30\n0\n2025-08-31\n0\n2025-09-01\n0\n2025-09-02\n0\n2025-09-03\n0\n2025-09-04\n0\n2025-09-05\n0\n2025-09-06\n0\n2025-09-07\n0\n2025-09-08\n0\n2025-09-09\n0\n2025-09-10\n0\n2025-09-11\n0\n2025-09-12\n0\n2025-09-13\n0\n2025-09-14\n0\n202"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 1,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:project:project-thoughtline:technology:senior-shortlist",
+      "category": "project",
+      "audience": "hiring-manager",
+      "question": "Which engineering skills and technologies did he apply to Thoughtline - LinkedIn Writing Assistant?",
+      "referenceAnswerId": "project:project-thoughtline:technology",
+      "referenceAnswer": "The documented stack for Thoughtline - LinkedIn Writing Assistant includes WXT, React 19, TypeScript, Chrome Manifest V3, Chrome Extensions API, Tailwind CSS, Hugeicons, OpenRouter API, Gemini API, Groq API, Zod, Vitest, Playwright, React Testing Library, TanStack Start, GitHub Actions, CI/CD, Git, System Design. Those technologies support the project's recorded purpose: User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual. This ties the stack to a concrete product scope instead of presenting it as an isolated keyword list.",
+      "expectedFactIds": [
+        "project:project-thoughtline"
+      ],
+      "supportingExcerpts": [
+        "User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual.\n\nfalse\n2026-07-17T21:02:58Z\nb2085eead2f039535d2caf81c901d57c0028298a\n2026-07-17T20:56:56Z\nhttps://github.com/montasim/Thoughtline\nproject-thoughtline\nassets/projects/thoughtline.png\nhttps://thoughtline.netlify.app\n\nhttps://github.com/montasim/Thoughtline/releases/latest\nWXT\nReact 19\nTypeScript\nChrome Manifest V3\nChrome Extensions API\nTailwind"
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    },
+    {
+      "id": "dynamic-eval:case-study:thoughtline:delivery:architecture-review",
+      "category": "case-study",
+      "audience": "engineering-leader",
+      "question": "Which implementation results are documented for Thoughtline - LinkedIn Writing Assistant?",
+      "referenceAnswerId": "case-study:thoughtline:delivery",
+      "referenceAnswer": "Montasim implemented reply, idea, refine, history, settings, and onboarding journeys. He built content extraction and validated prompt envelopes. He added manual four-direction replies, model provenance, and visible provider recovery states. He added encrypted credential storage, migrations/recovery/retention, configuration backup, and data archives. He established static, unit, packed-extension, Axe, responsive, and visual-regression gates. The case study records these outcomes: “Users can paste a post or select a visible conversation and draft four reply directions”; “Generate/refine post ideas in configured voice”; “Use a fixed free-only OpenRouter, Gemini, and Groq route under defined fallback rules”; “Export and restore validated configurations and history”. Together, those sections distinguish Montasim's stated contribution from the capabilities and limits recorded for the resulting system.",
+      "expectedFactIds": [
+        "case-study:thoughtline:contribution",
+        "case-study:thoughtline:outcomes"
+      ],
+      "supportingExcerpts": [
+        "Implemented reply, idea, refine, history, settings, and onboarding journeys.\nBuilt content extraction and validated prompt envelopes.\nAdded manual four-direction replies, model provenance, and visible provider recovery states.\nAdded encrypted credential storage, migrations/recovery/retention, configuration backup, and data archives.\nEstablished static, unit, packed-extension, Axe, responsive, and visual-regression gates.",
+        "Users can paste a post or select a visible conversation and draft four reply directions.\nGenerate/refine post ideas in configured voice.\nUse a fixed free-only OpenRouter, Gemini, and Groq route under defined fallback rules.\nExport and restore validated configurations and history."
+      ],
+      "evidenceRequirement": "reference-overlap-required",
+      "durationMs": 0,
+      "evaluation": {
+        "status": "failed",
+        "hardFailures": [
+          "evaluation-error"
+        ],
+        "issues": [
+          "No provider produced a fully validated portfolio answer."
+        ]
+      },
+      "error": "No provider produced a fully validated portfolio answer."
+    }
+  ]
+}
