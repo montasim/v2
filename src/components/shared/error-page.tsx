@@ -44,7 +44,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
         aria-labelledby="error-heading"
       >
         <div className="min-w-0 text-center sm:text-left">
-          <p className="flex items-center justify-center gap-2 text-sm font-medium text-emphasis-foreground sm:justify-start">
+          <p className="flex items-center justify-center gap-2 text-sm font-medium text-strong-foreground sm:justify-start">
             <span>Error {status}</span>
             <span className="text-border" aria-hidden="true">
               /
@@ -55,7 +55,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
           </p>
           <h1
             id="error-heading"
-            className="mt-3 text-xl font-bold tracking-tight text-emphasis-foreground sm:text-3xl"
+            className="mt-3 text-xl font-bold tracking-tight text-strong-foreground sm:text-3xl"
           >
             {content.title}
           </h1>
@@ -108,7 +108,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
         >
           <span className="absolute inset-0 translate-x-3 translate-y-3 rounded-xl border-2 border-muted-foreground/80" />
           <div className="relative grid h-full w-full place-items-center rounded-xl border bg-card ring-2 ring-foreground/10">
-            <span className="text-5xl font-bold tracking-[-0.08em] text-emphasis-foreground sm:text-6xl">
+            <span className="text-5xl font-bold tracking-[-0.08em] text-strong-foreground sm:text-6xl">
               {status}
             </span>
           </div>

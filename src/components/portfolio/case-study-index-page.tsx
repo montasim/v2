@@ -66,7 +66,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
 
         <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
           <div className="flex items-center justify-between gap-3 text-[0.6875rem]">
-            <p className="flex items-center gap-1.5 font-bold tracking-[0.06em] text-emphasis-foreground uppercase">
+            <p className="flex items-center gap-1.5 font-bold tracking-[0.06em] text-strong-foreground uppercase">
               <ProjectTypeIcon type={project.type} className="size-[1em]" />
               {project.type}
             </p>
@@ -75,7 +75,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
             </span>
           </div>
 
-          <h2 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-emphasis-foreground">
+          <h2 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-strong-foreground">
             {project.title}
           </h2>
           <p className="mt-2 line-clamp-3 text-[0.8125rem] leading-[1.55] text-muted-foreground">
@@ -89,7 +89,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
               </span>
               <span className="mt-1 line-clamp-1 block">{caseStudy.role}</span>
             </p>
-            <span className="flex shrink-0 items-center gap-1.5 font-semibold text-emphasis-foreground">
+            <span className="flex shrink-0 items-center gap-1.5 font-semibold text-strong-foreground">
               Read
               <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
             </span>
@@ -132,13 +132,13 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
           )}
         </div>
 
-        <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-emphasis-foreground sm:p-6 lg:min-h-100 lg:p-8">
+        <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">
           <div>
-            <p className="flex items-center gap-1.5 text-xs font-bold tracking-[0.06em] text-emphasis-foreground uppercase">
+            <p className="flex items-center gap-1.5 text-xs font-bold tracking-[0.06em] text-strong-foreground uppercase">
               <ProjectTypeIcon type={project.type} className="size-[1em]" />
               {project.type}
             </p>
-            <h2 className="mt-3.5 text-[1.625rem] leading-tight font-bold tracking-[-0.025em] text-balance text-emphasis-foreground">
+            <h2 className="mt-3.5 text-[1.625rem] leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground">
               {project.title}
             </h2>
             <p className="mt-4 max-w-[38ch] text-sm leading-[1.65] text-muted-foreground">
@@ -165,7 +165,7 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
                 </dd>
               </div>
             </dl>
-            <span className="mt-5 flex items-center justify-end gap-1.5 text-xs font-semibold text-emphasis-foreground">
+            <span className="mt-5 flex items-center justify-end gap-1.5 text-xs font-semibold text-strong-foreground">
               Read case study
               <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
             </span>
@@ -279,7 +279,7 @@ function FeaturedCaseStudyCarousel({
       <div className="mb-3.5 flex items-center justify-between gap-5">
         <h2
           id="featured-case-study-heading"
-          className="text-sm font-semibold text-emphasis-foreground"
+          className="text-sm font-semibold text-strong-foreground"
         >
           Featured case studies
         </h2>
@@ -376,7 +376,7 @@ export function CaseStudyIndexPage({
       </Breadcrumb>
 
       <header className="mt-8 border-b pb-8">
-        <h1 className="text-xl leading-tight font-bold tracking-[-0.025em] text-balance text-emphasis-foreground sm:text-3xl">
+        <h1 className="text-xl leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground sm:text-3xl">
           Case studies of software built to hold up.
         </h1>
         <p className="mt-4.5 max-w-[62ch] text-[1.0625rem] leading-[1.6] text-muted-foreground">
@@ -401,7 +401,7 @@ export function CaseStudyIndexPage({
         <div className="mb-6 flex items-end justify-between gap-8 max-md:flex-col max-md:items-start max-md:gap-2">
           <h2
             id="browse-case-studies-heading"
-            className="text-xl font-bold tracking-[-0.035em] text-emphasis-foreground sm:text-2xl"
+            className="text-xl font-bold tracking-[-0.035em] text-strong-foreground sm:text-2xl"
           >
             Browse case studies
           </h2>
@@ -445,7 +445,7 @@ export function CaseStudyIndexPage({
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "relative shrink-0 rounded-sm pt-2 pb-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] outline-none after:absolute after:right-0 after:bottom-[-1px] after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ring motion-reduce:transition-none motion-reduce:after:transition-none",
-                  isActive && "text-emphasis-foreground after:scale-x-100"
+                  isActive && "text-strong-foreground after:scale-x-100"
                 )}
               >
                 {item.label}
@@ -474,7 +474,7 @@ export function CaseStudyIndexPage({
           </div>
         ) : (
           <div className="mt-3 rounded-xl border border-dashed px-5 py-10 text-center text-muted-foreground">
-            <h2 className="text-sm font-semibold text-emphasis-foreground">
+            <h2 className="text-sm font-semibold text-strong-foreground">
               No matching case studies
             </h2>
             <p className="mt-1 text-[0.8125rem]">
@@ -483,7 +483,7 @@ export function CaseStudyIndexPage({
             <Link
               to="/case-studies"
               search={{ filter: "all", q: "" }}
-              className="mt-4 inline-flex rounded-md text-sm font-semibold text-emphasis-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
+              className="mt-4 inline-flex rounded-md text-sm font-semibold text-strong-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
             >
               Clear filters
             </Link>

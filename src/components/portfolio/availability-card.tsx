@@ -45,7 +45,7 @@ export function AvailabilityCard({
     <Card className="overflow-hidden">
       <div className="grid md:grid-cols-12">
         <div className="flex flex-col bg-muted/35 p-5 sm:p-6 md:col-span-4">
-          <h3 className="text-lg font-semibold tracking-tight text-emphasis-foreground">
+          <h3 className="text-lg font-semibold tracking-tight text-strong-foreground">
             {settings.cardTitle}
           </h3>
           <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
@@ -70,7 +70,7 @@ export function AvailabilityCard({
                 <Icon className="size-4" aria-hidden="true" />
                 {label}
               </dt>
-              <dd className="mt-2 text-sm font-semibold text-emphasis-foreground">
+              <dd className="mt-2 text-sm font-semibold text-strong-foreground">
                 {value}
               </dd>
               {detail ? (

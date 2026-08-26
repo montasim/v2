@@ -26,7 +26,7 @@ export function BackgroundSummary() {
   return (
     <Card className="grid overflow-hidden md:grid-cols-12">
       <CardContent className="flex flex-col bg-muted/35 p-5 sm:p-6 md:col-span-7">
-        <div className="flex items-center gap-2 text-sm font-semibold text-emphasis-foreground">
+        <div className="flex items-center gap-2 text-sm font-semibold text-strong-foreground">
           <GraduationCapIcon className="size-5" aria-hidden="true" />
           <h3>Education</h3>
         </div>
@@ -39,7 +39,7 @@ export function BackgroundSummary() {
             imageClassName="p-1.5"
           />
           <div className="mt-5 min-w-0 sm:mt-0">
-            <p className="max-w-lg text-xl leading-snug font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
+            <p className="max-w-lg text-xl leading-snug font-semibold tracking-tight text-strong-foreground sm:text-2xl">
               {summaryEducation.degree.replace("Bachelor of Science", "BSc")}
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -58,7 +58,7 @@ export function BackgroundSummary() {
         <InternalAction
           to="/education"
           variant="link"
-          className="group mt-6 h-auto w-fit p-0 font-medium text-emphasis-foreground"
+          className="group mt-6 h-auto w-fit p-0 font-medium text-strong-foreground"
         >
           View all education
           <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />
@@ -66,7 +66,7 @@ export function BackgroundSummary() {
       </CardContent>
 
       <CardContent className="flex flex-col border-t p-0 md:col-span-5 md:border-t-0 md:border-l">
-        <div className="flex items-center gap-2 px-5 py-5 text-sm font-semibold text-emphasis-foreground sm:px-6">
+        <div className="flex items-center gap-2 px-5 py-5 text-sm font-semibold text-strong-foreground sm:px-6">
           <CertificateIcon className="size-5" aria-hidden="true" />
           <h3>Selected credentials</h3>
         </div>
@@ -78,7 +78,7 @@ export function BackgroundSummary() {
                 className="group flex min-h-20 items-center justify-between gap-5 px-5 py-4 transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-0.5 hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:outline-none active:translate-x-0 motion-reduce:transition-none sm:px-6"
               >
                 <span className="min-w-0">
-                  <span className="font-semibold text-emphasis-foreground">
+                  <span className="font-semibold text-strong-foreground">
                     {item.title}
                   </span>
                   <span className="mt-1 block text-xs text-muted-foreground">
@@ -96,7 +96,7 @@ export function BackgroundSummary() {
           <InternalAction
             to="/certifications"
             variant="link"
-            className="group h-auto p-0 font-medium text-emphasis-foreground"
+            className="group h-auto p-0 font-medium text-strong-foreground"
           >
             View all certifications
             <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />

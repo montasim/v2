@@ -230,7 +230,7 @@ function BlogDiscussion({
           ) : null}
           <div className="flex items-start gap-2">
             <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-2">
-              <h3 className="text-sm font-semibold text-emphasis-foreground">
+              <h3 className="text-sm font-semibold text-strong-foreground">
                 {comment.name}
               </h3>
               <time
@@ -263,7 +263,7 @@ function BlogDiscussion({
               <button
                 type="button"
                 onClick={() => focusComposer(comment)}
-                className="rounded-sm text-xs font-semibold text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                className="rounded-sm text-xs font-semibold text-strong-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
               >
                 Reply
               </button>
@@ -275,7 +275,7 @@ function BlogDiscussion({
                   type="button"
                   disabled={deletingId === comment.id}
                   onClick={() => setPendingDeletionId(null)}
-                  className="rounded-sm font-semibold text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                  className="rounded-sm font-semibold text-strong-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
                 >
                   Cancel
                 </button>
@@ -305,7 +305,7 @@ function BlogDiscussion({
           <div className="min-w-0 flex-1">
             <h2
               id="discussion-heading"
-              className="text-lg leading-[1.4] font-semibold tracking-[-0.015em] text-emphasis-foreground"
+              className="text-lg leading-[1.4] font-semibold tracking-[-0.015em] text-strong-foreground"
             >
               Discussion
             </h2>
@@ -321,7 +321,7 @@ function BlogDiscussion({
         <div className="divide-y" aria-live="polite" aria-busy={isSubmitting}>
           {isLoading ? (
             <div className="px-5 py-10 text-center">
-              <p className="text-sm font-semibold text-emphasis-foreground">
+              <p className="text-sm font-semibold text-strong-foreground">
                 Loading discussion
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -330,7 +330,7 @@ function BlogDiscussion({
             </div>
           ) : loadError ? (
             <div className="px-5 py-10 text-center">
-              <p className="text-sm font-semibold text-emphasis-foreground">
+              <p className="text-sm font-semibold text-strong-foreground">
                 No discussion available
               </p>
               <p className="mt-1 text-xs text-muted-foreground">{loadError}</p>
@@ -346,7 +346,7 @@ function BlogDiscussion({
                   ))
                 : !isSubmitting && (
                     <div className="px-5 py-10 text-center">
-                      <p className="text-sm font-semibold text-emphasis-foreground">
+                      <p className="text-sm font-semibold text-strong-foreground">
                         Start the discussion
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
@@ -392,7 +392,7 @@ function BlogDiscussion({
         <header className="min-h-18 border-b px-4 py-4.5 sm:px-6">
           <h2
             id="reply-heading"
-            className="text-sm font-semibold text-emphasis-foreground"
+            className="text-sm font-semibold text-strong-foreground"
           >
             Leave a reply
           </h2>
@@ -488,14 +488,14 @@ function BlogDiscussion({
             <div className="flex items-center justify-between gap-4 rounded-[0.625rem] bg-muted px-3 py-2.5 text-xs text-muted-foreground">
               <span>
                 Replying to{" "}
-                <strong className="text-emphasis-foreground">
+                <strong className="text-strong-foreground">
                   {replyTo.name}
                 </strong>
               </span>
               <button
                 type="button"
                 onClick={() => setReplyTo(null)}
-                className="font-semibold text-emphasis-foreground hover:underline"
+                className="font-semibold text-strong-foreground hover:underline"
               >
                 Cancel
               </button>
@@ -505,7 +505,7 @@ function BlogDiscussion({
             <div className="grid gap-1.5">
               <label
                 htmlFor={nameId}
-                className="text-xs font-semibold text-emphasis-foreground"
+                className="text-xs font-semibold text-strong-foreground"
               >
                 Name
               </label>
@@ -541,7 +541,7 @@ function BlogDiscussion({
             <div className="grid gap-1.5">
               <label
                 htmlFor={emailId}
-                className="text-xs font-semibold text-emphasis-foreground"
+                className="text-xs font-semibold text-strong-foreground"
               >
                 Email
               </label>
@@ -579,7 +579,7 @@ function BlogDiscussion({
           <div className="flex items-center justify-between gap-4">
             <label
               htmlFor={messageId}
-              className="text-xs font-semibold text-emphasis-foreground"
+              className="text-xs font-semibold text-strong-foreground"
             >
               Message
             </label>
@@ -665,7 +665,7 @@ function BlogProjectInquiry() {
     >
       <h2
         id="blog-project-inquiry-heading"
-        className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
+        className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
       >
         Working through a similar challenge?
       </h2>
@@ -824,7 +824,7 @@ export function BlogDetailPage({
               </Button>
             </div>
           </div>
-          <h1 className="w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-emphasis-foreground sm:text-3xl">
+          <h1 className="w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:text-3xl">
             {post.title}
           </h1>
         </div>
@@ -907,7 +907,7 @@ export function BlogDetailPage({
                     className={cn(
                       "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l-2 lg:px-0 lg:py-1.75 lg:pl-3",
                       activeSection === id
-                        ? "bg-muted font-semibold text-emphasis-foreground lg:border-emphasis-foreground lg:bg-transparent"
+                        ? "bg-muted font-semibold text-strong-foreground lg:border-emphasis-foreground lg:bg-transparent"
                         : "border-transparent hover:bg-muted hover:text-foreground lg:hover:bg-transparent"
                     )}
                   >
@@ -930,7 +930,7 @@ export function BlogDetailPage({
               >
                 <h2
                   id={`${section.id}-heading`}
-                  className="mb-5 text-xl leading-[1.35] font-semibold tracking-[-0.02em] text-emphasis-foreground sm:text-2xl"
+                  className="mb-5 text-xl leading-[1.35] font-semibold tracking-[-0.02em] text-strong-foreground sm:text-2xl"
                 >
                   {section.title}
                 </h2>
@@ -946,7 +946,7 @@ export function BlogDetailPage({
                   </p>
                 ))}
                 {section.callout ? (
-                  <blockquote className="my-9 border-l-3 border-emphasis-foreground py-1.5 pl-5.5 text-base leading-7 text-emphasis-foreground">
+                  <blockquote className="my-9 border-l-3 border-emphasis-foreground py-1.5 pl-5.5 text-base leading-7 text-strong-foreground">
                     {section.callout}
                   </blockquote>
                 ) : null}
@@ -972,7 +972,7 @@ export function BlogDetailPage({
                 <span className="block text-[0.6875rem] text-muted-foreground">
                   Back
                 </span>
-                <strong className="mt-0.5 block text-sm text-emphasis-foreground">
+                <strong className="mt-0.5 block text-sm text-strong-foreground">
                   All writing
                 </strong>
               </span>
@@ -986,7 +986,7 @@ export function BlogDetailPage({
                 <span className="block text-[0.6875rem] text-muted-foreground">
                   Read next
                 </span>
-                <strong className="mt-0.5 block text-sm text-emphasis-foreground">
+                <strong className="mt-0.5 block text-sm text-strong-foreground">
                   {nextPost.title}
                 </strong>
               </span>

@@ -41,7 +41,7 @@ function Brand({
         event.preventDefault()
       }}
       aria-label={isOwner ? "Montasim — owner signed in" : "Montasim"}
-      className="flex items-center gap-2 rounded-md font-semibold tracking-tight text-emphasis-foreground"
+      className="flex items-center gap-2 rounded-md font-semibold tracking-tight text-strong-foreground"
     >
       <span className="relative shrink-0">
         <img
@@ -132,7 +132,7 @@ export function SiteHeader() {
                     event.preventDefault()
                   }}
                   className={cn(
-                    "rounded-md px-2.5 py-1.5 text-sm font-medium text-emphasis-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                    "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
                     isActive && "bg-muted"
                   )}
                   aria-current={isActive ? "location" : undefined}
@@ -145,7 +145,7 @@ export function SiteHeader() {
               to="/blog"
               search={{ topic: "all", q: "" }}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-sm font-medium text-emphasis-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
                 pathname.startsWith("/blog") && "bg-muted"
               )}
               aria-current={pathname.startsWith("/blog") ? "page" : undefined}
@@ -185,7 +185,7 @@ export function SiteHeader() {
                             event.preventDefault()
                           }}
                           className={cn(
-                            "rounded-md px-3 py-2 text-sm font-medium text-emphasis-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                            "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
                             isActive && "bg-muted"
                           )}
                           aria-current={isActive ? "location" : undefined}
@@ -200,7 +200,7 @@ export function SiteHeader() {
                       to="/blog"
                       search={{ topic: "all", q: "" }}
                       className={cn(
-                        "rounded-md px-3 py-2 text-sm font-medium text-emphasis-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                        "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
                         pathname.startsWith("/blog") && "bg-muted"
                       )}
                       aria-current={

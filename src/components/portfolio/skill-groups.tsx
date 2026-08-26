@@ -134,7 +134,7 @@ export function SkillGroups({
           <section key={group.id} aria-labelledby={`${group.id}-heading`}>
             <h2
               id={`${group.id}-heading`}
-              className="mb-3 flex items-center gap-2 text-sm font-semibold text-emphasis-foreground"
+              className="mb-3 flex items-center gap-2 text-sm font-semibold text-strong-foreground"
             >
               <GroupIcon className="size-5 shrink-0" aria-hidden="true" />
               {group.category}

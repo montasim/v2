@@ -92,12 +92,12 @@ function OwnerRootPage() {
       >
         <header className="border-b px-5 py-5 sm:px-7 sm:py-6">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <ShieldCheckIcon className="text-emphasis-foreground" />
+            <ShieldCheckIcon className="text-strong-foreground" />
             Private owner access
           </div>
           <h1
             id="owner-access-heading"
-            className="mt-3 text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
+            className="mt-3 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
           >
             {auth.status === "unconfigured"
               ? "Owner access unavailable"
@@ -111,7 +111,7 @@ function OwnerRootPage() {
           {auth.status === "forbidden" ? (
             <>
               <p className="text-sm leading-6 text-muted-foreground">
-                <strong className="text-emphasis-foreground">
+                <strong className="text-strong-foreground">
                   {auth.email}
                 </strong>{" "}
                 does not have access to this area. Sign out and use the

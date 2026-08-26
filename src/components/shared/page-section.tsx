@@ -40,7 +40,7 @@ export function PageSection({
         <div className="mb-6 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
           <h2
             id={headingId}
-            className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
+            className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
           >
             {title}
           </h2>
@@ -48,7 +48,7 @@ export function PageSection({
             <InternalAction
               to={to}
               variant="link"
-              className="group/action mt-4 h-auto p-0 font-medium text-emphasis-foreground sm:mt-0 sm:shrink-0"
+              className="group/action mt-4 h-auto p-0 font-medium text-strong-foreground sm:mt-0 sm:shrink-0"
             >
               {label}
               <ArrowRightCompactIcon className="group-hover/action:translate-x-0.5" />

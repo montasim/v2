@@ -87,7 +87,7 @@ export function ProjectCard({ project }: { project: Project }) {
             <ProjectTypeIcon type={project.type} className="size-[1em]" />
             {project.type}
           </p>
-          <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-emphasis-foreground">
+          <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-strong-foreground">
             {project.title}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -105,7 +105,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <Button
                 asChild
                 variant="link"
-                className="h-auto p-0 font-bold text-emphasis-foreground"
+                className="h-auto p-0 font-bold text-strong-foreground"
               >
                 <Link to="/projects/$slug" params={{ slug: caseStudy.slug }}>
                   <BookOpenTextIcon />
@@ -117,7 +117,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <ExternalAction
                 href={primaryUrl}
                 variant="link"
-                className="group/action h-auto p-0 font-bold text-emphasis-foreground"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
               >
                 {project.npmUrl && !project.liveUrl ? (
                   <PackageIcon />
@@ -131,7 +131,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <ExternalAction
                 href={separateNpmUrl}
                 variant="link"
-                className="group/action h-auto p-0 font-bold text-emphasis-foreground"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
               >
                 <PackageIcon className="group-hover/action:-translate-y-0.5" />
                 npm
@@ -141,7 +141,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <ExternalAction
                 href={project.githubUrl}
                 variant="link"
-                className="group/action h-auto p-0 font-bold text-emphasis-foreground"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
               >
                 <GithubLogoIcon className="group-hover/action:-translate-y-0.5" />
                 Source

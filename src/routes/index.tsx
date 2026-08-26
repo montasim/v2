@@ -67,7 +67,7 @@ function OverviewPage() {
             </Avatar>
           </div>
           <div className="hero-copy min-w-0 text-center sm:order-1 sm:text-left">
-            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-emphasis-foreground sm:justify-start">
+            <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-strong-foreground sm:justify-start">
               <span>{experienceCatalog.current.role}</span>
               <span className="text-border" aria-hidden="true">
                 /
@@ -78,7 +78,7 @@ function OverviewPage() {
             </p>
             <h1
               id="profile-name"
-              className="mx-auto mt-3 text-[clamp(0.875rem,4.5vw,1.875rem)] font-bold tracking-tight whitespace-nowrap text-emphasis-foreground sm:mx-0"
+              className="mx-auto mt-3 text-[clamp(0.875rem,4.5vw,1.875rem)] font-bold tracking-tight whitespace-nowrap text-strong-foreground sm:mx-0"
             >
               {profile.name}
             </h1>
@@ -89,7 +89,7 @@ function OverviewPage() {
               <ExternalAction
                 href={profile.resumeUrl}
                 variant="outline"
-                className="font-medium text-emphasis-foreground"
+                className="font-medium text-strong-foreground"
               >
                 <DownloadSimpleIcon className="size-[18px] sm:size-4" />
                 Download resume
@@ -227,7 +227,7 @@ function OverviewPage() {
       >
         <div className="grid gap-7 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-10">
           <div>
-            <p className="max-w-[60ch] text-xl leading-7 font-semibold text-emphasis-foreground">
+            <p className="max-w-[60ch] text-xl leading-7 font-semibold text-strong-foreground">
               Have something worth building or discussing?
             </p>
             <p className="mt-3 max-w-[60ch] text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">

@@ -62,7 +62,7 @@ function SectionHeading({
   return (
     <h2
       id={`${id}-heading`}
-      className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
+      className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
     >
       {children}
     </h2>
@@ -83,7 +83,7 @@ function CaseStudyFeedback() {
     >
       <h2
         id="case-study-feedback-heading"
-        className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
+        className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
       >
         Working through something similar?
       </h2>
@@ -203,7 +203,7 @@ export function ProjectCaseStudyPage({
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-emphasis-foreground sm:text-3xl">
+              <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-strong-foreground sm:text-3xl">
                 {project.title}
               </h1>
               <Badge variant="secondary" className="font-medium">
@@ -297,7 +297,7 @@ export function ProjectCaseStudyPage({
                     className={cn(
                       "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l-2 lg:px-0 lg:py-1.75 lg:pl-3",
                       activeSection === id
-                        ? "bg-muted font-semibold text-emphasis-foreground lg:border-emphasis-foreground lg:bg-transparent"
+                        ? "bg-muted font-semibold text-strong-foreground lg:border-emphasis-foreground lg:bg-transparent"
                         : "border-transparent hover:bg-muted hover:text-foreground lg:hover:bg-transparent"
                     )}
                   >
@@ -340,7 +340,7 @@ export function ProjectCaseStudyPage({
                   <span className="font-mono text-xs text-muted-foreground">
                     C{index + 1}
                   </span>
-                  <p className="mt-3 text-sm leading-6 text-emphasis-foreground">
+                  <p className="mt-3 text-sm leading-6 text-strong-foreground">
                     {constraint}
                   </p>
                 </li>
@@ -366,7 +366,7 @@ export function ProjectCaseStudyPage({
                   <span className="font-mono text-xs text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-3 font-semibold text-emphasis-foreground">
+                  <h3 className="mt-3 font-semibold text-strong-foreground">
                     {layer.title}
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -399,7 +399,7 @@ export function ProjectCaseStudyPage({
                   <span className="font-mono text-xs text-muted-foreground">
                     D{index + 1}
                   </span>
-                  <h3 className="text-sm font-semibold text-emphasis-foreground">
+                  <h3 className="text-sm font-semibold text-strong-foreground">
                     {decision.title}
                   </h3>
                   <p className="text-sm leading-6 text-muted-foreground">

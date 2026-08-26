@@ -35,7 +35,7 @@ export function Subscribers({ data }: { data: OwnerSubscriberPage["items"] }) {
             <div className="min-w-0">
               <a
                 href={`mailto:${subscriber.email}`}
-                className="block w-fit max-w-full truncate text-sm font-semibold text-emphasis-foreground underline-offset-4 hover:underline"
+                className="block w-fit max-w-full truncate text-sm font-semibold text-strong-foreground underline-offset-4 hover:underline"
               >
                 {subscriber.email}
               </a>

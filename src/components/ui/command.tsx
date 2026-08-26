@@ -88,7 +88,7 @@ export function CommandGroup({
     <Command.Group
       data-slot="command-group"
       className={cn(
-        "overflow-hidden text-emphasis-foreground [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+        "overflow-hidden text-strong-foreground [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
         className
       )}
       {...props}

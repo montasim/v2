@@ -54,12 +54,12 @@ function OwnerOAuthCallbackPage() {
       >
         <header className="border-b px-5 py-5 sm:px-7 sm:py-6">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <ShieldCheckIcon className="text-emphasis-foreground" />
+            <ShieldCheckIcon className="text-strong-foreground" />
             Private owner access
           </div>
           <h1
             id="oauth-callback-heading"
-            className="mt-3 text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
+            className="mt-3 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
           >
             {failed ? "Sign-in could not be completed" : "Completing sign-in"}
           </h1>

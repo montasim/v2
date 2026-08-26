@@ -14,7 +14,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import type { Certification } from "@/lib/content/certifications"
 
 const actionClassName =
-  "h-auto whitespace-nowrap p-0 font-medium text-emphasis-foreground"
+  "h-auto whitespace-nowrap p-0 font-medium text-strong-foreground"
 
 const completionDateFormatter = new Intl.DateTimeFormat("en", {
   day: "numeric",
@@ -78,7 +78,7 @@ export function CertificationCard({ item }: { item: Certification }) {
               </time>
             </span>
           </div>
-          <h2 className="mt-5 text-lg leading-snug font-semibold tracking-tight text-emphasis-foreground">
+          <h2 className="mt-5 text-lg leading-snug font-semibold tracking-tight text-strong-foreground">
             {item.title}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">

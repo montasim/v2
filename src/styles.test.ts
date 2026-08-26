@@ -34,18 +34,18 @@ function contrast(foreground: string, background: string) {
 }
 
 describe("dark theme text hierarchy", () => {
-  it("keeps primary, body, and supporting text visually distinct", () => {
-    const emphasis = luminance(token("emphasis-foreground"))
+  it("keeps strong, body, and supporting text visually distinct", () => {
+    const strong = luminance(token("strong-foreground"))
     const body = luminance(token("foreground"))
     const supporting = luminance(token("muted-foreground"))
 
-    expect(emphasis).toBeGreaterThan(body)
+    expect(strong).toBeGreaterThan(body)
     expect(body).toBeGreaterThan(supporting)
   })
 
   it.each([
-    ["emphasis-foreground", "background"],
-    ["emphasis-foreground", "card"],
+    ["strong-foreground", "background"],
+    ["strong-foreground", "card"],
     ["foreground", "background"],
     ["foreground", "card"],
     ["muted-foreground", "background"],

@@ -44,7 +44,7 @@ function Page() {
             <p className="mb-2 text-sm text-muted-foreground">{item.period}</p>
             <Card>
               <CardContent className="p-5 sm:p-6">
-                <h2 className="font-semibold text-emphasis-foreground">
+                <h2 className="font-semibold text-strong-foreground">
                   {item.degree}
                 </h2>
                 <p className="mt-1 text-sm font-medium">{item.institution}</p>
@@ -55,7 +55,7 @@ function Page() {
                   <ExternalAction
                     href={item.institutionUrl}
                     variant="link"
-                    className="mt-5 h-auto gap-2 p-0 font-medium text-emphasis-foreground"
+                    className="mt-5 h-auto gap-2 p-0 font-medium text-strong-foreground"
                   >
                     Visit institution
                     <ArrowUpRightIcon />

@@ -7,7 +7,7 @@ export function RichText({ text }: { text: string }) {
         part.startsWith("**") ? (
           <strong
             key={index}
-            className="font-semibold text-emphasis-foreground"
+            className="font-semibold text-strong-foreground"
           >
             {part.slice(2, -2)}
           </strong>

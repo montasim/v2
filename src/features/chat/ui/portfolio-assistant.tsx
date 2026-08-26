@@ -294,7 +294,7 @@ function AssistantHeader({ content }: { content: AssistantHeaderContent }) {
         <ChatCircleDotsIcon className="size-[19px]" />
       </span>
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="truncate text-sm font-semibold text-emphasis-foreground">
+        <Dialog.Title className="truncate text-sm font-semibold text-strong-foreground">
           {content.title}
         </Dialog.Title>
         <Dialog.Description className="truncate text-xs text-muted-foreground">
@@ -327,7 +327,7 @@ function AssistantHome({
   return (
     <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
-        <h2 className="text-sm font-semibold text-emphasis-foreground">
+        <h2 className="text-sm font-semibold text-strong-foreground">
           Explore his background
         </h2>
         <div className="mt-3 grid grid-cols-2 gap-2">
@@ -344,9 +344,9 @@ function AssistantHome({
                 )}
               >
                 <span className="flex items-start gap-3">
-                  <Icon className="mt-0.5 size-[19px] text-emphasis-foreground" />
+                  <Icon className="mt-0.5 size-[19px] text-strong-foreground" />
                   <span>
-                    <span className="block text-sm font-medium text-emphasis-foreground">
+                    <span className="block text-sm font-medium text-strong-foreground">
                       {item.title}
                     </span>
                     <span className="mt-1 block text-xs text-muted-foreground">
@@ -360,7 +360,7 @@ function AssistantHome({
         </div>
 
         <div className="mt-5 border-t pt-4">
-          <h3 className="text-sm font-semibold text-emphasis-foreground">
+          <h3 className="text-sm font-semibold text-strong-foreground">
             Contact Montasim
           </h3>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -404,7 +404,7 @@ function InquiryEntry({
         "flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none",
         primary
           ? "border-emphasis-foreground bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-          : "bg-card text-emphasis-foreground hover:bg-muted dark:bg-muted/60"
+          : "bg-card text-strong-foreground hover:bg-muted dark:bg-muted/60"
       )}
     >
       {children}
@@ -584,7 +584,7 @@ function MessageCitations({
             key={citation.href}
             href={citation.href}
             onClick={onNavigate}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             {citation.label}
             <ArrowRightCompactIcon className="size-3.5" aria-hidden="true" />
@@ -644,7 +644,7 @@ function QuickComposer({
       <div className="flex items-center justify-between gap-3 text-xs">
         <label
           htmlFor="assistant-message"
-          className="font-semibold text-emphasis-foreground"
+          className="font-semibold text-strong-foreground"
         >
           Message
         </label>
@@ -716,7 +716,7 @@ function MessageContactAction({
   if (intent === "funding") {
     return (
       <section className="mt-4 border-t pt-4">
-        <p className="font-semibold text-emphasis-foreground">
+        <p className="font-semibold text-strong-foreground">
           Want to support Montasim's work?
         </p>
         <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -750,7 +750,7 @@ function MessageContactAction({
   if (intent === "general") {
     return (
       <section className="mt-4 border-t pt-4">
-        <p className="font-semibold text-emphasis-foreground">
+        <p className="font-semibold text-strong-foreground">
           Need a verified detail?
         </p>
         <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -760,7 +760,7 @@ function MessageContactAction({
         <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
           <a
             href={emailUrl}
-            className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
             <span className="truncate">{profileCatalog.profile.email}</span>
@@ -769,7 +769,7 @@ function MessageContactAction({
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
             <WhatsappLogoIcon className="size-[17px]" />
             WhatsApp
@@ -781,7 +781,7 @@ function MessageContactAction({
 
   return (
     <section className="mt-4 border-t pt-4">
-      <p className="font-semibold text-emphasis-foreground">
+      <p className="font-semibold text-strong-foreground">
         {isRole
           ? "Interested in hiring Montasim?"
           : "Have a project for Montasim?"}
@@ -804,7 +804,7 @@ function MessageContactAction({
       <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
         <a
           href={emailUrl}
-          className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
           <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
           <span className="truncate">{profileCatalog.profile.email}</span>
@@ -813,7 +813,7 @@ function MessageContactAction({
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-emphasis-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
           <WhatsappLogoIcon className="size-[17px]" />
           WhatsApp
@@ -1025,7 +1025,7 @@ function InquiryQuestion({
     <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
         <div className="flex items-end justify-between text-xs">
-          <span className="font-semibold text-emphasis-foreground">
+          <span className="font-semibold text-strong-foreground">
             {title}
           </span>
           <span className="text-muted-foreground">
@@ -1074,7 +1074,7 @@ function InquiryQuestion({
                   }
                   answer(option)
                 }}
-                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium text-emphasis-foreground transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
+                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium text-strong-foreground transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
               >
                 {option}
                 <ArrowRightCompactIcon className="ml-auto size-[17px] text-muted-foreground" />
@@ -1127,7 +1127,7 @@ function InquiryQuestion({
           >
             <label
               htmlFor={`inquiry-${step.key}`}
-              className="text-sm font-semibold text-emphasis-foreground"
+              className="text-sm font-semibold text-strong-foreground"
             >
               {isCustomOption
                 ? step.key === "role"
@@ -1188,7 +1188,7 @@ function InquiryQuestion({
                   <>
                     <label
                       htmlFor="inquiry-context"
-                      className="mt-3 block text-sm font-semibold text-emphasis-foreground"
+                      className="mt-3 block text-sm font-semibold text-strong-foreground"
                     >
                       {state.type === "hire"
                         ? "Company or job link"
@@ -1289,7 +1289,7 @@ function InquiryQuestion({
         {isEditing ? (
           <Button
             variant="ghost"
-            className="min-h-10 rounded-lg px-3 text-xs font-semibold text-emphasis-foreground"
+            className="min-h-10 rounded-lg px-3 text-xs font-semibold text-strong-foreground"
             onClick={() => dispatch({ type: "cancel-edit" })}
           >
             <CaretLeftIcon className="size-4" /> Cancel edit
@@ -1297,7 +1297,7 @@ function InquiryQuestion({
         ) : state.stepIndex > 0 ? (
           <Button
             variant="ghost"
-            className="min-h-10 rounded-lg px-3 text-xs font-semibold text-emphasis-foreground"
+            className="min-h-10 rounded-lg px-3 text-xs font-semibold text-strong-foreground"
             onClick={() => dispatch({ type: "back" })}
           >
             <CaretLeftIcon className="size-4" /> Back
@@ -1332,7 +1332,7 @@ function ReviewAnswers({
       className="mt-6 rounded-xl border bg-card px-4 py-3"
       open={expanded || undefined}
     >
-      <summary className="cursor-pointer rounded text-xs font-semibold text-emphasis-foreground focus-visible:ring-2 focus-visible:ring-ring">
+      <summary className="cursor-pointer rounded text-xs font-semibold text-strong-foreground focus-visible:ring-2 focus-visible:ring-ring">
         Review earlier answers
       </summary>
       <div className="mt-3 space-y-2 border-t pt-3">
@@ -1345,7 +1345,7 @@ function ReviewAnswers({
               <span className="block text-muted-foreground">
                 {earlier.label}
               </span>
-              <span className="mt-1 block truncate font-medium text-emphasis-foreground">
+              <span className="mt-1 block truncate font-medium text-strong-foreground">
                 {state.answers[earlier.key]}
               </span>
             </div>
@@ -1393,7 +1393,7 @@ function InquirySuccess({
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Montasim will reply to{" "}
-              <strong className="font-semibold text-emphasis-foreground">
+              <strong className="font-semibold text-strong-foreground">
                 {state.answers.email}
               </strong>
               . He will review the details and reply directly.
@@ -1414,7 +1414,7 @@ function InquirySuccess({
               {state.type === "general" ? (
                 <div className="mt-3 border-t pt-3 text-sm">
                   <span className="text-muted-foreground">Message</span>
-                  <p className="mt-1.5 font-medium break-words whitespace-pre-wrap text-emphasis-foreground">
+                  <p className="mt-1.5 font-medium break-words whitespace-pre-wrap text-strong-foreground">
                     {state.answers.context}
                   </p>
                 </div>

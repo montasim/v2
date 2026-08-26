@@ -63,7 +63,7 @@ export function RecommendationDetails({
       <article>
         <header>
           <div className="flex items-start justify-between gap-4">
-            <h2 className="leading-snug font-semibold text-emphasis-foreground">
+            <h2 className="leading-snug font-semibold text-strong-foreground">
               {item.name}
             </h2>
             <span className="flex shrink-0 items-center gap-2 text-sm text-muted-foreground">
@@ -102,7 +102,7 @@ export function RecommendationDetails({
             href={linkedInRecommendationsUrl}
             variant="link"
             size="sm"
-            className="h-auto p-0 text-xs font-medium text-emphasis-foreground"
+            className="h-auto p-0 text-xs font-medium text-strong-foreground"
           >
             View on LinkedIn
             <ArrowUpRightIcon />
@@ -158,7 +158,7 @@ function FeaturedRecommendation({
         </blockquote>
         <figcaption className="mt-auto pt-4 sm:flex sm:items-end sm:justify-between sm:gap-6">
           <div>
-            <p className="text-sm font-semibold text-emphasis-foreground">
+            <p className="text-sm font-semibold text-strong-foreground">
               {item.name}
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground">{item.role}</p>
@@ -170,7 +170,7 @@ function FeaturedRecommendation({
             href={linkedInRecommendationsUrl}
             variant="link"
             size="sm"
-            className="mt-3 h-auto shrink-0 p-0 text-xs font-medium text-emphasis-foreground sm:mt-0"
+            className="mt-3 h-auto shrink-0 p-0 text-xs font-medium text-strong-foreground sm:mt-0"
           >
             View on LinkedIn
             <ArrowUpRightIcon />

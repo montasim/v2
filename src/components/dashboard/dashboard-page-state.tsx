@@ -37,7 +37,7 @@ export function DashboardPageHeader({
   return (
     <header className="mb-7 flex items-start gap-4 border-b pb-5">
       <div className="min-w-0 flex-1">
-        <h1 className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
+        <h1 className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
           {title}
         </h1>
         {description ? (
@@ -115,7 +115,7 @@ export function DashboardEmptyState({
         <span className="mx-auto grid size-11 place-items-center rounded-xl border bg-muted/35 text-muted-foreground">
           <Icon className="size-5" />
         </span>
-        <h2 className="mt-4 text-sm font-semibold text-emphasis-foreground">
+        <h2 className="mt-4 text-sm font-semibold text-strong-foreground">
           {state.title}
         </h2>
         <p className="mt-1.5 text-xs leading-5 text-muted-foreground">

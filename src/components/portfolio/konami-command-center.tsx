@@ -47,11 +47,11 @@ function CommandRow({
 }) {
   return (
     <span className="group flex items-center gap-3 rounded-xl border bg-background/40 p-3.5 transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-ring/50 hover:bg-muted active:scale-[0.99] motion-reduce:transition-none">
-      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-emphasis-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-ring/15 group-hover:text-ring motion-reduce:transition-none">
+      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-strong-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-ring/15 group-hover:text-ring motion-reduce:transition-none">
         <Icon className="size-5" aria-hidden="true" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-semibold text-emphasis-foreground">
+        <span className="block text-sm font-semibold text-strong-foreground">
           {label}
         </span>
         <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
@@ -117,7 +117,7 @@ export function KonamiCommandCenter() {
           <span className="text-[0.625rem] font-medium tracking-[0.14em] text-muted-foreground">
             CODE
           </span>
-          <span className="font-semibold tracking-[0.08em] text-emphasis-foreground">
+          <span className="font-semibold tracking-[0.08em] text-strong-foreground">
             {KONAMI_DISPLAY_SEQUENCE.slice(0, progress).join(" ")}
           </span>
         </div>
@@ -134,7 +134,7 @@ export function KonamiCommandCenter() {
             />
             Hidden layer · online
           </p>
-          <SheetTitle className="mt-5 pr-10 text-xl font-bold tracking-tight text-emphasis-foreground sm:text-3xl">
+          <SheetTitle className="mt-5 pr-10 text-xl font-bold tracking-tight text-strong-foreground sm:text-3xl">
             Developer command center
           </SheetTitle>
           <SheetDescription className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -185,7 +185,7 @@ export function KonamiCommandCenter() {
             href={githubUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-emphasis-foreground hover:underline"
+            className="inline-flex items-center gap-1 font-medium text-strong-foreground hover:underline"
           >
             GitHub <ArrowUpRightIcon className="size-3" aria-hidden="true" />
           </a>

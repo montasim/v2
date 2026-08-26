@@ -46,7 +46,7 @@ function Page() {
         <ExternalAction
           href={linkedInRecommendationsUrl}
           variant="link"
-          className="mt-4 h-auto p-0 font-medium text-emphasis-foreground"
+          className="mt-4 h-auto p-0 font-medium text-strong-foreground"
         >
           View recommendations on LinkedIn
           <ArrowUpRightIcon />

@@ -56,7 +56,7 @@ function EmptyState() {
   return (
     <div className="grid min-h-52 place-items-center rounded-lg border border-dashed bg-muted/15 px-6 text-center">
       <div>
-        <p className="text-sm font-medium text-emphasis-foreground">
+        <p className="text-sm font-medium text-strong-foreground">
           No hiring signals yet
         </p>
         <p className="mt-1 max-w-64 text-xs leading-5 text-muted-foreground">
@@ -109,7 +109,7 @@ function RoleRanking({ data }: { data: InquiryStat[] }) {
                     style={{ backgroundColor: color.solid }}
                     aria-hidden="true"
                   />
-                  <span className="truncate text-xs font-medium text-emphasis-foreground">
+                  <span className="truncate text-xs font-medium text-strong-foreground">
                     {item.label}
                   </span>
                 </div>
@@ -192,7 +192,7 @@ function ArrangementDistribution({ data }: { data: InquiryStat[] }) {
                 aria-hidden="true"
               />
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-xs font-medium text-emphasis-foreground">
+                <span className="block truncate text-xs font-medium text-strong-foreground">
                   {item.label}
                 </span>
                 <span className="mt-0.5 block text-[0.625rem] text-muted-foreground">
@@ -225,7 +225,7 @@ export function InquiryStats({
         <div>
           <h2
             id="inquiry-stats-heading"
-            className="text-sm font-semibold text-emphasis-foreground"
+            className="text-sm font-semibold text-strong-foreground"
           >
             Hiring signals
           </h2>

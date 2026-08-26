@@ -118,7 +118,7 @@ function OwnerDashboardPage() {
         <div className="flex h-16 items-center border-b px-4 lg:px-5">
           <Link
             to="/"
-            className="flex items-center gap-2 font-semibold tracking-tight text-emphasis-foreground"
+            className="flex items-center gap-2 font-semibold tracking-tight text-strong-foreground"
           >
             <span className="relative">
               <img
@@ -145,7 +145,7 @@ function OwnerDashboardPage() {
             </Button>
             <Button
               variant="outline"
-              className="ml-1 h-9 font-medium text-emphasis-foreground"
+              className="ml-1 h-9 font-medium text-strong-foreground"
               onClick={signOut}
               disabled={signingOut}
               aria-label="Sign out"
@@ -185,7 +185,7 @@ function OwnerDashboardPage() {
         <header className="sticky top-0 z-30 hidden h-16 items-center border-b bg-background/95 px-10 backdrop-blur-sm lg:flex">
           <div className="mx-auto flex w-full max-w-6xl items-center gap-4">
             <div
-              className="flex min-w-0 items-center gap-2 text-xs text-emphasis-foreground"
+              className="flex min-w-0 items-center gap-2 text-xs text-strong-foreground"
               aria-label="Dashboard location"
             >
               <DatabaseIcon className="size-3.5 shrink-0" />
@@ -215,7 +215,7 @@ function OwnerDashboardPage() {
               />
               <Button
                 variant="outline"
-                className="font-medium text-emphasis-foreground"
+                className="font-medium text-strong-foreground"
                 onClick={signOut}
                 disabled={signingOut}
                 aria-label="Sign out"
@@ -248,7 +248,7 @@ export function DashboardHeader({
 }) {
   return (
     <header className="mb-7 border-b pb-5">
-      <h1 className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
+      <h1 className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
         {title}
       </h1>
       {description ? (
@@ -300,7 +300,7 @@ export function Overview({ data }: { data: DashboardData }) {
         <div className="mb-3">
           <h2
             id="activity-heading"
-            className="text-sm font-semibold text-emphasis-foreground"
+            className="text-sm font-semibold text-strong-foreground"
           >
             Portfolio activity
           </h2>
@@ -317,15 +317,15 @@ export function Overview({ data }: { data: DashboardData }) {
               className="group flex min-h-40 flex-col rounded-xl border bg-background p-5 transition-colors hover:border-emphasis-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <div className="flex items-start justify-between gap-3">
-                <span className="grid size-9 place-items-center rounded-lg border bg-muted/35 text-emphasis-foreground">
+                <span className="grid size-9 place-items-center rounded-lg border bg-muted/35 text-strong-foreground">
                   <Icon className="size-4" />
                 </span>
                 <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
               </div>
-              <p className="mt-5 text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
+              <p className="mt-5 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
                 {value}
               </p>
-              <p className="mt-1 text-xs font-medium text-emphasis-foreground">
+              <p className="mt-1 text-xs font-medium text-strong-foreground">
                 {label}
               </p>
               <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">
@@ -340,7 +340,7 @@ export function Overview({ data }: { data: DashboardData }) {
         <section className="overflow-hidden rounded-xl border bg-background">
           <div className="flex items-center gap-4 border-b px-5 py-4">
             <div>
-              <h2 className="font-semibold text-emphasis-foreground">
+              <h2 className="font-semibold text-strong-foreground">
                 Recent inquiries
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -365,7 +365,7 @@ export function Overview({ data }: { data: DashboardData }) {
                   <AvatarFallback>{initials(item.name)}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-emphasis-foreground">
+                  <p className="truncate text-sm font-semibold text-strong-foreground">
                     {item.name}
                   </p>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
@@ -394,7 +394,7 @@ export function Overview({ data }: { data: DashboardData }) {
 
         <section className="overflow-hidden rounded-xl border bg-background">
           <div className="border-b px-5 py-4">
-            <h2 className="font-semibold text-emphasis-foreground">
+            <h2 className="font-semibold text-strong-foreground">
               Public availability
             </h2>
             <p className="mt-1 text-xs text-muted-foreground">
@@ -412,7 +412,7 @@ export function Overview({ data }: { data: DashboardData }) {
                 )}
                 aria-hidden="true"
               />
-              <p className="text-lg font-semibold text-emphasis-foreground">
+              <p className="text-lg font-semibold text-strong-foreground">
                 {data.availability.enabled ? "Visible to visitors" : "Hidden"}
               </p>
             </div>
@@ -453,7 +453,7 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
             <div className="min-w-0 flex-1">
               <h2
                 id={`inquiry-${item.id}`}
-                className="truncate text-sm font-semibold text-emphasis-foreground"
+                className="truncate text-sm font-semibold text-strong-foreground"
               >
                 {item.name}
               </h2>
@@ -489,7 +489,7 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
                   <ChatCenteredDotsIcon className="size-3.5" />
                   Message
                 </p>
-                <p className="mt-2 text-sm leading-6 text-emphasis-foreground">
+                <p className="mt-2 text-sm leading-6 text-strong-foreground">
                   {item.context}
                 </p>
               </section>
@@ -620,7 +620,7 @@ export function Comments({
               <div className="min-w-0 flex-1">
                 <h2
                   id={`comment-${item.id}`}
-                  className="truncate text-sm font-semibold text-emphasis-foreground"
+                  className="truncate text-sm font-semibold text-strong-foreground"
                 >
                   {item.name}
                 </h2>
@@ -675,7 +675,7 @@ export function Comments({
                   <ChatCircleDotsIcon className="size-3.5" />
                   Comment
                 </p>
-                <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-emphasis-foreground">
+                <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-strong-foreground">
                   {item.message}
                 </p>
               </section>
@@ -686,7 +686,7 @@ export function Comments({
                   <Link
                     to="/blog/$slug"
                     params={{ slug: item.postSlug }}
-                    className="mt-1 flex w-fit max-w-full items-center gap-2 text-sm font-medium text-emphasis-foreground underline-offset-4 hover:underline"
+                    className="mt-1 flex w-fit max-w-full items-center gap-2 text-sm font-medium text-strong-foreground underline-offset-4 hover:underline"
                   >
                     <BookOpenTextIcon className="size-4 shrink-0" />
                     <span className="truncate">{postTitle}</span>
@@ -746,10 +746,10 @@ export function Pagination({
     >
       <p className="text-xs text-muted-foreground" aria-live="polite">
         Showing{" "}
-        <span className="font-medium text-emphasis-foreground">
+        <span className="font-medium text-strong-foreground">
           {first}–{last}
         </span>{" "}
-        of <span className="font-medium text-emphasis-foreground">{total}</span>{" "}
+        of <span className="font-medium text-strong-foreground">{total}</span>{" "}
         {label}
       </p>
 
@@ -950,7 +950,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-background p-4">
       <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-      <dd className="mt-1.5 text-sm font-semibold text-emphasis-foreground">
+      <dd className="mt-1.5 text-sm font-semibold text-strong-foreground">
         {value}
       </dd>
     </div>
