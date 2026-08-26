@@ -32,6 +32,7 @@ import {
   SquaresFourIcon,
   SunIcon,
   TrashIcon,
+  UsersThreeIcon,
 } from "@/components/ui/icons"
 import { useTheme } from "@/components/theme-provider"
 import { updateOwnerAvailabilitySettings } from "@/features/availability/application/settings"
@@ -79,6 +80,11 @@ const navigation = [
     to: "/dashboard/comments",
     label: "Blog comments",
     icon: ChatCircleDotsIcon,
+  },
+  {
+    to: "/dashboard/subscribers",
+    label: "Subscribers",
+    icon: UsersThreeIcon,
   },
   {
     to: "/dashboard/availability",

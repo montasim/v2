@@ -6,6 +6,7 @@ import {
   BriefcaseIcon,
   ChatCenteredDotsIcon,
   ChatCircleDotsIcon,
+  UsersThreeIcon,
 } from "@/components/ui/icons"
 
 export function DashboardPageHeader({
@@ -91,6 +92,12 @@ const emptyStates = {
     title: "No comments to review",
     description:
       "New comments from blog discussions will appear here for moderation.",
+  },
+  subscribers: {
+    icon: UsersThreeIcon,
+    title: "No subscribers yet",
+    description:
+      "People who subscribe to new article notifications will appear here.",
   },
 } as const
 

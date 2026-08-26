@@ -311,6 +311,30 @@ export function DashboardCommentsSkeleton() {
   )
 }
 
+export function DashboardSubscribersSkeleton() {
+  return (
+    <LoadingRegion label="Loading newsletter subscribers">
+      <HeaderSkeleton width="w-48" description />
+      <div className="overflow-hidden rounded-xl border bg-background">
+        {[0, 1, 2, 3].map((item) => (
+          <div
+            key={item}
+            className="flex items-center gap-4 border-b px-5 py-4 last:border-b-0"
+          >
+            <Skeleton className="size-9 shrink-0 rounded-lg" />
+            <div className="min-w-0 flex-1">
+              <Skeleton className="h-4 w-52 max-w-full" />
+              <Skeleton className="mt-2 h-3 w-32" />
+            </div>
+            <Skeleton className="h-6 w-20 rounded-md" />
+          </div>
+        ))}
+      </div>
+      <PaginationSkeleton />
+    </LoadingRegion>
+  )
+}
+
 export function DashboardAvailabilitySkeleton() {
   return (
     <LoadingRegion label="Loading availability settings">

@@ -20,8 +20,9 @@ import {
   FunnelSimpleIcon,
   SearchIcon,
 } from "@/components/ui/icons"
-import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
+import { subscribeToNewsletter } from "@/features/newsletter/application/subscribe"
+import { getNewsletterSubscriptionError } from "@/features/newsletter/domain/subscriber"
 import { blogCatalog, blogTopicNavigation } from "@/lib/content/blog"
 import type { BlogPost, BlogTopic } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
@@ -292,19 +293,11 @@ function FeaturedCarousel({ posts }: { posts: BlogPost[] }) {
 
 function SubscriptionCard() {
   const fieldId = useId()
-  const verifyEmail = useServerFn(verifyVisitorEmail)
+  const subscribe = useServerFn(subscribeToNewsletter)
   const [email, setEmail] = useState("")
   const [saved, setSaved] = useState(false)
   const [isChecking, setIsChecking] = useState(false)
   const [error, setError] = useState("")
-
-  useEffect(() => {
-    const storedEmail = window.localStorage.getItem("blog-subscription-email")
-    if (storedEmail) {
-      setEmail(storedEmail)
-      setSaved(true)
-    }
-  }, [])
 
   return (
     <aside
@@ -330,19 +323,30 @@ function SubscriptionCard() {
           setIsChecking(true)
 
           try {
-            await verifyEmail({ data: email })
-            window.localStorage.setItem("blog-subscription-email", email)
+            const website = String(
+              new FormData(event.currentTarget).get("website") ?? ""
+            )
+            await subscribe({ data: { email, website } })
             setSaved(true)
           } catch (verificationError) {
             setError(
               getEmailVerificationError(verificationError) ??
-                "This email could not be verified. Try again."
+                getNewsletterSubscriptionError(verificationError) ??
+                "The subscription could not be completed. Try again."
             )
           } finally {
             setIsChecking(false)
           }
         }}
       >
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          className="hidden"
+          aria-hidden="true"
+        />
         <label htmlFor={fieldId} className="text-xs font-semibold">
           Email address
         </label>
@@ -372,7 +376,7 @@ function SubscriptionCard() {
             ) : saved ? (
               <CheckIcon />
             ) : null}
-            {isChecking ? "Checking" : saved ? "Saved" : "Subscribe"}
+            {isChecking ? "Subscribing" : saved ? "Subscribed" : "Subscribe"}
           </Button>
         </div>
         <p
@@ -384,8 +388,8 @@ function SubscriptionCard() {
         >
           {error ||
             (saved
-              ? "Preference saved on this device."
-              : "Prototype only. No email will be sent.")}
+              ? "Subscription confirmed. Check your inbox for a welcome email."
+              : "A confirmation email will be sent after subscribing.")}
         </p>
       </form>
     </aside>

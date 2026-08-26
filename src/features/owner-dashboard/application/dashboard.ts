@@ -6,6 +6,7 @@ import {
   loadOwnerConversations,
   loadOwnerDashboard,
   loadOwnerInquiries,
+  loadOwnerSubscribers,
 } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 import { loadAvailabilitySettings } from "@/features/availability/infrastructure/settings.server"
 import { requirePortfolioOwner } from "@/features/owner-auth/infrastructure/neon-auth.server"
@@ -39,6 +40,10 @@ export const getOwnerConversations = createServerFn({ method: "GET" })
 export const getOwnerComments = createServerFn({ method: "GET" })
   .validator((input: unknown) => ownerPageSchema.parse(input))
   .handler(ownerPageQuery(loadOwnerComments))
+
+export const getOwnerSubscribers = createServerFn({ method: "GET" })
+  .validator((input: unknown) => ownerPageSchema.parse(input))
+  .handler(ownerPageQuery(loadOwnerSubscribers))
 
 export const getOwnerAvailability = createServerFn({ method: "GET" }).handler(
   async () => {

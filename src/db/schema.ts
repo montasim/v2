@@ -40,6 +40,31 @@ export const blogPostViews = pgTable("blog_post_views", {
   viewCount: integer("view_count").default(0).notNull(),
 })
 
+export const newsletterSubscribers = pgTable(
+  "newsletter_subscribers",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: varchar("email", { length: 254 }).notNull(),
+    confirmationState: varchar("confirmation_state", { length: 16 })
+      .default("pending")
+      .notNull(),
+    confirmationLastError: text("confirmation_last_error"),
+    confirmationSentAt: timestamp("confirmation_sent_at", {
+      withTimezone: true,
+    }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("newsletter_subscribers_email_idx").on(table.email),
+    index("newsletter_subscribers_created_idx").on(table.createdAt),
+  ]
+)
+
 export const projectCaseStudyViews = pgTable("project_case_study_views", {
   caseStudySlug: varchar("case_study_slug", { length: 200 }).primaryKey(),
   viewCount: integer("view_count").default(0).notNull(),

@@ -4,6 +4,7 @@ import { getDatabase } from "@/db/client.server"
 import {
   assistantExchanges,
   blogComments,
+  newsletterSubscribers,
   portfolioInquiries,
 } from "@/db/schema"
 import { loadAvailabilitySettings } from "@/features/availability/infrastructure/settings.server"
@@ -63,11 +64,15 @@ function normalizeInquiryStats(
 async function loadPage<T>(
   requestedPage: number,
   table:
-    typeof portfolioInquiries | typeof assistantExchanges | typeof blogComments,
+    | typeof portfolioInquiries
+    | typeof assistantExchanges
+    | typeof blogComments
+    | typeof newsletterSubscribers,
   createdAt:
     | typeof portfolioInquiries.createdAt
     | typeof assistantExchanges.createdAt
     | typeof blogComments.createdAt
+    | typeof newsletterSubscribers.createdAt
 ) {
   const database = getDatabase()
   const [{ total }] = await database.select({ total: count() }).from(table)
@@ -180,5 +185,27 @@ export async function loadOwnerComments(page: number) {
     })),
   }
 }
+
+export async function loadOwnerSubscribers(page: number) {
+  const result = await loadPage<typeof newsletterSubscribers.$inferSelect>(
+    page,
+    newsletterSubscribers,
+    newsletterSubscribers.createdAt
+  )
+
+  return {
+    ...result,
+    items: result.items.map((subscriber) => ({
+      ...subscriber,
+      confirmationSentAt: subscriber.confirmationSentAt?.toISOString() ?? null,
+      createdAt: subscriber.createdAt.toISOString(),
+      updatedAt: subscriber.updatedAt.toISOString(),
+    })),
+  }
+}
+
+export type OwnerSubscriberPage = Awaited<
+  ReturnType<typeof loadOwnerSubscribers>
+>
 
 export type OwnerDashboardData = Awaited<ReturnType<typeof loadOwnerDashboard>>

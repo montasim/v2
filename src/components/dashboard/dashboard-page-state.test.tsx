@@ -79,4 +79,15 @@ describe("DashboardEmptyState", () => {
       )
     ).not.toBeNull()
   })
+
+  it("explains what will appear in an empty subscribers view", () => {
+    render(<DashboardEmptyState kind="subscribers" />)
+
+    expect(screen.getByText("No subscribers yet")).not.toBeNull()
+    expect(
+      screen.getByText(
+        "People who subscribe to new article notifications will appear here."
+      )
+    ).not.toBeNull()
+  })
 })
