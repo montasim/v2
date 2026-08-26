@@ -42,6 +42,7 @@ import {
 } from "@/features/chat/domain/chat-moderation"
 import { formatChatResponseProvenance } from "@/features/chat/domain/chat-response-provenance"
 import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
+import { PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE } from "@/features/chat/domain/portfolio-chat"
 import {
   createInquiryState,
   inquiryReducer,
@@ -542,27 +543,16 @@ function ChatView({
           </div>
         )}
         {chat.error && (
-          <div
+          <article
             role="alert"
-            className="rounded-2xl border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive"
+            className="max-w-[92%] rounded-2xl rounded-bl-md bg-muted px-4 py-4 text-sm leading-6"
           >
-            <div className="flex gap-3">
-              <WarningCircleIcon className="mt-0.5 size-[19px] shrink-0" />
-              <div>
-                <p className="font-semibold">Could not load the answer</p>
-                <p className="mt-1 leading-6">
-                  The answer could not be loaded. Your question is still here.
-                </p>
-                <button
-                  type="button"
-                  className="mt-3 rounded-lg border border-current px-3 py-2 text-xs font-semibold focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={() => void chat.regenerate()}
-                >
-                  Try again
-                </button>
-              </div>
-            </div>
-          </div>
+            <MessageParagraphs text={PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE} />
+            <MessageContactAction
+              intent="general"
+              startInquiry={startInquiry}
+            />
+          </article>
         )}
         <div ref={endRef} />
       </div>

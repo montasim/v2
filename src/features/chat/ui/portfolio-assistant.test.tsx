@@ -10,6 +10,7 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { AvailabilityCard } from "@/components/portfolio/availability-card"
+import { PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE } from "@/features/chat/domain/portfolio-chat"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 import { TEMPORARY_EMAIL_ERROR } from "@/features/email-verification/domain/email-verification"
 
@@ -20,6 +21,7 @@ const verifyVisitorEmail = vi.hoisted(() => vi.fn())
 const chatState = vi.hoisted(
   (): {
     status: "submitted" | "streaming" | "ready" | "error"
+    error?: Error
     messages: Array<{
       id: string
       role: "user" | "assistant"
@@ -36,6 +38,7 @@ const chatState = vi.hoisted(
     }>
   } => ({
     status: "ready",
+    error: undefined,
     messages: [],
   })
 )
@@ -46,7 +49,7 @@ vi.mock("@ai-sdk/react", () => ({
     sendMessage,
     setMessages,
     status: chatState.status,
-    error: undefined,
+    error: chatState.error,
     regenerate: vi.fn(),
     stop: vi.fn(),
     clearError: vi.fn(),
@@ -75,6 +78,7 @@ describe("PortfolioAssistant chat navigation", () => {
     verifyVisitorEmail.mockReset()
     verifyVisitorEmail.mockResolvedValue({ accepted: true })
     chatState.status = "ready"
+    chatState.error = undefined
     chatState.messages = []
     Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
       configurable: true,
@@ -508,6 +512,29 @@ describe("PortfolioAssistant chat navigation", () => {
         "Contact Montasim directly for information that is not published in this portfolio."
       )
     ).not.toBeNull()
+    expect(
+      screen
+        .getByRole("link", { name: "montasimmamun@gmail.com" })
+        .getAttribute("href")
+    ).toBe("mailto:montasimmamun@gmail.com")
+    expect(
+      screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")
+    ).toBe("https://wa.me/montasimalmamun")
+  })
+
+  it("shows the direct contact handoff for every failed chat response", () => {
+    chatState.status = "error"
+    chatState.error = new Error("Provider unreachable")
+
+    render(<PortfolioAssistant />)
+    fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
+    fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
+
+    const handoff = screen.getByRole("alert")
+    expect(screen.getByText(PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE)).not.toBeNull()
+    expect(handoff.className).not.toContain("destructive")
+    expect(screen.queryByText("Could not load the answer")).toBeNull()
+    expect(screen.queryByRole("button", { name: "Try again" })).toBeNull()
     expect(
       screen
         .getByRole("link", { name: "montasimmamun@gmail.com" })

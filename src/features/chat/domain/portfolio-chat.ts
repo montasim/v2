@@ -7,6 +7,9 @@ import type {
 export const PORTFOLIO_CHAT_POLICY_VERSION =
   "portfolio-chat/full-context-v1" as const
 
+export const PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE =
+  "I couldn't prepare a fully verified answer right now. Please try again shortly, explore Montasim's published portfolio, or contact him directly."
+
 export type NonEmptyReadonlyArray<T> = readonly [T, ...T[]]
 
 export interface PortfolioChatInput {

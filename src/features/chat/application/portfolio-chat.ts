@@ -21,6 +21,7 @@ import { redactChatText } from "@/features/chat/domain/chat-redaction"
 import { inferConversationAction } from "@/features/chat/domain/conversation-action"
 import type { ChatProviderName } from "@/features/chat/domain/chat"
 import type { PortfolioCitation } from "@/features/chat/domain/portfolio-citations"
+import { PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE } from "@/features/chat/domain/portfolio-chat"
 import type {
   PortfolioChat,
   PortfolioChatInput,
@@ -716,7 +717,7 @@ function providerUnavailableHandoff(
   return {
     kind: "handoff",
     messageId,
-    text: "I couldn't prepare a fully verified answer right now. Please try again shortly, explore Montasim's published portfolio, or contact him directly.",
+    text: PORTFOLIO_CHAT_UNAVAILABLE_MESSAGE,
     source: "Portfolio contact",
     citations: [],
     evidenceIds: [],
