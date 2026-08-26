@@ -89,7 +89,7 @@ function OverviewPage() {
               <ExternalAction
                 href={profile.resumeUrl}
                 variant="outline"
-                className="font-medium text-foreground"
+                className="font-medium text-emphasis-foreground"
               >
                 <DownloadSimpleIcon className="size-[18px] sm:size-4" />
                 Download resume

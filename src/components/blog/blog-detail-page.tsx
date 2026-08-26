@@ -230,7 +230,7 @@ function BlogDiscussion({
           ) : null}
           <div className="flex items-start gap-2">
             <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-2">
-              <h3 className="text-sm font-semibold text-foreground">
+              <h3 className="text-sm font-semibold text-emphasis-foreground">
                 {comment.name}
               </h3>
               <time
@@ -275,7 +275,7 @@ function BlogDiscussion({
                   type="button"
                   disabled={deletingId === comment.id}
                   onClick={() => setPendingDeletionId(null)}
-                  className="rounded-sm font-semibold text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                  className="rounded-sm font-semibold text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
                 >
                   Cancel
                 </button>
@@ -899,7 +899,7 @@ export function BlogDetailPage({
                     className={cn(
                       "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l-2 lg:px-0 lg:py-1.75 lg:pl-3",
                       activeSection === id
-                        ? "bg-muted font-semibold text-foreground lg:border-emphasis-foreground lg:bg-transparent"
+                        ? "bg-muted font-semibold text-emphasis-foreground lg:border-emphasis-foreground lg:bg-transparent"
                         : "border-transparent hover:bg-muted hover:text-foreground lg:hover:bg-transparent"
                     )}
                   >
@@ -938,7 +938,7 @@ export function BlogDetailPage({
                   </p>
                 ))}
                 {section.callout ? (
-                  <blockquote className="my-9 border-l-3 border-emphasis-foreground py-1.5 pl-5.5 text-base leading-7 text-foreground">
+                  <blockquote className="my-9 border-l-3 border-emphasis-foreground py-1.5 pl-5.5 text-base leading-7 text-emphasis-foreground">
                     {section.callout}
                   </blockquote>
                 ) : null}

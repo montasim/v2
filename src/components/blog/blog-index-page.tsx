@@ -484,7 +484,7 @@ export function BlogIndexPage({
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "relative shrink-0 rounded-sm pt-2 pb-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] outline-none after:absolute after:right-0 after:bottom-[-1px] after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ring motion-reduce:transition-none motion-reduce:after:transition-none",
-                  isActive && "text-foreground after:scale-x-100"
+                  isActive && "text-emphasis-foreground after:scale-x-100"
                 )}
               >
                 {item.label}

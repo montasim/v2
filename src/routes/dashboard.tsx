@@ -139,7 +139,7 @@ function OwnerDashboardPage() {
             </Button>
             <Button
               variant="outline"
-              className="ml-1 h-9 font-medium text-foreground"
+              className="ml-1 h-9 font-medium text-emphasis-foreground"
               onClick={signOut}
               disabled={signingOut}
               aria-label="Sign out"
@@ -209,7 +209,7 @@ function OwnerDashboardPage() {
               />
               <Button
                 variant="outline"
-                className="font-medium text-foreground"
+                className="font-medium text-emphasis-foreground"
                 onClick={signOut}
                 disabled={signingOut}
                 aria-label="Sign out"
@@ -740,10 +740,11 @@ export function Pagination({
     >
       <p className="text-xs text-muted-foreground" aria-live="polite">
         Showing{" "}
-        <span className="font-medium text-foreground">
+        <span className="font-medium text-emphasis-foreground">
           {first}–{last}
         </span>{" "}
-        of <span className="font-medium text-foreground">{total}</span> {label}
+        of <span className="font-medium text-emphasis-foreground">{total}</span>{" "}
+        {label}
       </p>
 
       {pageCount > 1 ? (

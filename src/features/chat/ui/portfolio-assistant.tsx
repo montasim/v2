@@ -1403,7 +1403,7 @@ function InquirySuccess({
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Montasim will reply to{" "}
-              <strong className="font-semibold text-foreground">
+              <strong className="font-semibold text-emphasis-foreground">
                 {state.answers.email}
               </strong>
               . He will review the details and reply directly.

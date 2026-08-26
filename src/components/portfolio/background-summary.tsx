@@ -58,7 +58,7 @@ export function BackgroundSummary() {
         <InternalAction
           to="/education"
           variant="link"
-          className="group mt-6 h-auto w-fit p-0 font-medium text-foreground"
+          className="group mt-6 h-auto w-fit p-0 font-medium text-emphasis-foreground"
         >
           View all education
           <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />
@@ -96,7 +96,7 @@ export function BackgroundSummary() {
           <InternalAction
             to="/certifications"
             variant="link"
-            className="group h-auto p-0 font-medium text-foreground"
+            className="group h-auto p-0 font-medium text-emphasis-foreground"
           >
             View all certifications
             <ArrowRightCompactIcon className="group-hover:translate-x-0.5" />

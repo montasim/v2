@@ -295,7 +295,7 @@ export function ProjectCaseStudyPage({
                     className={cn(
                       "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l-2 lg:px-0 lg:py-1.75 lg:pl-3",
                       activeSection === id
-                        ? "bg-muted font-semibold text-foreground lg:border-emphasis-foreground lg:bg-transparent"
+                        ? "bg-muted font-semibold text-emphasis-foreground lg:border-emphasis-foreground lg:bg-transparent"
                         : "border-transparent hover:bg-muted hover:text-foreground lg:hover:bg-transparent"
                     )}
                   >

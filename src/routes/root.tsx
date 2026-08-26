@@ -111,9 +111,11 @@ function OwnerRootPage() {
           {auth.status === "forbidden" ? (
             <>
               <p className="text-sm leading-6 text-muted-foreground">
-                <strong className="text-foreground">{auth.email}</strong> does
-                not have access to this area. Sign out and use the portfolio
-                owner account.
+                <strong className="text-emphasis-foreground">
+                  {auth.email}
+                </strong>{" "}
+                does not have access to this area. Sign out and use the
+                portfolio owner account.
               </p>
               <Button
                 type="button"

@@ -34,7 +34,7 @@ export function DetailPage({
   children: ReactNode
 }) {
   const actionClassName =
-    "group/action h-auto gap-2 rounded-md bg-background px-4 py-2.5 font-medium text-foreground"
+    "group/action h-auto gap-2 rounded-md bg-background px-4 py-2.5 font-medium text-emphasis-foreground"
 
   return (
     <PageShell padded>
