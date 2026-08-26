@@ -62,7 +62,7 @@ function SectionHeading({
   return (
     <h2
       id={`${id}-heading`}
-      className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+      className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
     >
       {children}
     </h2>
@@ -83,7 +83,7 @@ function CaseStudyFeedback() {
     >
       <h2
         id="case-study-feedback-heading"
-        className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+        className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
       >
         Working through something similar?
       </h2>
@@ -201,7 +201,7 @@ export function ProjectCaseStudyPage({
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="w-auto max-w-[80%] text-3xl leading-tight font-bold tracking-tight text-balance text-emphasis-foreground">
+              <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-emphasis-foreground sm:text-3xl">
                 {project.title}
               </h1>
               <Badge variant="secondary" className="font-medium">

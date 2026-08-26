@@ -97,7 +97,7 @@ function OwnerRootPage() {
           </div>
           <h1
             id="owner-access-heading"
-            className="mt-3 text-2xl font-semibold tracking-tight text-emphasis-foreground"
+            className="mt-3 text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
           >
             {auth.status === "unconfigured"
               ? "Owner access unavailable"

@@ -134,7 +134,7 @@ export function KonamiCommandCenter() {
             />
             Hidden layer · online
           </p>
-          <SheetTitle className="mt-5 pr-10 text-3xl font-bold tracking-tight text-emphasis-foreground">
+          <SheetTitle className="mt-5 pr-10 text-xl font-bold tracking-tight text-emphasis-foreground sm:text-3xl">
             Developer command center
           </SheetTitle>
           <SheetDescription className="mt-3 text-sm leading-relaxed text-muted-foreground">

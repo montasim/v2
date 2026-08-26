@@ -55,7 +55,7 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
           </p>
           <h1
             id="error-heading"
-            className="mt-3 text-3xl font-bold tracking-tight text-emphasis-foreground"
+            className="mt-3 text-xl font-bold tracking-tight text-emphasis-foreground sm:text-3xl"
           >
             {content.title}
           </h1>

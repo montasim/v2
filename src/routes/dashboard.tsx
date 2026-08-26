@@ -242,7 +242,7 @@ export function DashboardHeader({
 }) {
   return (
     <header className="mb-7 border-b pb-5">
-      <h1 className="text-2xl font-semibold tracking-tight text-emphasis-foreground">
+      <h1 className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
         {title}
       </h1>
       {description ? (
@@ -316,7 +316,7 @@ export function Overview({ data }: { data: DashboardData }) {
                 </span>
                 <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
               </div>
-              <p className="mt-5 text-2xl font-semibold tracking-tight text-emphasis-foreground">
+              <p className="mt-5 text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
                 {value}
               </p>
               <p className="mt-1 text-xs font-medium text-emphasis-foreground">

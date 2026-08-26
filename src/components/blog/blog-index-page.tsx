@@ -420,7 +420,7 @@ export function BlogIndexPage({
       </Breadcrumb>
 
       <header className="mt-8 border-b pb-8">
-        <h1 className="text-3xl leading-tight font-bold tracking-[-0.025em] text-balance text-emphasis-foreground">
+        <h1 className="text-xl leading-tight font-bold tracking-[-0.025em] text-balance text-emphasis-foreground sm:text-3xl">
           Writing about software that has to work.
         </h1>
         <p className="mt-4.5 max-w-[62ch] text-[1.0625rem] leading-[1.6] text-muted-foreground">
@@ -440,7 +440,7 @@ export function BlogIndexPage({
         <div className="mb-6 flex items-end justify-between gap-8 max-sm:flex-col max-sm:items-start max-sm:gap-2">
           <h2
             id="browse-writing-heading"
-            className="text-2xl font-bold tracking-[-0.035em] text-emphasis-foreground"
+            className="text-xl font-bold tracking-[-0.035em] text-emphasis-foreground sm:text-2xl"
           >
             Browse writing
           </h2>

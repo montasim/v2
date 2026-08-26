@@ -36,7 +36,7 @@ export function DashboardPageHeader({
   return (
     <header className="mb-7 flex items-start gap-4 border-b pb-5">
       <div className="min-w-0 flex-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-emphasis-foreground">
+        <h1 className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl">
           {title}
         </h1>
         {description ? (

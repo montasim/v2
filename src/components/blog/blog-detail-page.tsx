@@ -665,7 +665,7 @@ function BlogProjectInquiry() {
     >
       <h2
         id="blog-project-inquiry-heading"
-        className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+        className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
       >
         Working through a similar challenge?
       </h2>
@@ -834,7 +834,7 @@ export function BlogDetailPage({
               </Button>
             </div>
           </div>
-          <h1 className="w-full max-w-none text-3xl leading-tight font-bold tracking-[-0.025em] text-emphasis-foreground">
+          <h1 className="w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-emphasis-foreground sm:text-3xl">
             {post.title}
           </h1>
         </div>
@@ -922,7 +922,7 @@ export function BlogDetailPage({
               >
                 <h2
                   id={`${section.id}-heading`}
-                  className="mb-5 text-2xl leading-[1.35] font-semibold tracking-[-0.02em] text-emphasis-foreground"
+                  className="mb-5 text-xl leading-[1.35] font-semibold tracking-[-0.02em] text-emphasis-foreground sm:text-2xl"
                 >
                   {section.title}
                 </h2>

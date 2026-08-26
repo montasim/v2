@@ -1398,7 +1398,7 @@ function InquirySuccess({
             <span className="grid size-12 place-items-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
               <CheckIcon className="size-6" />
             </span>
-            <h2 className="mt-5 text-2xl font-semibold tracking-tight">
+            <h2 className="mt-5 text-xl font-semibold tracking-tight sm:text-2xl">
               Your inquiry was sent.
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -1472,7 +1472,7 @@ function InquiryError({
           <span className="grid size-12 place-items-center rounded-xl bg-destructive/10 text-destructive">
             <WarningCircleIcon className="size-6" />
           </span>
-          <h2 className="mt-5 text-2xl font-semibold tracking-tight">
+          <h2 className="mt-5 text-xl font-semibold tracking-tight sm:text-2xl">
             Your inquiry was not sent.
           </h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">

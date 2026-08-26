@@ -40,7 +40,7 @@ export function PageSection({
         <div className="mb-6 border-b pb-4 sm:flex sm:items-center sm:justify-between sm:gap-6">
           <h2
             id={headingId}
-            className="text-2xl font-semibold tracking-tight text-emphasis-foreground"
+            className="text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
           >
             {title}
           </h2>

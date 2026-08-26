@@ -59,7 +59,7 @@ function OwnerOAuthCallbackPage() {
           </div>
           <h1
             id="oauth-callback-heading"
-            className="mt-3 text-2xl font-semibold tracking-tight text-emphasis-foreground"
+            className="mt-3 text-xl font-semibold tracking-tight text-emphasis-foreground sm:text-2xl"
           >
             {failed ? "Sign-in could not be completed" : "Completing sign-in"}
           </h1>
