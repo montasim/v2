@@ -27,6 +27,8 @@ export function ProjectCard({ project }: { project: Project }) {
   const image = projectImage(project)
   const primaryUrl =
     project.liveUrl || project.npmUrl || project.releaseUrl || project.githubUrl
+  const separateNpmUrl =
+    project.npmUrl && project.npmUrl !== primaryUrl ? project.npmUrl : undefined
   const caseStudy = projectCaseStudyCatalog.findByProjectId(project.id)
   const preview = image ? (
     <img
@@ -117,6 +119,16 @@ export function ProjectCard({ project }: { project: Project }) {
                   <ArrowUpRightIcon className="group-hover/action:translate-x-0.5 group-hover/action:-translate-y-0.5" />
                 )}
                 {project.npmUrl && !project.liveUrl ? "Package" : "Live site"}
+              </ExternalAction>
+            ) : null}
+            {separateNpmUrl ? (
+              <ExternalAction
+                href={separateNpmUrl}
+                variant="link"
+                className="group/action h-auto p-0 font-bold text-emphasis-foreground"
+              >
+                <PackageIcon className="group-hover/action:-translate-y-0.5" />
+                npm
               </ExternalAction>
             ) : null}
             {project.githubUrl ? (
