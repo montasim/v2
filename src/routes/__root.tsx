@@ -58,7 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="min-h-[100dvh] bg-background text-strong-foreground antialiased selection:bg-[#d8aa63] selection:text-[#151614] dark:text-foreground">
+      <body className="min-h-[100dvh] bg-background text-strong-foreground antialiased selection:bg-[#d8aa63] selection:text-[#151614] dark:text-foreground dark:selection:bg-ring/35 dark:selection:text-strong-foreground">
         <ThemeProvider>
           <ApplicationFrame>{children}</ApplicationFrame>
         </ThemeProvider>

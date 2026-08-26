@@ -3,6 +3,7 @@
 import { useState } from "react"
 
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export function BadgeList({
@@ -32,26 +33,24 @@ export function BadgeList({
       ))}
       {hasHiddenItems ? (
         <li>
-          <Badge
-            asChild
+          <Button
+            type="button"
+            variant="outline"
+            size="xs"
+            aria-expanded={expanded}
+            aria-label={
+              expanded
+                ? `Show fewer ${label}`
+                : `Show ${remaining} more ${label}`
+            }
+            onClick={() => setExpanded((current) => !current)}
             className={cn(
               badgeClassName,
-              "cursor-pointer hover:border-foreground/30 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+              "h-auto rounded-full border-border bg-card px-2 py-0.5 text-xs font-medium text-muted-foreground hover:border-foreground/30 hover:text-foreground"
             )}
           >
-            <button
-              type="button"
-              aria-expanded={expanded}
-              aria-label={
-                expanded
-                  ? `Show fewer ${label}`
-                  : `Show ${remaining} more ${label}`
-              }
-              onClick={() => setExpanded((current) => !current)}
-            >
-              {expanded ? "Show fewer" : `+${remaining} more`}
-            </button>
-          </Badge>
+            {expanded ? "Show fewer" : `+${remaining} more`}
+          </Button>
         </li>
       ) : null}
     </ul>

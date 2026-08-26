@@ -700,12 +700,10 @@ describe("PortfolioAssistant chat navigation", () => {
       screen.getByText("This helps Montasim confirm fit and availability.")
     ).not.toBeNull()
     expect(
-      (
-        screen
-          .getByText("Review earlier answers")
-          .closest("details") as HTMLDetailsElement
-      ).open
-    ).toBe(false)
+      screen
+        .getByRole("button", { name: "Review earlier answers" })
+        .getAttribute("aria-expanded")
+    ).toBe("false")
 
     fireEvent.click(screen.getByRole("button", { name: "Remote" }))
     fireEvent.change(screen.getByLabelText("Name"), {
@@ -719,12 +717,10 @@ describe("PortfolioAssistant chat navigation", () => {
       target: { value: "mamun@yopmail.com" },
     })
     expect(
-      (
-        screen
-          .getByText("Review earlier answers")
-          .closest("details") as HTMLDetailsElement
-      ).open
-    ).toBe(true)
+      screen
+        .getByRole("button", { name: "Review earlier answers" })
+        .getAttribute("aria-expanded")
+    ).toBe("true")
     fireEvent.change(screen.getByLabelText(/Company or job link/), {
       target: { value: "https://example.com/jobs/senior-frontend" },
     })

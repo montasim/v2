@@ -91,39 +91,40 @@
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #d4d5cd;
-  --card: #171717;
-  --card-foreground: #d4d5cd;
-  --popover: #171717;
-  --popover-foreground: #d4d5cd;
-  --primary: #e2e3dc;
-  --primary-foreground: #171717;
-  --secondary: #262626;
-  --secondary-foreground: #dedfd7;
-  --muted: #262626;
-  --muted-foreground: #a5a69e;
+  --background: #0d0f12;
+  --foreground: #c6cad1;
+  --card: #15181d;
+  --card-foreground: #c6cad1;
+  --popover: #181c22;
+  --popover-foreground: #c6cad1;
+  --primary: #e7e9ed;
+  --primary-foreground: #111318;
+  --secondary: #1c2026;
+  --secondary-foreground: #d9dde3;
+  --muted: #1c2026;
+  --muted-foreground: #9299a3;
   --strong-foreground: #d2d7df;
-  --emphasis-foreground: #eeefe8;
-  --accent: #e2e3dc;
-  --accent-foreground: #171717;
+  --emphasis-foreground: #e7e9ed;
+  --accent: #232933;
+  --accent-foreground: #edf0f4;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: rgb(255 255 255 / 10%);
-  --input: rgb(255 255 255 / 15%);
-  --ring: #d8aa63;
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: #171717;
-  --sidebar-foreground: #d4d5cd;
-  --sidebar-primary: #e2e3dc;
-  --sidebar-primary-foreground: #171717;
-  --sidebar-accent: #262626;
-  --sidebar-accent-foreground: #dedfd7;
-  --sidebar-border: rgb(255 255 255 / 10%);
-  --sidebar-ring: #d8aa63;
+  --border: #2a3038;
+  --input: #39414c;
+  --ring: #78a8f8;
+  --chart-1: #78a8f8;
+  --chart-2: #a7b5c8;
+  --chart-3: #6d7b8e;
+  --chart-4: #4e5d70;
+  --chart-5: #35404e;
+  --sidebar: #15181d;
+  --sidebar-foreground: #c6cad1;
+  --sidebar-primary: #e7e9ed;
+  --sidebar-primary-foreground: #111318;
+  --sidebar-accent: #1f252d;
+  --sidebar-accent-foreground: #d9dde3;
+  --sidebar-border: #2a3038;
+  --sidebar-ring: #78a8f8;
+  scrollbar-color: #4e5662 var(--background);
 }
 
 @layer base {
@@ -140,6 +141,10 @@
   html {
     @apply font-sans;
   }
+}
+
+.dark body {
+  caret-color: var(--ring);
 }
 
 @keyframes page-enter {

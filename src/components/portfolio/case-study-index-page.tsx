@@ -3,6 +3,13 @@ import { Link } from "@tanstack/react-router"
 
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
 import { PageShell } from "@/components/shared/page-shell"
+import { Card } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
+import type { CarouselApi } from "@/components/ui/carousel"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +26,8 @@ import {
   SearchIcon,
 } from "@/components/ui/icons"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { optimizedImage } from "@/lib/assets"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import type {
@@ -39,64 +48,68 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
   const image = projectImage(caseStudy)
 
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden rounded-xl border bg-card p-2 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-emphasis-foreground motion-reduce:transition-none">
-      <Link
-        to="/projects/$slug"
-        params={{ slug: caseStudy.slug }}
-        aria-label={`Read the ${project.title} case study`}
-        className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
-      >
-        {image ? (
-          <img
-            src={image}
-            alt={`${project.title} interface preview`}
-            width="720"
-            height="450"
-            loading="lazy"
-            className="aspect-[16/10] w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
-          />
-        ) : (
-          <div className="grid aspect-[16/10] place-items-center rounded-lg border bg-muted/35 text-muted-foreground">
-            <span className="flex flex-col items-center gap-2 text-xs font-medium">
-              <BookOpenTextIcon className="size-6" />
-              Documentation-led case study
-            </span>
-          </div>
-        )}
-
-        <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
-          <div className="flex items-center justify-between gap-3 text-[0.6875rem]">
-            <p className="flex items-center gap-1.5 font-bold tracking-[0.06em] text-strong-foreground uppercase">
-              <ProjectTypeIcon type={project.type} className="size-[1em]" />
-              {project.type}
-            </p>
-            <span className="truncate text-muted-foreground">
-              {caseStudy.status}
-            </span>
-          </div>
-
-          <h2 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-strong-foreground">
-            {project.title}
-          </h2>
-          <p className="mt-2 line-clamp-3 text-[0.8125rem] leading-[1.55] text-muted-foreground">
-            {caseStudy.summary}
-          </p>
-
-          <div className="mt-auto flex items-end justify-between gap-4 pt-5 text-xs">
-            <p className="min-w-0 text-muted-foreground">
-              <span className="block text-[0.625rem] font-bold tracking-[0.06em] uppercase">
-                Role
+    <Card asChild>
+      <article className="group flex min-w-0 flex-col overflow-hidden p-2 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-emphasis-foreground motion-reduce:transition-none">
+        <Link
+          to="/projects/$slug"
+          params={{ slug: caseStudy.slug }}
+          aria-label={`Read the ${project.title} case study`}
+          className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
+        >
+          {image ? (
+            <img
+              src={image}
+              alt={`${project.title} interface preview`}
+              width="720"
+              height="450"
+              loading="lazy"
+              className="aspect-[16/10] w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
+            />
+          ) : (
+            <div className="grid aspect-[16/10] place-items-center rounded-lg border bg-muted/35 text-muted-foreground">
+              <span className="flex flex-col items-center gap-2 text-xs font-medium">
+                <BookOpenTextIcon className="size-6" />
+                Documentation-led case study
               </span>
-              <span className="mt-1 line-clamp-1 block">{caseStudy.role}</span>
+            </div>
+          )}
+
+          <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
+            <div className="flex items-center justify-between gap-3 text-[0.6875rem]">
+              <p className="flex items-center gap-1.5 font-bold tracking-[0.06em] text-strong-foreground uppercase">
+                <ProjectTypeIcon type={project.type} className="size-[1em]" />
+                {project.type}
+              </p>
+              <span className="truncate text-muted-foreground">
+                {caseStudy.status}
+              </span>
+            </div>
+
+            <h2 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-strong-foreground">
+              {project.title}
+            </h2>
+            <p className="mt-2 line-clamp-3 text-[0.8125rem] leading-[1.55] text-muted-foreground">
+              {caseStudy.summary}
             </p>
-            <span className="flex shrink-0 items-center gap-1.5 font-semibold text-strong-foreground">
-              Read
-              <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
-            </span>
+
+            <div className="mt-auto flex items-end justify-between gap-4 pt-5 text-xs">
+              <p className="min-w-0 text-muted-foreground">
+                <span className="block text-[0.625rem] font-bold tracking-[0.06em] uppercase">
+                  Role
+                </span>
+                <span className="mt-1 line-clamp-1 block">
+                  {caseStudy.role}
+                </span>
+              </p>
+              <span className="flex shrink-0 items-center gap-1.5 font-semibold text-strong-foreground">
+                Read
+                <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
+              </span>
+            </div>
           </div>
-        </div>
-      </Link>
-    </article>
+        </Link>
+      </article>
+    </Card>
   )
 }
 
@@ -106,72 +119,74 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
 
   return (
     <article>
-      <Link
-        to="/projects/$slug"
-        params={{ slug: caseStudy.slug }}
-        aria-label={`Read the ${project.title} case study`}
-        className="group grid gap-0 overflow-hidden rounded-xl border bg-card p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none lg:grid-cols-[13fr_7fr] lg:p-2.5"
-      >
-        <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
-          {image ? (
-            <img
-              src={image}
-              alt={`${project.title} interface preview`}
-              width="1200"
-              height="900"
-              fetchPriority="high"
-              className="h-full w-full object-cover object-top contrast-[1.02] grayscale transition-[transform,filter] duration-300 group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
-            />
-          ) : (
-            <div className="grid h-full min-h-57.5 place-items-center text-muted-foreground sm:min-h-85 lg:min-h-100">
-              <span className="flex flex-col items-center gap-3 text-sm font-medium">
-                <BookOpenTextIcon className="size-8" />
-                Documentation-led case study
+      <Card asChild>
+        <Link
+          to="/projects/$slug"
+          params={{ slug: caseStudy.slug }}
+          aria-label={`Read the ${project.title} case study`}
+          className="group grid gap-0 overflow-hidden p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none lg:grid-cols-[13fr_7fr] lg:p-2.5"
+        >
+          <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
+            {image ? (
+              <img
+                src={image}
+                alt={`${project.title} interface preview`}
+                width="1200"
+                height="900"
+                fetchPriority="high"
+                className="h-full w-full object-cover object-top contrast-[1.02] grayscale transition-[transform,filter] duration-300 group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
+              />
+            ) : (
+              <div className="grid h-full min-h-57.5 place-items-center text-muted-foreground sm:min-h-85 lg:min-h-100">
+                <span className="flex flex-col items-center gap-3 text-sm font-medium">
+                  <BookOpenTextIcon className="size-8" />
+                  Documentation-led case study
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">
+            <div>
+              <p className="flex items-center gap-1.5 text-xs font-bold tracking-[0.06em] text-strong-foreground uppercase">
+                <ProjectTypeIcon type={project.type} className="size-[1em]" />
+                {project.type}
+              </p>
+              <h2 className="mt-3.5 text-[1.625rem] leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground">
+                {project.title}
+              </h2>
+              <p className="mt-4 max-w-[38ch] text-sm leading-[1.65] text-muted-foreground">
+                {caseStudy.summary}
+              </p>
+            </div>
+
+            <div className="mt-8">
+              <dl className="grid grid-cols-2 gap-4 border-y py-4 text-xs">
+                <div>
+                  <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
+                    Role
+                  </dt>
+                  <dd className="mt-1.5 line-clamp-2 leading-5">
+                    {caseStudy.role}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
+                    Status
+                  </dt>
+                  <dd className="mt-1.5 line-clamp-2 leading-5">
+                    {caseStudy.status}
+                  </dd>
+                </div>
+              </dl>
+              <span className="mt-5 flex items-center justify-end gap-1.5 text-xs font-semibold text-strong-foreground">
+                Read case study
+                <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
               </span>
             </div>
-          )}
-        </div>
-
-        <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">
-          <div>
-            <p className="flex items-center gap-1.5 text-xs font-bold tracking-[0.06em] text-strong-foreground uppercase">
-              <ProjectTypeIcon type={project.type} className="size-[1em]" />
-              {project.type}
-            </p>
-            <h2 className="mt-3.5 text-[1.625rem] leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground">
-              {project.title}
-            </h2>
-            <p className="mt-4 max-w-[38ch] text-sm leading-[1.65] text-muted-foreground">
-              {caseStudy.summary}
-            </p>
           </div>
-
-          <div className="mt-8">
-            <dl className="grid grid-cols-2 gap-4 border-y py-4 text-xs">
-              <div>
-                <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
-                  Role
-                </dt>
-                <dd className="mt-1.5 line-clamp-2 leading-5">
-                  {caseStudy.role}
-                </dd>
-              </div>
-              <div>
-                <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
-                  Status
-                </dt>
-                <dd className="mt-1.5 line-clamp-2 leading-5">
-                  {caseStudy.status}
-                </dd>
-              </div>
-            </dl>
-            <span className="mt-5 flex items-center justify-end gap-1.5 text-xs font-semibold text-strong-foreground">
-              Read case study
-              <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
-            </span>
-          </div>
-        </div>
-      </Link>
+        </Link>
+      </Card>
     </article>
   )
 }
@@ -182,14 +197,12 @@ function FeaturedCaseStudyCarousel({
   caseStudies: readonly ProjectCaseStudy[]
 }) {
   const carouselRef = useRef<HTMLDivElement>(null)
-  const pointerStartX = useRef<number | null>(null)
-  const suppressClick = useRef(false)
+  const [api, setApi] = useState<CarouselApi>()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [inViewport, setInViewport] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [focusWithin, setFocusWithin] = useState(false)
-  const [dragging, setDragging] = useState(false)
-  const interactionPaused = hovered || focusWithin || dragging
+  const interactionPaused = hovered || focusWithin
 
   useEffect(() => {
     const element = carouselRef.current
@@ -208,34 +221,41 @@ function FeaturedCaseStudyCarousel({
   }, [])
 
   useEffect(() => {
-    if (caseStudies.length < 2 || !inViewport || interactionPaused) return
+    if (!api) return
+    const syncSelection = () => setSelectedIndex(api.selectedScrollSnap())
+    syncSelection()
+    api.on("select", syncSelection)
+    api.on("reInit", syncSelection)
+    return () => {
+      api.off("select", syncSelection)
+      api.off("reInit", syncSelection)
+    }
+  }, [api])
+
+  useEffect(() => {
+    if (!api || caseStudies.length < 2 || !inViewport || interactionPaused)
+      return
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
     if (reduceMotion.matches) return
 
     const timer = window.setInterval(() => {
       if (document.visibilityState === "visible") {
-        setSelectedIndex((index) => (index + 1) % caseStudies.length)
+        api.scrollNext()
       }
     }, 6000)
 
     return () => window.clearInterval(timer)
-  }, [caseStudies.length, inViewport, interactionPaused, selectedIndex])
+  }, [api, caseStudies.length, inViewport, interactionPaused])
 
   if (!caseStudies.length) return null
 
   const currentCaseStudy = caseStudies[selectedIndex] ?? caseStudies[0]
-  const showPrevious = () =>
-    setSelectedIndex(
-      (index) => (index - 1 + caseStudies.length) % caseStudies.length
-    )
-  const showNext = () =>
-    setSelectedIndex((index) => (index + 1) % caseStudies.length)
-
   return (
-    <div
+    <Carousel
       ref={carouselRef}
-      role="region"
+      setApi={setApi}
+      options={{ loop: true }}
       aria-roledescription="carousel"
       aria-label="Featured case studies"
       onMouseEnter={() => setHovered(true)}
@@ -245,35 +265,6 @@ function FeaturedCaseStudyCarousel({
         if (!event.currentTarget.contains(event.relatedTarget)) {
           setFocusWithin(false)
         }
-      }}
-      onPointerDown={(event) => {
-        pointerStartX.current = event.clientX
-        setDragging(true)
-      }}
-      onPointerUp={(event) => {
-        const startX = pointerStartX.current
-        pointerStartX.current = null
-        setDragging(false)
-        if (startX === null) return
-
-        const distance = event.clientX - startX
-        if (Math.abs(distance) < 48) return
-        suppressClick.current = true
-        event.preventDefault()
-        if (distance > 0) showPrevious()
-        else showNext()
-        window.setTimeout(() => {
-          suppressClick.current = false
-        }, 0)
-      }}
-      onPointerCancel={() => {
-        pointerStartX.current = null
-        setDragging(false)
-      }}
-      onClickCapture={(event) => {
-        if (!suppressClick.current) return
-        event.preventDefault()
-        event.stopPropagation()
       }}
     >
       <div className="mb-3.5 flex items-center justify-between gap-5">
@@ -293,7 +284,7 @@ function FeaturedCaseStudyCarousel({
               type="button"
               variant="outline"
               size="icon-sm"
-              onClick={showPrevious}
+              onClick={() => api?.scrollPrev()}
               aria-label="Previous featured case study"
             >
               <ArrowLeftCompactIcon />
@@ -302,7 +293,7 @@ function FeaturedCaseStudyCarousel({
               type="button"
               variant="outline"
               size="icon-sm"
-              onClick={showNext}
+              onClick={() => api?.scrollNext()}
               aria-label="Next featured case study"
             >
               <ArrowRightCompactIcon />
@@ -329,22 +320,23 @@ function FeaturedCaseStudyCarousel({
             />
           </div>
         ) : null}
-        <div
-          key={currentCaseStudy.slug}
-          role="group"
-          aria-roledescription="slide"
-          aria-label={`${selectedIndex + 1} of ${caseStudies.length}`}
-          className="carousel-card-enter"
-        >
-          <FeaturedCaseStudy caseStudy={currentCaseStudy} />
-        </div>
+        <CarouselContent>
+          {caseStudies.map((caseStudy, index) => (
+            <CarouselItem
+              key={caseStudy.slug}
+              aria-label={`${index + 1} of ${caseStudies.length}`}
+            >
+              <FeaturedCaseStudy caseStudy={caseStudy} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
       </div>
 
       <p className="sr-only" aria-live="polite">
         Showing featured case study {selectedIndex + 1} of {caseStudies.length}:{" "}
         {currentCaseStudy.project.title}
       </p>
-    </div>
+    </Carousel>
   )
 }
 
@@ -413,16 +405,16 @@ export function CaseStudyIndexPage({
 
         <div className="relative">
           <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <label htmlFor="case-study-search" className="sr-only">
+          <Label htmlFor="case-study-search" className="sr-only">
             Search case studies
-          </label>
-          <input
+          </Label>
+          <Input
             id="case-study-search"
             type="search"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search by project, decision, or technology"
-            className="min-h-10.5 w-full rounded-[0.625rem] border bg-card pr-3 pl-9.5 text-sm outline-none placeholder:text-muted-foreground focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="min-h-10.5 rounded-[0.625rem] bg-card pr-3 pl-9.5"
           />
         </div>
 
@@ -473,7 +465,7 @@ export function CaseStudyIndexPage({
             ))}
           </div>
         ) : (
-          <div className="mt-3 rounded-xl border border-dashed px-5 py-10 text-center text-muted-foreground">
+          <Card className="mt-3 border-dashed px-5 py-10 text-center text-muted-foreground">
             <h2 className="text-sm font-semibold text-strong-foreground">
               No matching case studies
             </h2>
@@ -487,7 +479,7 @@ export function CaseStudyIndexPage({
             >
               Clear filters
             </Link>
-          </div>
+          </Card>
         )}
       </section>
     </PageShell>

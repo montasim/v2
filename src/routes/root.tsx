@@ -4,6 +4,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router"
 
 import { PageShell } from "@/components/shared/page-shell"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   CircleDashedIcon,
   GoogleIcon,
@@ -86,83 +87,85 @@ function OwnerRootPage() {
 
   return (
     <PageShell className="flex min-h-[calc(100dvh-10rem)] items-center py-12 sm:py-16">
-      <section
-        aria-labelledby="owner-access-heading"
-        className="mx-auto w-full max-w-xl overflow-hidden rounded-2xl border bg-background"
+      <Card
+        asChild
+        className="mx-auto w-full max-w-xl overflow-hidden rounded-2xl bg-background"
       >
-        <header className="border-b px-5 py-5 sm:px-7 sm:py-6">
-          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <ShieldCheckIcon className="text-strong-foreground" />
-            Private owner access
+        <section aria-labelledby="owner-access-heading">
+          <header className="border-b px-5 py-5 sm:px-7 sm:py-6">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <ShieldCheckIcon className="text-strong-foreground" />
+              Private owner access
+            </div>
+            <h1
+              id="owner-access-heading"
+              className="mt-3 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
+            >
+              {auth.status === "unconfigured"
+                ? "Owner access unavailable"
+                : auth.status === "forbidden"
+                  ? "Access restricted"
+                  : "Sign in to continue"}
+            </h1>
+          </header>
+
+          <div className="px-5 py-6 sm:px-7 sm:py-7">
+            {auth.status === "forbidden" ? (
+              <>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  <strong className="text-strong-foreground">
+                    {auth.email}
+                  </strong>{" "}
+                  does not have access to this area. Sign out and use the
+                  portfolio owner account.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mt-6"
+                  disabled={isPending}
+                  onClick={signOut}
+                >
+                  <LogoutIcon />
+                  {isPending ? "Preparing sign-in" : "Use another account"}
+                </Button>
+              </>
+            ) : auth.status === "unconfigured" ? (
+              <p className="text-sm leading-6 text-muted-foreground">
+                Owner access is not configured for this environment.
+              </p>
+            ) : (
+              <>
+                <p className="text-sm leading-6 text-muted-foreground">
+                  Use the authorized Google account to manage blog comments. No
+                  other sign-in method is available.
+                </p>
+                <Button
+                  type="button"
+                  className="mt-6 min-w-[11.25rem] bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                  disabled={isPending}
+                  onClick={signInWithGoogle}
+                >
+                  {isPending ? (
+                    <CircleDashedIcon className="animate-spin motion-reduce:animate-none" />
+                  ) : (
+                    <GoogleIcon />
+                  )}
+                  <span aria-live="polite">
+                    {isPending ? "Opening Google" : "Continue with Google"}
+                  </span>
+                </Button>
+              </>
+            )}
+
+            {error ? (
+              <p className="mt-4 text-sm text-destructive" role="alert">
+                {error}
+              </p>
+            ) : null}
           </div>
-          <h1
-            id="owner-access-heading"
-            className="mt-3 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
-          >
-            {auth.status === "unconfigured"
-              ? "Owner access unavailable"
-              : auth.status === "forbidden"
-                ? "Access restricted"
-                : "Sign in to continue"}
-          </h1>
-        </header>
-
-        <div className="px-5 py-6 sm:px-7 sm:py-7">
-          {auth.status === "forbidden" ? (
-            <>
-              <p className="text-sm leading-6 text-muted-foreground">
-                <strong className="text-strong-foreground">
-                  {auth.email}
-                </strong>{" "}
-                does not have access to this area. Sign out and use the
-                portfolio owner account.
-              </p>
-              <Button
-                type="button"
-                variant="outline"
-                className="mt-6"
-                disabled={isPending}
-                onClick={signOut}
-              >
-                <LogoutIcon />
-                {isPending ? "Preparing sign-in" : "Use another account"}
-              </Button>
-            </>
-          ) : auth.status === "unconfigured" ? (
-            <p className="text-sm leading-6 text-muted-foreground">
-              Owner access is not configured for this environment.
-            </p>
-          ) : (
-            <>
-              <p className="text-sm leading-6 text-muted-foreground">
-                Use the authorized Google account to manage blog comments. No
-                other sign-in method is available.
-              </p>
-              <Button
-                type="button"
-                className="mt-6 min-w-[11.25rem] bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-                disabled={isPending}
-                onClick={signInWithGoogle}
-              >
-                {isPending ? (
-                  <CircleDashedIcon className="animate-spin motion-reduce:animate-none" />
-                ) : (
-                  <GoogleIcon />
-                )}
-                <span aria-live="polite">
-                  {isPending ? "Opening Google" : "Continue with Google"}
-                </span>
-              </Button>
-            </>
-          )}
-
-          {error ? (
-            <p className="mt-4 text-sm text-destructive" role="alert">
-              {error}
-            </p>
-          ) : null}
-        </div>
-      </section>
+        </section>
+      </Card>
     </PageShell>
   )
 }

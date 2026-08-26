@@ -7,7 +7,7 @@ import {
   GithubLogoIcon,
   LinkedinLogoIcon,
 } from "@/components/ui/icons"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   ExternalAction,
@@ -53,7 +53,7 @@ function OverviewPage() {
             />
             <Avatar className="relative h-full w-full rounded-xl border bg-card ring-2 ring-foreground/10">
               <AvatarFallback className="rounded-xl">MS</AvatarFallback>
-              <img
+              <AvatarImage
                 src={profile.avatarUrl}
                 alt={profile.name}
                 width="224"
@@ -69,7 +69,10 @@ function OverviewPage() {
           <div className="hero-copy min-w-0 text-center sm:order-1 sm:text-left">
             <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-strong-foreground sm:justify-start">
               <span>{experienceCatalog.current.role}</span>
-              <span className="text-border" aria-hidden="true">
+              <span
+                className="text-border dark:text-muted-foreground"
+                aria-hidden="true"
+              >
                 /
               </span>
               <span className="font-normal text-muted-foreground">

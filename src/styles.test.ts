@@ -55,4 +55,18 @@ describe("dark theme text hierarchy", () => {
       contrast(token(foreground), token(background))
     ).toBeGreaterThanOrEqual(4.5)
   })
+
+  it.each([
+    ["strong-foreground", 10, 15],
+    ["foreground", 8, 13],
+    ["muted-foreground", 4.5, 8],
+  ])(
+    "keeps %s contrast crisp without glare on the page background",
+    (foreground, minimum, maximum) => {
+      const ratio = contrast(token(foreground), token("background"))
+
+      expect(ratio).toBeGreaterThanOrEqual(minimum)
+      expect(ratio).toBeLessThanOrEqual(maximum)
+    }
+  )
 })

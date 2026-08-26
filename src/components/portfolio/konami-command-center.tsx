@@ -16,6 +16,7 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { Card } from "@/components/ui/card"
 
 const internalCommands = [
   {
@@ -46,22 +47,24 @@ function CommandRow({
   shortcut: string
 }) {
   return (
-    <span className="group flex items-center gap-3 rounded-xl border bg-background/40 p-3.5 transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-ring/50 hover:bg-muted active:scale-[0.99] motion-reduce:transition-none">
-      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-strong-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-ring/15 group-hover:text-ring motion-reduce:transition-none">
-        <Icon className="size-5" aria-hidden="true" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-sm font-semibold text-strong-foreground">
-          {label}
+    <Card asChild className="bg-background/40">
+      <span className="group flex items-center gap-3 p-3.5 transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-ring/50 hover:bg-muted active:scale-[0.99] motion-reduce:transition-none">
+        <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-muted text-strong-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:bg-ring/15 group-hover:text-ring motion-reduce:transition-none">
+          <Icon className="size-5" aria-hidden="true" />
         </span>
-        <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-          {description}
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-semibold text-strong-foreground">
+            {label}
+          </span>
+          <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
+            {description}
+          </span>
         </span>
+        <kbd className="rounded-md border bg-card px-2 py-1 font-mono text-[0.625rem] font-medium text-muted-foreground uppercase">
+          {shortcut}
+        </kbd>
       </span>
-      <kbd className="rounded-md border bg-card px-2 py-1 font-mono text-[0.625rem] font-medium text-muted-foreground uppercase">
-        {shortcut}
-      </kbd>
-    </span>
+    </Card>
   )
 }
 

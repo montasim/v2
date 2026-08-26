@@ -3,6 +3,8 @@ import {
   BriefcaseIcon,
   SquaresFourIcon,
 } from "@/components/ui/icons"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { ExperienceList } from "@/components/portfolio/experience-list"
 import { ProjectCard } from "@/components/portfolio/project-card"
 import type { SkillEvidence as SkillEvidenceRecord } from "@/lib/content/skill-evidence"
@@ -18,19 +20,17 @@ export function SkillEvidence({
 }) {
   if (!evidence) {
     return (
-      <section
-        id="evidence"
-        className="scroll-mt-20 rounded-xl border bg-muted/35 p-5 sm:p-6"
-        aria-labelledby="evidence-heading"
-      >
-        <h2 id="evidence-heading" className="text-base font-semibold">
-          Explore skills with evidence
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Select a skill to see the projects and professional roles where it
-          appears in the portfolio data.
-        </p>
-      </section>
+      <Card asChild className="scroll-mt-20 bg-muted/35 p-5 sm:p-6">
+        <section id="evidence" aria-labelledby="evidence-heading">
+          <h2 id="evidence-heading" className="text-base font-semibold">
+            Explore skills with evidence
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Select a skill to see the projects and professional roles where it
+            appears in the portfolio data.
+          </p>
+        </section>
+      </Card>
     )
   }
 
@@ -40,7 +40,7 @@ export function SkillEvidence({
       className="scroll-mt-20"
       aria-labelledby="evidence-heading"
     >
-      <div className="flex flex-wrap items-end justify-between gap-4 rounded-xl border bg-muted/35 p-5 sm:p-6">
+      <Card className="flex flex-wrap items-end justify-between gap-4 bg-muted/35 p-5 sm:p-6">
         <div>
           <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
             Skill evidence
@@ -54,20 +54,29 @@ export function SkillEvidence({
             this portfolio.
           </p>
         </div>
-        <a
-          href="#skill-list"
-          className="inline-flex items-center gap-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="text-xs text-muted-foreground"
         >
-          <ArrowUpIcon aria-hidden="true" />
-          Choose another skill
-        </a>
-      </div>
+          <a href="#skill-list">
+            <ArrowUpIcon aria-hidden="true" />
+            Choose another skill
+          </a>
+        </Button>
+      </Card>
 
       {evidence.total === 0 ? (
-        <p className="mt-5 rounded-xl border border-dashed p-5 text-sm text-muted-foreground">
-          No project or experience record is explicitly tagged with this skill
-          yet.
-        </p>
+        <Card
+          asChild
+          className="mt-5 border-dashed p-5 text-sm text-muted-foreground"
+        >
+          <p>
+            No project or experience record is explicitly tagged with this skill
+            yet.
+          </p>
+        </Card>
       ) : null}
 
       {evidence.experience.length > 0 ? (

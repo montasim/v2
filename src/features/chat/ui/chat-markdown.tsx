@@ -3,6 +3,15 @@ import ReactMarkdown from "react-markdown"
 import type { Components } from "react-markdown"
 import remarkGfm from "remark-gfm"
 
+import { Separator } from "@/components/ui/separator"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 
 const markdownComponents: Components = {
@@ -46,16 +55,25 @@ const markdownComponents: Components = {
     />
   ),
   table: ({ node: _node, className, ...props }) => (
-    <table
+    <Table
       className={cn(
-        "mt-3 block w-full border-collapse overflow-x-auto text-left text-xs first:mt-0",
+        "mt-3 border-collapse text-left text-xs first:mt-0",
         className
       )}
       {...props}
     />
   ),
+  thead: ({ node: _node, className, ...props }) => (
+    <TableHeader className={className} {...props} />
+  ),
+  tbody: ({ node: _node, className, ...props }) => (
+    <TableBody className={className} {...props} />
+  ),
+  tr: ({ node: _node, className, ...props }) => (
+    <TableRow className={className} {...props} />
+  ),
   th: ({ node: _node, className, ...props }) => (
-    <th
+    <TableHead
       className={cn(
         "border-b border-border px-2 py-1.5 font-semibold",
         className
@@ -64,7 +82,7 @@ const markdownComponents: Components = {
     />
   ),
   td: ({ node: _node, className, ...props }) => (
-    <td
+    <TableCell
       className={cn("border-b border-border px-2 py-1.5 align-top", className)}
       {...props}
     />
@@ -89,7 +107,7 @@ const markdownComponents: Components = {
     />
   ),
   hr: ({ node: _node, className, ...props }) => (
-    <hr className={cn("my-4 border-border", className)} {...props} />
+    <Separator className={cn("my-4", className)} {...props} />
   ),
   img: ({ node: _node, alt }) =>
     alt ? <span className="text-muted-foreground">{alt}</span> : null,

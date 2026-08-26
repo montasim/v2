@@ -25,9 +25,27 @@ import {
 } from "@/components/ui/icons"
 import { useServerFn } from "@tanstack/react-start"
 import { DefaultChatTransport } from "ai"
-import { Dialog } from "radix-ui"
 
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { InputGroup } from "@/components/ui/input-group"
+import { Label } from "@/components/ui/label"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Textarea } from "@/components/ui/textarea"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
 import { getInquiryMessageModerationError } from "@/features/chat/domain/inquiry-moderation"
 import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
@@ -224,9 +242,9 @@ export function PortfolioAssistant() {
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen} modal={false}>
+    <Dialog open={open} onOpenChange={setOpen} modal={false}>
       <div className="chat-launcher-enter fixed right-4 bottom-4 z-40 sm:right-6 sm:bottom-6">
-        <Dialog.Trigger asChild>
+        <DialogTrigger asChild>
           <Button
             size="icon"
             className="size-14 rounded-full bg-emphasis-foreground text-background shadow-lg hover:bg-emphasis-foreground/80"
@@ -235,55 +253,58 @@ export function PortfolioAssistant() {
           >
             <ChatCenteredDotsIcon className="size-5" />
           </Button>
-        </Dialog.Trigger>
+        </DialogTrigger>
       </div>
-      <Dialog.Portal>
-        <Dialog.Overlay className="motion-overlay fixed inset-0 z-50 bg-foreground/15 backdrop-blur-[2px] sm:hidden" />
-        <Dialog.Content className="motion-dialog fixed inset-0 z-50 flex min-h-0 flex-col overflow-hidden bg-background outline-none sm:inset-auto sm:right-6 sm:bottom-2 sm:h-[min(720px,calc(100dvh-1rem))] sm:w-[440px] sm:rounded-2xl sm:border sm:shadow-2xl">
-          <AssistantHeader
-            content={mode === "inquiry" ? inquiryHeader : defaultHeader}
-          />
-          {mode !== "home" && (
-            <div className="shrink-0 px-4 py-4">
-              <button
-                type="button"
-                onClick={returnToAssistant}
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-lg pr-2 text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <ArrowLeftCompactIcon className="size-[15px]" />
-                Back to assistant
-              </button>
-            </div>
-          )}
+      <DialogContent
+        showCloseButton={false}
+        overlayClassName="motion-overlay bg-foreground/15 backdrop-blur-[2px] sm:hidden"
+        className="motion-dialog inset-0 top-0 left-0 flex min-h-0 max-w-none translate-x-0 translate-y-0 grid-cols-none flex-col gap-0 overflow-hidden rounded-none border-0 bg-background p-0 outline-none sm:inset-auto sm:right-6 sm:bottom-2 sm:left-auto sm:h-[min(720px,calc(100dvh-1rem))] sm:w-[440px] sm:max-w-none sm:rounded-2xl sm:border sm:shadow-2xl"
+      >
+        <AssistantHeader
+          content={mode === "inquiry" ? inquiryHeader : defaultHeader}
+        />
+        {mode !== "home" && (
+          <div className="shrink-0 px-4 py-4">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={returnToAssistant}
+              className="min-h-8 px-0 pr-2 text-xs text-muted-foreground hover:bg-transparent"
+            >
+              <ArrowLeftCompactIcon className="size-[15px]" />
+              Back to assistant
+            </Button>
+          </div>
+        )}
 
-          {mode === "home" && (
-            <AssistantHome
-              ask={ask}
-              openPreparedAnswer={openPreparedAnswer}
-              startInquiry={startInquiry}
-            />
-          )}
-          {mode === "chat" && (
-            <ChatView
-              chat={chat}
-              ask={ask}
-              startInquiry={startInquiry}
-              onCitationNavigate={() => setOpen(false)}
-            />
-          )}
-          {mode === "inquiry" && (
-            <InquiryFlow
-              key={inquiryKey}
-              type={inquiryType}
-              onCancel={cancelInquiry}
-              onContinue={continueAfterInquiry}
-              onRestart={resetAssistant}
-              onHeaderChange={setInquiryHeader}
-            />
-          )}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        {mode === "home" && (
+          <AssistantHome
+            ask={ask}
+            openPreparedAnswer={openPreparedAnswer}
+            startInquiry={startInquiry}
+          />
+        )}
+        {mode === "chat" && (
+          <ChatView
+            chat={chat}
+            ask={ask}
+            startInquiry={startInquiry}
+            onCitationNavigate={() => setOpen(false)}
+          />
+        )}
+        {mode === "inquiry" && (
+          <InquiryFlow
+            key={inquiryKey}
+            type={inquiryType}
+            onCancel={cancelInquiry}
+            onContinue={continueAfterInquiry}
+            onRestart={resetAssistant}
+            onHeaderChange={setInquiryHeader}
+          />
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }
 
@@ -294,14 +315,14 @@ function AssistantHeader({ content }: { content: AssistantHeaderContent }) {
         <ChatCircleDotsIcon className="size-[19px]" />
       </span>
       <div className="min-w-0 flex-1">
-        <Dialog.Title className="truncate text-sm font-semibold text-strong-foreground">
+        <DialogTitle className="truncate text-sm font-semibold text-strong-foreground">
           {content.title}
-        </Dialog.Title>
-        <Dialog.Description className="truncate text-xs text-muted-foreground">
+        </DialogTitle>
+        <DialogDescription className="truncate text-xs text-muted-foreground">
           {content.description}
-        </Dialog.Description>
+        </DialogDescription>
       </div>
-      <Dialog.Close asChild>
+      <DialogClose asChild>
         <Button
           variant="ghost"
           size="icon"
@@ -310,7 +331,7 @@ function AssistantHeader({ content }: { content: AssistantHeaderContent }) {
         >
           <XIcon className="size-5" />
         </Button>
-      </Dialog.Close>
+      </DialogClose>
     </header>
   )
 }
@@ -334,12 +355,13 @@ function AssistantHome({
           {suggestedQuestions.map((item, index) => {
             const Icon = item.icon
             return (
-              <button
+              <Button
                 key={item.title}
                 type="button"
+                variant="outline"
                 onClick={() => openPreparedAnswer(item.answerId)}
                 className={cn(
-                  "min-h-14 rounded-xl border bg-card p-3 text-left transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none dark:bg-muted",
+                  "h-auto min-h-14 justify-start rounded-xl bg-card p-3 text-left whitespace-normal hover:border-primary dark:bg-muted",
                   index === 2 && "col-span-2"
                 )}
               >
@@ -354,7 +376,7 @@ function AssistantHome({
                     </span>
                   </span>
                 </span>
-              </button>
+              </Button>
             )
           })}
         </div>
@@ -397,11 +419,12 @@ function InquiryEntry({
   primary?: boolean
 }) {
   return (
-    <button
+    <Button
       type="button"
+      variant={primary ? "default" : "outline"}
       onClick={onClick}
       className={cn(
-        "flex min-h-11 w-full items-center gap-3 rounded-xl border px-4 text-sm font-semibold transition-[color,background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none",
+        "min-h-11 w-full justify-start gap-3 rounded-xl px-4 text-sm font-semibold",
         primary
           ? "border-emphasis-foreground bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
           : "bg-card text-strong-foreground hover:bg-muted dark:bg-muted/60"
@@ -409,7 +432,7 @@ function InquiryEntry({
     >
       {children}
       <ArrowRightCompactIcon className="ml-auto size-[18px]" />
-    </button>
+    </Button>
   )
 }
 
@@ -520,14 +543,16 @@ function ChatView({
                   <span className="min-w-0 flex-1 truncate">
                     {formatChatResponseProvenance(message.metadata)}
                   </span>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onClick={() => void navigator.clipboard.writeText(text)}
-                    className="grid size-8 place-items-center rounded-lg hover:bg-background focus-visible:ring-2 focus-visible:ring-ring"
+                    className="hover:bg-background"
                     aria-label="Copy answer"
                   >
                     <CopyIcon className="size-[15px]" />
-                  </button>
+                  </Button>
                 </div>
               )}
             </article>
@@ -538,8 +563,8 @@ function ChatView({
             className="max-w-[88%] rounded-2xl rounded-bl-md bg-muted p-4"
             aria-label="Thinking"
           >
-            <div className="h-3 w-4/5 animate-pulse rounded bg-foreground/10 motion-reduce:animate-none" />
-            <div className="mt-2 h-3 w-3/5 animate-pulse rounded bg-foreground/10 motion-reduce:animate-none" />
+            <Skeleton className="h-3 w-4/5 bg-foreground/10" />
+            <Skeleton className="mt-2 h-3 w-3/5 bg-foreground/10" />
           </div>
         )}
         {chat.error && (
@@ -580,15 +605,17 @@ function MessageCitations({
       </p>
       <div className="mt-2 flex flex-wrap gap-2">
         {citations.map((citation) => (
-          <a
+          <Button
             key={citation.href}
-            href={citation.href}
-            onClick={onNavigate}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border bg-background px-2.5 py-1.5 text-xs leading-4 font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            asChild
+            variant="outline"
+            className="min-h-9 bg-background text-xs leading-4 font-medium text-strong-foreground hover:border-primary"
           >
-            {citation.label}
-            <ArrowRightCompactIcon className="size-3.5" aria-hidden="true" />
-          </a>
+            <a href={citation.href} onClick={onNavigate}>
+              {citation.label}
+              <ArrowRightCompactIcon className="size-3.5" aria-hidden="true" />
+            </a>
+          </Button>
         ))}
       </div>
     </nav>
@@ -627,7 +654,10 @@ function QuickComposer({
       }
       onSend(question)
       setValue("")
-      if (textareaRef.current) textareaRef.current.style.height = "auto"
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto"
+        textareaRef.current.style.overflowY = "hidden"
+      }
     } finally {
       setIsChecking(false)
     }
@@ -642,21 +672,21 @@ function QuickComposer({
       }}
     >
       <div className="flex items-center justify-between gap-3 text-xs">
-        <label
+        <Label
           htmlFor="assistant-message"
           className="font-semibold text-strong-foreground"
         >
           Message
-        </label>
+        </Label>
         <span className="text-muted-foreground">Enter to send</span>
       </div>
-      <div
+      <InputGroup
         className={cn(
-          "mt-2 flex items-end gap-2 rounded-xl border bg-card p-1.5 focus-within:ring-2 focus-within:ring-ring",
-          error && "border-destructive focus-within:ring-destructive"
+          "mt-2 items-end gap-2 p-1.5",
+          error && "border-destructive focus-within:ring-destructive/20"
         )}
       >
-        <textarea
+        <Textarea
           ref={textareaRef}
           id="assistant-message"
           rows={1}
@@ -671,7 +701,10 @@ function QuickComposer({
           onInput={(event) => {
             const textarea = event.currentTarget
             textarea.style.height = "auto"
-            textarea.style.height = `${Math.min(textarea.scrollHeight, 112)}px`
+            const nextHeight = Math.min(textarea.scrollHeight, 112)
+            textarea.style.height = `${nextHeight}px`
+            textarea.style.overflowY =
+              textarea.scrollHeight > 112 ? "auto" : "hidden"
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter" && !event.shiftKey) {
@@ -681,7 +714,7 @@ function QuickComposer({
           }}
           placeholder={placeholder}
           disabled={disabled || isChecking}
-          className="max-h-28 min-h-9 min-w-0 flex-1 resize-none bg-transparent px-2 py-2 text-base leading-5 outline-none placeholder:text-muted-foreground sm:text-sm"
+          className="max-h-28 min-h-14 min-w-0 flex-1 resize-none overflow-y-hidden border-0 bg-transparent px-2 py-2 text-base leading-5 shadow-none focus-visible:ring-0 sm:min-h-9 sm:text-sm dark:bg-transparent"
         />
         <Button
           type="submit"
@@ -696,7 +729,7 @@ function QuickComposer({
             <ArrowUpIcon className="size-[18px]" />
           )}
         </Button>
-      </div>
+      </InputGroup>
       {error ? (
         <p id={errorId} className="mt-2 text-xs text-destructive" role="alert">
           {error}
@@ -722,23 +755,27 @@ function MessageContactAction({
         <p className="mt-1 text-xs leading-5 text-muted-foreground">
           Support his independent projects directly through SupportKori.
         </p>
-        <a
-          href={profileCatalog.profile.supportUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-3 flex min-h-14 w-full items-center gap-3 rounded-xl border border-emphasis-foreground bg-emphasis-foreground px-4 text-background hover:bg-emphasis-foreground/80 focus-visible:ring-2 focus-visible:ring-ring"
+        <Button
+          asChild
+          className="mt-3 min-h-14 w-full justify-start gap-3 rounded-xl border-emphasis-foreground bg-emphasis-foreground px-4 text-background hover:bg-emphasis-foreground/80"
         >
-          <HeartStraightIcon className="size-[19px] shrink-0" />
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-semibold">
-              Support on SupportKori
+          <a
+            href={profileCatalog.profile.supportUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <HeartStraightIcon className="size-[19px] shrink-0" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold">
+                Support on SupportKori
+              </span>
+              <span className="block truncate text-[11px] opacity-75">
+                supportkori.com/montasim
+              </span>
             </span>
-            <span className="block truncate text-[11px] opacity-75">
-              supportkori.com/montasim
-            </span>
-          </span>
-          <ArrowRightCompactIcon className="size-[18px] shrink-0" />
-        </a>
+            <ArrowRightCompactIcon className="size-[18px] shrink-0" />
+          </a>
+        </Button>
       </section>
     )
   }
@@ -758,22 +795,26 @@ function MessageContactAction({
           this portfolio.
         </p>
         <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-          <a
-            href={emailUrl}
-            className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          <Button
+            asChild
+            variant="outline"
+            className="min-h-10 min-w-0 justify-start gap-2 rounded-xl bg-background px-3 text-xs text-strong-foreground hover:border-primary"
           >
-            <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
-            <span className="truncate">{profileCatalog.profile.email}</span>
-          </a>
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            <a href={emailUrl}>
+              <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
+              <span className="truncate">{profileCatalog.profile.email}</span>
+            </a>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            className="min-h-10 gap-2 rounded-xl bg-background px-3 text-xs text-strong-foreground hover:border-primary"
           >
-            <WhatsappLogoIcon className="size-[17px]" />
-            WhatsApp
-          </a>
+            <a href={whatsappUrl} target="_blank" rel="noreferrer">
+              <WhatsappLogoIcon className="size-[17px]" />
+              WhatsApp
+            </a>
+          </Button>
         </div>
       </section>
     )
@@ -802,22 +843,26 @@ function MessageContactAction({
         </InquiryEntry>
       </div>
       <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] gap-2">
-        <a
-          href={emailUrl}
-          className="flex min-h-10 min-w-0 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+        <Button
+          asChild
+          variant="outline"
+          className="min-h-10 min-w-0 justify-start gap-2 rounded-xl bg-background px-3 text-xs text-strong-foreground hover:border-primary"
         >
-          <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
-          <span className="truncate">{profileCatalog.profile.email}</span>
-        </a>
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="flex min-h-10 items-center gap-2 rounded-xl border bg-background px-3 text-xs font-medium text-strong-foreground hover:border-primary hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          <a href={emailUrl}>
+            <EnvelopeSimpleIcon className="size-[17px] shrink-0" />
+            <span className="truncate">{profileCatalog.profile.email}</span>
+          </a>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          className="min-h-10 gap-2 rounded-xl bg-background px-3 text-xs text-strong-foreground hover:border-primary"
         >
-          <WhatsappLogoIcon className="size-[17px]" />
-          WhatsApp
-        </a>
+          <a href={whatsappUrl} target="_blank" rel="noreferrer">
+            <WhatsappLogoIcon className="size-[17px]" />
+            WhatsApp
+          </a>
+        </Button>
       </div>
     </section>
   )
@@ -957,8 +1002,8 @@ function InquiryFlow({
             Please keep this window open for a moment.
           </p>
           <div className="mt-5 space-y-2" aria-label="Submitting">
-            <div className="mx-auto h-3 w-4/5 animate-pulse rounded bg-foreground/10 motion-reduce:animate-none" />
-            <div className="mx-auto h-3 w-3/5 animate-pulse rounded bg-foreground/10 motion-reduce:animate-none" />
+            <Skeleton className="mx-auto h-3 w-4/5 bg-foreground/10" />
+            <Skeleton className="mx-auto h-3 w-3/5 bg-foreground/10" />
           </div>
         </div>
       </div>
@@ -1025,9 +1070,7 @@ function InquiryQuestion({
     <div className="motion-view flex min-h-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
         <div className="flex items-end justify-between text-xs">
-          <span className="font-semibold text-strong-foreground">
-            {title}
-          </span>
+          <span className="font-semibold text-strong-foreground">{title}</span>
           <span className="text-muted-foreground">
             {progressStep + 1} of {steps.length}
           </span>
@@ -1042,10 +1085,10 @@ function InquiryQuestion({
         </div>
 
         {isEditing && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border bg-card px-3 py-2 text-xs text-muted-foreground">
+          <Alert className="mt-4 rounded-xl bg-card px-3 py-2 text-xs text-muted-foreground">
             <PencilSimpleIcon className="size-[15px]" />
-            Editing an earlier answer
-          </div>
+            <AlertDescription>Editing an earlier answer</AlertDescription>
+          </Alert>
         )}
 
         <section className="mt-5 rounded-2xl bg-muted p-5">
@@ -1060,9 +1103,10 @@ function InquiryQuestion({
         {step.type === "options" && !isCustomOption ? (
           <div className="mt-5 space-y-2">
             {step.options.map((option) => (
-              <button
+              <Button
                 key={option}
                 type="button"
+                variant="outline"
                 onClick={() => {
                   if (
                     customChoice &&
@@ -1074,11 +1118,11 @@ function InquiryQuestion({
                   }
                   answer(option)
                 }}
-                className="flex min-h-12 w-full items-center gap-3 rounded-xl border bg-card px-4 text-left text-sm font-medium text-strong-foreground transition-[background-color,border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-primary hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px motion-reduce:transition-none dark:bg-muted"
+                className="h-auto min-h-12 w-full justify-start gap-3 rounded-xl bg-card px-4 text-left whitespace-normal hover:border-primary dark:bg-muted"
               >
                 {option}
                 <ArrowRightCompactIcon className="ml-auto size-[17px] text-muted-foreground" />
-              </button>
+              </Button>
             ))}
           </div>
         ) : (
@@ -1125,7 +1169,7 @@ function InquiryQuestion({
               }
             }}
           >
-            <label
+            <Label
               htmlFor={`inquiry-${step.key}`}
               className="text-sm font-semibold text-strong-foreground"
             >
@@ -1134,9 +1178,9 @@ function InquiryQuestion({
                   ? "Role title"
                   : "Project type"
                 : step.label}
-            </label>
+            </Label>
             {step.type === "textarea" ? (
-              <textarea
+              <Textarea
                 id={`inquiry-${step.key}`}
                 value={value}
                 onChange={(event) => {
@@ -1147,10 +1191,10 @@ function InquiryQuestion({
                 minLength={step.minLength}
                 maxLength={1_000}
                 rows={5}
-                className="mt-2 w-full resize-y rounded-xl border bg-card px-3 py-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+                className="mt-2 min-h-0 resize-y rounded-xl bg-card px-3 py-3 text-base sm:text-sm"
               />
             ) : (
-              <input
+              <Input
                 id={`inquiry-${step.key}`}
                 type={isCustomOption ? "text" : step.type}
                 autoComplete={step.type === "email" ? "email" : "name"}
@@ -1168,7 +1212,7 @@ function InquiryQuestion({
                       ? step.placeholder
                       : undefined
                 }
-                className="mt-2 min-h-12 w-full rounded-xl border bg-card px-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+                className="mt-2 min-h-12 rounded-xl bg-card px-3 text-base sm:text-sm"
               />
             )}
             <p className="mt-2 min-h-5 text-xs font-medium text-destructive">
@@ -1186,7 +1230,7 @@ function InquiryQuestion({
               <>
                 {state.type !== "general" ? (
                   <>
-                    <label
+                    <Label
                       htmlFor="inquiry-context"
                       className="mt-3 block text-sm font-semibold text-strong-foreground"
                     >
@@ -1196,8 +1240,8 @@ function InquiryQuestion({
                       <span className="font-normal text-muted-foreground">
                         (optional)
                       </span>
-                    </label>
-                    <textarea
+                    </Label>
+                    <Textarea
                       id="inquiry-context"
                       value={context}
                       aria-invalid={Boolean(contextError)}
@@ -1215,7 +1259,7 @@ function InquiryQuestion({
                           ? "Paste a job link or share brief context"
                           : "Share a short brief or existing product link"
                       }
-                      className="mt-2 w-full resize-y rounded-xl border bg-card px-3 py-3 text-base outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring sm:text-sm"
+                      className="mt-2 min-h-0 resize-y rounded-xl bg-card px-3 py-3 text-base sm:text-sm"
                     />
                     {contextError ? (
                       <p
@@ -1228,7 +1272,7 @@ function InquiryQuestion({
                     ) : null}
                   </>
                 ) : null}
-                <input
+                <Input
                   type="text"
                   name="website"
                   value={website}
@@ -1327,15 +1371,32 @@ function ReviewAnswers({
   expanded?: boolean
 }) {
   const steps = inquirySteps[state.type]
+  const [open, setOpen] = React.useState(expanded)
+
+  React.useEffect(() => {
+    if (expanded) setOpen(true)
+  }, [expanded])
+
   return (
-    <details
+    <Collapsible
       className="mt-6 rounded-xl border bg-card px-4 py-3"
-      open={expanded || undefined}
+      open={open}
+      onOpenChange={setOpen}
     >
-      <summary className="cursor-pointer rounded text-xs font-semibold text-strong-foreground focus-visible:ring-2 focus-visible:ring-ring">
-        Review earlier answers
-      </summary>
-      <div className="mt-3 space-y-2 border-t pt-3">
+      <CollapsibleTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="xs"
+          className="h-auto p-0 text-xs font-semibold text-strong-foreground hover:bg-transparent"
+        >
+          Review earlier answers
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent
+        forceMount
+        className="mt-3 space-y-2 border-t pt-3 data-[state=closed]:hidden"
+      >
         {steps.slice(0, state.stepIndex).map((earlier, index) => (
           <div
             key={earlier.key}
@@ -1349,18 +1410,20 @@ function ReviewAnswers({
                 {state.answers[earlier.key]}
               </span>
             </div>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => dispatch({ type: "begin-edit", stepIndex: index })}
-              className="inline-flex min-h-8 shrink-0 items-center gap-1 rounded-lg px-2 font-semibold text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              className="min-h-8 shrink-0 gap-1 px-2 font-semibold text-muted-foreground"
               aria-label={`Change ${earlier.label}`}
             >
               <PencilSimpleIcon className="size-3.5" /> Change
-            </button>
+            </Button>
           </div>
         ))}
-      </div>
-    </details>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }
 

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { optimizedImage } from "@/lib/assets"
 import { cn } from "@/lib/utils"
 
@@ -24,7 +24,7 @@ export function EntityAvatar({
       <AvatarFallback className="rounded-none bg-background">
         {fallback}
       </AvatarFallback>
-      <img
+      <AvatarImage
         src={optimizedImage(src)}
         alt=""
         className={cn(
