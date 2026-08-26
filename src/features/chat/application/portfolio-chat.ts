@@ -45,10 +45,10 @@ import type {
 } from "@/features/chat/knowledge/portfolio-knowledge.server"
 import { logger } from "@/lib/logger.server"
 
-const CHAT_GENERATION_DEADLINE_MS = 35_000
-const OPENROUTER_GENERATION_ATTEMPT_MS = 8_000
-const DIRECT_GENERATION_ATTEMPT_MS = 21_000
-const REVIEW_ATTEMPT_MS = 6_000
+export const CHAT_GENERATION_DEADLINE_MS = 50_000
+export const OPENROUTER_GENERATION_ATTEMPT_MS = 30_000
+export const DIRECT_GENERATION_ATTEMPT_MS = 28_000
+export const REVIEW_ATTEMPT_MS = 10_000
 
 type ProviderAttemptStage = "generation" | "review"
 
@@ -161,18 +161,28 @@ export function createPortfolioChat({
           knowledgeScope
         )
         const signal = deadlineSignal(context.signal)
-        const reply = await generateValidatedReply({
-          question,
-          trustedPrevious,
-          knowledge,
-          providers,
-          providerCircuit,
-          requestLimiter,
-          createId,
-          now,
-          attemptTimeoutMs,
-          signal,
-        })
+        let reply: PortfolioChatReply
+        try {
+          reply = await generateValidatedReply({
+            question,
+            trustedPrevious,
+            knowledge,
+            providers,
+            providerCircuit,
+            requestLimiter,
+            createId,
+            now,
+            attemptTimeoutMs,
+            signal,
+          })
+        } catch (error) {
+          if (!(error instanceof ChatGenerationUnavailableError)) throw error
+          reply = providerUnavailableHandoff(
+            question,
+            createId(),
+            error.attempts
+          )
+        }
         await recordReply({
           recorder,
           input: safeInput,
@@ -238,6 +248,7 @@ async function generateValidatedReply(
     (provider) => provider.supportsFullContextGeneration !== false
   )
   for (const [fallbackDepth, provider] of generationProviders.entries()) {
+    input.signal.throwIfAborted()
     if (!(await canAttempt(input.providerCircuit, provider))) {
       attempts.push({
         stage: "generation",
@@ -265,15 +276,20 @@ async function generateValidatedReply(
       continue
     }
 
+    input.signal.throwIfAborted()
     const startedAt = input.now().getTime()
     try {
-      const completion = await provider.complete({
-        ...generation.providerRequest,
-        signal: attemptDeadlineSignal(
-          input.signal,
-          input.attemptTimeoutMs("generation", provider.provider)
-        ),
-      })
+      const attemptSignal = attemptDeadlineSignal(
+        input.signal,
+        input.attemptTimeoutMs("generation", provider.provider)
+      )
+      const completion = await withSignal(
+        provider.complete({
+          ...generation.providerRequest,
+          signal: attemptSignal,
+        }),
+        attemptSignal
+      )
       const generationTrace = completionTrace(
         "generation",
         provider,
@@ -434,6 +450,7 @@ async function reviewGeneratedAnswer(input: {
   const reviewers = reviewerOrder(input.providers, input.generator)
 
   for (const reviewer of reviewers) {
+    input.signal.throwIfAborted()
     if (!(await canAttempt(input.providerCircuit, reviewer))) {
       attempts.push({
         stage: "review",
@@ -446,15 +463,20 @@ async function reviewGeneratedAnswer(input: {
       continue
     }
 
+    input.signal.throwIfAborted()
     const startedAt = input.now().getTime()
     try {
-      const completion = await reviewer.complete({
-        ...review.providerRequest,
-        signal: attemptDeadlineSignal(
-          input.signal,
-          input.attemptTimeoutMs("review", reviewer.provider)
-        ),
-      })
+      const attemptSignal = attemptDeadlineSignal(
+        input.signal,
+        input.attemptTimeoutMs("review", reviewer.provider)
+      )
+      const completion = await withSignal(
+        reviewer.complete({
+          ...review.providerRequest,
+          signal: attemptSignal,
+        }),
+        attemptSignal
+      )
       await safeCircuitSuccess(input.providerCircuit, reviewer)
       const trace = completionTrace(
         "review",
@@ -684,6 +706,25 @@ function resolveSafetyHandoff(
     }
   }
   return undefined
+}
+
+function providerUnavailableHandoff(
+  question: string,
+  messageId: string,
+  attempts: readonly ProviderAttemptTrace[]
+): PortfolioHandoffReply {
+  return {
+    kind: "handoff",
+    messageId,
+    text: "I couldn't prepare a fully verified answer right now. Please try again shortly, explore Montasim's published portfolio, or contact him directly.",
+    source: "Portfolio contact",
+    citations: [],
+    evidenceIds: [],
+    contactAction: inferConversationAction(question) ?? "general",
+    reason: "provider-unavailable",
+    fallbackDepth: 0,
+    attempts,
+  }
 }
 
 async function enforceVisitorDynamicLimits(

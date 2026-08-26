@@ -1,10 +1,16 @@
 import { beforeAll, describe, expect, it, vi } from "vitest"
 
 import {
-  ChatGenerationUnavailableError,
+  CHAT_GENERATION_DEADLINE_MS,
   createPortfolioChat,
+  DIRECT_GENERATION_ATTEMPT_MS,
+  OPENROUTER_GENERATION_ATTEMPT_MS,
+  REVIEW_ATTEMPT_MS,
 } from "@/features/chat/application/portfolio-chat"
-import type { AiProviderAdapter } from "@/features/chat/application/ports/ai-provider"
+import type {
+  AiCompletionResult,
+  AiProviderAdapter,
+} from "@/features/chat/application/ports/ai-provider"
 import type {
   ChatExchange,
   ChatExchangeRecorder,
@@ -143,6 +149,16 @@ function dynamicQuestion() {
 }
 
 describe("PortfolioChat full-context orchestration", () => {
+  it("budgets for a real full-context OpenRouter generation and independent review", () => {
+    expect(OPENROUTER_GENERATION_ATTEMPT_MS).toBeGreaterThan(18_000)
+    expect(
+      OPENROUTER_GENERATION_ATTEMPT_MS + REVIEW_ATTEMPT_MS * 2
+    ).toBeLessThanOrEqual(CHAT_GENERATION_DEADLINE_MS)
+    expect(
+      DIRECT_GENERATION_ATTEMPT_MS + REVIEW_ATTEMPT_MS
+    ).toBeLessThanOrEqual(CHAT_GENERATION_DEADLINE_MS)
+  })
+
   it("returns an exact catalog answer with server-derived citations and no model call", async () => {
     const openrouter = provider("openrouter", [validGeneratedDraft], {
       costUsd: 0,
@@ -417,6 +433,131 @@ describe("PortfolioChat full-context orchestration", () => {
     expect(groq.complete).toHaveBeenCalledOnce()
   })
 
+  it("enforces an attempt timeout when a provider ignores its abort signal", async () => {
+    vi.useFakeTimers()
+    try {
+      const openrouter: AiProviderAdapter = {
+        provider: "openrouter",
+        modelId: "z-ai/glm-5.2:free",
+        complete: vi.fn(
+          () =>
+            new Promise<AiCompletionResult>((resolve) => {
+              setTimeout(
+                () =>
+                  resolve({
+                    text: validGeneratedDraft,
+                    requestedModelId: "z-ai/glm-5.2:free",
+                    usage: { costUsd: 0 },
+                  }),
+                1_000
+              )
+            })
+        ),
+      }
+      const gemini = provider("gemini", [validGeneratedDraft])
+      const groq = provider("groq", [acceptedReview])
+      const chat = createPortfolioChat({
+        knowledge,
+        exactAnswers: noExactAnswers(),
+        providers: [openrouter, gemini, groq],
+        recorder: recorder().adapter,
+        requestLimiter: allowAllLimiter(),
+        providerCircuit: new InMemoryProviderCircuitStore(),
+        attemptTimeoutMs: (stage, providerName) =>
+          stage === "generation" && providerName === "openrouter" ? 5 : 100,
+      })
+
+      const answer = chat.answer(
+        { conversationId: "c", question: dynamicQuestion() },
+        { visitorHash: "visitor" }
+      )
+      await vi.waitFor(() => expect(openrouter.complete).toHaveBeenCalledOnce())
+      await vi.advanceTimersByTimeAsync(6)
+
+      expect(gemini.complete).toHaveBeenCalledOnce()
+      await expect(answer).resolves.toMatchObject({
+        kind: "generated",
+        provider: "gemini",
+      })
+    } finally {
+      await vi.runAllTimersAsync()
+      vi.useRealTimers()
+    }
+  })
+
+  it("moves to another reviewer when a reviewer ignores its abort signal", async () => {
+    vi.useFakeTimers()
+    try {
+      const openrouter = provider("openrouter", [validGeneratedDraft], {
+        costUsd: 0,
+      })
+      const gemini: AiProviderAdapter = {
+        provider: "gemini",
+        modelId: "gemini-test-model",
+        complete: vi.fn(() => new Promise<AiCompletionResult>(() => undefined)),
+      }
+      const groq = provider("groq", [acceptedReview])
+      const chat = createPortfolioChat({
+        knowledge,
+        exactAnswers: noExactAnswers(),
+        providers: [openrouter, gemini, groq],
+        recorder: recorder().adapter,
+        requestLimiter: allowAllLimiter(),
+        providerCircuit: new InMemoryProviderCircuitStore(),
+        attemptTimeoutMs: (stage) => (stage === "review" ? 5 : 100),
+      })
+
+      const answer = chat.answer(
+        { conversationId: "c", question: dynamicQuestion() },
+        { visitorHash: "visitor" }
+      )
+      await vi.waitFor(() => expect(gemini.complete).toHaveBeenCalledOnce())
+      await vi.advanceTimersByTimeAsync(6)
+
+      expect(groq.complete).toHaveBeenCalledOnce()
+      await expect(answer).resolves.toMatchObject({
+        kind: "generated",
+        provider: "openrouter",
+      })
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it("does not start another provider after the shared deadline expires", async () => {
+    const deadline = new AbortController()
+    const openrouter: AiProviderAdapter = {
+      provider: "openrouter",
+      modelId: "z-ai/glm-5.2:free",
+      complete: vi.fn(async (request) => {
+        deadline.abort(
+          new DOMException("The deadline expired.", "TimeoutError")
+        )
+        throw request.signal?.reason
+      }),
+    }
+    const gemini = provider("gemini", [validGeneratedDraft])
+    const groq = provider("groq", [acceptedReview])
+    const chat = createPortfolioChat({
+      knowledge,
+      exactAnswers: noExactAnswers(),
+      providers: [openrouter, gemini, groq],
+      recorder: recorder().adapter,
+      requestLimiter: allowAllLimiter(),
+      providerCircuit: new InMemoryProviderCircuitStore(),
+    })
+
+    await expect(
+      chat.answer(
+        { conversationId: "c", question: dynamicQuestion() },
+        { visitorHash: "visitor", signal: deadline.signal }
+      )
+    ).rejects.toMatchObject({ name: "TimeoutError" })
+    expect(openrouter.complete).toHaveBeenCalledOnce()
+    expect(gemini.complete).not.toHaveBeenCalled()
+    expect(groq.complete).not.toHaveBeenCalled()
+  })
+
   it("rejects a non-zero OpenRouter charge observation and uses a direct provider", async () => {
     const openrouter = provider("openrouter", [validGeneratedDraft], {
       costUsd: 0.001,
@@ -493,7 +634,7 @@ describe("PortfolioChat full-context orchestration", () => {
     )
   })
 
-  it("returns a retryable failure when no provider can prepare a validated answer", async () => {
+  it("returns a safe handoff when no provider can prepare a validated answer", async () => {
     const openrouter = provider("openrouter", [], {
       failWith: "provider-unavailable",
     })
@@ -516,8 +657,16 @@ describe("PortfolioChat full-context orchestration", () => {
         { conversationId: "c", question: dynamicQuestion() },
         { visitorHash: "visitor" }
       )
-    ).rejects.toBeInstanceOf(ChatGenerationUnavailableError)
-    expect(store.exchanges).toEqual([])
+    ).resolves.toMatchObject({
+      kind: "handoff",
+      reason: "provider-unavailable",
+      contactAction: "general",
+      attempts: expect.arrayContaining([
+        expect.objectContaining({ provider: "openrouter", outcome: "failed" }),
+        expect.objectContaining({ provider: "gemini", outcome: "failed" }),
+      ]),
+    })
+    expect(store.exchanges).toHaveLength(1)
   })
 
   it("uses a constrained direct provider only for review, never full-context generation", async () => {
@@ -539,7 +688,10 @@ describe("PortfolioChat full-context orchestration", () => {
         { conversationId: "c", question: dynamicQuestion() },
         { visitorHash: "visitor" }
       )
-    ).rejects.toBeInstanceOf(ChatGenerationUnavailableError)
+    ).resolves.toMatchObject({
+      kind: "handoff",
+      reason: "provider-unavailable",
+    })
     expect(groq.complete).not.toHaveBeenCalled()
   })
 

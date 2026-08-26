@@ -94,7 +94,10 @@ describe("live portfolio chat evaluation", () => {
         },
         {}
       )
-    ).rejects.toThrow("No provider produced a fully validated portfolio answer")
+    ).resolves.toMatchObject({
+      kind: "handoff",
+      reason: "provider-unavailable",
+    })
   })
 
   it("evaluates every selected case and produces a deterministic JSON report", async () => {

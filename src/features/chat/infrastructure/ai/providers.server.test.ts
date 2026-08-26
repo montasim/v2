@@ -18,6 +18,7 @@ import {
   GROQ_MODEL_ID,
   GROQ_TEMPERATURE,
   OPENROUTER_FREE_MODEL_IDS,
+  OPENROUTER_MAX_FALLBACK_MODELS,
   OPENROUTER_MAX_OUTPUT_TOKENS,
   OPENROUTER_MODEL_ID,
   OPENROUTER_PROVIDER_OPTIONS,
@@ -87,7 +88,11 @@ beforeEach(() => {
   )
   mocks.createOpenRouter.mockReset().mockImplementation(({ apiKey }) => ({
     apiKey,
-    chat: (modelId: string) => ({ provider: "openrouter", modelId }),
+    chat: (modelId: string, settings?: unknown) => ({
+      provider: "openrouter",
+      modelId,
+      settings,
+    }),
   }))
 })
 
@@ -152,12 +157,12 @@ describe("provider discovery", () => {
     })
 
     expect(providers.map(({ provider }) => provider)).toEqual([
-      ...OPENROUTER_FREE_MODEL_IDS.map(() => "openrouter" as const),
+      "openrouter",
       "gemini",
       "groq",
     ])
     expect(providers.map(({ modelId }) => modelId)).toEqual([
-      ...OPENROUTER_FREE_MODEL_IDS,
+      OPENROUTER_MODEL_ID,
       GEMINI_MODEL_ID,
       GROQ_MODEL_ID,
     ])
@@ -165,7 +170,7 @@ describe("provider discovery", () => {
       providers.map(({ supportsFullContextGeneration }) =>
         Boolean(supportsFullContextGeneration)
       )
-    ).toEqual([...OPENROUTER_FREE_MODEL_IDS.map(() => true), true, false])
+    ).toEqual([true, true, false])
   })
 
   it("omits every provider with a missing or blank key", () => {
@@ -184,12 +189,7 @@ describe("provider discovery", () => {
       createAiProviders({ OPENROUTER: "existing-key" }).map(
         ({ provider }) => provider
       )
-    ).toEqual(
-      Array.from(
-        { length: OPENROUTER_FREE_MODEL_IDS.length },
-        () => "openrouter"
-      )
-    )
+    ).toEqual(["openrouter"])
   })
 
   it("uses a comma-separated OpenRouter pool in configured failover order", () => {
@@ -201,8 +201,102 @@ describe("provider discovery", () => {
 
     expect(providers.map(({ modelId }) => modelId)).toEqual([
       "google/gemma-4-31b-it:free",
-      "z-ai/glm-5.2:free",
     ])
+  })
+
+  it("collapses the configured OpenRouter pool into one routed request", async () => {
+    mocks.generateText.mockResolvedValue(
+      generated({
+        providerMetadata: {
+          openrouter: { usage: { cost: 0 } },
+        },
+      })
+    )
+    const providers = createAiProviders({
+      OPENROUTER_API_KEY: "openrouter-key",
+      OPENROUTER_FREE_MODELS:
+        "google/gemma-4-31b-it:free,z-ai/glm-5.2:free,minimax/minimax-m3:free",
+    })
+
+    expect(providers).toHaveLength(1)
+    await providers[0]?.complete(request)
+    expect(mocks.generateText).toHaveBeenCalledOnce()
+    expect(mocks.generateText.mock.calls[0]?.[0]).toMatchObject({
+      model: {
+        provider: "openrouter",
+        modelId: "google/gemma-4-31b-it:free",
+        settings: {
+          models: [
+            "z-ai/glm-5.2:free",
+            "minimax/minimax-m3:free",
+            "openrouter/free",
+          ],
+        },
+      },
+    })
+  })
+
+  it("uses the automatic free router when only the primary model is configured", async () => {
+    mocks.generateText.mockResolvedValue(
+      generated({
+        providerMetadata: {
+          openrouter: { usage: { cost: 0 } },
+        },
+      })
+    )
+    const [provider] = createAiProviders({
+      OPENROUTER_API_KEY: "openrouter-key",
+      OPENROUTER_FREE_MODELS: "z-ai/glm-5.2:free",
+    })
+
+    await provider.complete(request)
+
+    expect(mocks.generateText.mock.calls[0]?.[0]).toMatchObject({
+      model: {
+        provider: "openrouter",
+        modelId: "z-ai/glm-5.2:free",
+        settings: { models: ["openrouter/free"] },
+      },
+    })
+  })
+
+  it("keeps each routed fallback window within OpenRouter's three-model limit", async () => {
+    mocks.generateText.mockResolvedValue(
+      generated({
+        providerMetadata: {
+          openrouter: { usage: { cost: 0 } },
+        },
+      })
+    )
+    const fallbackModelIds = OPENROUTER_FREE_MODEL_IDS.slice(1)
+    const [provider] = createAiProviders({
+      OPENROUTER_API_KEY: "openrouter-key",
+      OPENROUTER_FREE_MODELS: OPENROUTER_FREE_MODEL_IDS.join(","),
+    })
+
+    for (let index = 0; index < 32; index += 1) {
+      await provider.complete({
+        ...request,
+        messages: [{ role: "user", content: `Question ${index}` }],
+      })
+    }
+
+    const routedFallbacks = mocks.generateText.mock.calls.map(
+      ([options]) => options.model.settings.models as string[]
+    )
+    expect(
+      routedFallbacks.every(
+        (modelIds) =>
+          modelIds.length <= OPENROUTER_MAX_FALLBACK_MODELS &&
+          modelIds.at(-1) === "openrouter/free" &&
+          modelIds
+            .slice(0, -1)
+            .every((modelId) => modelId !== "openrouter/free")
+      )
+    ).toBe(true)
+    expect(
+      new Set(routedFallbacks.flat().filter((id) => id !== "openrouter/free"))
+    ).toEqual(new Set(fallbackModelIds))
   })
 
   it("prefers the model pool over the legacy single-model override", () => {
@@ -215,7 +309,6 @@ describe("provider discovery", () => {
 
     expect(providers.map(({ modelId }) => modelId)).toEqual([
       "nvidia/nemotron-3-super-120b-a12b:free",
-      "minimax/minimax-m3:free",
     ])
   })
 

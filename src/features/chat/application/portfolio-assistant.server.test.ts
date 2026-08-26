@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from "vitest"
 
-import { handlePortfolioChatRequest } from "@/features/chat/application/portfolio-assistant.server"
-import { ChatDynamicRateLimitError } from "@/features/chat/application/portfolio-chat"
+import {
+  CHAT_HTTP_DEADLINE_MS,
+  handlePortfolioChatRequest,
+} from "@/features/chat/application/portfolio-assistant.server"
+import {
+  CHAT_GENERATION_DEADLINE_MS,
+  ChatDynamicRateLimitError,
+} from "@/features/chat/application/portfolio-chat"
 import { CHAT_MODERATION_ERROR } from "@/features/chat/domain/chat-moderation"
 import type {
   PortfolioChat,
@@ -60,6 +66,13 @@ const questionRecorder = {
 }
 
 describe("portfolio chat HTTP handler", () => {
+  it("keeps the default deadline within Netlify's execution limit with delivery headroom", () => {
+    expect(CHAT_HTTP_DEADLINE_MS).toBeLessThan(60_000)
+    expect(
+      CHAT_HTTP_DEADLINE_MS - CHAT_GENERATION_DEADLINE_MS
+    ).toBeGreaterThanOrEqual(5_000)
+  })
+
   it("adapts a fully resolved answer to the existing AI SDK UI protocol", async () => {
     const assistant = chat()
     const response = await handlePortfolioChatRequest(request(), {
@@ -118,6 +131,35 @@ describe("portfolio chat HTTP handler", () => {
     expect(response.status).toBe(200)
     expect(body).toContain('"requestedModel":"z-ai/glm-5.2:free"')
     expect(body).toContain('"servedModel":"z-ai/glm-5.2"')
+  })
+
+  it("returns a usable stream when providers cannot produce a verified answer", async () => {
+    const assistant: PortfolioChat = {
+      answer: vi.fn(async () => ({
+        kind: "handoff" as const,
+        messageId: "answer",
+        text: "I couldn't prepare a fully verified answer right now.",
+        source: "Portfolio contact",
+        evidenceIds: [] as const,
+        citations: [] as const,
+        contactAction: "general" as const,
+        reason: "provider-unavailable" as const,
+        fallbackDepth: 0,
+        attempts: [],
+      })),
+    }
+
+    const response = await handlePortfolioChatRequest(request(), {
+      chat: assistant,
+      limiter: new InMemoryChatRequestLimiter(),
+      questionRecorder,
+    })
+    const body = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(body).toContain("fully verified answer")
+    expect(body).toContain('"responseKind":"handoff"')
+    expect(body).toContain('"contactAction":"general"')
   })
 
   it("rejects cross-site, non-JSON, and oversized requests before chat", async () => {

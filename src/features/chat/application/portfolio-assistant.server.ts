@@ -32,7 +32,9 @@ import { redactChatText } from "@/features/chat/domain/chat-redaction"
 import { logger } from "@/lib/logger.server"
 
 const MAX_CHAT_BODY_BYTES = 16_000
-const CHAT_HTTP_DEADLINE_MS = 48_000
+// Netlify synchronous functions allow 60 seconds. Keep five seconds to persist,
+// serialize, and deliver either the validated answer or a retryable failure.
+export const CHAT_HTTP_DEADLINE_MS = 55_000
 const TEN_MINUTES_MS = 10 * 60 * 1_000
 const BROAD_REQUEST_LIMIT = 60
 
