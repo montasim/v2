@@ -73,6 +73,7 @@ GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
 GROQ_API_KEY=your_groq_key
 OPENROUTER_API_KEY=your_openrouter_key
 OPENROUTER_FREE_MODELS=z-ai/glm-5.2:free,minimax/minimax-m3:free,minimax/minimax-m2.7:free,google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3-super-120b-a12b:free,dots-studio/dots-3-note-preview:free
+UPTIMEROBOT_READ_ONLY_API_KEY=your_read_only_uptimerobot_key
 DATABASE_URL=postgresql://user:password@host/database?sslmode=require
 CHAT_RATE_LIMIT_SECRET=generate_a_separate_32_byte_secret
 INQUIRY_RATE_LIMIT_SECRET=generate_a_separate_32_byte_secret
@@ -96,6 +97,8 @@ pnpm db:migrate
 ```
 
 No chat-indexing step is required. A build validates the public catalogs and compiles their complete facts, derived counts and chronology, relationships, evidence IDs, and direct citation URLs into a deterministic TOON packet. Resend requires a verified sender domain. Share the target spreadsheet with the service-account email as an editor. Neon accepts each inquiry first; Sheets and email are secondary delivery channels.
+
+The public `/status` route reads project availability from UptimeRobot's v3 API. Create the project monitors in UptimeRobot, use an account-level read-only API key for `UPTIMEROBOT_READ_ONLY_API_KEY`, and keep the key server-only. Results are cached for five minutes, and the last successful snapshot is retained if the provider has a temporary outage.
 
 After changing public portfolio data, regenerate the versioned exact-answer artifact and review its diff:
 

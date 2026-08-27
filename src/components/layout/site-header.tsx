@@ -152,6 +152,16 @@ export function SiteHeader() {
             >
               Blog
             </Link>
+            <Link
+              to="/status"
+              className={cn(
+                "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                pathname === "/status" && "bg-muted"
+              )}
+              aria-current={pathname === "/status" ? "page" : undefined}
+            >
+              Status
+            </Link>
             <span className="mx-1 h-4 border-l" aria-hidden="true" />
             {themeButton}
           </div>
@@ -208,6 +218,18 @@ export function SiteHeader() {
                       }
                     >
                       Blog
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      to="/status"
+                      className={cn(
+                        "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                        pathname === "/status" && "bg-muted"
+                      )}
+                      aria-current={pathname === "/status" ? "page" : undefined}
+                    >
+                      Status
                     </Link>
                   </SheetClose>
                 </nav>

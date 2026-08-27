@@ -11,4 +11,6 @@ export const descriptions = {
     "Credentials prioritized for senior frontend and full-stack hiring: production web engineering first, followed by testing, cloud, accessibility, delivery, data, and supporting foundations.",
   recommendations:
     "Hiring-focused endorsements led by executive and manager validation, followed by evidence of leadership, production engineering, measurable impact, and cross-functional collaboration.",
+  status:
+    "Live availability for deployed projects, collected in one place",
 } as const
