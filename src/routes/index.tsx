@@ -230,7 +230,7 @@ function OverviewPage() {
       >
         <div className="grid gap-7 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:gap-10">
           <div>
-            <p className="max-w-[60ch] text-xl leading-7 font-semibold text-strong-foreground">
+            <p className="max-w-[60ch] text-xl leading-7 font-semibold text-muted-foreground">
               Have something worth building or discussing?
             </p>
             <p className="mt-3 max-w-[60ch] text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
