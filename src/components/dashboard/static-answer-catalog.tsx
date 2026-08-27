@@ -545,7 +545,7 @@ function CatalogPagination({
       </p>
 
       {pageCount > 1 ? (
-        <PaginationContent className="overflow-x-auto pb-1 sm:ml-auto sm:pb-0">
+        <PaginationContent className="sm:ml-auto">
           <PaginationItem>
             <Button
               type="button"

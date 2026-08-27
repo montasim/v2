@@ -172,5 +172,11 @@ describe("StaticAnswerCatalog", () => {
       screen.getByRole("navigation", { name: "Static answers pagination" })
         .textContent
     ).toContain("Showing 13–13 of 13 answers")
+
+    const paginationContent = screen
+      .getByRole("navigation", { name: "Static answers pagination" })
+      .querySelector<HTMLElement>('[data-slot="pagination-content"]')
+    expect(paginationContent).not.toBeNull()
+    expect(paginationContent?.className).toContain("overflow-y-hidden")
   })
 })
