@@ -30,7 +30,7 @@ export interface AiProviderRoute {
 }
 
 export interface AiProviderAdapter extends AiProviderRoute {
-  /** False when this configured provider can review but cannot accept the full knowledge packet. */
+  /** @deprecated Focused evidence makes every configured provider generation-capable. */
   readonly supportsFullContextGeneration?: boolean
   complete: (request: AiCompletionRequest) => Promise<AiCompletionResult>
 }

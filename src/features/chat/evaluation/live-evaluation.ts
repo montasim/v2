@@ -281,7 +281,7 @@ async function evaluateCase(input: {
           status: "failed",
           hardFailures: ["judge-not-independent"],
           issues: [
-            "No configured judge was independent from the accepted generator and runtime reviewer.",
+            "No configured judge was independent from the accepted generator.",
           ],
         },
         durationMs: Math.max(0, input.clock.now() - startedAt),
@@ -372,20 +372,23 @@ function selectIndependentJudge(
   caseIndex: number
 ) {
   const excluded = new Set<ChatProviderName>()
+  const unavailable = new Set<ChatProviderName>()
   if (reply.kind === "generated" && reply.provider) {
     excluded.add(reply.provider)
   }
   for (const attempt of reply.attempts) {
-    if (
-      attempt.outcome === "accepted" &&
-      (attempt.stage === "generation" || attempt.stage === "review")
-    ) {
+    if (attempt.outcome === "accepted" && attempt.stage === "generation") {
       excluded.add(attempt.provider)
+    }
+    if (attempt.outcome === "failed" || attempt.outcome === "skipped") {
+      unavailable.add(attempt.provider)
     }
   }
   const eligible = judges.filter((judge) => !excluded.has(judge.provider))
   if (eligible.length === 0) return undefined
-  return eligible[caseIndex % eligible.length]
+  const preferred = eligible.filter((judge) => !unavailable.has(judge.provider))
+  const pool = preferred.length > 0 ? preferred : eligible
+  return pool[caseIndex % pool.length]
 }
 
 function createStartPacer(

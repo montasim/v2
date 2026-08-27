@@ -102,7 +102,7 @@ export async function validateChatRequest(input: unknown): Promise<{
 
   const lastMessage = messages.at(-1)
   if (
-    !lastMessage?.id?.trim() ||
+    !lastMessage?.id.trim() ||
     lastMessage.id.length > MAX_CHAT_ID_CHARACTERS
   ) {
     throw new InvalidChatRequestError("The client message ID is invalid.")

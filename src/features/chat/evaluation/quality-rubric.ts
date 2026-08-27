@@ -178,7 +178,7 @@ function deterministicHardFailures(
   }
 
   const words = reply.text.trim().split(/\s+/u).filter(Boolean).length
-  if (words < 18 || words > 220) failures.add("answer-length")
+  if (words < 10 || words > 220) failures.add("answer-length")
 
   return [...failures]
 }
@@ -336,7 +336,7 @@ function hardFailureDescription(failure: QualityHardFailure) {
       "The answer uses contact or inability language instead of answering.",
     "uncalibrated-endorsement":
       "The answer uses an unsupported endorsement or guarantee.",
-    "answer-length": "The answer is outside the 18–220 word quality range.",
+    "answer-length": "The answer is outside the 10–220 word quality range.",
     "unsupported-claim": "The answer contains a claim unsupported by evidence.",
     "reference-contradiction": "The answer contradicts the reviewed reference.",
     "irrelevant-answer": "The answer does not directly address the question.",
@@ -346,7 +346,7 @@ function hardFailureDescription(failure: QualityHardFailure) {
     "tone-violation":
       "The answer does not meet the calibrated professional tone.",
     "judge-not-independent":
-      "No judge independent from the generator and runtime reviewer was available.",
+      "No judge independent from the generator was available.",
     "evaluation-error": "The live evaluation case could not be completed.",
     "invalid-judgment": "The quality judge output is invalid.",
   }

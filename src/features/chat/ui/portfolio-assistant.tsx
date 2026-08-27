@@ -490,11 +490,11 @@ function ChatView({
   }, [chat.messages, chat.status])
 
   return (
-    <div className="motion-view flex min-h-0 flex-1 flex-col">
+    <div className="motion-view flex min-h-0 min-w-0 flex-1 flex-col">
       <div
         ref={feedRef}
         aria-live="polite"
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4"
+        className="min-h-0 min-w-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4"
       >
         {chat.messages.map((message, index) => {
           const text = getMessageText(message)
@@ -512,7 +512,7 @@ function ChatView({
               }
               key={message.id}
               className={cn(
-                "motion-view scroll-mt-4 rounded-2xl px-4 py-4 text-sm leading-6",
+                "motion-view min-w-0 scroll-mt-4 rounded-2xl px-4 py-4 text-sm leading-6",
                 message.role === "user"
                   ? "ml-auto max-w-[84%] rounded-br-md bg-emphasis-foreground text-background"
                   : "max-w-[92%] rounded-bl-md bg-muted"
@@ -599,20 +599,23 @@ function MessageCitations({
   onNavigate: () => void
 }) {
   return (
-    <nav className="mt-4 border-t pt-3" aria-label="Supporting evidence">
+    <nav
+      className="mt-4 min-w-0 border-t pt-3"
+      aria-label="Supporting evidence"
+    >
       <p className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
         Supporting evidence
       </p>
-      <div className="mt-2 flex flex-wrap gap-2">
+      <div className="mt-2 flex max-w-full min-w-0 flex-wrap gap-2">
         {citations.map((citation) => (
           <Button
             key={citation.href}
             asChild
             variant="outline"
-            className="min-h-9 bg-background text-xs leading-4 font-medium text-strong-foreground hover:border-primary"
+            className="h-auto min-h-9 max-w-full min-w-0 shrink justify-start bg-background py-2 text-left text-xs leading-4 font-medium whitespace-normal text-strong-foreground hover:border-primary"
           >
             <a href={citation.href} onClick={onNavigate}>
-              {citation.label}
+              <span className="min-w-0 break-words">{citation.label}</span>
               <ArrowRightCompactIcon className="size-3.5" aria-hidden="true" />
             </a>
           </Button>

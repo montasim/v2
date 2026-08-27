@@ -63,8 +63,8 @@ export class DatabaseChatExchangeRecorder implements ChatExchangeRecorder {
           : String(acceptedAttempt.costUsd),
       policyVersion: exchange.policyVersion,
       // The existing column is intentionally retained during the operational
-      // cutover. It stores the complete knowledge packet hash, not a retrieval
-      // corpus version, for v3 exchanges.
+      // cutover. It stores the compiled knowledge hash, not a retrieval corpus
+      // version, for focused-evidence exchanges.
       corpusVersion: exchange.knowledgeHash,
     }
     const insert = getDatabase().insert(assistantExchanges).values(values)

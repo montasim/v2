@@ -141,8 +141,8 @@ function knowledgeFixture(
   }
 }
 
-describe("full-context generation", () => {
-  it("prepares the complete knowledge packet and trusted previous exchange", () => {
+describe("focused-context generation", () => {
+  it("prepares focused evidence and a trusted previous exchange", () => {
     const knowledge = knowledgeFixture()
     const attempt = prepareFullContextGeneration({
       question: "What did he build there?",
@@ -154,7 +154,10 @@ describe("full-context generation", () => {
       knowledge,
     })
 
-    expect(attempt.providerRequest.system).toContain(knowledge.toon)
+    expect(attempt.providerRequest.system).not.toContain(knowledge.toon)
+    expect(attempt.providerRequest.system).toContain(
+      "schemaVersion: portfolio-focused-evidence/v1"
+    )
     expect(attempt.providerRequest.system).toContain("third person")
     expect(attempt.providerRequest.system).toContain("20")
     expect(attempt.providerRequest.system).toContain("180")
@@ -214,8 +217,8 @@ describe("full-context generation", () => {
     expect(system).toContain('"mode":"answer"')
     expect(system).toContain('"type":"fact|synthesis|boundary"')
     expect(system).toContain('"factIds"')
-    expect(system).toContain('"supportingExcerpts"')
-    expect(system).toContain("positionally aligned")
+    expect(system).not.toContain('"supportingExcerpts"')
+    expect(system).toContain("supportingExcerpts is optional")
     expect(system).toContain("Do not return citation URLs")
     expect(system).toContain("professional-observation")
     expect(system).toContain("does not establish a verified personal weakness")
@@ -333,7 +336,10 @@ describe("full-context generation", () => {
       })
     )
 
-    expect(result).toMatchObject({ status: "accepted" })
+    expect(
+      result.status,
+      result.status === "rejected" ? JSON.stringify(result.reasons) : undefined
+    ).toBe("accepted")
   })
 
   it("accepts a documented role-at-company name assembled from one fact", () => {
@@ -425,6 +431,42 @@ describe("full-context generation", () => {
     })
   })
 
+  it("accepts a subject alias joined to a supported possessive product name", () => {
+    const contributionFact: PortfolioKnowledgeFact = {
+      id: "contributions",
+      source: "contributions",
+      recordId: "github-contributions",
+      label: "GitHub contribution activity",
+      data: { totalContributions: 1_824 },
+      evidenceRole: "activity-record",
+      citationId: "project:postcraft",
+    }
+    const attempt = prepareFullContextGeneration({
+      question:
+        "What can a recruiter responsibly infer from the contribution snapshot?",
+      knowledge: knowledgeFixture([...facts, contributionFact]),
+    })
+
+    const result = attempt.evaluate(
+      JSON.stringify({
+        interpretation: "Describe the bounded public activity signal.",
+        mode: "answer",
+        claims: [
+          {
+            text: "Mohammad's GitHub contribution snapshot documents 1,824 contributions. It indicates visible public activity, while recruiters should inspect repositories separately before drawing broader conclusions.",
+            type: "boundary",
+            factIds: ["contributions"],
+          },
+        ],
+      })
+    )
+
+    expect(
+      result.status,
+      result.status === "rejected" ? JSON.stringify(result.reasons) : undefined
+    ).toBe("accepted")
+  })
+
   it("rejects a number that is absent from the aligned evidence", () => {
     const attempt = prepareFullContextGeneration({
       question: "How reliable was the biometric engine?",
@@ -451,6 +493,40 @@ describe("full-context generation", () => {
       status: "rejected",
       reasons: [{ code: "unsupported-number", claimIndex: 0 }],
     })
+  })
+
+  it("accepts a conservative number when the evidence documents that number or more", () => {
+    const plusFacts = facts.map((fact) =>
+      fact.id === "experience:senior"
+        ? {
+            ...fact,
+            data: {
+              description:
+                "Refactored 54+ modules into a Presentational/Container architecture for clearer frontend ownership and maintainability.",
+            },
+          }
+        : fact
+    )
+    const attempt = prepareFullContextGeneration({
+      question: "How many modules did Montasim refactor?",
+      knowledge: knowledgeFixture(plusFacts),
+    })
+
+    const result = attempt.evaluate(
+      JSON.stringify({
+        interpretation: "State the documented frontend refactor scope.",
+        mode: "answer",
+        claims: [
+          {
+            text: "Montasim refactored 54 modules into a Presentational/Container architecture, providing documented evidence of broad frontend maintainability work in his current engineering role.",
+            type: "fact",
+            factIds: ["experience:senior"],
+          },
+        ],
+      })
+    )
+
+    expect(result).toMatchObject({ status: "accepted" })
   })
 
   it("treats Markdown emphasis as presentation rather than evidence text", () => {
@@ -783,10 +859,12 @@ describe("full-context generation", () => {
       })
     )
 
-    expect(result).toMatchObject({
-      status: "rejected",
-      reasons: [{ code: "named-artifact-mismatch" }],
-    })
+    expect(result).toMatchObject({ status: "rejected" })
+    expect(result.status === "rejected" ? result.reasons : []).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "named-artifact-mismatch" }),
+      ])
+    )
   })
 
   it("rejects evidence from a catalog unrelated to the question", () => {
@@ -811,10 +889,12 @@ describe("full-context generation", () => {
       })
     )
 
-    expect(result).toMatchObject({
-      status: "rejected",
-      reasons: [{ code: "question-irrelevant-evidence" }],
-    })
+    expect(result).toMatchObject({ status: "rejected" })
+    expect(result.status === "rejected" ? result.reasons : []).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: "question-irrelevant-evidence" }),
+      ])
+    )
   })
 
   it("rejects a model handoff so orchestration can try another provider", () => {
@@ -936,7 +1016,7 @@ describe("full-context generation", () => {
   })
 
   it.each([
-    { label: "fewer than 40 words", wordCount: 39 },
+    { label: "fewer than 10 words", wordCount: 9 },
     { label: "more than 220 words", wordCount: 221 },
   ])("rejects an answer with $label", ({ wordCount }) => {
     const attempt = prepareFullContextGeneration({

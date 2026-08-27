@@ -226,7 +226,7 @@ describe("live portfolio chat evaluation", () => {
     expect(report.cases[1]?.evaluation.status).toBe("passed")
   })
 
-  it("selects a judge independent from the accepted generator and runtime reviewer", async () => {
+  it("selects a judge independent from the accepted generator", async () => {
     const evaluationCase = buildEvaluationCorpus()[0]
     const generated = replyFor(evaluationCase)
     if (generated.kind !== "generated") throw new Error("Expected generation")
@@ -238,13 +238,6 @@ describe("live portfolio chat evaluation", () => {
           stage: "generation",
           provider: "openrouter",
           requestedModel: "generator",
-          outcome: "accepted",
-          latencyMs: 1,
-        },
-        {
-          stage: "review",
-          provider: "gemini",
-          requestedModel: "reviewer",
           outcome: "accepted",
           latencyMs: 1,
         },
@@ -265,7 +258,50 @@ describe("live portfolio chat evaluation", () => {
     })
 
     expect(openrouter.complete).not.toHaveBeenCalled()
-    expect(gemini.complete).not.toHaveBeenCalled()
+    expect(gemini.complete).toHaveBeenCalledOnce()
+    expect(groq.complete).not.toHaveBeenCalled()
+    expect(report.cases[0]?.judge?.provider).toBe("gemini")
+  })
+
+  it("prefers an available independent judge over a failed generation provider", async () => {
+    const evaluationCase = buildEvaluationCorpus()[0]
+    const generated = replyFor(evaluationCase)
+    if (generated.kind !== "generated") throw new Error("Expected generation")
+    const reply: PortfolioChatReply = {
+      ...generated,
+      provider: "gemini",
+      attempts: [
+        {
+          stage: "generation",
+          provider: "openrouter",
+          requestedModel: "unavailable-generator",
+          outcome: "failed",
+          reason: "rate-limited",
+          latencyMs: 1,
+        },
+        {
+          stage: "generation",
+          provider: "gemini",
+          requestedModel: "accepted-generator",
+          outcome: "accepted",
+          latencyMs: 1,
+        },
+      ],
+    }
+    const openrouter = judge("openrouter", 0)
+    const groq = judge("groq")
+
+    const report = await runLiveEvaluation({
+      target: { mode: "forced-dynamic", answer: async () => reply },
+      judges: [openrouter, groq],
+      knowledge,
+      cases: [evaluationCase],
+      controls: { concurrency: 1, caseStartsPerMinute: 600 },
+      runId: "available-independent-judge",
+      clock: { now: () => 0, sleep: async () => undefined },
+    })
+
+    expect(openrouter.complete).not.toHaveBeenCalled()
     expect(groq.complete).toHaveBeenCalledOnce()
     expect(report.cases[0]?.judge?.provider).toBe("groq")
   })

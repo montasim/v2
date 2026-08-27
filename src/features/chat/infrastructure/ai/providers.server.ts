@@ -27,8 +27,8 @@ export const OPENROUTER_FREE_MODEL_IDS = [
 ] as const
 export type OpenRouterFreeModelId = (typeof OPENROUTER_FREE_MODEL_IDS)[number]
 
-export const OPENROUTER_MODEL_ID: OpenRouterFreeModelId = "z-ai/glm-5.2:free"
-export const OPENROUTER_FREE_ROUTER_ID = "openrouter/free" as const
+export const OPENROUTER_MODEL_ID: OpenRouterFreeModelId =
+  "minimax/minimax-m3:free"
 export const GEMINI_MODEL_ID = "gemini-3.5-flash"
 export const GROQ_MODEL_ID = "openai/gpt-oss-120b"
 
@@ -61,8 +61,6 @@ export const GROQ_LANGUAGE_MODEL_OPTIONS = {
 } satisfies GroqLanguageModelChatOptions
 
 export const OPENROUTER_MAX_OUTPUT_TOKENS = 2_400
-export const OPENROUTER_MAX_FALLBACK_MODELS = 3
-const OPENROUTER_CURATED_FALLBACK_MODELS = OPENROUTER_MAX_FALLBACK_MODELS - 1
 export const OPENROUTER_TEMPERATURE = 0
 export const GEMINI_MAX_OUTPUT_TOKENS = 2_400
 export const GEMINI_TEMPERATURE = 0
@@ -121,6 +119,7 @@ export class AiProviderError extends Error {
 export interface OpenRouterAdapterConfig {
   apiKey: string
   modelId?: string
+  /** @deprecated Only the first configured model is used. */
   modelIds?: readonly string[]
 }
 
@@ -131,8 +130,8 @@ export interface DirectProviderAdapterConfig {
 export interface AiProviderEnvironment {
   OPENROUTER_API_KEY?: string
   OPENROUTER?: string
+  /** @deprecated Only the first entry is used; prefer OPENROUTER_FREE_MODEL. */
   OPENROUTER_FREE_MODELS?: string
-  /** @deprecated Use OPENROUTER_FREE_MODELS for an ordered failover pool. */
   OPENROUTER_FREE_MODEL?: string
   GOOGLE_GENERATIVE_AI_API_KEY?: string
   GROQ_API_KEY?: string
@@ -144,26 +143,18 @@ class OpenRouterAdapter implements AiProviderAdapter {
 
   constructor(
     readonly modelId: OpenRouterFreeModelId,
-    private readonly fallbackModelIds: readonly OpenRouterFreeModelId[],
     private readonly apiKey: string
   ) {}
 
   async complete(request: AiCompletionRequest) {
     try {
-      const fallbackModelIds = selectOpenRouterFallbackModelIds(
-        this.fallbackModelIds,
-        request
-      )
       const openrouter = createOpenRouter({
         apiKey: this.apiKey,
         compatibility: "strict",
         headers: { "X-OpenRouter-Metadata": "enabled" },
       })
       const result = await generateText({
-        model: openrouter.chat(
-          this.modelId,
-          fallbackModelIds.length > 0 ? { models: fallbackModelIds } : undefined
-        ),
+        model: openrouter.chat(this.modelId),
         system: request.system,
         messages: request.messages,
         abortSignal: request.signal,
@@ -191,34 +182,6 @@ class OpenRouterAdapter implements AiProviderAdapter {
       throw normalizeProviderError(error, this.provider, this.modelId, request)
     }
   }
-}
-
-function selectOpenRouterFallbackModelIds(
-  modelIds: readonly OpenRouterFreeModelId[],
-  request: AiCompletionRequest
-): Array<OpenRouterFreeModelId | typeof OPENROUTER_FREE_ROUTER_ID> {
-  if (modelIds.length <= OPENROUTER_CURATED_FALLBACK_MODELS) {
-    return [...modelIds, OPENROUTER_FREE_ROUTER_ID]
-  }
-
-  const requestText = [
-    request.system,
-    ...request.messages.flatMap(({ role, content }) => [role, content]),
-  ].join("\u0000")
-  let hash = 2_166_136_261
-  for (let index = 0; index < requestText.length; index += 1) {
-    hash ^= requestText.charCodeAt(index)
-    hash = Math.imul(hash, 16_777_619)
-  }
-  const startIndex = (hash >>> 0) % modelIds.length
-
-  return [
-    ...Array.from(
-      { length: OPENROUTER_CURATED_FALLBACK_MODELS },
-      (_, offset) => modelIds[(startIndex + offset) % modelIds.length]
-    ),
-    OPENROUTER_FREE_ROUTER_ID,
-  ]
 }
 
 class GeminiAdapter implements AiProviderAdapter {
@@ -255,7 +218,7 @@ class GeminiAdapter implements AiProviderAdapter {
 class GroqAdapter implements AiProviderAdapter {
   readonly provider = "groq" as const
   readonly modelId = GROQ_MODEL_ID
-  readonly supportsFullContextGeneration = false
+  readonly supportsFullContextGeneration = true
 
   constructor(private readonly apiKey: string) {}
 
@@ -290,13 +253,8 @@ export function createOpenRouterAdapter(
     config.modelId ?? OPENROUTER_MODEL_ID,
   ]
   assertApiKey(config.apiKey, "openrouter", configuredModelIds[0] ?? "")
-  const modelIds = Array.from(
-    new Set(
-      configuredModelIds.map((modelId) => validateOpenRouterModelId(modelId))
-    )
-  )
-  const modelId = modelIds[0] ?? validateOpenRouterModelId("")
-  return new OpenRouterAdapter(modelId, modelIds.slice(1), config.apiKey)
+  const modelId = validateOpenRouterModelId(configuredModelIds[0] ?? "")
+  return new OpenRouterAdapter(modelId, config.apiKey)
 }
 
 export function createGeminiAdapter(
@@ -341,6 +299,10 @@ export function createAiProviders(
 function configuredOpenRouterModelIds(
   environment: AiProviderEnvironment
 ): readonly OpenRouterFreeModelId[] {
+  if (environment.OPENROUTER_FREE_MODEL !== undefined) {
+    return [validateOpenRouterModelId(environment.OPENROUTER_FREE_MODEL)]
+  }
+
   if (environment.OPENROUTER_FREE_MODELS !== undefined) {
     const entries = environment.OPENROUTER_FREE_MODELS.split(",")
     const normalized = entries.map((modelId) => modelId.trim())
@@ -349,16 +311,16 @@ function configuredOpenRouterModelIds(
       return [validateOpenRouterModelId("")]
     }
 
-    return Array.from(
-      new Set(normalized.map((modelId) => validateOpenRouterModelId(modelId)))
-    )
+    let selected: OpenRouterFreeModelId | undefined
+    for (const modelId of normalized) {
+      const validated = validateOpenRouterModelId(modelId)
+      selected ??= validated
+      if (validated === OPENROUTER_MODEL_ID) selected = validated
+    }
+    return [selected ?? validateOpenRouterModelId("")]
   }
 
-  if (environment.OPENROUTER_FREE_MODEL !== undefined) {
-    return [validateOpenRouterModelId(environment.OPENROUTER_FREE_MODEL)]
-  }
-
-  return OPENROUTER_FREE_MODEL_IDS
+  return [OPENROUTER_MODEL_ID]
 }
 
 export function validateOpenRouterModelId(

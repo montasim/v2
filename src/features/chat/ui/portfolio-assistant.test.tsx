@@ -253,6 +253,8 @@ describe("PortfolioAssistant chat navigation", () => {
   })
 
   it("renders links to supporting portfolio evidence", () => {
+    const citationLabel =
+      "I Refused to Make WebGL the Only Way In: The Architecture Behind Fallback Rendering"
     chatState.messages = [
       {
         id: "cited-answer",
@@ -261,7 +263,7 @@ describe("PortfolioAssistant chat navigation", () => {
           source: "Projects",
           citations: [
             {
-              label: "Open PostCraft",
+              label: citationLabel,
               href: "/projects#project-postcraft",
             },
           ],
@@ -273,8 +275,19 @@ describe("PortfolioAssistant chat navigation", () => {
     fireEvent.click(screen.getByRole("button", { name: "Ask about Montasim" }))
     fireEvent.click(screen.getByRole("button", { name: /Why hire him/ }))
 
-    const citation = screen.getByRole("link", { name: /Open PostCraft/ })
+    const citation = screen.getByRole("link", { name: citationLabel })
+    const citationClasses = citation.className.split(" ")
+
     expect(citation.getAttribute("href")).toBe("/projects#project-postcraft")
+    expect(citationClasses).toContain("max-w-full")
+    expect(citationClasses).toContain("min-w-0")
+    expect(citationClasses).toContain("shrink")
+    expect(citationClasses).toContain("whitespace-normal")
+    expect(citationClasses).not.toContain("shrink-0")
+    expect(citationClasses).not.toContain("whitespace-nowrap")
+    expect(citation.querySelector("span")?.className.split(" ")).toContain(
+      "break-words"
+    )
     expect(screen.getByText("Supporting evidence")).not.toBeNull()
   })
 

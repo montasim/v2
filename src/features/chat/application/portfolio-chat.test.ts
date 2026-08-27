@@ -3,9 +3,9 @@ import { beforeAll, describe, expect, it, vi } from "vitest"
 import {
   CHAT_GENERATION_DEADLINE_MS,
   createPortfolioChat,
-  DIRECT_GENERATION_ATTEMPT_MS,
+  GEMINI_GENERATION_ATTEMPT_MS,
+  GROQ_GENERATION_ATTEMPT_MS,
   OPENROUTER_GENERATION_ATTEMPT_MS,
-  REVIEW_ATTEMPT_MS,
 } from "@/features/chat/application/portfolio-chat"
 import type {
   AiCompletionResult,
@@ -148,14 +148,15 @@ function dynamicQuestion() {
   return "Synthesize the strongest evidence that his real-time AI work demonstrates senior engineering judgment."
 }
 
-describe("PortfolioChat full-context orchestration", () => {
-  it("budgets for a real full-context OpenRouter generation and independent review", () => {
-    expect(OPENROUTER_GENERATION_ATTEMPT_MS).toBeGreaterThan(18_000)
+describe("PortfolioChat focused-evidence orchestration", () => {
+  it("budgets for all three generation providers inside the shared deadline", () => {
+    expect(OPENROUTER_GENERATION_ATTEMPT_MS).toBe(12_000)
+    expect(GEMINI_GENERATION_ATTEMPT_MS).toBe(22_000)
+    expect(GROQ_GENERATION_ATTEMPT_MS).toBe(10_000)
     expect(
-      OPENROUTER_GENERATION_ATTEMPT_MS + REVIEW_ATTEMPT_MS * 2
-    ).toBeLessThanOrEqual(CHAT_GENERATION_DEADLINE_MS)
-    expect(
-      DIRECT_GENERATION_ATTEMPT_MS + REVIEW_ATTEMPT_MS
+      OPENROUTER_GENERATION_ATTEMPT_MS +
+        GEMINI_GENERATION_ATTEMPT_MS +
+        GROQ_GENERATION_ATTEMPT_MS
     ).toBeLessThanOrEqual(CHAT_GENERATION_DEADLINE_MS)
   })
 
@@ -196,12 +197,13 @@ describe("PortfolioChat full-context orchestration", () => {
     expect(openrouter.complete).not.toHaveBeenCalled()
     expect(limiter.consume).not.toHaveBeenCalled()
     expect(store.exchanges[0]).toMatchObject({
-      policyVersion: "portfolio-chat/full-context-v1",
+      policyVersion: "portfolio-chat/focused-evidence-v2",
       knowledgeHash: knowledge.hash,
+      retrievalMetadata: { mode: "exact-answer" },
     })
   })
 
-  it("sends the complete knowledge packet and accepts only after an independent review", async () => {
+  it("sends focused evidence and accepts a deterministically validated answer", async () => {
     const openrouter = provider("openrouter", [validGeneratedDraft], {
       costUsd: 0,
     })
@@ -238,16 +240,18 @@ describe("PortfolioChat full-context orchestration", () => {
       "/experience#experience-mymedicalhub-senior-software-engineer"
     )
     expect(openrouter.complete).toHaveBeenCalledOnce()
-    expect(gemini.complete).toHaveBeenCalledOnce()
+    expect(gemini.complete).not.toHaveBeenCalled()
     const generationRequest = vi.mocked(openrouter.complete).mock.calls[0][0]
-    expect(generationRequest.system).toContain(knowledge.toon)
-    const reviewRequest = vi.mocked(gemini.complete).mock.calls[0][0]
-    expect(reviewRequest.system).not.toContain(knowledge.toon)
-    expect(reviewRequest.system).toContain("independent quality gate")
+    expect(generationRequest.system).not.toContain(knowledge.toon)
+    expect(generationRequest.system).toContain(currentRoleFactId)
+    expect(generationRequest.system.length).toBeLessThan(40_000)
     expect(reply.attempts.map((attempt) => attempt.stage)).toEqual([
       "generation",
-      "review",
     ])
+    expect(store.exchanges[0]?.retrievalMetadata).toMatchObject({
+      mode: "focused-evidence",
+      semanticReview: false,
+    })
     expect(limiter.consume).toHaveBeenCalledTimes(4)
   })
 
@@ -268,7 +272,8 @@ describe("PortfolioChat full-context orchestration", () => {
     const reply = await chat.answer(
       {
         conversationId: "funding",
-        question: "How can I sponsor his work?",
+        question:
+          "How can I sponsor the work in his current Senior Software Engineer role?",
       },
       { visitorHash: "visitor" }
     )
@@ -313,13 +318,9 @@ describe("PortfolioChat full-context orchestration", () => {
           provider: "gemini",
           outcome: "accepted",
         }),
-        expect.objectContaining({
-          stage: "review",
-          provider: "groq",
-          outcome: "accepted",
-        }),
       ])
     )
+    expect(groq.complete).not.toHaveBeenCalled()
   })
 
   it("keeps OpenRouter model failures isolated within the curated pool", async () => {
@@ -355,19 +356,17 @@ describe("PortfolioChat full-context orchestration", () => {
     expect(available.complete).toHaveBeenCalledOnce()
   })
 
-  it("tries the complete configured OpenRouter pool before direct fallback", async () => {
-    const openrouter = Array.from({ length: 4 }, (_, index) =>
-      provider("openrouter", [], {
-        failWith: "request-failed",
-        modelId: `reviewed/free-model-${index + 1}:free`,
-      })
-    )
+  it("uses direct Gemini immediately after the pinned OpenRouter fails", async () => {
+    const openrouter = provider("openrouter", [], {
+      failWith: "request-failed",
+      modelId: "z-ai/glm-5.2:free",
+    })
     const gemini = provider("gemini", [validGeneratedDraft])
     const groq = provider("groq", [acceptedReview])
     const chat = createPortfolioChat({
       knowledge,
       exactAnswers: noExactAnswers(),
-      providers: [...openrouter, gemini, groq],
+      providers: [openrouter, gemini, groq],
       recorder: recorder().adapter,
       requestLimiter: allowAllLimiter(),
       providerCircuit: new InMemoryProviderCircuitStore(),
@@ -379,9 +378,8 @@ describe("PortfolioChat full-context orchestration", () => {
     )
 
     expect(reply).toMatchObject({ kind: "generated", provider: "gemini" })
-    for (const adapter of openrouter) {
-      expect(adapter.complete).toHaveBeenCalledOnce()
-    }
+    expect(openrouter.complete).toHaveBeenCalledOnce()
+    expect(groq.complete).not.toHaveBeenCalled()
   })
 
   it("reserves time for a fallback when the primary provider stalls", async () => {
@@ -430,7 +428,7 @@ describe("PortfolioChat full-context orchestration", () => {
       ])
     )
     expect(gemini.complete).toHaveBeenCalledOnce()
-    expect(groq.complete).toHaveBeenCalledOnce()
+    expect(groq.complete).not.toHaveBeenCalled()
   })
 
   it("enforces an attempt timeout when a provider ignores its abort signal", async () => {
@@ -485,10 +483,10 @@ describe("PortfolioChat full-context orchestration", () => {
     }
   })
 
-  it("moves to another reviewer when a reviewer ignores its abort signal", async () => {
+  it("moves to Groq generation when Gemini ignores its abort signal", async () => {
     vi.useFakeTimers()
     try {
-      const openrouter = provider("openrouter", [validGeneratedDraft], {
+      const openrouter = provider("openrouter", ["not-json"], {
         costUsd: 0,
       })
       const gemini: AiProviderAdapter = {
@@ -496,7 +494,7 @@ describe("PortfolioChat full-context orchestration", () => {
         modelId: "gemini-test-model",
         complete: vi.fn(() => new Promise<AiCompletionResult>(() => undefined)),
       }
-      const groq = provider("groq", [acceptedReview])
+      const groq = provider("groq", [validGeneratedDraft])
       const chat = createPortfolioChat({
         knowledge,
         exactAnswers: noExactAnswers(),
@@ -504,7 +502,8 @@ describe("PortfolioChat full-context orchestration", () => {
         recorder: recorder().adapter,
         requestLimiter: allowAllLimiter(),
         providerCircuit: new InMemoryProviderCircuitStore(),
-        attemptTimeoutMs: (stage) => (stage === "review" ? 5 : 100),
+        attemptTimeoutMs: (_stage, providerName) =>
+          providerName === "gemini" ? 5 : 100,
       })
 
       const answer = chat.answer(
@@ -514,10 +513,10 @@ describe("PortfolioChat full-context orchestration", () => {
       await vi.waitFor(() => expect(gemini.complete).toHaveBeenCalledOnce())
       await vi.advanceTimersByTimeAsync(6)
 
-      expect(groq.complete).toHaveBeenCalledOnce()
+      await vi.waitFor(() => expect(groq.complete).toHaveBeenCalledOnce())
       await expect(answer).resolves.toMatchObject({
         kind: "generated",
-        provider: "openrouter",
+        provider: "groq",
       })
     } finally {
       vi.useRealTimers()
@@ -588,23 +587,12 @@ describe("PortfolioChat full-context orchestration", () => {
     })
   })
 
-  it("never exposes a candidate rejected by the semantic reviewer", async () => {
-    const rejectedReview = JSON.stringify({
-      verdict: "reject",
-      scores: {
-        factualEntailment: 4,
-        questionRelevance: 2,
-        evidenceSelection: 2,
-        audienceUsefulness: 2,
-        professionalTone: 4,
-      },
-      issues: ["The answer does not address the requested decision."],
-    })
+  it("does not spend a fallback call after deterministic validation succeeds", async () => {
     const openrouter = provider("openrouter", [validGeneratedDraft], {
       costUsd: 0,
     })
-    const gemini = provider("gemini", [rejectedReview, validGeneratedDraft])
-    const groq = provider("groq", [acceptedReview])
+    const gemini = provider("gemini", [validGeneratedDraft])
+    const groq = provider("groq", [validGeneratedDraft])
     const chat = createPortfolioChat({
       knowledge,
       exactAnswers: noExactAnswers(),
@@ -620,18 +608,10 @@ describe("PortfolioChat full-context orchestration", () => {
       { visitorHash: "visitor" }
     )
 
-    expect(reply).toMatchObject({ kind: "generated", provider: "gemini" })
-    expect(reply.text).not.toContain("does not address")
-    expect(reply.attempts).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          stage: "review",
-          provider: "gemini",
-          outcome: "rejected",
-          reason: "quality-threshold",
-        }),
-      ])
-    )
+    expect(reply).toMatchObject({ kind: "generated", provider: "openrouter" })
+    expect(reply.attempts).toHaveLength(1)
+    expect(gemini.complete).not.toHaveBeenCalled()
+    expect(groq.complete).not.toHaveBeenCalled()
   })
 
   it("returns a safe handoff when no provider can prepare a validated answer", async () => {
@@ -669,7 +649,7 @@ describe("PortfolioChat full-context orchestration", () => {
     expect(store.exchanges).toHaveLength(1)
   })
 
-  it("uses a constrained direct provider only for review, never full-context generation", async () => {
+  it("uses focused evidence with a formerly constrained Groq provider", async () => {
     const groq = {
       ...provider("groq", [validGeneratedDraft]),
       supportsFullContextGeneration: false,
@@ -689,10 +669,10 @@ describe("PortfolioChat full-context orchestration", () => {
         { visitorHash: "visitor" }
       )
     ).resolves.toMatchObject({
-      kind: "handoff",
-      reason: "provider-unavailable",
+      kind: "generated",
+      provider: "groq",
     })
-    expect(groq.complete).not.toHaveBeenCalled()
+    expect(groq.complete).toHaveBeenCalledOnce()
   })
 
   it("does not send unsafe or noisy input to a model", async () => {
@@ -779,7 +759,7 @@ describe("PortfolioChat full-context orchestration", () => {
 
     expect(results).toEqual(Array.from({ length: 8 }, () => results[0]))
     expect(openrouter.complete).toHaveBeenCalledOnce()
-    expect(gemini.complete).toHaveBeenCalledOnce()
+    expect(gemini.complete).not.toHaveBeenCalled()
     expect(limiter.consume).toHaveBeenCalledTimes(4)
   })
 

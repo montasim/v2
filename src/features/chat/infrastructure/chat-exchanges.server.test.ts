@@ -58,7 +58,7 @@ vi.mock("@/db/client.server", () => ({
 }))
 
 const scope = {
-  policyVersion: "portfolio-chat/full-context-v1",
+  policyVersion: "portfolio-chat/focused-evidence-v2",
   knowledgeHash: "a".repeat(64),
 } satisfies ChatKnowledgeScope
 

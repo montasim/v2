@@ -6,10 +6,12 @@ import {
 } from "@/features/chat/domain/portfolio-chat-policy"
 
 describe("portfolio chat runtime policy", () => {
-  it("binds v3 replies to the complete knowledge packet hash", () => {
-    expect(PORTFOLIO_CHAT_POLICY_VERSION).toBe("portfolio-chat/full-context-v1")
+  it("binds focused-evidence replies to the compiled knowledge hash", () => {
+    expect(PORTFOLIO_CHAT_POLICY_VERSION).toBe(
+      "portfolio-chat/focused-evidence-v2"
+    )
     expect(createPortfolioChatKnowledgeScope("a".repeat(64))).toEqual({
-      policyVersion: "portfolio-chat/full-context-v1",
+      policyVersion: "portfolio-chat/focused-evidence-v2",
       knowledgeHash: "a".repeat(64),
     })
   })

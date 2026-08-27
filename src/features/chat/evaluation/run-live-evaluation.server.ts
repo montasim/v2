@@ -43,9 +43,9 @@ export async function runLiveEvaluationCli(arguments_: readonly string[]) {
   const uniqueProviderNames = new Set(
     configuredProviders.map((provider) => provider.provider)
   )
-  if (uniqueProviderNames.size < 3) {
+  if (uniqueProviderNames.size < 2) {
     throw new Error(
-      "Live chat evaluation requires three distinct providers so generation, runtime review, and evaluation judgment remain independent."
+      "Live chat evaluation requires two distinct providers so generation and evaluation judgment remain independent."
     )
   }
   const providerHarness = createEvaluationProviderHarness({
@@ -236,8 +236,8 @@ Options:
   --output <path>       New JSON report path (default: artifacts/chat-evaluation/<time>.json)
   --help                Show this help
 
-The runner always injects an empty exact-answer catalog. Three distinct
-providers keep generation, runtime review, and judgment independent. Every
+The runner always injects an empty exact-answer catalog. At least two distinct
+providers keep generation and judgment independent. Every
 provider call is paced and reported. OpenRouter retains the runtime free-model
 allowlist, an 18 RPM / 900 request ceiling, and fail-closed zero-cost checks.
 `

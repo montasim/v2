@@ -95,8 +95,8 @@ export function isEvaluationFatalProviderError(
 }
 
 /**
- * Wraps every evaluation provider once so generation, runtime review, and the
- * independent judge share the same request pacing and accounting ledger.
+ * Wraps every evaluation provider once so generation and the independent
+ * judge share the same request pacing and accounting ledger.
  */
 export function createEvaluationProviderHarness(input: {
   readonly providers: readonly AiProviderAdapter[]

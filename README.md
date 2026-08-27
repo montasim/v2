@@ -21,8 +21,8 @@ The result is designed for two audiences:
 - Eight typed routes with route-specific titles, descriptions, canonical links, Open Graph tags, and Twitter card metadata
 - Responsive desktop navigation and an accessible shadcn `Sheet` menu on small screens
 - System-aware light and dark themes with a persistent manual toggle
-- Buffered, portfolio-grounded AI assistant with a zero-cost free-model OpenRouter primary, direct Gemini generation fallback, and independent Groq review
-- Complete citation-ready TOON knowledge packets, exact-question answers, claim validation, durable limits, and provider telemetry
+- Buffered, portfolio-grounded AI assistant with a pinned zero-cost OpenRouter primary, Gemini fallback, and Groq final fallback
+- Focused citation-ready TOON evidence, exact-question answers, deterministic claim validation, durable limits, and provider telemetry
 - Guided role and project inquiry workflows with Neon as the source of truth plus idempotent Google Sheets and Resend delivery
 - Shareable, validated URL filters for project, education, certification, and recommendation catalogs
 - Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
@@ -72,7 +72,7 @@ Copy [`.env.example`](.env.example) to `.env.local` and add the services you wan
 GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
 GROQ_API_KEY=your_groq_key
 OPENROUTER_API_KEY=your_openrouter_key
-OPENROUTER_FREE_MODELS=z-ai/glm-5.2:free,minimax/minimax-m3:free,minimax/minimax-m2.7:free,google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,nvidia/nemotron-3-super-120b-a12b:free,dots-studio/dots-3-note-preview:free
+OPENROUTER_FREE_MODEL=minimax/minimax-m3:free
 UPTIMEROBOT_READ_ONLY_API_KEY=your_read_only_uptimerobot_key
 DATABASE_URL=postgresql://user:password@host/database?sslmode=require
 CHAT_RATE_LIMIT_SECRET=generate_a_separate_32_byte_secret
@@ -88,7 +88,7 @@ GOOGLE_ROLE_INQUIRIES_RANGE="'Role Inquiries'!A:J"
 GOOGLE_PROJECT_INQUIRIES_RANGE="'Project Inquiries'!A:J"
 ```
 
-OpenRouter is attempted first using the ordered, comma-separated `OPENROUTER_FREE_MODELS` pool. Its default order follows OpenRouter's [free text-model intelligence ranking](https://openrouter.ai/models?variant=free&output_modalities=text&order=intelligence-high-to-low), restricted to models that currently advertise the JSON response capabilities and context size required by this portfolio chat; Dots3 Note is retained as a structured-output-capable curated option when no intelligence score is published. The code trims and deduplicates that list, accepts only reviewed exact `:free` model IDs, and sends one OpenRouter request per generation. The first configured ID remains the primary model. Two reviewed models are selected as a deterministic rotating fallback window, and `openrouter/free` is always appended as the third and final fallback; OpenRouter filters that automatic router's random free-model pool for the request's required capabilities. This keeps the complete curated pool available across requests, adds automatic access to newly available compatible free models, and does not multiply OpenRouter quota usage for one chat. The request requires JSON-capable endpoints, sends no tools or plugins, sets every price ceiling to zero, and rejects any response whose reported cost is not exactly zero. The routed pool shares one application-level circuit and free-tier safety-budget entry. Direct Gemini `gemini-3.5-flash` is the full-context generation fallback after the routed OpenRouter request. Groq `openai/gpt-oss-120b` remains an independent small-context quality reviewer; the configured Groq allowance cannot accept the complete portfolio packet and is therefore never presented as a generation fallback. Exact catalog matches use no model request. Every visitor is limited to 60 total chat requests per 10 minutes; dynamic generations also have 180-per-10-minute and 900-per-day safeguards, while OpenRouter receives a separate shared safety budget of 18 requests per minute and 900 per day. A quota or upstream availability response never routes to a paid OpenRouter model. Answers are buffered, fact-checked, and independently reviewed before the existing UI receives them, so a rejected or interrupted provider draft is never shown. The orchestration budget allows 30 seconds for the full-context OpenRouter request, 10 seconds per reviewer, 50 seconds overall, and five additional seconds for persistence and delivery within Netlify's 60-second synchronous-function limit. If no generation-and-review pair succeeds, the endpoint returns a safe streamed handoff instead of exposing a provider draft or producing the UI's transport-error state. The code proves zero spend only for OpenRouter; Gemini and Groq billing remain governed by the quotas configured in their own accounts.
+OpenRouter is attempted first with one pinned, reviewed `:free` model. The app does not pass an OpenRouter model pool or the random `openrouter/free` router, so the primary model and its answer quality remain stable. The request sends no tools or plugins, sets every OpenRouter price ceiling to zero, and rejects a response unless reported cost is exactly zero. Gemini `gemini-3.5-flash` is the first direct generation fallback; Groq `openai/gpt-oss-120b` is the final generation fallback. Exact catalog matches use no model request. Dynamic questions select at most 12 relevant facts from the compiled portfolio and send that compact TOON packet to each provider. Models return prose claims and fact IDs; the server validates the IDs, numbers, dates, names, evidence roles, and citations before accepting an answer. The live path does not spend another model call on review; independent quality judging remains an offline evaluation gate. Every visitor is limited to 60 total chat requests per 10 minutes; dynamic generations also have 180-per-10-minute and 900-per-day safeguards, while OpenRouter receives a separate shared safety budget of 18 requests per minute and 900 per day. Attempt budgets are 12 seconds for OpenRouter, 22 seconds for Gemini, and 10 seconds for Groq inside a 50-second shared deadline. If all three fail validation or availability checks, the endpoint returns a safe streamed handoff. OpenRouter is the only provider for which the code proves zero spend; Gemini and Groq billing remain governed by their account quotas.
 
 Initialize the operational database before using dynamic features:
 
@@ -131,10 +131,11 @@ flowchart LR
     F[Incoming request] --> G[Pino request logger]
     G --> E
     I[Assistant panel] --> J[Chat API]
-    J --> S[Validated catalogs to complete TOON knowledge]
+    J --> S[Validated catalogs to compiled knowledge]
     S -->|Exact normalized question| T[Exact cited answer]
-    S -->|Every other safe question| M[OpenRouter exact-free, then Gemini]
-    M --> L[Claim checks plus independent Gemini or Groq review]
+    S -->|Every other safe question| R[Select up to 12 relevant facts]
+    R --> M[Pinned OpenRouter, then Gemini, then Groq]
+    M --> L[Deterministic claim and citation checks]
     L --> U[Canonical cited answer]
     I --> N[Inquiry server function]
     N --> O[Neon source of truth]
@@ -143,7 +144,7 @@ flowchart LR
 
 Route files own metadata and domain-specific record rendering. Domain-local catalog modules validate JSON, normalize classifications, and expose featured records and filters. Reusable catalog and detail-page modules own repeated page workflows, while navigation actions centralize internal, external, download, and email behavior. Malformed content fails during development and builds instead of reaching visitors silently.
 
-The assistant validates all public catalogs, normalizes each record, derives counts and chronology, attaches stable evidence IDs and direct citation URLs, and compiles the complete result into TOON. A clean-room catalog of 450 newly written normalized exact questions can answer without a provider; it references the same evidence ledger and is rejected before build or at runtime if its source or knowledge hash is stale. Every other safe question gives the generation model the complete knowledge packet, so relevant evidence is never excluded by retrieval. Generated claims must cite exact source excerpts, pass deterministic factual checks, and pass an independent relevance and quality review before they are served. Recommendations can support collaboration claims, but not substitute for technical, ranking, count, or career-impact evidence.
+The assistant validates all public catalogs, normalizes each record, derives counts and chronology, and attaches stable evidence IDs and direct citation URLs. A clean-room catalog of 450 normalized exact questions can answer without a provider; it references the same evidence ledger and is rejected before build or at runtime if its source or knowledge hash is stale. Every other safe question receives a focused evidence packet selected by deterministic intent rules and lexical ranking. Generated claims cite fact IDs and pass server-side factual checks before they are served. Recommendations can support collaboration claims, but not substitute for technical, ranking, count, or career-impact evidence. The live evaluation suite independently judges relevance, usefulness, tone, and evidence quality without adding a reviewer call to visitor requests.
 
 The server entry wraps TanStack Start's default handler to record the request method, path, response status, and elapsed time. It redacts authorization and cookie fields from structured logs.
 
@@ -170,20 +171,20 @@ prototypes/           # Approved static reference implementation
 
 ## Technology
 
-| Area             | Technology                                                          |
-| ---------------- | ------------------------------------------------------------------- |
-| Application      | TanStack Start, TanStack Router, React 19, TypeScript               |
-| AI               | AI SDK, zero-cost OpenRouter models, Gemini generation, Groq review |
-| Email            | Resend                                                              |
-| Operational data | Neon Postgres                                                       |
-| Inquiry delivery | Resend, Google Sheets API                                           |
-| Build            | Vite 8                                                              |
-| Interface        | Tailwind CSS 4, shadcn/ui, Radix UI, Hugeicons                      |
-| Validation       | Zod 4                                                               |
-| Logging          | Pino 10                                                             |
-| Content          | Local JSON files                                                    |
-| Testing          | Vitest                                                              |
-| Quality          | ESLint, Prettier, TypeScript, Lighthouse                            |
+| Area             | Technology                                                     |
+| ---------------- | -------------------------------------------------------------- |
+| Application      | TanStack Start, TanStack Router, React 19, TypeScript          |
+| AI               | AI SDK, pinned zero-cost OpenRouter, Gemini and Groq fallbacks |
+| Email            | Resend                                                         |
+| Operational data | Neon Postgres                                                  |
+| Inquiry delivery | Resend, Google Sheets API                                      |
+| Build            | Vite 8                                                         |
+| Interface        | Tailwind CSS 4, shadcn/ui, Radix UI, Hugeicons                 |
+| Validation       | Zod 4                                                          |
+| Logging          | Pino 10                                                        |
+| Content          | Local JSON files                                               |
+| Testing          | Vitest                                                         |
+| Quality          | ESLint, Prettier, TypeScript, Lighthouse                       |
 
 ## Updating content
 
@@ -263,9 +264,9 @@ The deployment configuration pins the project's supported Node.js and pnpm
 versions. Verify server-side rendering, static assets, canonical URLs, and the
 social preview after the first deployment.
 
-Configure the server-only variables from [`.env.example`](.env.example) in Netlify; never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The two inquiry-range variables and `OPENROUTER_FREE_MODELS` are optional.
+Configure the server-only variables from [`.env.example`](.env.example) in Netlify; never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The two inquiry-range variables and `OPENROUTER_FREE_MODEL` are optional.
 
-The application no longer reads the legacy portfolio evidence tables. Forward migration `0008_solid_raider` removes both evidence tables and the database vector extension. On an existing deployment, deploy and verify this full-context runtime before applying that cleanup migration; a fresh environment can apply the complete migration chain before receiving traffic.
+The application no longer reads the legacy portfolio evidence tables. Forward migration `0008_solid_raider` removes both evidence tables and the database vector extension. On an existing deployment, deploy and verify the focused-evidence runtime before applying that cleanup migration; a fresh environment can apply the complete migration chain before receiving traffic.
 
 Do not present `pnpm preview` as the production server.
 

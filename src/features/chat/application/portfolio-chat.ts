@@ -14,9 +14,10 @@ import type {
 import type { ChatRequestCoordinator } from "@/features/chat/application/ports/chat-request-coordinator"
 import type { ChatRequestLimiter } from "@/features/chat/application/ports/chat-request-limiter"
 import type { ProviderCircuitStore } from "@/features/chat/application/ports/provider-circuit"
-import { prepareFullContextGeneration } from "@/features/chat/application/full-context-generation"
+import { prepareFocusedContextGeneration } from "@/features/chat/application/full-context-generation"
 import type { AcceptedGeneratedAnswer } from "@/features/chat/application/full-context-generation"
-import { prepareSemanticAnswerReview } from "@/features/chat/application/semantic-answer-review"
+import { selectPortfolioEvidence } from "@/features/chat/application/portfolio-evidence-selection"
+import type { PortfolioEvidenceSelection } from "@/features/chat/application/portfolio-evidence-selection"
 import { redactChatText } from "@/features/chat/domain/chat-redaction"
 import { inferConversationAction } from "@/features/chat/domain/conversation-action"
 import type { ChatProviderName } from "@/features/chat/domain/chat"
@@ -47,8 +48,12 @@ import type {
 import { logger } from "@/lib/logger.server"
 
 export const CHAT_GENERATION_DEADLINE_MS = 50_000
-export const OPENROUTER_GENERATION_ATTEMPT_MS = 30_000
-export const DIRECT_GENERATION_ATTEMPT_MS = 28_000
+export const OPENROUTER_GENERATION_ATTEMPT_MS = 12_000
+export const GEMINI_GENERATION_ATTEMPT_MS = 22_000
+export const GROQ_GENERATION_ATTEMPT_MS = 10_000
+/** @deprecated Use the provider-specific generation timeout. */
+export const DIRECT_GENERATION_ATTEMPT_MS = GEMINI_GENERATION_ATTEMPT_MS
+/** @deprecated Runtime semantic review was removed. */
 export const REVIEW_ATTEMPT_MS = 10_000
 
 type ProviderAttemptStage = "generation" | "review"
@@ -131,6 +136,7 @@ export function createPortfolioChat({
             startedAt,
             now,
             knowledge,
+            retrievalMetadata: { mode: "exact-answer" },
             requirePersistence,
           })
           return reply
@@ -145,6 +151,7 @@ export function createPortfolioChat({
             startedAt,
             now,
             knowledge,
+            retrievalMetadata: { mode: "safety-policy" },
             requirePersistence,
           })
           return safetyHandoff
@@ -161,12 +168,20 @@ export function createPortfolioChat({
           input.conversationId,
           knowledgeScope
         )
+        const evidence = selectPortfolioEvidence({
+          question,
+          ...(trustedPrevious
+            ? { trustedPreviousExchange: trustedPrevious }
+            : {}),
+          knowledge,
+        })
         const signal = deadlineSignal(context.signal)
         let reply: PortfolioChatReply
         try {
           reply = await generateValidatedReply({
             question,
             trustedPrevious,
+            evidence,
             knowledge,
             providers,
             providerCircuit,
@@ -191,6 +206,13 @@ export function createPortfolioChat({
           startedAt,
           now,
           knowledge,
+          retrievalMetadata: {
+            mode: "focused-evidence",
+            factCount: evidence.facts.length,
+            promptCharacters: evidence.prompt.length,
+            strategies: evidence.strategies,
+            semanticReview: false,
+          },
           requirePersistence,
         })
         return reply
@@ -219,6 +241,7 @@ interface GenerationInput {
     readonly answer: string
   } | null
   readonly knowledge: CompiledPortfolioKnowledge
+  readonly evidence: PortfolioEvidenceSelection
   readonly providers: readonly AiProviderAdapter[]
   readonly providerCircuit: ProviderCircuitStore
   readonly requestLimiter?: ChatRequestLimiter
@@ -236,19 +259,17 @@ async function generateValidatedReply(
 ): Promise<PortfolioChatReply> {
   const attempts: ProviderAttemptTrace[] = []
 
-  const generation = prepareFullContextGeneration({
+  const generation = prepareFocusedContextGeneration({
     question: input.question,
     ...(input.trustedPrevious
       ? { trustedPreviousExchange: input.trustedPrevious }
       : {}),
     knowledge: input.knowledge,
+    evidence: input.evidence,
     signal: input.signal,
   })
 
-  const generationProviders = input.providers.filter(
-    (provider) => provider.supportsFullContextGeneration !== false
-  )
-  for (const [fallbackDepth, provider] of generationProviders.entries()) {
+  for (const [fallbackDepth, provider] of input.providers.entries()) {
     input.signal.throwIfAborted()
     if (!(await canAttempt(input.providerCircuit, provider))) {
       attempts.push({
@@ -317,6 +338,14 @@ async function generateValidatedReply(
       await safeCircuitSuccess(input.providerCircuit, provider)
       const evaluated = generation.evaluate(completion.text)
       if (evaluated.status === "rejected") {
+        logger.warn(
+          {
+            provider: provider.provider,
+            model: provider.modelId,
+            reasons: evaluated.reasons,
+          },
+          "Portfolio chat generation was rejected by deterministic validation"
+        )
         attempts.push({
           ...generationTrace,
           outcome: "rejected",
@@ -343,36 +372,7 @@ async function generateValidatedReply(
         continue
       }
 
-      const review = await reviewGeneratedAnswer({
-        generator: provider,
-        answer: evaluated.answer,
-        question: input.question,
-        knowledge: input.knowledge,
-        providers: input.providers,
-        providerCircuit: input.providerCircuit,
-        now: input.now,
-        attemptTimeoutMs: input.attemptTimeoutMs,
-        signal: input.signal,
-      })
-      if (review.status !== "accepted") {
-        attempts.push(
-          {
-            ...generationTrace,
-            outcome: "rejected",
-            reason:
-              review.status === "unavailable"
-                ? "semantic-review-unavailable"
-                : `semantic-review-${review.reason}`,
-          },
-          ...review.attempts
-        )
-        continue
-      }
-
-      attempts.push(
-        { ...generationTrace, outcome: "accepted" },
-        ...review.attempts
-      )
+      attempts.push({ ...generationTrace, outcome: "accepted" })
       return generatedReply({
         answer: evaluated.answer,
         provider,
@@ -410,134 +410,6 @@ async function generateValidatedReply(
   }
 
   throw new ChatGenerationUnavailableError(attempts)
-}
-
-type ReviewResult =
-  | {
-      readonly status: "accepted"
-      readonly attempts: readonly ProviderAttemptTrace[]
-    }
-  | {
-      readonly status: "rejected"
-      readonly reason: "invalid-review" | "quality-threshold"
-      readonly attempts: readonly ProviderAttemptTrace[]
-    }
-  | {
-      readonly status: "unavailable"
-      readonly attempts: readonly ProviderAttemptTrace[]
-    }
-
-async function reviewGeneratedAnswer(input: {
-  readonly generator: AiProviderAdapter
-  readonly answer: AcceptedGeneratedAnswer
-  readonly question: string
-  readonly knowledge: CompiledPortfolioKnowledge
-  readonly providers: readonly AiProviderAdapter[]
-  readonly providerCircuit: ProviderCircuitStore
-  readonly now: () => Date
-  readonly attemptTimeoutMs: (
-    stage: ProviderAttemptStage,
-    provider: ChatProviderName
-  ) => number
-  readonly signal: AbortSignal
-}): Promise<ReviewResult> {
-  const attempts: ProviderAttemptTrace[] = []
-  const review = prepareSemanticAnswerReview({
-    question: input.question,
-    answer: input.answer,
-    knowledge: input.knowledge,
-    signal: input.signal,
-  })
-  const reviewers = reviewerOrder(input.providers, input.generator)
-
-  for (const reviewer of reviewers) {
-    input.signal.throwIfAborted()
-    if (!(await canAttempt(input.providerCircuit, reviewer))) {
-      attempts.push({
-        stage: "review",
-        provider: reviewer.provider,
-        requestedModel: reviewer.modelId,
-        outcome: "skipped",
-        reason: "provider-circuit-open",
-        latencyMs: 0,
-      })
-      continue
-    }
-
-    input.signal.throwIfAborted()
-    const startedAt = input.now().getTime()
-    try {
-      const attemptSignal = attemptDeadlineSignal(
-        input.signal,
-        input.attemptTimeoutMs("review", reviewer.provider)
-      )
-      const completion = await withSignal(
-        reviewer.complete({
-          ...review.providerRequest,
-          signal: attemptSignal,
-        }),
-        attemptSignal
-      )
-      await safeCircuitSuccess(input.providerCircuit, reviewer)
-      const trace = completionTrace(
-        "review",
-        reviewer,
-        completion,
-        input.now().getTime() - startedAt
-      )
-      const evaluated = review.evaluate(completion.text)
-      if (evaluated.status === "accepted") {
-        return {
-          status: "accepted",
-          attempts: [...attempts, { ...trace, outcome: "accepted" }],
-        }
-      }
-      const rejectedAttempt = {
-        ...trace,
-        outcome: "rejected" as const,
-        reason: evaluated.reason,
-      }
-      if (evaluated.reason === "quality-threshold") {
-        return {
-          status: "rejected",
-          reason: evaluated.reason,
-          attempts: [...attempts, rejectedAttempt],
-        }
-      }
-      attempts.push(rejectedAttempt)
-    } catch (error) {
-      const reason = errorCode(error)
-      attempts.push({
-        stage: "review",
-        provider: reviewer.provider,
-        requestedModel: reviewer.modelId,
-        outcome: "failed",
-        reason,
-        latencyMs: input.now().getTime() - startedAt,
-        costUsd: readCostUsd(error),
-      })
-      if (isCircuitFailure(reason)) {
-        await safeCircuitFailure(input.providerCircuit, reviewer, {
-          reason,
-          retryAfterSeconds: readRetryAfter(error),
-          costUsd: readCostUsd(error),
-        })
-      }
-    }
-  }
-
-  return { status: "unavailable", attempts }
-}
-
-function reviewerOrder(
-  providers: readonly AiProviderAdapter[],
-  generator: AiProviderAdapter
-) {
-  const direct = providers.filter(
-    (candidate) =>
-      candidate.provider !== "openrouter" && candidate !== generator
-  )
-  return direct
 }
 
 function completionTrace(
@@ -792,6 +664,7 @@ async function recordReply(input: {
   readonly startedAt: number
   readonly now: () => Date
   readonly knowledge: CompiledPortfolioKnowledge
+  readonly retrievalMetadata: Record<string, unknown>
   readonly requirePersistence: boolean
 }) {
   try {
@@ -801,12 +674,7 @@ async function recordReply(input: {
       question: input.input.question,
       reply: input.reply,
       latencyMs: Math.max(0, input.now().getTime() - input.startedAt),
-      retrievalMetadata: {
-        mode: "complete-structured-context",
-        factCount: input.knowledge.facts.length,
-        citationCount: input.knowledge.citations.length,
-        semanticReview: input.reply.kind === "generated",
-      },
+      retrievalMetadata: input.retrievalMetadata,
       policyVersion: createPortfolioChatKnowledgeScope(input.knowledge.hash)
         .policyVersion,
       knowledgeHash: input.knowledge.hash,
@@ -873,9 +741,9 @@ function defaultAttemptTimeoutMs(
   provider: ChatProviderName
 ) {
   if (stage === "review") return REVIEW_ATTEMPT_MS
-  return provider === "openrouter"
-    ? OPENROUTER_GENERATION_ATTEMPT_MS
-    : DIRECT_GENERATION_ATTEMPT_MS
+  if (provider === "openrouter") return OPENROUTER_GENERATION_ATTEMPT_MS
+  if (provider === "gemini") return GEMINI_GENERATION_ATTEMPT_MS
+  return GROQ_GENERATION_ATTEMPT_MS
 }
 
 function attemptDeadlineSignal(signal: AbortSignal, timeoutMs: number) {
