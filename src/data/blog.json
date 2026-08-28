@@ -479,9 +479,9 @@
     {
       "kind": "case-study-derived",
       "projectId": "project-book-heaven",
-      "slug": "a-modular-monolith-for-a-book-platform",
-      "title": "Why I Chose a Modular Monolith for a Multi-Sided Book Platform",
-      "category": "System design",
+      "slug": "a-merged-pull-request-is-not-a-deployed-feature",
+      "title": "A Merged Pull Request Is Not a Deployed Feature",
+      "category": "Release engineering",
       "topic": "product",
       "featured": false
     },

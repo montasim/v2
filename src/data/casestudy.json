@@ -1578,68 +1578,74 @@
   {
     "slug": "book-heaven",
     "projectId": "project-book-heaven",
-    "summary": "Admin Dashboard UI built with Shadcn and Next.js.",
-    "role": "Product design and full-stack engineering",
-    "scope": "Product workflows, data boundaries, and delivery",
-    "status": "Public beta",
+    "summary": "Recovering a failed Vercel rollout by separating a correct feature change from build-system failures, hardening the production build, and verifying the deployed widget contract end to end.",
+    "role": "Incident diagnosis, build engineering, and release verification",
+    "scope": "Next.js build reliability, dependency compatibility, and Vercel delivery",
+    "status": "Resolved and deployed",
     "verifiedBranch": "main",
-    "verifiedCommit": "8b74ad10ee943895c0d7e5f34b572e2254c87fdb",
-    "problem": "Readers, communities, marketplace activity, library operations, and AI-assisted discovery are commonly split across separate systems with disconnected identity and catalog data.",
+    "verifiedCommit": "e3674bed711b6202a608aca980be0ad5a96cd204",
+    "problem": "The SupportKori integration was correct in source and merged to main, but Book Heaven's Vercel production deployment failed before the new build reached visitors. The live site therefore looked as if the widget change were missing, even though the actual fault was in the delivery path. The recovery needed to identify each build blocker without weakening existing API contracts or treating a merged pull request as proof of a successful release.",
     "constraints": [
-      "The broad feature set has many service dependencies and is beta, not a turnkey production claim.",
-      "Real-time messaging is optional and falls back to HTTP polling.",
-      "AI, embeddings/pgvector, payments, email, Redis queues, Firebase, and Socket.IO each require separate configuration and operational review."
+      "The large Next.js application compiles many routes and integrations inside Vercel's finite build-memory envelope; the default Node.js heap was exhausted during production validation.",
+      "The Stripe dependency used a caret range, allowing a newer release whose TypeScript contract expected a later API version than the application intentionally used.",
+      "Environment-backed providers initialize during route collection, so local checks had to distinguish absent production credentials from the build failures under investigation.",
+      "Acceptance required the exact script URL and data attributes to appear in public production HTML after a successful main-branch deployment."
     ],
     "architecture": {
-      "summary": "Next.js/React reader, marketplace, community, and admin UI; application/domain services and TanStack client state; Prisma/PostgreSQL persistence with optional pgvector and Redis/BullMQ jobs; provider adapters for auth, AI, Firebase/Socket.IO, Stripe, and Resend.",
+      "summary": "A four-stage recovery loop separated source correctness, deterministic production compilation, platform deployment, and public runtime verification so each failure could be diagnosed at the boundary where it occurred.",
       "layers": [
         {
-          "title": "Interface",
-          "detail": "Next.js/React reader, marketplace, community, and admin UI."
+          "title": "Source contract",
+          "detail": "A root-layout Next.js Script component owns the exact SupportKori URL, account ID, message, color, and position."
         },
         {
-          "title": "Domain",
-          "detail": "Application/domain services and TanStack client state."
+          "title": "Build envelope",
+          "detail": "Prisma generation and Next.js compilation run with a 4 GB Node.js heap and two build workers to keep resource use predictable."
         },
         {
-          "title": "Data and integrations",
-          "detail": "Prisma/PostgreSQL persistence with optional pgvector and Redis/BullMQ jobs."
+          "title": "Dependency contract",
+          "detail": "Stripe is pinned to version 20.1.0 so its types remain aligned with the API version selected by the application."
         },
         {
-          "title": "Quality and delivery",
-          "detail": "Provider adapters for auth, AI, Firebase/Socket.IO, Stripe, and Resend."
+          "title": "Release proof",
+          "detail": "GitHub status, the Vercel preview, the production deployment, and the returned public HTML form a chain of release evidence."
         }
       ]
     },
     "decisions": [
       {
-        "title": "Use a modular monolith around one catalog/identity model",
-        "detail": "Use a modular monolith around one catalog/identity model rather than split services early."
+        "title": "Separate feature correctness from delivery health",
+        "detail": "The widget implementation and the deployment pipeline were tested independently, preventing a stale production page from being misdiagnosed as a frontend defect."
       },
       {
-        "title": "Make richer infrastructure optional",
-        "detail": "Make richer infrastructure optional so the catalog remains the minimum viable setup."
+        "title": "Make the build resource budget explicit",
+        "detail": "Increasing the Node.js heap and limiting parallel workers addressed the resource failure deterministically instead of relying on repeated deployment attempts."
       },
       {
-        "title": "Provide polling fallback for optional socket delivery",
-        "detail": "Provide polling fallback for optional socket delivery, trading immediacy for operability."
+        "title": "Pin the dependency to the application's API contract",
+        "detail": "Stripe stayed on the compatible 20.1.0 release rather than silently changing the application's API version to satisfy types from an unintended upgrade."
+      },
+      {
+        "title": "Verify the artifact visitors receive",
+        "detail": "The incident was considered resolved only after Vercel reported a successful main deployment and the public response contained every required widget attribute."
       }
     ],
     "contribution": [
-      "Built discovery, reading/library, marketplace, community, and admin surfaces.",
-      "Modeled catalog, user, commerce, and community entities in Prisma.",
-      "Integrated job queues, payments, email, AI chat/recommendations, and optional retrieval.",
-      "Documented staged configuration and operational boundaries."
+      "Confirmed that the merged root-layout integration was correct while the public site was still serving the previous deployment.",
+      "Reproduced the production build and traced the failure through memory pressure and Stripe type-version drift.",
+      "Updated all production build paths with a 4 GB heap, limited Next.js to two build workers, and pinned Stripe to the compatible release.",
+      "Delivered the fixes through reviewed pull requests, then checked the Vercel preview, production status, and live HTML contract."
     ],
     "outcomes": [
-      "Readers can discover and organize books.",
-      "Users can participate in community and marketplace flows.",
-      "Administrators can operate catalog/library workflows.",
-      "Deployments can add AI, queues, real-time, payment, and email capabilities incrementally."
+      "The repaired main-branch build completed successfully on Vercel at the verified commit.",
+      "Book Heaven's public site now loads the exact SupportKori script with the required ID, message, color, and position.",
+      "Build behavior is less sensitive to heap exhaustion and excessive worker parallelism.",
+      "Stripe type compatibility can no longer drift beyond the selected API contract through an implicit minor-version update.",
+      "The release workflow now distinguishes code merged from deployment completed and production artifact verified."
     ],
     "screenshot": {
-      "alt": "Book Heaven interface preview",
-      "caption": "Book Heaven presents admin Dashboard UI built with Shadcn and Next.js."
+      "alt": "Book Heaven public application after the Vercel deployment recovery",
+      "caption": "The live Book Heaven beta was the final verification target: the fix was complete only when production served the intended widget contract."
     }
   },
   {
