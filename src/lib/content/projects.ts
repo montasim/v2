@@ -50,6 +50,7 @@ const hiringPriority = [
   "project-ship-agent-skill",
   "project-vidquery",
   "project-thoughtline",
+  "project-bugreceipt",
   "project-shrnkly",
   "project-ramadan-clock",
   "project-mulalens",

@@ -3,7 +3,7 @@
     "name": "Montasim",
     "avatarUrl": "/images/avatar.webp"
   },
-  "caseStudyPublishedAt": "2026-08-24",
+  "caseStudyPublishedAt": "2026-08-28",
   "posts": [
     {
       "kind": "authored",
@@ -284,6 +284,15 @@
       "slug": "video-qa-without-processing-video",
       "title": "I Stopped Treating Video Q&A as a Media-Processing Problem",
       "category": "AI engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-bugreceipt",
+      "slug": "reproducible-bug-reports-without-default-surveillance",
+      "title": "Turning ‘It Broke’ Into Reproducible Evidence Without Default Surveillance",
+      "category": "Privacy engineering",
       "topic": "tools",
       "featured": false
     },

@@ -269,6 +269,73 @@
     }
   },
   {
+    "slug": "bugreceipt",
+    "projectId": "project-bugreceipt",
+    "summary": "Local-first Chrome extension that combines privacy-filtered console, network, reproduction-step, environment, and visual evidence in a reviewable browser bug report.",
+    "role": "Product design and browser-extension engineering",
+    "scope": "Capture lifecycle, privacy boundaries, review workflows, and release delivery",
+    "status": "Public pre-release",
+    "verifiedBranch": "main",
+    "verifiedCommit": "9818fe33ee306c7d1bff318bef36ab730813dafd",
+    "problem": "Screenshots and vague descriptions rarely preserve the sequence, browser evidence, environment, and visual result developers need to reproduce a web application failure.",
+    "constraints": [
+      "Browser diagnostics and screen recordings can expose sensitive information, while local filtering cannot guarantee that every secret will be recognized.",
+      "Chrome permission, selected-tab, service-worker, navigation, and storage boundaries must remain understandable during a capture.",
+      "Email delivery crosses a separate network boundary and must not bundle server credentials or silently transmit evidence."
+    ],
+    "architecture": {
+      "summary": "WXT Manifest V3 side panel, selected-tab recorder, review page, and background capture lifecycle; isolated page instrumentation feeding typed capture contracts; deterministic local privacy filtering and report rendering; extension storage and IndexedDB with local export or explicit Resend delivery through a TanStack Start endpoint.",
+      "layers": [
+        {
+          "title": "Capture interface",
+          "detail": "Persistent React side panel, selected-tab recorder, manual steps, and editable review page."
+        },
+        {
+          "title": "Session domain",
+          "detail": "Background-owned capture lifecycle and Zod-validated extension message contracts."
+        },
+        {
+          "title": "Privacy and storage",
+          "detail": "Bounded local filtering with extension storage for session data and IndexedDB for visual evidence."
+        },
+        {
+          "title": "Export and delivery",
+          "detail": "Markdown and visual report bundles stay local unless the user explicitly invokes the server-side Resend path."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Capture evidence locally before defining any sharing path",
+        "detail": "Capture and filter evidence inside the extension first so downloading remains the default and email delivery is a separate, explicit boundary."
+      },
+      {
+        "title": "Make review part of the data pipeline",
+        "detail": "Open an editable review surface before export so users can remove individual steps, diagnostics, and visual artifacts after automated filtering."
+      },
+      {
+        "title": "Bound diagnostics instead of collecting the entire page",
+        "detail": "Record selected console and network evidence without collecting DOM snapshots, cookies, browser storage, headers, form values, keystrokes, clipboard contents, or audio."
+      }
+    ],
+    "contribution": [
+      "Designed the selected-tab capture, manual-step, stop, review, edit, download, copy, and explicit email journeys.",
+      "Implemented background session ownership, isolated page instrumentation, cross-origin interruption handling, and persistent evidence storage.",
+      "Built deterministic filtering for URLs, diagnostic text, supported response bodies, tokens, email addresses, and secret-shaped fields.",
+      "Created the TanStack Start delivery endpoint, Resend boundary, deterministic broken-app fixture, CI quality gate, and checksummed Chrome release workflow."
+    ],
+    "outcomes": [
+      "Reporters can preserve reproduction steps, bounded console and network evidence, environment details, and a recording or screenshot in one workflow.",
+      "Every captured item remains reviewable and removable before it leaves extension-owned storage.",
+      "Users can export a local Markdown-and-visual bundle or deliberately send a size-bounded report through the configured endpoint.",
+      "Maintainers can exercise known failures and ship verifiable unpacked Chrome archives with published checksums."
+    ],
+    "screenshot": {
+      "alt": "BugReceipt browser bug-reporting extension preview",
+      "caption": "BugReceipt turns a browser failure into a reviewable report containing privacy-filtered steps, console, network, environment, and visual evidence."
+    }
+  },
+  {
     "slug": "mulalens",
     "projectId": "project-mulalens",
     "summary": "Chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",

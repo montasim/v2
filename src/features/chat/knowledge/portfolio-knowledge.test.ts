@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 7 }),
-      expect.objectContaining({ id: "projects", recordCount: 31 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 31 }),
-      expect.objectContaining({ id: "blog", recordCount: 32 }),
+      expect.objectContaining({ id: "projects", recordCount: 32 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 32 }),
+      expect.objectContaining({ id: "blog", recordCount: 33 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -82,6 +82,57 @@ describe("PortfolioKnowledge", () => {
     )
   })
 
+  it("connects BugReceipt project, case-study, and article evidence to citations", () => {
+    const knowledge = compilePortfolioKnowledge()
+    const project = knowledge.findFact("project:project-bugreceipt")
+
+    expect(project).toMatchObject({
+      source: "projects",
+      recordId: "project-bugreceipt",
+      evidenceRole: "first-party-portfolio",
+      citationId: "project:project-bugreceipt",
+    })
+    expect(knowledge.textForFact(project?.id ?? "")).toContain(
+      "privacy-filtered console"
+    )
+    expect(knowledge.findCitation(project?.citationId ?? "")?.href).toBe(
+      "/projects#project-bugreceipt"
+    )
+    expect(
+      knowledge.findCitation("case-study:bugreceipt:architecture")?.href
+    ).toBe("/projects/bugreceipt#architecture")
+
+    const articleEvidence = knowledge.findFact(
+      "blog:reproducible-bug-reports-without-default-surveillance:problem"
+    )
+    expect(articleEvidence?.supportingFactIds).toEqual([
+      "case-study:bugreceipt",
+      "case-study:bugreceipt:problem",
+    ])
+    expect(
+      knowledge.findCitation(articleEvidence?.citationId ?? "")?.href
+    ).toBe(
+      "/blog/reproducible-bug-reports-without-default-surveillance#problem"
+    )
+
+    expect(knowledge.relationships).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "relationship:casestudy:bugreceipt:documents:project-bugreceipt",
+          kind: "documents",
+        }),
+        expect.objectContaining({
+          id: "relationship:blog:reproducible-bug-reports-without-default-surveillance:explains:project-bugreceipt",
+          kind: "explains",
+        }),
+        expect.objectContaining({
+          id: "relationship:blog:reproducible-bug-reports-without-default-surveillance:derived-from:bugreceipt",
+          kind: "derived-from",
+        }),
+      ])
+    )
+  })
+
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
@@ -129,36 +180,36 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-foliofarer",
-      title: "Foliofarer",
-      historyStartedAt: "2026-08-11T04:54:55Z",
+      recordId: "project-bugreceipt",
+      title: "BugReceipt",
+      historyStartedAt: "2026-08-27T19:28:19Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
       recordId: "video-qa-without-processing-video",
-      publishedAt: "2026-08-24",
+      publishedAt: "2026-08-28",
       tieBreak: "catalog-order",
     })
-    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(28)
-    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(28)
+    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(29)
+    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(29)
     expect(
       knowledge.textForFact(knowledge.derived.latestDatedBlog.factId)
-    ).toContain("28")
+    ).toContain("29")
 
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 32,
+      total: 33,
       authored: 4,
-      caseStudyDerived: 28,
+      caseStudyDerived: 29,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 31,
+      total: 32,
       byType: {
         api: 1,
         dataset: 2,
-        extension: 3,
+        extension: 4,
         package: 4,
         skill: 11,
         template: 1,

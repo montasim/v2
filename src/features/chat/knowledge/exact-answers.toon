@@ -1,6 +1,6 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: 57de7b58361e4c79fe40a98285c0516684db5b2c8773e2aaf0f6c821aea36718
-records[450]:
+knowledgeHash: 4fc35852564880baeb9389c925c891156e27e41184669d932f72b31540bfe171
+records[456]:
   - id: "project:project-postcraft:overview"
     category: project
     question: What is Montasim's PostCraft project?
@@ -97,6 +97,18 @@ records[450]:
     text: "Montasim built Thoughtline - LinkedIn Writing Assistant with WXT, React 19, TypeScript, Chrome Manifest V3, Chrome Extensions API, Tailwind CSS, Hugeicons, OpenRouter API, Gemini API, Groq API, Zod, Vitest, Playwright, React Testing Library, TanStack Start, GitHub Actions, CI/CD, Git, System Design. The product goal is clear: User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual. More importantly, the architecture is explicit: LinkedIn content scripts plus manual pasted-post input; React side-panel workflows; typed drafting/source-research ports with free OpenRouter-first routing and Gemini/Groq fallback; encrypted browser storage, migrations, backup/export, and Manifest V3 permissions. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-thoughtline","case-study:thoughtline:architecture"
     supportingExcerpts[2]: "User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual.\n\nfalse\n2026-07-17T21:02:58Z\nb2085eead2f039535d2caf81c901d57c0028298a\n2026-07-17T20:56:56Z\nhttps://github.com/montasim/Thoughtline\nproject-thoughtline\nassets/projects/thoughtline.png\nhttps://thoughtline.netlify.app\n\nhttps://github.com/montasim/Thoughtline/releases/latest\nWXT\nReact 19\nTypeScript\nChrome Manifest V3\nChrome Extensions API\nTailwind","LinkedIn content scripts/extraction plus bounded manual pasted-post input.\nPage integration\nReact side-panel workflows.\nExtension interface\nTyped drafting/source-research ports with curated free OpenRouter models, bounded provider timeouts, and Gemini/Groq fallback.\nProvider boundary\nEncrypted browser storage, migrations, backup/export, and Manifest V3 permissions.\nStorage and delivery\nLinkedIn content scripts plus manual pasted-post input; React side-panel workflows; typed drafting/source-research ports with free"
+  - id: "project:project-bugreceipt:overview"
+    category: project
+    question: What is Montasim's BugReceipt project?
+    text: "Montasim built BugReceipt, an extension project. Local-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug report. His role covered product design and browser-extension engineering, with scope spanning capture lifecycle, privacy boundaries, review workflows, and release delivery. Reporters can preserve reproduction steps, bounded console and network evidence, environment details, and a recording or screenshot in one workflow. A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary."
+    factIds[3]: "project:project-bugreceipt","case-study:bugreceipt:problem","case-study:bugreceipt:outcomes"
+    supportingExcerpts[3]: "Local-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug report.\n\nfalse\n2026-08-27T19:28:19Z\n396c58ff62a3ab2e23f2970cb54daed2bc3c9b1e\n2026-08-27T19:31:45Z\nhttps://github.com/montasim/BugReceipt\nproject-bugreceipt\nassets/projects/bugreceipt.png\nhttps://bugreceipt.netlify.app\n\nhttps://github.com/montasim/BugReceipt/releases/latest\nWXT\nReact 19\nTypeScript\nChrome Manifest V3\nChrome Extensions API\nTailwind CSS\nTanStack","Screenshots and vague descriptions rarely preserve the sequence, browser evidence, environment, and visual result developers need to reproduce a web application failure.\nBrowser diagnostics and screen recordings can expose sensitive information, while local filtering cannot guarantee that every secret will be recognized.\nChrome permission, selected-tab, service-worker, navigation, and storage boundaries must remain understandable during a capture.\nEmail delivery crosses a separate network boundary and must not","Reporters can preserve reproduction steps, bounded console and network evidence, environment details, and a recording or screenshot in one workflow.\nEvery captured item remains reviewable and removable before it leaves extension-owned storage.\nUsers can export a local Markdown-and-visual bundle or deliberately send a size-bounded report through the configured endpoint.\nMaintainers can exercise known failures and ship verifiable unpacked Chrome archives with published checksums."
+  - id: "project:project-bugreceipt:technology"
+    category: project
+    question: Which technologies did Montasim use for BugReceipt?
+    text: "Montasim built BugReceipt with WXT, React 19, TypeScript, Chrome Manifest V3, Chrome Extensions API, Tailwind CSS, TanStack Start, Zod, JSZip, Resend, Vitest, React Testing Library, Netlify, GitHub Actions, CI/CD, System Design. The product goal is clear: Local-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug report. More importantly, the architecture is explicit: WXT Manifest V3 side panel, selected-tab recorder, review page, and background capture lifecycle; isolated page instrumentation feeding typed capture contracts; deterministic local privacy filtering and report rendering; extension storage and IndexedDB with local export or explicit Resend delivery through a TanStack Start endpoint. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
+    factIds[2]: "project:project-bugreceipt","case-study:bugreceipt:architecture"
+    supportingExcerpts[2]: "Local-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug report.\n\nfalse\n2026-08-27T19:28:19Z\n396c58ff62a3ab2e23f2970cb54daed2bc3c9b1e\n2026-08-27T19:31:45Z\nhttps://github.com/montasim/BugReceipt\nproject-bugreceipt\nassets/projects/bugreceipt.png\nhttps://bugreceipt.netlify.app\n\nhttps://github.com/montasim/BugReceipt/releases/latest\nWXT\nReact 19\nTypeScript\nChrome Manifest V3\nChrome Extensions API\nTailwind CSS\nTanStack","Persistent React side panel, selected-tab recorder, manual steps, and editable review page.\nCapture interface\nBackground-owned capture lifecycle and Zod-validated extension message contracts.\nSession domain\nBounded local filtering with extension storage for session data and IndexedDB for visual evidence.\nPrivacy and storage\nMarkdown and visual report bundles stay local unless the user explicitly invokes the server-side Resend path.\nExport and delivery\nWXT Manifest V3 side panel, selected-tab recorder, review page,"
   - id: "project:project-shrnkly:overview"
     category: project
     question: What is Montasim's Shrnkly project?
@@ -517,6 +529,24 @@ records[450]:
     text: "Montasim implemented reply, idea, refine, history, settings, and onboarding journeys. He built content extraction and validated prompt envelopes. He added manual four-direction replies, model provenance, and visible provider recovery states. He added encrypted credential storage, migrations/recovery/retention, configuration backup, and data archives. He established static, unit, packed-extension, Axe, responsive, and visual-regression gates. The resulting capabilities and outcomes are “Users can paste a post or select a visible conversation and draft four reply directions”; “Generate/refine post ideas in configured voice”; “Use a fixed free-only OpenRouter, Gemini, and Groq route under defined fallback rules”; “Export and restore validated configurations and history”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
     factIds[2]: "case-study:thoughtline:contribution","case-study:thoughtline:outcomes"
     supportingExcerpts[2]: "Implemented reply, idea, refine, history, settings, and onboarding journeys.\nBuilt content extraction and validated prompt envelopes.\nAdded manual four-direction replies, model provenance, and visible provider recovery states.\nAdded encrypted credential storage, migrations/recovery/retention, configuration backup, and data archives.\nEstablished static, unit, packed-extension, Axe, responsive, and visual-regression gates.","Users can paste a post or select a visible conversation and draft four reply directions.\nGenerate/refine post ideas in configured voice.\nUse a fixed free-only OpenRouter, Gemini, and Groq route under defined fallback rules.\nExport and restore validated configurations and history."
+  - id: "case-study:bugreceipt:problem"
+    category: case-study
+    question: What problem did Montasim address in the BugReceipt case study?
+    text: "Screenshots and vague descriptions rarely preserve the sequence, browser evidence, environment, and visual result developers need to reproduce a web application failure. Montasim owned product design and browser-extension engineering, covering capture lifecycle, privacy boundaries, review workflows, and release delivery. The solution also had to respect “Browser diagnostics and screen recordings can expose sensitive information, while local filtering cannot guarantee that every secret will be recognized”; “Chrome permission, selected-tab, service-worker, navigation, and storage boundaries must remain understandable during a capture”. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request."
+    factIds[1]: "case-study:bugreceipt:problem"
+    supportingExcerpts[1]: "Screenshots and vague descriptions rarely preserve the sequence, browser evidence, environment, and visual result developers need to reproduce a web application failure.\nBrowser diagnostics and screen recordings can expose sensitive information, while local filtering cannot guarantee that every secret will be recognized.\nChrome permission, selected-tab, service-worker, navigation, and storage boundaries must remain understandable during a capture.\nEmail delivery crosses a separate network boundary and must not"
+  - id: "case-study:bugreceipt:architecture"
+    category: case-study
+    question: How did Montasim structure the BugReceipt solution?
+    text: "WXT Manifest V3 side panel, selected-tab recorder, review page, and background capture lifecycle; isolated page instrumentation feeding typed capture contracts; deterministic local privacy filtering and report rendering; extension storage and IndexedDB with local export or explicit Resend delivery through a TanStack Start endpoint. A representative decision was “Capture evidence locally before defining any sharing path”: Capture and filter evidence inside the extension first so downloading remains the default and email delivery is a separate, explicit boundary. The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve."
+    factIds[1]: "case-study:bugreceipt:architecture"
+    supportingExcerpts[1]: "Persistent React side panel, selected-tab recorder, manual steps, and editable review page.\nCapture interface\nBackground-owned capture lifecycle and Zod-validated extension message contracts.\nSession domain\nBounded local filtering with extension storage for session data and IndexedDB for visual evidence.\nPrivacy and storage\nMarkdown and visual report bundles stay local unless the user explicitly invokes the server-side Resend path.\nExport and delivery\nWXT Manifest V3 side panel, selected-tab recorder, review page,"
+  - id: "case-study:bugreceipt:delivery"
+    category: case-study
+    question: What did Montasim deliver and achieve with BugReceipt?
+    text: "Montasim designed the selected-tab capture, manual-step, stop, review, edit, download, copy, and explicit email journeys. He implemented background session ownership, isolated page instrumentation, cross-origin interruption handling, and persistent evidence storage. He built deterministic filtering for URLs, diagnostic text, supported response bodies, tokens, email addresses, and secret-shaped fields. He created the TanStack Start delivery endpoint, Resend boundary, deterministic broken-app fixture, CI quality gate, and checksummed Chrome release workflow. The resulting capabilities and outcomes are “Reporters can preserve reproduction steps, bounded console and network evidence, environment details, and a recording or screenshot in one workflow”; “Every captured item remains reviewable and removable before it leaves extension-owned storage”; “Users can export a local Markdown-and-visual bundle or deliberately send a size-bounded report through the configured endpoint”; “Maintainers can exercise known failures and ship verifiable unpacked Chrome archives with published checksums”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
+    factIds[2]: "case-study:bugreceipt:contribution","case-study:bugreceipt:outcomes"
+    supportingExcerpts[2]: "Designed the selected-tab capture, manual-step, stop, review, edit, download, copy, and explicit email journeys.\nImplemented background session ownership, isolated page instrumentation, cross-origin interruption handling, and persistent evidence storage.\nBuilt deterministic filtering for URLs, diagnostic text, supported response bodies, tokens, email addresses, and secret-shaped fields.\nCreated the TanStack Start delivery endpoint, Resend boundary, deterministic broken-app fixture, CI quality gate, and checksummed","Reporters can preserve reproduction steps, bounded console and network evidence, environment details, and a recording or screenshot in one workflow.\nEvery captured item remains reviewable and removable before it leaves extension-owned storage.\nUsers can export a local Markdown-and-visual bundle or deliberately send a size-bounded report through the configured endpoint.\nMaintainers can exercise known failures and ship verifiable unpacked Chrome archives with published checksums."
   - id: "case-study:shrnkly:problem"
     category: case-study
     question: What problem did Montasim address in the Shrnkly case study?
@@ -961,6 +991,12 @@ records[450]:
     text: "Montasim's opening insight in “I Stopped Treating Video Q&A as a Media-Processing Problem” is framed as “The visible feature was only the surface”: Viewers must scrub long YouTube videos to find specific answers even when the page already exposes metadata and a transcript. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
     factIds[2]: "blog:video-qa-without-processing-video","case-study:vidquery:problem"
     supportingExcerpts[2]: "AI engineering\nfalse\ncase-study-derived\nproject-vidquery\nvideo-qa-without-processing-video\nI Stopped Treating Video Q&A as a Media-Processing Problem\ntools","Viewers must scrub long YouTube videos to find specific answers even when the page already exposes metadata and a transcript.\nAnswers are limited by transcript availability and quality.\nGemini calls require the user's own API key and send bounded video context to an external provider.\nYouTube route/DOM changes and extension permission boundaries can break extraction."
+  - id: "blog:reproducible-bug-reports-without-default-surveillance"
+    category: blog
+    question: What engineering insight does Montasim share in “Turning ‘It Broke’ Into Reproducible Evidence Without Default Surveillance”?
+    text: "Montasim's opening insight in “Turning ‘It Broke’ Into Reproducible Evidence Without Default Surveillance” is framed as “The visible feature was only the surface”: Screenshots and vague descriptions rarely preserve the sequence, browser evidence, environment, and visual result developers need to reproduce a web application failure. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
+    factIds[2]: "blog:reproducible-bug-reports-without-default-surveillance","case-study:bugreceipt:problem"
+    supportingExcerpts[2]: "Privacy engineering\nfalse\ncase-study-derived\nproject-bugreceipt\nreproducible-bug-reports-without-default-surveillance\nTurning ‘It Broke’ Into Reproducible Evidence Without Default Surveillance\ntools","Screenshots and vague descriptions rarely preserve the sequence, browser evidence, environment, and visual result developers need to reproduce a web application failure.\nBrowser diagnostics and screen recordings can expose sensitive information, while local filtering cannot guarantee that every secret will be recognized.\nChrome permission, selected-tab, service-worker, navigation, and storage boundaries must remain understandable during a capture.\nEmail delivery crosses a separate network boundary and must not"
   - id: "blog:workplace-evidence-without-tracking-the-web"
     category: blog
     question: What engineering insight does Montasim share in “Putting Workplace Evidence Where Job Seekers Need It—Without Tracking the Web”?
@@ -2452,21 +2488,21 @@ records[450]:
   - id: "catalog-chronology-comparison:project-count"
     category: catalog-chronology-comparison
     question: How many projects are published in Montasim's portfolio?
-    text: "The portfolio currently publishes 31 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
+    text: "The portfolio currently publishes 32 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
     factIds[1]: "derived:catalog-count:projects"
-    supportingExcerpts[1]: "projects\n31"
+    supportingExcerpts[1]: "projects\n32"
   - id: "catalog-chronology-comparison:case-study-count"
     category: catalog-chronology-comparison
     question: How many project case studies has Montasim documented?
-    text: "Montasim has 31 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
+    text: "Montasim has 32 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
     factIds[1]: "derived:catalog-count:casestudy"
-    supportingExcerpts[1]: "casestudy\n31"
+    supportingExcerpts[1]: "casestudy\n32"
   - id: "catalog-chronology-comparison:blog-count"
     category: catalog-chronology-comparison
     question: How many articles are in Montasim's blog catalog?
-    text: "The blog catalog contains 32 articles: 4 authored essays and 28 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
+    text: "The blog catalog contains 33 articles: 4 authored essays and 29 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "32\n4\n28"
+    supportingExcerpts[1]: "33\n4\n29"
   - id: "catalog-chronology-comparison:credential-count"
     category: catalog-chronology-comparison
     question: How many credentials does Montasim publish?
@@ -2512,15 +2548,15 @@ records[450]:
   - id: "catalog-chronology-comparison:newest-project"
     category: catalog-chronology-comparison
     question: Which project is newest by Montasim's GitHub history?
-    text: "Foliofarer is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-08-11, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
-    factIds[2]: "derived:newest-project-by-github-history","project:project-foliofarer"
-    supportingExcerpts[2]: "project-foliofarer\nFoliofarer\n2026-08-11T04:54:55Z\nearlier of repository creation and initial commit\nFoliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL","Foliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL rendering.\n\nfalse\n2026-08-11T04:55:39Z\n358c8036ebd35b75398baa5463b6acd445356533\n2026-08-11T04:54:55Z\nhttps://github.com/montasim/foliofarer\nproject-foliofarer\nassets/projects/foliofarer.png\nhttps://foliofarer.netlify.app\n\nNext.js\nReact\nTypeScript\nReact Three Fiber\nThree.js\nDrei\nReact Three Rapier\nTailwind"
+    text: "BugReceipt is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-08-27, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
+    factIds[2]: "derived:newest-project-by-github-history","project:project-bugreceipt"
+    supportingExcerpts[2]: "project-bugreceipt\nBugReceipt\n2026-08-27T19:28:19Z\nearlier of repository creation and initial commit\nLocal-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug","Local-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug report.\n\nfalse\n2026-08-27T19:28:19Z\n396c58ff62a3ab2e23f2970cb54daed2bc3c9b1e\n2026-08-27T19:31:45Z\nhttps://github.com/montasim/BugReceipt\nproject-bugreceipt\nassets/projects/bugreceipt.png\nhttps://bugreceipt.netlify.app\n\nhttps://github.com/montasim/BugReceipt/releases/latest\nWXT\nReact 19\nTypeScript\nChrome Manifest V3\nChrome Extensions API\nTailwind CSS\nTanStack"
   - id: "catalog-chronology-comparison:latest-blog"
     category: catalog-chronology-comparison
     question: Which article is treated as Montasim's latest dated blog entry?
-    text: "The derived chronology selects “I Stopped Treating Video Q&A as a Media-Processing Problem” at 2026-08-24. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
+    text: "The derived chronology selects “I Stopped Treating Video Q&A as a Media-Processing Problem” at 2026-08-28. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
     factIds[1]: "derived:latest-dated-blog"
-    supportingExcerpts[1]: "video-qa-without-processing-video\nI Stopped Treating Video Q&A as a Media-Processing Problem\n2026-08-24\nvideo-qa-without-processing-video\nworkplace-evidence-without-tracking-the-web\nmaking-agent-skills-comparable\nshipping-across-npm-github-and-agent-hosts\none-green-dashboard-does-not-prove-a-release\nreadme-generation-must-start-with-evidence\nrelease-notes-users-can-trust\nno-single-source-of-truth-for-project-metadata\nlocal-build-does-not-prove-deployability\naudit-design-systems-before-screenshots\nmaking-a-codebase-"
+    supportingExcerpts[1]: "video-qa-without-processing-video\nI Stopped Treating Video Q&A as a Media-Processing Problem\n2026-08-28\nvideo-qa-without-processing-video\nreproducible-bug-reports-without-default-surveillance\nworkplace-evidence-without-tracking-the-web\nmaking-agent-skills-comparable\nshipping-across-npm-github-and-agent-hosts\none-green-dashboard-does-not-prove-a-release\nreadme-generation-must-start-with-evidence\nrelease-notes-users-can-trust\nno-single-source-of-truth-for-project-metadata\nlocal-build-does-not-prove-deployability\naudi"
   - id: "catalog-chronology-comparison:featured-projects"
     category: catalog-chronology-comparison
     question: How many projects are featured for recruiter review?
@@ -2530,15 +2566,15 @@ records[450]:
   - id: "catalog-chronology-comparison:project-type-distribution"
     category: catalog-chronology-comparison
     question: How is Montasim's project catalog distributed by type?
-    text: "The 31 projects are distributed as website: 7, tool: 2, skill: 11, dataset: 2, extension: 3, package: 4, template: 1, API: 1. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
+    text: "The 32 projects are distributed as website: 7, tool: 2, skill: 11, dataset: 2, extension: 4, package: 4, template: 1, API: 1. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
     factIds[1]: "derived:project-type-distribution"
-    supportingExcerpts[1]: "31\n1\n2\n3\n4\n11\n1\n2\n7"
+    supportingExcerpts[1]: "32\n1\n2\n4\n4\n11\n1\n2\n7"
   - id: "catalog-chronology-comparison:authored-versus-linked-writing"
     category: catalog-chronology-comparison
     question: How much of Montasim's writing is standalone versus project-linked?
-    text: "The blog contains 4 authored essays and 28 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
+    text: "The blog contains 4 authored essays and 29 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "32\n4\n28"
+    supportingExcerpts[1]: "33\n4\n29"
   - id: "catalog-chronology-comparison:mymedicalhub-role-count"
     category: catalog-chronology-comparison
     question: How many MyMedicalHub roles document Montasim's progression?
@@ -2548,9 +2584,9 @@ records[450]:
   - id: "catalog-chronology-comparison:project-case-study-coverage"
     category: catalog-chronology-comparison
     question: Does every published project have a corresponding case study?
-    text: "Yes. The validated catalogs contain 31 projects and 31 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
+    text: "Yes. The validated catalogs contain 32 projects and 32 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
     factIds[2]: "derived:catalog-count:projects","derived:catalog-count:casestudy"
-    supportingExcerpts[2]: "projects\n31","casestudy\n31"
+    supportingExcerpts[2]: "projects\n32","casestudy\n32"
   - id: "catalog-chronology-comparison:credential-year-range"
     category: catalog-chronology-comparison
     question: What years do Montasim's published credentials cover?
@@ -2560,9 +2596,9 @@ records[450]:
   - id: "catalog-chronology-comparison:catalog-breadth"
     category: catalog-chronology-comparison
     question: What kinds of evidence are available across Montasim's portfolio?
-    text: "The portfolio combines profile facts, 7 experience records, 31 projects, 31 case studies, 32 articles, 47 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
+    text: "The portfolio combines profile facts, 7 experience records, 32 projects, 32 case studies, 33 articles, 47 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
     factIds[6]: "derived:catalog-count:experience","derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:blog","derived:catalog-count:certifications","derived:catalog-count:recommendations"
-    supportingExcerpts[6]: "experience\n7","projects\n31","casestudy\n31","blog\n32","certifications\n47","recommendations\n16"
+    supportingExcerpts[6]: "experience\n7","projects\n32","casestudy\n32","blog\n33","certifications\n47","recommendations\n16"
   - id: "catalog-chronology-comparison:evidence-relationship"
     category: catalog-chronology-comparison
     question: "How do Montasim's projects, case studies, and blog articles relate?"
@@ -2656,9 +2692,9 @@ records[450]:
   - id: "client-delivery-product-thinking:proof-of-work"
     category: client-delivery-product-thinking
     question: What proof can a client review before contacting Montasim?
-    text: "Before making contact, a client can review 31 project records, 31 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
+    text: "Before making contact, a client can review 32 project records, 32 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
     factIds[3]: "derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:recommendations"
-    supportingExcerpts[3]: "projects\n31","casestudy\n31","recommendations\n16"
+    supportingExcerpts[3]: "projects\n32","casestudy\n32","recommendations\n16"
   - id: "contributions-learning:total"
     category: contributions-learning
     question: How much GitHub contribution activity does Montasim publish?

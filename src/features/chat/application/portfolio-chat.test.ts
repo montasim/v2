@@ -203,6 +203,65 @@ describe("PortfolioChat focused-evidence orchestration", () => {
     })
   })
 
+  it("serves BugReceipt context and the updated project count with derived evidence", async () => {
+    const openrouter = provider("openrouter", [validGeneratedDraft], {
+      costUsd: 0,
+    })
+    const limiter = allowAllLimiter()
+    let replyId = 0
+    const chat = createPortfolioChat({
+      knowledge,
+      exactAnswers: getPortfolioExactAnswerCatalog(),
+      providers: [openrouter],
+      recorder: recorder().adapter,
+      requestLimiter: limiter,
+      providerCircuit: new InMemoryProviderCircuitStore(),
+      createId: () => `bugreceipt-exact-${++replyId}`,
+    })
+
+    const projectReply = await chat.answer(
+      {
+        conversationId: "bugreceipt-conversation",
+        clientMessageId: "bugreceipt-project-question",
+        question: "What is Montasim's BugReceipt project?",
+      },
+      { visitorHash: "visitor" }
+    )
+
+    expect(projectReply).toMatchObject({
+      kind: "exact",
+      evidenceIds: [
+        "project:project-bugreceipt",
+        "case-study:bugreceipt:problem",
+        "case-study:bugreceipt:outcomes",
+      ],
+      citations: [
+        expect.objectContaining({ href: "/projects#project-bugreceipt" }),
+        expect.objectContaining({ href: "/projects/bugreceipt#problem" }),
+        expect.objectContaining({ href: "/projects/bugreceipt#outcomes" }),
+      ],
+    })
+    expect(projectReply.text).toContain("privacy-filtered")
+
+    const countReply = await chat.answer(
+      {
+        conversationId: "bugreceipt-conversation",
+        clientMessageId: "project-count-question",
+        question: "How many projects are published in Montasim's portfolio?",
+      },
+      { visitorHash: "visitor" }
+    )
+
+    expect(countReply).toMatchObject({
+      kind: "exact",
+      evidenceIds: ["derived:catalog-count:projects"],
+      citations: [expect.objectContaining({ href: "/projects" })],
+    })
+    expect(countReply.text).toContain("32 project records")
+    expect(openrouter.complete).not.toHaveBeenCalled()
+    expect(limiter.consume).not.toHaveBeenCalled()
+  })
+
   it("sends focused evidence and accepts a deterministically validated answer", async () => {
     const openrouter = provider("openrouter", [validGeneratedDraft], {
       costUsd: 0,

@@ -96,14 +96,14 @@ describe("chat quality evaluation corpus", () => {
           .filter((entry) => entry.category === "project")
           .map((entry) => entityRoot(entry.referenceAnswerId))
       ).size
-    ).toBe(31)
+    ).toBe(32)
     expect(
       new Set(
         corpus
           .filter((entry) => entry.category === "case-study")
           .map((entry) => entityRoot(entry.referenceAnswerId))
       ).size
-    ).toBe(31)
+    ).toBe(32)
   })
 
   it("keeps the known difficult visitor phrasings in the dynamic suite", () => {

@@ -46,8 +46,8 @@ describe("portfolio content", () => {
       "project-ship-agent-skill",
       "project-vidquery",
       "project-thoughtline",
+      "project-bugreceipt",
       "project-shrnkly",
-      "project-ramadan-clock",
     ])
     expect(
       educationCatalog.records.every((record) =>
@@ -125,7 +125,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-foliofarer")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-bugreceipt")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)
