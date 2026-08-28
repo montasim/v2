@@ -398,7 +398,7 @@ describe("PortfolioAssistant chat navigation", () => {
       ).toBe("mailto:montasimmamun@gmail.com")
       expect(
         screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")
-      ).toBe("https://wa.me/montasimalmamun")
+      ).toBe("https://wa.me/montasimmamun")
     }
   )
 
@@ -532,7 +532,7 @@ describe("PortfolioAssistant chat navigation", () => {
     ).toBe("mailto:montasimmamun@gmail.com")
     expect(
       screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")
-    ).toBe("https://wa.me/montasimalmamun")
+    ).toBe("https://wa.me/montasimmamun")
   })
 
   it("shows the direct contact handoff for every failed chat response", () => {
@@ -555,7 +555,7 @@ describe("PortfolioAssistant chat navigation", () => {
     ).toBe("mailto:montasimmamun@gmail.com")
     expect(
       screen.getByRole("link", { name: "WhatsApp" }).getAttribute("href")
-    ).toBe("https://wa.me/montasimalmamun")
+    ).toBe("https://wa.me/montasimmamun")
   })
 
   it("opens the role inquiry directly from the availability card", () => {
