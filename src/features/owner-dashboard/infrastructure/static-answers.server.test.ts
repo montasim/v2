@@ -7,7 +7,7 @@ describe("loadOwnerStaticAnswers", () => {
     const catalog = loadOwnerStaticAnswers()
 
     expect(catalog.knowledgeHash).toMatch(/^[a-f0-9]{64}$/)
-    expect(catalog.records).toHaveLength(456)
+    expect(catalog.records).toHaveLength(462)
     expect(catalog.records[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -23,7 +23,7 @@ describe("loadOwnerStaticAnswers", () => {
       catalog.records.find(
         (record) => record.id === "catalog-chronology-comparison:project-count"
       )?.text
-    ).toContain("32 project records")
+    ).toContain("33 project records")
     expect(
       catalog.records
         .filter(
@@ -41,6 +41,24 @@ describe("loadOwnerStaticAnswers", () => {
       "How did Montasim structure the BugReceipt solution?",
       "What did Montasim deliver and achieve with BugReceipt?",
       "What engineering insight does Montasim share in “Turning ‘It Broke’ Into Reproducible Evidence Without Default Surveillance”?",
+    ])
+
+    expect(
+      catalog.records
+        .filter(
+          (record) =>
+            record.id.startsWith("project:project-1snap:") ||
+            record.id.startsWith("case-study:1snap:") ||
+            record.id === "blog:full-page-screenshots-without-cloud-capture"
+        )
+        .map((record) => record.question)
+    ).toEqual([
+      "What is Montasim's 1Snap project?",
+      "Which technologies did Montasim use for 1Snap?",
+      "What problem did Montasim address in the 1Snap case study?",
+      "How did Montasim structure the 1Snap solution?",
+      "What did Montasim deliver and achieve with 1Snap?",
+      "What engineering insight does Montasim share in “Capturing the Whole Page Without Sending It to the Cloud”?",
     ])
   })
 })

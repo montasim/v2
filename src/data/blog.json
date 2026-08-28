@@ -298,6 +298,15 @@
     },
     {
       "kind": "case-study-derived",
+      "projectId": "project-1snap",
+      "slug": "full-page-screenshots-without-cloud-capture",
+      "title": "Capturing the Whole Page Without Sending It to the Cloud",
+      "category": "Browser engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
       "projectId": "project-mulalens",
       "slug": "workplace-evidence-without-tracking-the-web",
       "title": "Putting Workplace Evidence Where Job Seekers Need It—Without Tracking the Web",

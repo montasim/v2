@@ -51,6 +51,7 @@ const hiringPriority = [
   "project-vidquery",
   "project-thoughtline",
   "project-bugreceipt",
+  "project-1snap",
   "project-shrnkly",
   "project-ramadan-clock",
   "project-mulalens",

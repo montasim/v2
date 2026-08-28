@@ -203,7 +203,7 @@ describe("PortfolioChat focused-evidence orchestration", () => {
     })
   })
 
-  it("serves BugReceipt context and the updated project count with derived evidence", async () => {
+  it("serves 1Snap context and the updated project count with derived evidence", async () => {
     const openrouter = provider("openrouter", [validGeneratedDraft], {
       costUsd: 0,
     })
@@ -216,14 +216,14 @@ describe("PortfolioChat focused-evidence orchestration", () => {
       recorder: recorder().adapter,
       requestLimiter: limiter,
       providerCircuit: new InMemoryProviderCircuitStore(),
-      createId: () => `bugreceipt-exact-${++replyId}`,
+      createId: () => `1snap-exact-${++replyId}`,
     })
 
     const projectReply = await chat.answer(
       {
-        conversationId: "bugreceipt-conversation",
-        clientMessageId: "bugreceipt-project-question",
-        question: "What is Montasim's BugReceipt project?",
+        conversationId: "1snap-conversation",
+        clientMessageId: "1snap-project-question",
+        question: "What is Montasim's 1Snap project?",
       },
       { visitorHash: "visitor" }
     )
@@ -231,21 +231,21 @@ describe("PortfolioChat focused-evidence orchestration", () => {
     expect(projectReply).toMatchObject({
       kind: "exact",
       evidenceIds: [
-        "project:project-bugreceipt",
-        "case-study:bugreceipt:problem",
-        "case-study:bugreceipt:outcomes",
+        "project:project-1snap",
+        "case-study:1snap:problem",
+        "case-study:1snap:outcomes",
       ],
       citations: [
-        expect.objectContaining({ href: "/projects#project-bugreceipt" }),
-        expect.objectContaining({ href: "/projects/bugreceipt#problem" }),
-        expect.objectContaining({ href: "/projects/bugreceipt#outcomes" }),
+        expect.objectContaining({ href: "/projects#project-1snap" }),
+        expect.objectContaining({ href: "/projects/1snap#problem" }),
+        expect.objectContaining({ href: "/projects/1snap#outcomes" }),
       ],
     })
-    expect(projectReply.text).toContain("privacy-filtered")
+    expect(projectReply.text).toContain("complete web pages")
 
     const countReply = await chat.answer(
       {
-        conversationId: "bugreceipt-conversation",
+        conversationId: "1snap-conversation",
         clientMessageId: "project-count-question",
         question: "How many projects are published in Montasim's portfolio?",
       },
@@ -257,7 +257,7 @@ describe("PortfolioChat focused-evidence orchestration", () => {
       evidenceIds: ["derived:catalog-count:projects"],
       citations: [expect.objectContaining({ href: "/projects" })],
     })
-    expect(countReply.text).toContain("32 project records")
+    expect(countReply.text).toContain("33 project records")
     expect(openrouter.complete).not.toHaveBeenCalled()
     expect(limiter.consume).not.toHaveBeenCalled()
   })

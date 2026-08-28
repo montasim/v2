@@ -336,6 +336,73 @@
     }
   },
   {
+    "slug": "1snap",
+    "projectId": "project-1snap",
+    "summary": "Local-first Chrome extension that scrolls through a complete web page, stabilizes changing presentation, stitches captured frames in the browser, and opens one reusable PNG.",
+    "role": "Product design and browser-extension engineering",
+    "scope": "Capture lifecycle, page stabilization, local image processing, and release delivery",
+    "status": "Public pre-release",
+    "verifiedBranch": "main",
+    "verifiedCommit": "dbdf696a1e650b97f9cda186422f0701ae6b58d0",
+    "problem": "Chrome's standard screenshot flow captures only the visible viewport, while many full-page tools add accounts, editors, or cloud upload to a job that should produce one complete local image.",
+    "constraints": [
+      "Chrome can capture only the active visible tab, so the source tab must stay active while 1Snap scrolls and records each frame.",
+      "Dynamic content, visible images and fonts, fixed or sticky elements, and the user's original scroll position must be stabilized or restored without leaving the page altered.",
+      "Captures are bounded to 50 frames, 16,000 by 32,000 output dimensions, and 120 million pixels, with proportional downscaling when needed."
+    ],
+    "architecture": {
+      "summary": "Toolbar-triggered WXT background controller coordinating the active tab and progress; injected page planning that measures, stabilizes, scrolls, and restores document state; recent frame records in extension-owned IndexedDB; local Canvas stitching followed by a React result page for inspection, copy, and download.",
+      "layers": [
+        {
+          "title": "Capture orchestration",
+          "detail": "The background controller owns the active-tab lifecycle, progress badge, capture rate, cancellation, and recovery."
+        },
+        {
+          "title": "Page preparation",
+          "detail": "An injected page script measures the document, waits for visible assets, pauses motion, manages sticky elements, and restores the original presentation."
+        },
+        {
+          "title": "Local processing",
+          "detail": "Captured frames are retained in IndexedDB and stitched into a bounded PNG through the browser Canvas API."
+        },
+        {
+          "title": "Result and delivery",
+          "detail": "A dedicated React result page reports capture measurements and exposes local copy and download actions; release automation packages a checksummed Chrome archive."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Keep capture and stitching inside Chrome",
+        "detail": "Store recent frames and assemble the PNG locally rather than uploading page captures, avoiding an account or remote image-processing boundary."
+      },
+      {
+        "title": "Treat page restoration as part of capture correctness",
+        "detail": "Record and restore scroll position and temporary presentation changes on success or failure so the capture workflow does not leave the source page modified."
+      },
+      {
+        "title": "Bound frames and output dimensions explicitly",
+        "detail": "Stop or proportionally downscale oversized captures instead of allowing unbounded browser memory and canvas work."
+      }
+    ],
+    "contribution": [
+      "Designed the one-click capture, progress, result, copy, download, and recovery journeys.",
+      "Implemented document measurement, scroll planning, visible-asset waiting, animation pausing, sticky-element handling, and state restoration.",
+      "Built IndexedDB frame retention, local Canvas stitching, output sizing safeguards, and the measured result page.",
+      "Established unit and UI coverage, the product website, Netlify deployment, and checksummed Manifest V3 release packaging."
+    ],
+    "outcomes": [
+      "Users can turn a regular web page into one full-height PNG from a single toolbar action.",
+      "Capture frames and image assembly remain inside extension-owned browser storage and processing.",
+      "The result page exposes dimensions, file size, source, time, frame count, copy, and download actions.",
+      "Maintainers can ship and verify a versioned Chrome ZIP with a matching SHA-256 checksum."
+    ],
+    "screenshot": {
+      "alt": "1Snap full-page screenshot Chrome extension landing page",
+      "caption": "1Snap captures a complete page from one toolbar action, stitches the frames locally, and opens a measured PNG result for inspection, copying, or download."
+    }
+  },
+  {
     "slug": "mulalens",
     "projectId": "project-mulalens",
     "summary": "Chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",

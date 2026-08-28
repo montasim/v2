@@ -89,12 +89,12 @@ describe("portfolio exact answers", () => {
   it("contains the approved number of independently traceable records", () => {
     const records = getExactAnswerCatalog()
 
-    expect(records).toHaveLength(456)
-    expect(new Set(records.map((record) => record.id)).size).toBe(456)
+    expect(records).toHaveLength(462)
+    expect(new Set(records.map((record) => record.id)).size).toBe(462)
     expect(
       new Set(records.map((record) => normalizeExactQuestion(record.question)))
         .size
-    ).toBe(456)
+    ).toBe(462)
 
     for (const record of records) {
       expect(record.text.trim().length, record.id).toBeGreaterThan(40)
@@ -214,11 +214,11 @@ describe("portfolio exact answers", () => {
     expect(findExactAnswer("What is Montasim's current role?")).toBeUndefined()
   })
 
-  it("publishes static answers for the updated project count and BugReceipt context", () => {
+  it("publishes static answers for the updated project count and new extension context", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("32 project records")
+    expect(projectCount.text).toContain("33 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(
@@ -243,6 +243,28 @@ describe("portfolio exact answers", () => {
       "project:project-bugreceipt",
       "case-study:bugreceipt:problem",
       "case-study:bugreceipt:outcomes",
+    ])
+
+    const oneSnapAnswers = getExactAnswerCatalog().filter(
+      (record) =>
+        record.id.startsWith("project:project-1snap:") ||
+        record.id.startsWith("case-study:1snap:") ||
+        record.id === "blog:full-page-screenshots-without-cloud-capture"
+    )
+    expect(oneSnapAnswers.map((record) => record.id)).toEqual([
+      "project:project-1snap:overview",
+      "project:project-1snap:technology",
+      "case-study:1snap:problem",
+      "case-study:1snap:architecture",
+      "case-study:1snap:delivery",
+      "blog:full-page-screenshots-without-cloud-capture",
+    ])
+    expect(
+      reusableAnswerById("project:project-1snap:overview").factIds
+    ).toEqual([
+      "project:project-1snap",
+      "case-study:1snap:problem",
+      "case-study:1snap:outcomes",
     ])
   })
 

@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 7 }),
-      expect.objectContaining({ id: "projects", recordCount: 32 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 32 }),
-      expect.objectContaining({ id: "blog", recordCount: 33 }),
+      expect.objectContaining({ id: "projects", recordCount: 33 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 33 }),
+      expect.objectContaining({ id: "blog", recordCount: 34 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -133,6 +133,55 @@ describe("PortfolioKnowledge", () => {
     )
   })
 
+  it("connects 1Snap project, case-study, and article evidence to citations", () => {
+    const knowledge = compilePortfolioKnowledge()
+    const project = knowledge.findFact("project:project-1snap")
+
+    expect(project).toMatchObject({
+      source: "projects",
+      recordId: "project-1snap",
+      evidenceRole: "first-party-portfolio",
+      citationId: "project:project-1snap",
+    })
+    expect(knowledge.textForFact(project?.id ?? "")).toContain(
+      "complete web pages"
+    )
+    expect(knowledge.findCitation(project?.citationId ?? "")?.href).toBe(
+      "/projects#project-1snap"
+    )
+    expect(knowledge.findCitation("case-study:1snap:architecture")?.href).toBe(
+      "/projects/1snap#architecture"
+    )
+
+    const articleEvidence = knowledge.findFact(
+      "blog:full-page-screenshots-without-cloud-capture:problem"
+    )
+    expect(articleEvidence?.supportingFactIds).toEqual([
+      "case-study:1snap",
+      "case-study:1snap:problem",
+    ])
+    expect(
+      knowledge.findCitation(articleEvidence?.citationId ?? "")?.href
+    ).toBe("/blog/full-page-screenshots-without-cloud-capture#problem")
+
+    expect(knowledge.relationships).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "relationship:casestudy:1snap:documents:project-1snap",
+          kind: "documents",
+        }),
+        expect.objectContaining({
+          id: "relationship:blog:full-page-screenshots-without-cloud-capture:explains:project-1snap",
+          kind: "explains",
+        }),
+        expect.objectContaining({
+          id: "relationship:blog:full-page-screenshots-without-cloud-capture:derived-from:1snap",
+          kind: "derived-from",
+        }),
+      ])
+    )
+  })
+
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
@@ -180,36 +229,36 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-bugreceipt",
-      title: "BugReceipt",
-      historyStartedAt: "2026-08-27T19:28:19Z",
+      recordId: "project-1snap",
+      title: "1Snap",
+      historyStartedAt: "2026-08-28T05:24:40Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
       recordId: "video-qa-without-processing-video",
       publishedAt: "2026-08-28",
       tieBreak: "catalog-order",
     })
-    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(29)
-    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(29)
+    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(30)
+    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(30)
     expect(
       knowledge.textForFact(knowledge.derived.latestDatedBlog.factId)
-    ).toContain("29")
+    ).toContain("30")
 
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 33,
+      total: 34,
       authored: 4,
-      caseStudyDerived: 29,
+      caseStudyDerived: 30,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 32,
+      total: 33,
       byType: {
         api: 1,
         dataset: 2,
-        extension: 4,
+        extension: 5,
         package: 4,
         skill: 11,
         template: 1,
