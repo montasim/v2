@@ -215,7 +215,7 @@
     "type": "extension",
     "featured": false,
     "title": "1Snap",
-    "description": "Local-first Chrome extension that captures complete web pages, restores page state, stitches frames in the browser, and opens one reusable PNG.",
+    "description": "Local-first Chrome extension that captures complete web pages, restores page state, stitches frames in the browser, and adds non-destructive annotations before PNG export.",
     "technologies": [
       "WXT",
       "React 19",
@@ -223,6 +223,7 @@
       "Chrome Manifest V3",
       "Chrome Extensions API",
       "Browser Canvas API",
+      "SVG",
       "IndexedDB",
       "Vite",
       "Sharp",
@@ -244,6 +245,7 @@
     "emoji": "",
     "imageUrl": "assets/projects/1snap.png",
     "topics": [
+      "annotation",
       "browser-extension",
       "chrome-extension",
       "full-page-screenshot",

@@ -338,20 +338,20 @@
   {
     "slug": "1snap",
     "projectId": "project-1snap",
-    "summary": "Local-first Chrome extension that scrolls through a complete web page, stabilizes changing presentation, stitches captured frames in the browser, and opens one reusable PNG.",
+    "summary": "Local-first Chrome extension that scrolls through a complete web page, stabilizes changing presentation, stitches captured frames in the browser, and opens a measured workspace for non-destructive annotation and original-resolution PNG export.",
     "role": "Product design and browser-extension engineering",
-    "scope": "Capture lifecycle, page stabilization, local image processing, and release delivery",
-    "status": "Public pre-release",
+    "scope": "Capture lifecycle, page stabilization, local image processing, annotation tooling, and release delivery",
+    "status": "GitHub release v0.1.1",
     "verifiedBranch": "main",
-    "verifiedCommit": "dbdf696a1e650b97f9cda186422f0701ae6b58d0",
-    "problem": "Chrome's standard screenshot flow captures only the visible viewport, while many full-page tools add accounts, editors, or cloud upload to a job that should produce one complete local image.",
+    "verifiedCommit": "43d28cf9f21429c8971960361d84f96e13f3d127",
+    "problem": "Chrome's standard screenshot flow captures only the visible viewport, while many full-page tools add heavy editors, accounts, or cloud upload. 1Snap had to capture and mark one complete image without introducing a remote processing boundary.",
     "constraints": [
       "Chrome can capture only the active visible tab, so the source tab must stay active while 1Snap scrolls and records each frame.",
       "Dynamic content, visible images and fonts, fixed or sticky elements, and the user's original scroll position must be stabilized or restored without leaving the page altered.",
-      "Captures are bounded to 50 frames, 16,000 by 32,000 output dimensions, and 120 million pixels, with proportional downscaling when needed."
+      "Captures are bounded to 50 frames, 16,000 by 32,000 output dimensions, and 120 million pixels, with proportional downscaling when needed; annotation geometry must stay aligned through responsive editing and original-resolution export."
     ],
     "architecture": {
-      "summary": "Toolbar-triggered WXT background controller coordinating the active tab and progress; injected page planning that measures, stabilizes, scrolls, and restores document state; recent frame records in extension-owned IndexedDB; local Canvas stitching followed by a React result page for inspection, copy, and download.",
+      "summary": "Toolbar-triggered WXT background controller coordinating the active tab and progress; injected page planning that measures, stabilizes, scrolls, and restores document state; capture and annotation records in extension-owned IndexedDB; local Canvas stitching followed by a React result page with an SVG editing overlay and original-resolution export composition.",
       "layers": [
         {
           "title": "Capture orchestration",
@@ -363,11 +363,11 @@
         },
         {
           "title": "Local processing",
-          "detail": "Captured frames are retained in IndexedDB and stitched into a bounded PNG through the browser Canvas API."
+          "detail": "Captured frames and vector annotation documents are retained separately in IndexedDB; frames are stitched into a bounded PNG through the browser Canvas API."
         },
         {
           "title": "Result and delivery",
-          "detail": "A dedicated React result page reports capture measurements and exposes local copy and download actions; release automation packages a checksummed Chrome archive."
+          "detail": "A React result page reports capture measurements, supports Select, Marker, Highlight, and Border tools, and composes marks into the PNG only for Copy or Download; release automation packages a checksummed Chrome archive."
         }
       ]
     },
@@ -375,6 +375,10 @@
       {
         "title": "Keep capture and stitching inside Chrome",
         "detail": "Store recent frames and assemble the PNG locally rather than uploading page captures, avoiding an account or remote image-processing boundary."
+      },
+      {
+        "title": "Keep annotations non-destructive until export",
+        "detail": "Persist vector geometry separately from the stitched screenshot so users can select, move, resize, undo, redo, or cancel edits before Canvas composition produces the final PNG."
       },
       {
         "title": "Treat page restoration as part of capture correctness",
@@ -386,20 +390,20 @@
       }
     ],
     "contribution": [
-      "Designed the one-click capture, progress, result, copy, download, and recovery journeys.",
+      "Designed the one-click capture, progress, result, annotation, copy, download, and recovery journeys.",
       "Implemented document measurement, scroll planning, visible-asset waiting, animation pausing, sticky-element handling, and state restoration.",
-      "Built IndexedDB frame retention, local Canvas stitching, output sizing safeguards, and the measured result page.",
-      "Established unit and UI coverage, the product website, Netlify deployment, and checksummed Manifest V3 release packaging."
+      "Built IndexedDB frame and annotation retention, local Canvas stitching, SVG editing and history controls, output sizing safeguards, and original-resolution annotated export.",
+      "Established unit and UI coverage, the public product website, Netlify deployment, and the checksummed Manifest V3 v0.1.1 release."
     ],
     "outcomes": [
-      "Users can turn a regular web page into one full-height PNG from a single toolbar action.",
-      "Capture frames and image assembly remain inside extension-owned browser storage and processing.",
-      "The result page exposes dimensions, file size, source, time, frame count, copy, and download actions.",
-      "Maintainers can ship and verify a versioned Chrome ZIP with a matching SHA-256 checksum."
+      "Users can turn a regular web page into one full-height PNG, then mark details with Marker, Highlight, or Border tools.",
+      "Capture frames, vector annotations, image assembly, and export composition remain inside extension-owned browser storage and processing.",
+      "The result page combines measured capture evidence with selection, movement, resizing, color and width controls, undo, redo, clear, copy, and download.",
+      "Maintainers shipped v0.1.1 as a verified Chrome ZIP with a matching published SHA-256 checksum."
     ],
     "screenshot": {
-      "alt": "1Snap full-page screenshot Chrome extension landing page",
-      "caption": "1Snap captures a complete page from one toolbar action, stitches the frames locally, and opens a measured PNG result for inspection, copying, or download."
+      "alt": "1Snap result page with Marker, Highlight, and Border annotation controls over a captured report",
+      "caption": "The v0.1.1 result workspace keeps the complete capture visible while users highlight, draw, frame details, and export one locally composed PNG."
     }
   },
   {
