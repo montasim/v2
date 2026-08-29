@@ -26,7 +26,7 @@ Public content is maintained in version-controlled files and deployed with the a
 ## Capabilities and Constraints
 
 - The application is a server-rendered TanStack Start web application.
-- The assistant includes 450 exact-match static questions and evidence-backed answers compiled into a versioned artifact.
+- The assistant includes 468 exact-match static questions and evidence-backed answers compiled into a versioned artifact.
 - Static questions and answers are reviewed from the dashboard but remain read-only there; content changes continue to happen in source files and require catalog regeneration and deployment.
 - The owner dashboard must remain authenticated, responsive, accessible, and consistent with its existing navigation and visual system.
 

@@ -42,12 +42,12 @@ describe("portfolio content", () => {
       "project-b4joinacompany",
       "project-devtools",
       "project-skillfoliox",
+      "project-formflow",
       "project-bangladesh-location-registry",
       "project-ship-agent-skill",
       "project-vidquery",
       "project-thoughtline",
       "project-bugreceipt",
-      "project-1snap",
     ])
     expect(
       educationCatalog.records.every((record) =>
@@ -125,7 +125,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-1snap")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-formflow")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)

@@ -276,7 +276,12 @@ export function ProjectCaseStudyPage({
             width="1600"
             height="1000"
             fetchPriority="high"
-            className="aspect-[16/10] w-full rounded-lg border object-cover object-top"
+            className={cn(
+              "aspect-[16/10] w-full rounded-lg border",
+              caseStudy.screenshot.fit === "contain"
+                ? "bg-muted object-contain"
+                : "object-cover object-top"
+            )}
           />
         </figure>
       ) : null}
@@ -460,7 +465,12 @@ export function ProjectCaseStudyPage({
                     width="1600"
                     height="1000"
                     loading="lazy"
-                    className="aspect-[16/10] w-full rounded-md border object-cover object-top"
+                    className={cn(
+                      "aspect-[16/10] w-full rounded-md border",
+                      caseStudy.screenshot.fit === "contain"
+                        ? "bg-muted object-contain"
+                        : "object-cover object-top"
+                    )}
                   />
                 </div>
                 <figcaption className="mt-3 max-w-[68ch] text-sm leading-6 text-muted-foreground">

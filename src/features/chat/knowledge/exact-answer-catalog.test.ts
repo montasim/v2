@@ -89,12 +89,12 @@ describe("portfolio exact answers", () => {
   it("contains the approved number of independently traceable records", () => {
     const records = getExactAnswerCatalog()
 
-    expect(records).toHaveLength(462)
-    expect(new Set(records.map((record) => record.id)).size).toBe(462)
+    expect(records).toHaveLength(468)
+    expect(new Set(records.map((record) => record.id)).size).toBe(468)
     expect(
       new Set(records.map((record) => normalizeExactQuestion(record.question)))
         .size
-    ).toBe(462)
+    ).toBe(468)
 
     for (const record of records) {
       expect(record.text.trim().length, record.id).toBeGreaterThan(40)
@@ -218,7 +218,7 @@ describe("portfolio exact answers", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("33 project records")
+    expect(projectCount.text).toContain("34 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(

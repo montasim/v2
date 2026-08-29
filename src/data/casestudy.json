@@ -2104,5 +2104,79 @@
       "alt": "TIN Audit Checker - Bangladesh interface preview",
       "caption": "TIN Audit Checker - Bangladesh presents check if your Bangladesh TIN is selected for NBR Risk-Based Audit (AY 2023-24). Client-side, private, instant lookup of 72,342 returns."
     }
+  },
+  {
+    "slug": "formflow",
+    "projectId": "project-formflow",
+    "summary": "A bilingual, institution-configurable operations platform that keeps form definitions, immutable versions, assignments, progress, notifications, and audit history attached to one submission.",
+    "role": "Product design and full-stack engineering",
+    "scope": "Multi-tenant authorization, configurable workflows, and bilingual service delivery",
+    "status": "Public early-stage deployment",
+    "verifiedBranch": "main",
+    "verifiedCommit": "dea000fb774f4c9eb44dfdf369598d4ff9a270d1",
+    "problem": "Institutions often manage operational requests across chat, spreadsheets, fixed forms, and verbal follow-up, separating submitted information from ownership, current status, and accountability.",
+    "constraints": [
+      "English and Bengali must be complete interfaces, with locale-aware content and Bengali or Latin numeral handling where appropriate.",
+      "Google identity, platform authority, and institution membership are separate security boundaries, so every protected read and mutation must be authorized on the server.",
+      "Historical submissions must remain interpretable after an institution edits a form or workflow, requiring immutable published versions and explicit state transitions.",
+      "Google OAuth, Neon, Resend, and Netlify depend on environment-specific configuration without moving credentials into source control."
+    ],
+    "architecture": {
+      "summary": "TanStack Start routes and server functions deliver role-aware React workspaces; framework-independent domain modules own forms, workflows, status transitions, and authorization; Drizzle repositories scope Neon PostgreSQL records by institution and actor; Better Auth, Google OAuth, Resend, Netlify Functions, and GitHub Actions form the identity, communication, deployment, and quality boundaries.",
+      "layers": [
+        {
+          "title": "Role-aware interface",
+          "detail": "Locale-aware TanStack Start routes and React workspaces for platform administrators, institution managers, requesters, and employees"
+        },
+        {
+          "title": "Domain rules",
+          "detail": "Framework-independent form validation, workflow versioning, ordering, permissions, assignments, and status transitions"
+        },
+        {
+          "title": "Institution-scoped data",
+          "detail": "Drizzle repositories over Neon PostgreSQL with immutable form and workflow versions, notifications, work logs, and audit events"
+        },
+        {
+          "title": "Identity and delivery",
+          "detail": "Better Auth with Google OAuth, Resend invitation email, Netlify SSR functions, and GitHub Actions quality gates"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate identity from institution access",
+        "detail": "Google sign-in establishes identity, while platform authority and institution membership independently determine what a person can see and do."
+      },
+      {
+        "title": "Version published forms and workflows",
+        "detail": "Each submission retains the immutable Form Version and Workflow Version it entered, so later edits cannot rewrite the meaning or required process of historical work."
+      },
+      {
+        "title": "Enforce authorization at server and repository boundaries",
+        "detail": "Role-aware navigation improves usability, but server functions and institution-scoped queries remain the security controls for every protected read and mutation."
+      },
+      {
+        "title": "Separate requester updates from internal work records",
+        "detail": "Employees and managers can preserve operational detail without publishing every internal note to the person who submitted the request."
+      }
+    ],
+    "contribution": [
+      "Designed role-specific journeys for Super Admins, Admins, Managers, Requesters, and Employees across English and Bengali interfaces.",
+      "Built dynamic form creation, immutable publishing, configurable workflows, submission tracking, assignment, work updates, notifications, invitations, profiles, and audit views.",
+      "Modeled tenant boundaries, delegated Manager capabilities, versioned records, and role-specific data access across domain modules, repositories, and database migrations.",
+      "Established automated domain, application, authorization, route, and presentation checks with GitHub Actions and a Netlify SSR deployment."
+    ],
+    "outcomes": [
+      "Institutions can define bilingual forms and operational workflows without changing application source code.",
+      "Requesters can submit a published form, receive a tracking number, and follow requester-visible progress from one record.",
+      "Admins and delegated Managers can review queues, assign Employees, manage people, and inspect accountable history within their institution.",
+      "Employees can accept assigned work, record progress and evidence, and complete or return the assignment through explicit workflow states.",
+      "Published versions, work logs, notifications, decisions, and audit events preserve a traceable history as the process evolves."
+    ],
+    "screenshot": {
+      "alt": "FormFlow preview showing a bilingual forms platform and a traceable service-request workflow",
+      "caption": "FormFlow keeps configurable forms, role-aware work, and requester-visible progress connected through one accountable record.",
+      "fit": "contain"
+    }
   }
 ]

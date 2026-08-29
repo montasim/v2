@@ -46,6 +46,7 @@ const hiringPriority = [
   "project-b4joinacompany",
   "project-devtools",
   "project-skillfoliox",
+  "project-formflow",
   "project-bangladesh-location-registry",
   "project-ship-agent-skill",
   "project-vidquery",

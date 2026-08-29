@@ -46,6 +46,7 @@ const caseStudySchema = z.object({
     .object({
       alt: z.string().min(1),
       caption: z.string().min(1),
+      fit: z.enum(["cover", "contain"]).optional(),
     })
     .optional(),
 })

@@ -1,6 +1,6 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: 592b0534458fd4d44f924aa0bd61060f042494234f2333f9a1cea3f60188be5f
-records[462]:
+knowledgeHash: 4c3e841b056e9ee578d1bd5b858d79b00cc7bba2f1df36845a083e12d90ec11a
+records[468]:
   - id: "project:project-postcraft:overview"
     category: project
     question: What is Montasim's PostCraft project?
@@ -13,6 +13,18 @@ records[462]:
     text: "Montasim built PostCraft with Next.js, React, TypeScript, MongoDB, Mongoose, Redux Toolkit, Better Auth, OpenRouter, Gemini API, Groq API, ZhipuAI, Inngest, REST APIs, Tailwind CSS, shadcn/ui, Radix UI, Zod, Resend, System Design. The product goal is clear: AI-powered social media manager to generate, preview, score, and auto-publish engaging posts for LinkedIn, X, and Facebook using Gemini AI and custom brand guardrails. More importantly, the architecture is explicit: The Next.js application keeps HTTP boundaries in route handlers, product logic in domain modules, infrastructure in core services, and durable delivery in Inngest. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-postcraft","case-study:postcraft:architecture"
     supportingExcerpts[2]: "AI-powered social media manager to generate, preview, score, and auto-publish engaging posts for LinkedIn, X, and Facebook using Gemini AI and custom brand guardrails.\n\ntrue\n2026-05-21T22:57:30Z\n664e1557c35eebde3bdb3a106447b4716e103b2c\n2026-05-26T16:29:25Z\nhttps://github.com/montasim/PostCraft\nproject-postcraft\nassets/projects/postcraft.png\nhttps://aipostcraft.vercel.app\n\nNext.js\nReact\nTypeScript\nMongoDB\nMongoose\nRedux Toolkit\nBetter Auth\nOpenRouter\nGemini API\nGroq API\nZhipuAI\nInngest\nREST APIs\nTailwind","Generation, scoring, editing, brand rules, and platform previews\nWorkspace\nValidated workflows for content, library, accounts, and publishing\nDomain services\nOpenRouter, Groq, Gemini, and ZhipuAI with model and key fallback\nProvider layer\nMongoDB persistence, Inngest jobs, and social platform APIs\nDelivery\nThe Next.js application keeps HTTP boundaries in route handlers, product logic in domain modules, infrastructure in core services, and durable delivery in Inngest.\nA provider switcher walks configured models and"
+  - id: "project:project-formflow:overview"
+    category: project
+    question: What is Montasim's FormFlow project?
+    text: "Montasim built FormFlow, a website project. Bilingual, role-aware platform for institution-owned forms, versioned submission workflows, employee assignments, requester-visible progress, notifications, and audit history. His role covered product design and full-stack engineering, with scope spanning multi-tenant authorization, configurable workflows, and bilingual service delivery. Institutions can define bilingual forms and operational workflows without changing application source code. A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary."
+    factIds[3]: "project:project-formflow","case-study:formflow:problem","case-study:formflow:outcomes"
+    supportingExcerpts[3]: "Bilingual, role-aware platform for institution-owned forms, versioned submission workflows, employee assignments, requester-visible progress, notifications, and audit history.\n\nfalse\n2026-08-29T06:42:01Z\n2ef417ae6d940253a1ff9130792af4ec43a04c15\n2026-08-29T08:16:40Z\nhttps://github.com/montasim/FormFlow\nproject-formflow\nassets/projects/formflow.png\nhttps://formflown.netlify.app/en/\n\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nBetter Auth\nGoogle OAuth\nPostgreSQL\nNeon\nDrizzle","Institutions often manage operational requests across chat, spreadsheets, fixed forms, and verbal follow-up, separating submitted information from ownership, current status, and accountability.\nEnglish and Bengali must be complete interfaces, with locale-aware content and Bengali or Latin numeral handling where appropriate.\nGoogle identity, platform authority, and institution membership are separate security boundaries, so every protected read and mutation must be authorized on the server.\nHistorical submissions","Institutions can define bilingual forms and operational workflows without changing application source code.\nRequesters can submit a published form, receive a tracking number, and follow requester-visible progress from one record.\nAdmins and delegated Managers can review queues, assign Employees, manage people, and inspect accountable history within their institution.\nEmployees can accept assigned work, record progress and evidence, and complete or return the assignment through explicit workflow states.\nPublished"
+  - id: "project:project-formflow:technology"
+    category: project
+    question: Which technologies did Montasim use for FormFlow?
+    text: "Montasim built FormFlow with TanStack Start, React 19, TypeScript, Tailwind CSS, Better Auth, Google OAuth, PostgreSQL, Neon, Drizzle ORM, Resend, Zod, Hugeicons, Netlify, GitHub Actions, CI/CD, System Design. The product goal is clear: Bilingual, role-aware platform for institution-owned forms, versioned submission workflows, employee assignments, requester-visible progress, notifications, and audit history. More importantly, the architecture is explicit: TanStack Start routes and server functions deliver role-aware React workspaces; framework-independent domain modules own forms, workflows, status transitions, and authorization; Drizzle repositories scope Neon PostgreSQL records by institution and actor; Better Auth, Google OAuth, Resend, Netlify Functions, and GitHub Actions form the identity, communication, deployment, and quality boundaries. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
+    factIds[2]: "project:project-formflow","case-study:formflow:architecture"
+    supportingExcerpts[2]: "Bilingual, role-aware platform for institution-owned forms, versioned submission workflows, employee assignments, requester-visible progress, notifications, and audit history.\n\nfalse\n2026-08-29T06:42:01Z\n2ef417ae6d940253a1ff9130792af4ec43a04c15\n2026-08-29T08:16:40Z\nhttps://github.com/montasim/FormFlow\nproject-formflow\nassets/projects/formflow.png\nhttps://formflown.netlify.app/en/\n\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nBetter Auth\nGoogle OAuth\nPostgreSQL\nNeon\nDrizzle","Locale-aware TanStack Start routes and React workspaces for platform administrators, institution managers, requesters, and employees\nRole-aware interface\nFramework-independent form validation, workflow versioning, ordering, permissions, assignments, and status transitions\nDomain rules\nDrizzle repositories over Neon PostgreSQL with immutable form and workflow versions, notifications, work logs, and audit events\nInstitution-scoped data\nBetter Auth with Google OAuth, Resend invitation email, Netlify SSR functions,"
   - id: "project:project-b4joinacompany:overview"
     category: project
     question: What is Montasim's b4joinacompany project?
@@ -415,6 +427,24 @@ records[462]:
     text: "Montasim defined the end-to-end product flow from topic input to platform-ready output. He built the Next.js interface, API routes, domain services, and MongoDB repositories. He implemented multi-provider AI selection, reusable guardrails, scoring, and platform previews. He integrated authentication, account recovery, social OAuth, Inngest scheduling, and publishing records. The resulting capabilities and outcomes are “One workspace now covers generation, comparison, refinement, preview, and delivery”; “Provider and key fallback reduce the workflow's dependency on a single AI endpoint”; “Publishing state is persisted for library and insights views instead of ending at generation”; “Operational limits remain explicit: publishing still depends on platform approval, scopes, account type, and API access”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
     factIds[2]: "case-study:postcraft:contribution","case-study:postcraft:outcomes"
     supportingExcerpts[2]: "Defined the end-to-end product flow from topic input to platform-ready output.\nBuilt the Next.js interface, API routes, domain services, and MongoDB repositories.\nImplemented multi-provider AI selection, reusable guardrails, scoring, and platform previews.\nIntegrated authentication, account recovery, social OAuth, Inngest scheduling, and publishing records.","One workspace now covers generation, comparison, refinement, preview, and delivery.\nProvider and key fallback reduce the workflow's dependency on a single AI endpoint.\nPublishing state is persisted for library and insights views instead of ending at generation.\nOperational limits remain explicit: publishing still depends on platform approval, scopes, account type, and API access."
+  - id: "case-study:formflow:problem"
+    category: case-study
+    question: What problem did Montasim address in the FormFlow case study?
+    text: "Institutions often manage operational requests across chat, spreadsheets, fixed forms, and verbal follow-up, separating submitted information from ownership, current status, and accountability. Montasim owned product design and full-stack engineering, covering multi-tenant authorization, configurable workflows, and bilingual service delivery. The solution also had to respect “English and Bengali must be complete interfaces, with locale-aware content and Bengali or Latin numeral handling where appropriate”; “Google identity, platform authority, and institution membership are separate security boundaries, so every protected read and mutation must be authorized on the server”. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request."
+    factIds[1]: "case-study:formflow:problem"
+    supportingExcerpts[1]: "Institutions often manage operational requests across chat, spreadsheets, fixed forms, and verbal follow-up, separating submitted information from ownership, current status, and accountability.\nEnglish and Bengali must be complete interfaces, with locale-aware content and Bengali or Latin numeral handling where appropriate.\nGoogle identity, platform authority, and institution membership are separate security boundaries, so every protected read and mutation must be authorized on the server.\nHistorical submissions"
+  - id: "case-study:formflow:architecture"
+    category: case-study
+    question: How did Montasim structure the FormFlow solution?
+    text: "TanStack Start routes and server functions deliver role-aware React workspaces; framework-independent domain modules own forms, workflows, status transitions, and authorization; Drizzle repositories scope Neon PostgreSQL records by institution and actor; Better Auth, Google OAuth, Resend, Netlify Functions, and GitHub Actions form the identity, communication, deployment, and quality boundaries. A representative decision was “Separate identity from institution access”: Google sign-in establishes identity, while platform authority and institution membership independently determine what a person can see and do. The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve."
+    factIds[1]: "case-study:formflow:architecture"
+    supportingExcerpts[1]: "Locale-aware TanStack Start routes and React workspaces for platform administrators, institution managers, requesters, and employees\nRole-aware interface\nFramework-independent form validation, workflow versioning, ordering, permissions, assignments, and status transitions\nDomain rules\nDrizzle repositories over Neon PostgreSQL with immutable form and workflow versions, notifications, work logs, and audit events\nInstitution-scoped data\nBetter Auth with Google OAuth, Resend invitation email, Netlify SSR functions,"
+  - id: "case-study:formflow:delivery"
+    category: case-study
+    question: What did Montasim deliver and achieve with FormFlow?
+    text: "Montasim designed role-specific journeys for Super Admins, Admins, Managers, Requesters, and Employees across English and Bengali interfaces. He built dynamic form creation, immutable publishing, configurable workflows, submission tracking, assignment, work updates, notifications, invitations, profiles, and audit views. He modeled tenant boundaries, delegated Manager capabilities, versioned records, and role-specific data access across domain modules, repositories, and database migrations. He established automated domain, application, authorization, route, and presentation checks with GitHub Actions and a Netlify SSR deployment. The resulting capabilities and outcomes are “Institutions can define bilingual forms and operational workflows without changing application source code”; “Requesters can submit a published form, receive a tracking number, and follow requester-visible progress from one record”; “Admins and delegated Managers can review queues, assign Employees, manage people, and inspect accountable history within their institution”; “Employees can accept assigned work, record progress and evidence, and complete or return the assignment through explicit workflow states”; “Published versions, work logs, notifications, decisions, and audit events preserve a traceable history as the process evolves”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
+    factIds[2]: "case-study:formflow:contribution","case-study:formflow:outcomes"
+    supportingExcerpts[2]: "Designed role-specific journeys for Super Admins, Admins, Managers, Requesters, and Employees across English and Bengali interfaces.\nBuilt dynamic form creation, immutable publishing, configurable workflows, submission tracking, assignment, work updates, notifications, invitations, profiles, and audit views.\nModeled tenant boundaries, delegated Manager capabilities, versioned records, and role-specific data access across domain modules, repositories, and database migrations.\nEstablished automated domain,","Institutions can define bilingual forms and operational workflows without changing application source code.\nRequesters can submit a published form, receive a tracking number, and follow requester-visible progress from one record.\nAdmins and delegated Managers can review queues, assign Employees, manage people, and inspect accountable history within their institution.\nEmployees can accept assigned work, record progress and evidence, and complete or return the assignment through explicit workflow states.\nPublished"
   - id: "case-study:b4joinacompany:problem"
     category: case-study
     question: What problem did Montasim address in the b4joinacompany case study?
@@ -1195,6 +1225,12 @@ records[462]:
     text: "Montasim's opening insight in “I Kept Tax-ID Lookups Out of the Server” is framed as “The visible feature was only the surface”: A static historical audit list is inconvenient to search manually, especially on mobile, while submitting a tax identifier to another application server creates avoidable query exposure. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
     factIds[2]: "blog:keeping-tax-id-lookups-out-of-the-server","case-study:tin-audit-checker:problem"
     supportingExcerpts[2]: "Privacy engineering\nfalse\ncase-study-derived\nproject-tin-audit-checker\nkeeping-tax-id-lookups-out-of-the-server\nI Kept Tax-ID Lookups Out of the Server\nproduct","A static historical audit list is inconvenient to search manually, especially on mobile, while submitting a tax identifier to another application server creates avoidable query exposure.\nThe data is historical, not live audit/compliance status.\nClaimed NBR provenance, accuracy, completeness, and redistribution rights are not established.\nShipping the dataset to browsers makes records retrievable even though lookup queries stay client-side."
+  - id: "blog:version-the-workflow-not-just-the-form"
+    category: blog
+    question: "What engineering insight does Montasim share in “Version the Workflow, Not Just the Form”?"
+    text: "Montasim's opening insight in “Version the Workflow, Not Just the Form” is framed as “The visible feature was only the surface”: Institutions often manage operational requests across chat, spreadsheets, fixed forms, and verbal follow-up, separating submitted information from ownership, current status, and accountability. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
+    factIds[2]: "blog:version-the-workflow-not-just-the-form","case-study:formflow:problem"
+    supportingExcerpts[2]: "Multi-tenant systems\nfalse\ncase-study-derived\nproject-formflow\nversion-the-workflow-not-just-the-form\nVersion the Workflow, Not Just the Form\nproduct","Institutions often manage operational requests across chat, spreadsheets, fixed forms, and verbal follow-up, separating submitted information from ownership, current status, and accountability.\nEnglish and Bengali must be complete interfaces, with locale-aware content and Bengali or Latin numeral handling where appropriate.\nGoogle identity, platform authority, and institution membership are separate security boundaries, so every protected read and mutation must be authorized on the server.\nHistorical submissions"
   - id: "certification:certification-claude-101"
     category: certification
     question: What does Montasim's “Claude 101” credential document?
@@ -2524,21 +2560,21 @@ records[462]:
   - id: "catalog-chronology-comparison:project-count"
     category: catalog-chronology-comparison
     question: How many projects are published in Montasim's portfolio?
-    text: "The portfolio currently publishes 33 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
+    text: "The portfolio currently publishes 34 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
     factIds[1]: "derived:catalog-count:projects"
-    supportingExcerpts[1]: "projects\n33"
+    supportingExcerpts[1]: "projects\n34"
   - id: "catalog-chronology-comparison:case-study-count"
     category: catalog-chronology-comparison
     question: How many project case studies has Montasim documented?
-    text: "Montasim has 33 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
+    text: "Montasim has 34 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
     factIds[1]: "derived:catalog-count:casestudy"
-    supportingExcerpts[1]: "casestudy\n33"
+    supportingExcerpts[1]: "casestudy\n34"
   - id: "catalog-chronology-comparison:blog-count"
     category: catalog-chronology-comparison
     question: How many articles are in Montasim's blog catalog?
-    text: "The blog catalog contains 34 articles: 4 authored essays and 30 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
+    text: "The blog catalog contains 35 articles: 4 authored essays and 31 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "34\n4\n30"
+    supportingExcerpts[1]: "35\n4\n31"
   - id: "catalog-chronology-comparison:credential-count"
     category: catalog-chronology-comparison
     question: How many credentials does Montasim publish?
@@ -2584,9 +2620,9 @@ records[462]:
   - id: "catalog-chronology-comparison:newest-project"
     category: catalog-chronology-comparison
     question: Which project is newest by Montasim's GitHub history?
-    text: "1Snap is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-08-28, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
-    factIds[2]: "derived:newest-project-by-github-history","project:project-1snap"
-    supportingExcerpts[2]: "project-1snap\n1Snap\n2026-08-28T05:24:40Z\nearlier of repository creation and initial commit\nLocal-first Chrome extension that captures complete web pages, restores page state, stitches frames in the browser, and adds non-destructive annotations before PNG export.\n\nfalse\n2026-08-28T05:24:40Z\na95586379ad877413a97faa96afadfbbdd771a86\n2026-08-28T05:51:14Z\nhttps://github.com/montasim/1Snap\nproject-1snap\nassets/projects/1snap.png\nhttps://1snap.netlify.app\n\nhttps://github.com/montasim/1Snap/releases/latest\nWXT\nReact","Local-first Chrome extension that captures complete web pages, restores page state, stitches frames in the browser, and adds non-destructive annotations before PNG export.\n\nfalse\n2026-08-28T05:24:40Z\na95586379ad877413a97faa96afadfbbdd771a86\n2026-08-28T05:51:14Z\nhttps://github.com/montasim/1Snap\nproject-1snap\nassets/projects/1snap.png\nhttps://1snap.netlify.app\n\nhttps://github.com/montasim/1Snap/releases/latest\nWXT\nReact 19\nTypeScript\nChrome Manifest V3\nChrome Extensions API\nBrowser Canvas"
+    text: "FormFlow is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-08-29, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
+    factIds[2]: "derived:newest-project-by-github-history","project:project-formflow"
+    supportingExcerpts[2]: "project-formflow\nFormFlow\n2026-08-29T06:42:01Z\nearlier of repository creation and initial commit\nBilingual, role-aware platform for institution-owned forms, versioned submission workflows, employee assignments, requester-visible progress, notifications, and audit history.\n\nfalse\n2026-08-29T06:42:01Z\n2ef417ae6d940253a1ff9130792af4ec43a04c15\n2026-08-29T08:16:40Z\nhttps://github.com/montasim/FormFlow\nproject-formflow\nassets/projects/formflow.png\nhttps://formflown.netlify.app/en/\n\nTanStack Start\nReact","Bilingual, role-aware platform for institution-owned forms, versioned submission workflows, employee assignments, requester-visible progress, notifications, and audit history.\n\nfalse\n2026-08-29T06:42:01Z\n2ef417ae6d940253a1ff9130792af4ec43a04c15\n2026-08-29T08:16:40Z\nhttps://github.com/montasim/FormFlow\nproject-formflow\nassets/projects/formflow.png\nhttps://formflown.netlify.app/en/\n\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nBetter Auth\nGoogle OAuth\nPostgreSQL\nNeon\nDrizzle"
   - id: "catalog-chronology-comparison:latest-blog"
     category: catalog-chronology-comparison
     question: Which article is treated as Montasim's latest dated blog entry?
@@ -2602,15 +2638,15 @@ records[462]:
   - id: "catalog-chronology-comparison:project-type-distribution"
     category: catalog-chronology-comparison
     question: How is Montasim's project catalog distributed by type?
-    text: "The 33 projects are distributed as website: 7, tool: 2, skill: 11, dataset: 2, extension: 5, package: 4, template: 1, API: 1. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
+    text: "The 34 projects are distributed as website: 8, tool: 2, skill: 11, dataset: 2, extension: 5, package: 4, template: 1, API: 1. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
     factIds[1]: "derived:project-type-distribution"
-    supportingExcerpts[1]: "33\n1\n2\n5\n4\n11\n1\n2\n7"
+    supportingExcerpts[1]: "34\n1\n2\n5\n4\n11\n1\n2\n8"
   - id: "catalog-chronology-comparison:authored-versus-linked-writing"
     category: catalog-chronology-comparison
     question: How much of Montasim's writing is standalone versus project-linked?
-    text: "The blog contains 4 authored essays and 30 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
+    text: "The blog contains 4 authored essays and 31 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "34\n4\n30"
+    supportingExcerpts[1]: "35\n4\n31"
   - id: "catalog-chronology-comparison:mymedicalhub-role-count"
     category: catalog-chronology-comparison
     question: How many MyMedicalHub roles document Montasim's progression?
@@ -2620,9 +2656,9 @@ records[462]:
   - id: "catalog-chronology-comparison:project-case-study-coverage"
     category: catalog-chronology-comparison
     question: Does every published project have a corresponding case study?
-    text: "Yes. The validated catalogs contain 33 projects and 33 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
+    text: "Yes. The validated catalogs contain 34 projects and 34 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
     factIds[2]: "derived:catalog-count:projects","derived:catalog-count:casestudy"
-    supportingExcerpts[2]: "projects\n33","casestudy\n33"
+    supportingExcerpts[2]: "projects\n34","casestudy\n34"
   - id: "catalog-chronology-comparison:credential-year-range"
     category: catalog-chronology-comparison
     question: What years do Montasim's published credentials cover?
@@ -2632,9 +2668,9 @@ records[462]:
   - id: "catalog-chronology-comparison:catalog-breadth"
     category: catalog-chronology-comparison
     question: What kinds of evidence are available across Montasim's portfolio?
-    text: "The portfolio combines profile facts, 7 experience records, 33 projects, 33 case studies, 34 articles, 47 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
+    text: "The portfolio combines profile facts, 7 experience records, 34 projects, 34 case studies, 35 articles, 47 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
     factIds[6]: "derived:catalog-count:experience","derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:blog","derived:catalog-count:certifications","derived:catalog-count:recommendations"
-    supportingExcerpts[6]: "experience\n7","projects\n33","casestudy\n33","blog\n34","certifications\n47","recommendations\n16"
+    supportingExcerpts[6]: "experience\n7","projects\n34","casestudy\n34","blog\n35","certifications\n47","recommendations\n16"
   - id: "catalog-chronology-comparison:evidence-relationship"
     category: catalog-chronology-comparison
     question: "How do Montasim's projects, case studies, and blog articles relate?"
@@ -2728,9 +2764,9 @@ records[462]:
   - id: "client-delivery-product-thinking:proof-of-work"
     category: client-delivery-product-thinking
     question: What proof can a client review before contacting Montasim?
-    text: "Before making contact, a client can review 33 project records, 33 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
+    text: "Before making contact, a client can review 34 project records, 34 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
     factIds[3]: "derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:recommendations"
-    supportingExcerpts[3]: "projects\n33","casestudy\n33","recommendations\n16"
+    supportingExcerpts[3]: "projects\n34","casestudy\n34","recommendations\n16"
   - id: "contributions-learning:total"
     category: contributions-learning
     question: How much GitHub contribution activity does Montasim publish?

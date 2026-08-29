@@ -547,6 +547,15 @@
       "category": "Privacy engineering",
       "topic": "product",
       "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-formflow",
+      "slug": "version-the-workflow-not-just-the-form",
+      "title": "Version the Workflow, Not Just the Form",
+      "category": "Multi-tenant systems",
+      "topic": "product",
+      "featured": false
     }
   ]
 }

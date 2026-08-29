@@ -7,7 +7,7 @@ describe("loadOwnerStaticAnswers", () => {
     const catalog = loadOwnerStaticAnswers()
 
     expect(catalog.knowledgeHash).toMatch(/^[a-f0-9]{64}$/)
-    expect(catalog.records).toHaveLength(462)
+    expect(catalog.records).toHaveLength(468)
     expect(catalog.records[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -23,7 +23,7 @@ describe("loadOwnerStaticAnswers", () => {
       catalog.records.find(
         (record) => record.id === "catalog-chronology-comparison:project-count"
       )?.text
-    ).toContain("33 project records")
+    ).toContain("34 project records")
     expect(
       catalog.records
         .filter(
@@ -59,6 +59,24 @@ describe("loadOwnerStaticAnswers", () => {
       "How did Montasim structure the 1Snap solution?",
       "What did Montasim deliver and achieve with 1Snap?",
       "What engineering insight does Montasim share in “Capturing the Whole Page Without Sending It to the Cloud”?",
+    ])
+
+    expect(
+      catalog.records
+        .filter(
+          (record) =>
+            record.id.startsWith("project:project-formflow:") ||
+            record.id.startsWith("case-study:formflow:") ||
+            record.id === "blog:version-the-workflow-not-just-the-form"
+        )
+        .map((record) => record.question)
+    ).toEqual([
+      "What is Montasim's FormFlow project?",
+      "Which technologies did Montasim use for FormFlow?",
+      "What problem did Montasim address in the FormFlow case study?",
+      "How did Montasim structure the FormFlow solution?",
+      "What did Montasim deliver and achieve with FormFlow?",
+      "What engineering insight does Montasim share in “Version the Workflow, Not Just the Form”?",
     ])
   })
 })

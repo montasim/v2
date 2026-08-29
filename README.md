@@ -225,7 +225,7 @@ pnpm build
 
 ## Verified quality
 
-The release gate validates formatting, ESLint, the complete Vitest suite, TypeScript, exact-answer freshness, and the production build. The chat-specific suite also covers the 450 exact answers, a 300-question paraphrase corpus, claim-to-evidence traceability, provider failover, zero-cost OpenRouter enforcement, and inert Markdown rendering. A local Lighthouse run against the warmed production preview reported:
+The release gate validates formatting, ESLint, the complete Vitest suite, TypeScript, exact-answer freshness, and the production build. The chat-specific suite also covers the 468 exact answers, a 300-question paraphrase corpus, claim-to-evidence traceability, provider failover, zero-cost OpenRouter enforcement, and inert Markdown rendering. A local Lighthouse run against the warmed production preview reported:
 
 Run `pnpm chat:evaluate` as a separate provider-backed acceptance gate. It forces all 300 non-exact questions through dynamic generation, uses a third provider as the independent judge, shares the production OpenRouter safety budget, and writes a non-overwriting JSON report under `artifacts/chat-evaluation/`. A smaller cross-category smoke run is available with `pnpm chat:evaluate -- --limit 16`. This network gate requires three configured providers and is intentionally separate from deterministic builds.
 

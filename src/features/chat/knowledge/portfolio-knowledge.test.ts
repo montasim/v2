@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 7 }),
-      expect.objectContaining({ id: "projects", recordCount: 33 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 33 }),
-      expect.objectContaining({ id: "blog", recordCount: 34 }),
+      expect.objectContaining({ id: "projects", recordCount: 34 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 34 }),
+      expect.objectContaining({ id: "blog", recordCount: 35 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -229,32 +229,32 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-1snap",
-      title: "1Snap",
-      historyStartedAt: "2026-08-28T05:24:40Z",
+      recordId: "project-formflow",
+      title: "FormFlow",
+      historyStartedAt: "2026-08-29T06:42:01Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
       recordId: "video-qa-without-processing-video",
       publishedAt: "2026-08-28",
       tieBreak: "catalog-order",
     })
-    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(30)
-    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(30)
+    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(31)
+    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(31)
     expect(
       knowledge.textForFact(knowledge.derived.latestDatedBlog.factId)
-    ).toContain("30")
+    ).toContain("31")
 
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 34,
+      total: 35,
       authored: 4,
-      caseStudyDerived: 30,
+      caseStudyDerived: 31,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 33,
+      total: 34,
       byType: {
         api: 1,
         dataset: 2,
@@ -263,7 +263,7 @@ describe("PortfolioKnowledge", () => {
         skill: 11,
         template: 1,
         tool: 2,
-        website: 7,
+        website: 8,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({
