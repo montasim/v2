@@ -1,4 +1,4 @@
 {
-  "prompt": "Source capture, not AI-generated. Browser screenshot of the deployed FormFlow landing page at https://formflown.netlify.app/en/, captured on 29 Aug 2026 for Montasim's v2 portfolio project card and case study; preserve the full bilingual, role-aware workflow interface without cropping.",
+  "prompt": "Source capture, not AI-generated. Browser screenshot of the deployed FormFlow landing page at https://formflown.netlify.app/en/, captured on 29 Aug 2026 for Montasim's v2 portfolio project card and case study; preserve the full bilingual, role-aware workflow interface while excluding the browser scrollbar.",
   "createdAt": "2026-08-29T08:39:26.357Z"
 }
