@@ -1,6 +1,7 @@
 import {
   ArrowUpRightIcon,
   BookOpenTextIcon,
+  ChromeIcon,
   GithubLogoIcon,
   PackageIcon,
   SquaresFourIcon,
@@ -85,7 +86,7 @@ export function ProjectCard({ project }: { project: Project }) {
         <CardContent className="flex min-w-0 flex-col p-5 sm:p-6">
           <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
             <ProjectTypeIcon type={project.type} className="size-[1em]" />
-            {project.type}
+            {project.type === "desktop" ? "desktop app" : project.type}
           </p>
           <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-strong-foreground">
             {project.title}
@@ -125,6 +126,16 @@ export function ProjectCard({ project }: { project: Project }) {
                   <ArrowUpRightIcon className="group-hover/action:translate-x-0.5 group-hover/action:-translate-y-0.5" />
                 )}
                 {primaryActionLabel}
+              </ExternalAction>
+            ) : null}
+            {project.chromeWebStoreUrl ? (
+              <ExternalAction
+                href={project.chromeWebStoreUrl}
+                variant="link"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
+              >
+                <ChromeIcon />
+                Chrome Web Store
               </ExternalAction>
             ) : null}
             {separateNpmUrl ? (

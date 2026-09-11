@@ -22,6 +22,7 @@ import {
   ArrowUpCompactIcon,
   ChatCenteredDotsIcon,
   CheckIcon,
+  ChromeIcon,
   CircleDashedIcon,
   ClockIcon,
   EnvelopeSimpleIcon,
@@ -51,6 +52,8 @@ import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { blogCatalog } from "@/lib/content/blog"
 import type { BlogPost } from "@/lib/content/blog"
+import { projectCatalog } from "@/lib/content/projects"
+import { ExternalAction } from "@/components/shared/navigation-action"
 import { cn } from "@/lib/utils"
 import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 
@@ -726,6 +729,9 @@ export function BlogDetailPage({
   const [activeSection, setActiveSection] = useState(sectionLinks[0][0])
   const [shareStatus, setShareStatus] = useState("")
   const [commentCount, setCommentCount] = useState(0)
+  const relatedProject = post.projectId
+    ? projectCatalog.records.find((project) => project.id === post.projectId)
+    : undefined
   const viewCount = useVisitorCount({
     resourceKey: "blog",
     slug: post.slug,
@@ -835,6 +841,15 @@ export function BlogDetailPage({
               </Badge>
             </div>
             <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+              {relatedProject?.chromeWebStoreUrl ? (
+                <ExternalAction
+                  href={relatedProject.chromeWebStoreUrl}
+                  variant="outline"
+                >
+                  <ChromeIcon />
+                  Chrome Web Store
+                </ExternalAction>
+              ) : null}
               <Button
                 type="button"
                 onClick={shareArticle}

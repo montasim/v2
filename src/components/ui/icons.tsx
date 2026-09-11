@@ -25,6 +25,7 @@ import HugeCertificateIcon from "@hugeicons/core-free-icons/Certificate01Icon"
 import HugeCheckIcon from "@hugeicons/core-free-icons/CheckIcon"
 import HugeCheckCircleIcon from "@hugeicons/core-free-icons/CheckmarkCircle02Icon"
 import HugeCircleDashedIcon from "@hugeicons/core-free-icons/CircleDashedIcon"
+import HugeChromeIcon from "@hugeicons/core-free-icons/ChromeIcon"
 import HugeClipboardIcon from "@hugeicons/core-free-icons/ClipboardIcon"
 import HugeClockIcon from "@hugeicons/core-free-icons/Clock01Icon"
 import HugeCloudIcon from "@hugeicons/core-free-icons/CloudIcon"
@@ -204,6 +205,7 @@ export const CheckCircleIcon = createIcon(
   HugeCheckCircleIcon,
   "CheckCircleIcon"
 )
+export const ChromeIcon = createIcon(HugeChromeIcon, "ChromeIcon")
 export const CheckIcon = createIcon(HugeCheckIcon, "CheckIcon")
 export const CircleDashedIcon = createIcon(
   HugeCircleDashedIcon,

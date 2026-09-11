@@ -7,6 +7,7 @@ import {
   ArrowRightIcon,
   ArrowUpRightIcon,
   CheckCircleIcon,
+  ChromeIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
@@ -208,34 +209,50 @@ export function ProjectCaseStudyPage({
               </h1>
               <Badge variant="secondary" className="font-medium">
                 <ProjectTypeIcon type={project.type} className="size-[1em]" />
-                {project.type}
+                {project.type === "desktop" ? "desktop app" : project.type}
               </Badge>
               <VisitorCountBadge count={viewCount} />
-              <ExternalLink
-                href={`${project.githubUrl}/commits/${caseStudy.verifiedBranch}`}
-                aria-label={`View the latest commits for ${project.title}`}
-                className="shrink-0 leading-none"
-              >
-                <img
-                  src={lastCommitBadgeUrl}
-                  alt="Last commit"
-                  width="118"
-                  height="20"
-                  loading="lazy"
-                  className="h-5 w-auto"
-                />
-              </ExternalLink>
+              {!project.githubRepositoryPrivate ? (
+                <ExternalLink
+                  href={`${project.githubUrl}/commits/${caseStudy.verifiedBranch}`}
+                  aria-label={`View the latest commits for ${project.title}`}
+                  className="shrink-0 leading-none"
+                >
+                  <img
+                    src={lastCommitBadgeUrl}
+                    alt="Last commit"
+                    width="118"
+                    height="20"
+                    loading="lazy"
+                    className="h-5 w-auto"
+                  />
+                </ExternalLink>
+              ) : null}
             </div>
             <p className="mt-5 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg">
               {caseStudy.summary}
             </p>
           </div>
           <div className="flex flex-wrap gap-3 lg:justify-end">
+            {project.chromeWebStoreUrl ? (
+              <ExternalAction
+                href={project.chromeWebStoreUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
+                <ChromeIcon />
+                Install extension
+              </ExternalAction>
+            ) : null}
             {project.liveUrl ? (
               <ExternalAction
                 href={project.liveUrl}
                 size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                className={cn(
+                  !project.chromeWebStoreUrl &&
+                    "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                )}
+                variant={project.chromeWebStoreUrl ? "outline" : "default"}
               >
                 Open product
                 <ArrowUpRightIcon />
