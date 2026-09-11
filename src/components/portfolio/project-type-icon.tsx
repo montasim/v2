@@ -13,6 +13,7 @@ import type { Project } from "@/lib/content/projects"
 
 const projectTypeIcons: Record<Project["type"], Icon> = {
   website: DevicesIcon,
+  desktop: DevicesIcon,
   extension: PlugsConnectedIcon,
   package: PackageIcon,
   skill: SparkleIcon,

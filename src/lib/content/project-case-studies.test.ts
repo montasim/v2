@@ -27,7 +27,7 @@ describe("project case-study catalog", () => {
   it("derives the featured carousel from featured projects", () => {
     expect(
       projectCaseStudyCatalog.featured.map((record) => record.project.title)
-    ).toEqual(["PostCraft", "b4joinacompany", "DevTools"])
+    ).toEqual(["PostCraft", "b4joinacompany", "ISPCine"])
   })
 
   it("searches project and case-study evidence", () => {

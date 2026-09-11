@@ -7,7 +7,7 @@ describe("loadOwnerStaticAnswers", () => {
     const catalog = loadOwnerStaticAnswers()
 
     expect(catalog.knowledgeHash).toMatch(/^[a-f0-9]{64}$/)
-    expect(catalog.records).toHaveLength(468)
+    expect(catalog.records).toHaveLength(474)
     expect(catalog.records[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -23,7 +23,7 @@ describe("loadOwnerStaticAnswers", () => {
       catalog.records.find(
         (record) => record.id === "catalog-chronology-comparison:project-count"
       )?.text
-    ).toContain("34 project records")
+    ).toContain("35 project records")
     expect(
       catalog.records
         .filter(

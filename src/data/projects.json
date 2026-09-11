@@ -261,7 +261,7 @@
     "type": "extension",
     "featured": false,
     "title": "MulaLens - Workplace Context Extension",
-    "description": "Chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",
+    "description": "Published Chrome Web Store extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",
     "technologies": [
       "TypeScript",
       "Chrome Manifest V3",
@@ -282,6 +282,7 @@
     "githubInitialCommitAt": "2025-05-19T12:20:24Z",
     "githubInitialCommitSha": "1a9f8695205bed1396d547bfe2be9e392ddeb285",
     "releaseUrl": "https://github.com/montasim/MulaLens/releases/latest",
+    "chromeWebStoreUrl": "https://chromewebstore.google.com/detail/MulaLens/fchnnoakpkkefkpbcliooalddncffedo",
     "npmUrl": "",
     "emoji": "",
     "imageUrl": "assets/projects/mulalens.png",
@@ -1179,7 +1180,7 @@
   {
     "id": "project-devtools",
     "type": "tool",
-    "featured": true,
+    "featured": false,
     "title": "DevTools",
     "description": "A comprehensive suite of 30+ free developer tools for formatting, validating, generating, and transforming data. All tools run entirely in your browser.",
     "technologies": [
@@ -1345,6 +1346,52 @@
       "tanstack-start",
       "versioned-workflows",
       "workflow-management"
+    ]
+  },
+  {
+    "id": "project-ispcine",
+    "type": "desktop",
+    "featured": true,
+    "title": "ISPCine",
+    "description": "A local-first cinema that turns authorized ISP media catalogs into one cross-platform browsing, playback, download, subtitle, and account-sync experience.",
+    "technologies": [
+      "TanStack Start",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "Electron",
+      "Capacitor",
+      "Kotlin",
+      "Android TV",
+      "SQLite",
+      "Drizzle ORM",
+      "Better Auth",
+      "Vidstack",
+      "FFmpeg",
+      "Vitest",
+      "Playwright",
+      "GitHub Actions",
+      "System Design"
+    ],
+    "liveUrl": "https://ispcine.netlify.app",
+    "githubUrl": "https://github.com/montasim/ISPCine",
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2026-08-31T09:01:09Z",
+    "githubInitialCommitAt": "2026-08-31T08:51:02Z",
+    "githubInitialCommitSha": "1722d09897646b48652072c8f41a973522f623a6",
+    "releaseUrl": "https://github.com/montasim/ISPCine/releases/latest",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": "assets/projects/ispcine.png",
+    "topics": [
+      "android-tv",
+      "cross-platform",
+      "desktop-app",
+      "electron",
+      "local-first",
+      "media-player",
+      "tanstack-start",
+      "video-streaming"
     ]
   }
 ]

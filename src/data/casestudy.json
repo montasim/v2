@@ -409,10 +409,10 @@
   {
     "slug": "mulalens",
     "projectId": "project-mulalens",
-    "summary": "Chrome extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",
+    "summary": "Published Chrome Web Store extension that adds identity, workplace, salary, job, story, and cited-research context to Deshi Mula company pages.",
     "role": "Product design and browser-extension engineering",
     "scope": "Browser integration, provider workflows, and privacy",
-    "status": "GitHub release available",
+    "status": "Published on the Chrome Web Store",
     "verifiedBranch": "main",
     "verifiedCommit": "c4fbbc08a7c9dd99211a61fb0d77780e8d414265",
     "problem": "Deshi Mula company pages surface community conversation, but job seekers need structured identity, salary, workplace, story, and cited-research context at the decision point.",
@@ -422,7 +422,7 @@
       "Page matching and injection must remain narrow to avoid collecting unrelated browsing data."
     ],
     "architecture": {
-      "summary": "Deshi Mula page detection/content script; injected research panel UI; typed thin client to hosted b4join endpoints; release-built Manifest V3 package plus public documentation site.",
+      "summary": "Deshi Mula page detection/content script; injected research panel UI; typed thin client to hosted b4join endpoints; release-built Manifest V3 package published through the Chrome Web Store plus a public documentation site.",
       "layers": [
         {
           "title": "Page integration",
@@ -438,7 +438,7 @@
         },
         {
           "title": "Storage and delivery",
-          "detail": "Release-built Manifest V3 package plus public documentation site."
+          "detail": "Release-built Manifest V3 package published on the Chrome Web Store plus a public documentation site."
         }
       ]
     },
@@ -460,12 +460,12 @@
       "Implemented company-page detection and panel injection.",
       "Built identity, workplace, salary, job, story, and cited-research sections.",
       "Integrated hosted b4join lookup endpoints and error/loading states.",
-      "Produced release packaging, store artwork, privacy docs, ADRs, and checks."
+      "Produced release packaging, store artwork, privacy docs, ADRs, checks, and the published Chrome Web Store listing."
     ],
     "outcomes": [
       "Users can open workplace context without leaving the company page.",
       "Inspect salary and narrative signals alongside source links.",
-      "Install a packaged release.",
+      "Install MulaLens directly from its published Chrome Web Store listing.",
       "Understand that evidence is advisory and API-dependent."
     ],
     "screenshot": {
@@ -2176,6 +2176,79 @@
     "screenshot": {
       "alt": "FormFlow preview showing a bilingual forms platform and a traceable service-request workflow",
       "caption": "FormFlow keeps configurable forms, role-aware work, and requester-visible progress connected through one accountable record.",
+      "fit": "contain"
+    }
+  },
+  {
+    "slug": "ispcine",
+    "projectId": "project-ispcine",
+    "summary": "A local-first cinema that normalizes authorized ISP catalogs behind one cross-platform interface for discovery, playback, downloads, subtitles, and synchronized viewing state.",
+    "role": "Product design, platform architecture, and full-stack engineering",
+    "scope": "Provider integration, secure media delivery, cross-platform packaging, and playback UX",
+    "status": "Public project site and packaged releases",
+    "verifiedBranch": "main",
+    "verifiedCommit": "817b9f6f61b8daea743f104de1db5859f8c41df4",
+    "problem": "ISP media portals expose useful local catalogs, but each provider has different markup, resource paths, availability behavior, and playback quirks. Viewers need one dependable cinema interface without moving private catalog access or media ownership into a hosted streaming service.",
+    "constraints": [
+      "The application may only access portals and media libraries the viewer is authorized to use; it must not bypass DRM, credentials, or ownership boundaries.",
+      "Provider catalogs and media resources differ in shape, health, pagination, cookies, signed URLs, and seek support.",
+      "Desktop, browser, Android handheld, and Android TV targets need shared product behavior while retaining platform-appropriate packaging and controls.",
+      "Sensitive upstream URLs and portal state must stay behind local or server-side boundaries instead of leaking into browser-visible application data."
+    ],
+    "architecture": {
+      "summary": "Provider adapters normalize catalog and resource behavior, a TanStack server owns upstream access and local persistence, React renders the shared cinema experience, and Electron or Capacitor hosts package it for desktop and Android targets.",
+      "layers": [
+        {
+          "title": "Provider boundary",
+          "detail": "Adapters normalize catalog queries, health checks, pagination, media identities, and provider-specific resource resolution."
+        },
+        {
+          "title": "Application server",
+          "detail": "TanStack Start, guarded media routes, HTTP Range forwarding, subtitle workflows, downloads, and SQLite-backed local state."
+        },
+        {
+          "title": "Shared cinema interface",
+          "detail": "React browse, search, title detail, My List, history, download, account, and Vidstack playback experiences."
+        },
+        {
+          "title": "Platform hosts",
+          "detail": "Electron packages Windows and Linux builds while Capacitor and Kotlin hosts cover Android handheld and TV delivery."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Normalize providers behind one contract",
+        "detail": "Catalog screens consume shared title and provider identities while each adapter owns its portal-specific parsing, health, pagination, and resource rules."
+      },
+      {
+        "title": "Keep upstream access behind guarded boundaries",
+        "detail": "The server resolves opaque media identities, preserves provider session state, and proxies byte ranges without exposing sensitive upstream URLs to the interface."
+      },
+      {
+        "title": "Share the product interface across native hosts",
+        "detail": "The TanStack and React application remains the behavioral source of truth while Electron and Capacitor supply platform packaging and native integration."
+      },
+      {
+        "title": "Make optional services additive",
+        "detail": "Local libraries work without an account, while Google sign-in adds synchronized My List, progress, and history without replacing device-owned data paths."
+      }
+    ],
+    "contribution": [
+      "Designed the provider abstraction and implemented adapters for multiple ISP catalogs with isolated connection and resource-resolution behavior.",
+      "Built the shared catalog, search, title-detail, history, My List, download, subtitle, network-check, and immersive player journeys.",
+      "Implemented guarded media proxying, HTTP Range seeking, persistent downloads, SQLite state, optional account synchronization, and subtitle workflows.",
+      "Packaged the application for Windows, Ubuntu/Debian, Android handheld, and Android TV with automated web, desktop, and Android verification."
+    ],
+    "outcomes": [
+      "One interface can browse and switch among multiple configured providers without leaking their implementation details into product screens.",
+      "Viewers can seek, resume, manage captions, navigate episodes, and keep local library state across a focused playback experience.",
+      "Desktop users can install branded Windows and Linux releases, while Android targets reuse the same core product behavior.",
+      "The architecture keeps authorization limits explicit and preserves local use when optional hosted account services are unavailable."
+    ],
+    "screenshot": {
+      "alt": "ISPCine home screen showing a cinematic featured title and provider-backed catalog shelves",
+      "caption": "ISPCine turns multiple authorized ISP catalogs into one focused, cross-platform cinema interface.",
       "fit": "contain"
     }
   }

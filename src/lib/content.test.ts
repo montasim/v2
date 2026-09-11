@@ -33,7 +33,7 @@ describe("portfolio content", () => {
     expect(projectCatalog.featured.map((project) => project.id)).toEqual([
       "project-postcraft",
       "project-b4joinacompany",
-      "project-devtools",
+      "project-ispcine",
     ])
     expect(
       projectCatalog.records.slice(0, 10).map((project) => project.id)
@@ -43,11 +43,11 @@ describe("portfolio content", () => {
       "project-devtools",
       "project-skillfoliox",
       "project-formflow",
+      "project-ispcine",
       "project-bangladesh-location-registry",
       "project-ship-agent-skill",
-      "project-vidquery",
+      "project-mulalens",
       "project-thoughtline",
-      "project-bugreceipt",
     ])
     expect(
       educationCatalog.records.every((record) =>
@@ -125,7 +125,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-formflow")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-ispcine")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)
