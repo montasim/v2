@@ -151,6 +151,10 @@ export const projectCatalog = {
   findBySlug(slug: string) {
     return recordsBySlug.get(slug)
   },
+  next(projectId: string) {
+    const index = records.findIndex((project) => project.id === projectId)
+    return index === -1 ? undefined : records[(index + 1) % records.length]
+  },
   matches(project: Project, filter: ProjectFilter) {
     return filter === "all" || project.type === filter
   },

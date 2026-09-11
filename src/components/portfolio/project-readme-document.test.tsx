@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { cleanup, fireEvent, render, screen } from "@testing-library/react"
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react"
 import { ProjectReadmeDocument } from "./project-readme-document"
 
 afterEach(() => {
@@ -23,9 +29,7 @@ describe("ProjectReadmeDocument", () => {
       />
     )
 
-    expect(
-      screen.getByRole("heading", { name: "Private project" })
-    ).toBeTruthy()
+    expect(screen.queryByText("Private project")).toBeNull()
     expect(screen.getByText("Portfolio-safe documentation.")).toBeTruthy()
     expect(fetchMock).not.toHaveBeenCalled()
   })
@@ -54,9 +58,8 @@ describe("ProjectReadmeDocument", () => {
       />
     )
 
-    expect(
-      await screen.findByRole("heading", { name: "Public project" })
-    ).toBeTruthy()
+    expect(await screen.findByRole("link", { name: "Guide" })).toBeTruthy()
+    expect(screen.queryByText("Public project")).toBeNull()
     expect(
       screen.getByRole("link", { name: "Guide" }).getAttribute("href")
     ).toBe("https://github.com/example/project/blob/main/docs/guide.md")
@@ -95,9 +98,7 @@ describe("ProjectReadmeDocument", () => {
       await screen.findByRole("heading", { name: "README unavailable" })
     ).toBeTruthy()
     fireEvent.click(screen.getByRole("button", { name: "Retry" }))
-    expect(
-      await screen.findByRole("heading", { name: "Recovered" })
-    ).toBeTruthy()
-    expect(fetchMock).toHaveBeenCalledTimes(2)
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2))
+    expect(screen.queryByText("Recovered")).toBeNull()
   })
 })

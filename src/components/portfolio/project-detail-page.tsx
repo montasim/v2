@@ -1,8 +1,11 @@
 import { Link } from "@tanstack/react-router"
 import {
+  ArrowLeftCompactIcon,
+  ArrowRightCompactIcon,
   ArrowUpRightIcon,
   BookOpenTextIcon,
   ChromeIcon,
+  EnvelopeSimpleIcon,
   GithubLogoIcon,
   PencilSimpleIcon,
 } from "@/components/ui/icons"
@@ -24,6 +27,7 @@ import type { Project } from "@/lib/content/projects"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { BlogPost } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
+import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import {
   ProjectReadmeDocument,
   type ProjectReadmeSource,
@@ -31,11 +35,13 @@ import {
 
 export function ProjectDetailPage({
   project,
+  nextProject,
   caseStudy,
   blogPost,
   readmeSource,
 }: {
   project: Project
+  nextProject: Project
   caseStudy?: ProjectCaseStudy
   blogPost?: BlogPost
   readmeSource?: ProjectReadmeSource
@@ -116,8 +122,21 @@ export function ProjectDetailPage({
       </header>
 
       <div className="mt-12 w-full">
+        <div>
+          {readmeSource ? (
+            <ProjectReadmeDocument source={readmeSource} />
+          ) : (
+            <section className="border-t py-10">
+              <h2 className="text-xl font-semibold">README unavailable</h2>
+              <p className="mt-3 text-sm text-muted-foreground">
+                A README has not been connected to this project yet.
+              </p>
+            </section>
+          )}
+        </div>
+
         <section
-          className="border-y py-6"
+          className="mt-12 border-t py-6"
           aria-labelledby="project-stack-heading"
         >
           <h2
@@ -156,18 +175,51 @@ export function ProjectDetailPage({
           ) : null}
         </section>
 
-        <div className="mt-10">
-          {readmeSource ? (
-            <ProjectReadmeDocument source={readmeSource} />
-          ) : (
-            <section className="border-t py-10">
-              <h2 className="text-xl font-semibold">README unavailable</h2>
-              <p className="mt-3 text-sm text-muted-foreground">
-                A README has not been connected to this project yet.
-              </p>
-            </section>
-          )}
-        </div>
+        <section
+          aria-labelledby="project-feedback-heading"
+          className="mt-12 border-y py-8 sm:py-10"
+        >
+          <h2
+            id="project-feedback-heading"
+            className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl"
+          >
+            Working through something similar?
+          </h2>
+          <p className="mt-3 max-w-[62ch] text-sm leading-6 text-muted-foreground">
+            Share your challenge, scope, and timeline to start a focused
+            conversation.
+          </p>
+          <Button
+            className="mt-6 bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
+            onClick={() => requestPortfolioInquiry({ inquiryType: "project" })}
+          >
+            <EnvelopeSimpleIcon />
+            Discuss a project
+          </Button>
+        </section>
+
+        <footer className="mt-8 flex flex-wrap gap-3">
+          <Button asChild variant="outline" size="lg" className="w-auto">
+            <Link to="/projects" search={{ filter: "all" }}>
+              <ArrowLeftCompactIcon />
+              All projects
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="ml-auto w-auto"
+          >
+            <Link
+              to="/projects/$slug"
+              params={{ slug: nextProject.id.replace(/^project-/, "") }}
+            >
+              Next: {nextProject.title}
+              <ArrowRightCompactIcon />
+            </Link>
+          </Button>
+        </footer>
       </div>
     </PageShell>
   )

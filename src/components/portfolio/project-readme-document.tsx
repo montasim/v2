@@ -40,6 +40,7 @@ function resolveUrl(
 
 function markdownComponents(source: ProjectReadmeSource): Components {
   return {
+    h1: () => null,
     a: ({ href, children }) => (
       <a
         href={resolveUrl(href, source)}
