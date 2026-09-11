@@ -61,7 +61,7 @@ export function ProjectCard({ project }: { project: Project }) {
             caseStudy ? (
               <Link
                 to="/projects/$slug"
-                params={{ slug: caseStudy.slug }}
+                params={{ slug: project.id.replace(/^project-/, "") }}
                 className="block h-full overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 {preview}
@@ -89,7 +89,13 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.type === "desktop" ? "desktop app" : project.type}
           </p>
           <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-strong-foreground">
-            {project.title}
+            <Link
+              to="/projects/$slug"
+              params={{ slug: project.id.replace(/^project-/, "") }}
+              className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              {project.title}
+            </Link>
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             {project.description}
@@ -108,7 +114,10 @@ export function ProjectCard({ project }: { project: Project }) {
                 variant="link"
                 className="h-auto p-0 font-bold text-strong-foreground"
               >
-                <Link to="/projects/$slug" params={{ slug: caseStudy.slug }}>
+                <Link
+                  to="/case-studies/$slug"
+                  params={{ slug: caseStudy.slug }}
+                >
                   <BookOpenTextIcon />
                   Case study
                 </Link>
@@ -148,7 +157,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 npm
               </ExternalAction>
             ) : null}
-            {project.githubUrl ? (
+            {project.githubUrl && !project.githubRepositoryPrivate ? (
               <ExternalAction
                 href={project.githubUrl}
                 variant="link"

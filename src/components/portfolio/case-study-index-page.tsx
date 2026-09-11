@@ -51,7 +51,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
     <Card asChild>
       <article className="group flex min-w-0 flex-col overflow-hidden p-2 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-emphasis-foreground motion-reduce:transition-none">
         <Link
-          to="/projects/$slug"
+          to="/case-studies/$slug"
           params={{ slug: caseStudy.slug }}
           aria-label={`Read the ${project.title} case study`}
           className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
@@ -121,7 +121,7 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
     <article>
       <Card asChild>
         <Link
-          to="/projects/$slug"
+          to="/case-studies/$slug"
           params={{ slug: caseStudy.slug }}
           aria-label={`Read the ${project.title} case study`}
           className="group grid gap-0 overflow-hidden p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none lg:grid-cols-[13fr_7fr] lg:p-2.5"

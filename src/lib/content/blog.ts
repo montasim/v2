@@ -249,6 +249,9 @@ export const blogCatalog = {
   find(slug: string) {
     return blog.posts.find((post) => post.slug === slug)
   },
+  findByProjectId(projectId: string) {
+    return blog.posts.find((post) => post.projectId === projectId)
+  },
   next(slug: string) {
     const index = blog.posts.findIndex((post) => post.slug === slug)
     return blog.posts[(index + 1) % blog.posts.length]

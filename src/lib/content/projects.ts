@@ -91,6 +91,10 @@ const records = [...parsedRecords].sort(
     (hiringRank.get(right.id) ?? Number.MAX_SAFE_INTEGER)
 )
 
+const recordsBySlug = new Map(
+  records.map((project) => [project.id.replace(/^project-/, ""), project])
+)
+
 // GitHub chronology is evidence of when a project first existed in repository
 // history, not its release or deployment date. Taking the earlier timestamp
 // handles both local-first commits and repositories whose default-branch
@@ -144,6 +148,9 @@ export const projectCatalog = {
     "api",
     "template",
   ]),
+  findBySlug(slug: string) {
+    return recordsBySlug.get(slug)
+  },
   matches(project: Project, filter: ProjectFilter) {
     return filter === "all" || project.type === filter
   },

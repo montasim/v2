@@ -24,6 +24,7 @@ import { Route as StatusRouteImport } from './routes/status'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
+import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies_.$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardAvailabilityRouteImport } from './routes/dashboard.availability'
 import { Route as DashboardCommentsRouteImport } from './routes/dashboard.comments'
@@ -109,6 +110,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaseStudiesSlugRoute = CaseStudiesSlugRouteImport.update({
+  id: '/case-studies_/$slug',
+  path: '/case-studies/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/api/chat': typeof ApiChatRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/dashboard/availability': typeof DashboardAvailabilityRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/api/chat': typeof ApiChatRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/case-studies/$slug': typeof CaseStudiesSlugRoute
   '/dashboard/availability': typeof DashboardAvailabilityRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/api/chat': typeof ApiChatRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog_/$slug': typeof BlogSlugRoute
+  '/case-studies_/$slug': typeof CaseStudiesSlugRoute
   '/dashboard/availability': typeof DashboardAvailabilityRoute
   '/dashboard/comments': typeof DashboardCommentsRoute
   '/dashboard/conversations': typeof DashboardConversationsRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/auth/callback'
     | '/blog/$slug'
+    | '/case-studies/$slug'
     | '/dashboard/availability'
     | '/dashboard/comments'
     | '/dashboard/conversations'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/auth/callback'
     | '/blog/$slug'
+    | '/case-studies/$slug'
     | '/dashboard/availability'
     | '/dashboard/comments'
     | '/dashboard/conversations'
@@ -302,6 +313,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/auth/callback'
     | '/blog_/$slug'
+    | '/case-studies_/$slug'
     | '/dashboard/availability'
     | '/dashboard/comments'
     | '/dashboard/conversations'
@@ -329,6 +341,7 @@ export interface RootRouteChildren {
   ApiChatRoute: typeof ApiChatRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -440,6 +453,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/case-studies_/$slug': {
+      id: '/case-studies_/$slug'
+      path: '/case-studies/$slug'
+      fullPath: '/case-studies/$slug'
+      preLoaderRoute: typeof CaseStudiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -546,6 +566,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiChatRoute: ApiChatRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BlogSlugRoute: BlogSlugRoute,
+  CaseStudiesSlugRoute: CaseStudiesSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

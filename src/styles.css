@@ -49,6 +49,74 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@layer components {
+  .project-readme h1 {
+    @apply scroll-mt-24 border-b pb-4 text-2xl font-bold tracking-tight text-strong-foreground sm:text-3xl;
+  }
+
+  .project-readme h2 {
+    @apply mt-10 scroll-mt-24 text-xl font-semibold tracking-tight text-strong-foreground first:mt-0 sm:text-2xl;
+  }
+
+  .project-readme h3 {
+    @apply mt-8 text-lg font-semibold text-strong-foreground;
+  }
+
+  .project-readme p {
+    @apply mt-4 text-base leading-7 text-muted-foreground;
+  }
+
+  .project-readme ul,
+  .project-readme ol {
+    @apply mt-5 space-y-2 pl-5 text-sm leading-6 text-muted-foreground;
+  }
+
+  .project-readme ul {
+    @apply list-disc;
+  }
+
+  .project-readme ol {
+    @apply list-decimal;
+  }
+
+  .project-readme table {
+    @apply mt-6 w-full border-collapse text-left text-sm;
+  }
+
+  .project-readme th,
+  .project-readme td {
+    @apply border-y px-3 py-3 align-top;
+  }
+
+  .project-readme th {
+    @apply font-semibold text-strong-foreground;
+  }
+
+  .project-readme a {
+    @apply font-medium text-strong-foreground underline underline-offset-4 hover:text-foreground;
+  }
+
+  .project-readme blockquote {
+    @apply my-5 border-l bg-muted/50 px-5 py-3 text-muted-foreground;
+  }
+
+  .project-readme code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.875em] text-strong-foreground;
+  }
+
+  .project-readme pre {
+    @apply my-5 overflow-x-auto rounded-lg bg-emphasis-foreground p-5 text-background;
+  }
+
+  .project-readme pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+
+  .project-readme img {
+    @apply my-5 h-auto max-w-full rounded-lg;
+  }
+}
+
 :root {
   --background: #f6f6f3;
   --foreground: #151614;

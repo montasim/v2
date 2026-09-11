@@ -258,14 +258,16 @@ export function ProjectCaseStudyPage({
                 <ArrowUpRightIcon />
               </ExternalAction>
             ) : null}
-            <ExternalAction
-              href={project.githubUrl}
-              variant="outline"
-              size="lg"
-            >
-              <GithubLogoIcon />
-              Source
-            </ExternalAction>
+            {!project.githubRepositoryPrivate ? (
+              <ExternalAction
+                href={project.githubUrl}
+                variant="outline"
+                size="lg"
+              >
+                <GithubLogoIcon />
+                Source
+              </ExternalAction>
+            ) : null}
           </div>
         </div>
 
@@ -317,7 +319,7 @@ export function ProjectCaseStudyPage({
                     aria-current={activeSection === id ? "location" : undefined}
                     onClick={() => setActiveSection(id)}
                     className={cn(
-                      "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l-2 lg:px-0 lg:py-1.75 lg:pl-3",
+                      "block rounded-lg px-2 py-1.5 text-muted-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 lg:rounded-none lg:border-l lg:px-0 lg:py-1.75 lg:pl-3",
                       activeSection === id
                         ? "bg-muted font-semibold text-strong-foreground lg:border-emphasis-foreground lg:bg-transparent"
                         : "border-transparent hover:bg-muted hover:text-foreground lg:hover:bg-transparent"
@@ -329,13 +331,16 @@ export function ProjectCaseStudyPage({
               ))}
             </ul>
           </nav>
-          <ExternalLink
-            href={commitUrl}
-            className="mt-6 hidden items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline lg:inline-flex"
-          >
-            <GitCommitIcon className="size-4" />
-            {caseStudy.verifiedBranch} @ {caseStudy.verifiedCommit.slice(0, 7)}
-          </ExternalLink>
+          {!project.githubRepositoryPrivate ? (
+            <ExternalLink
+              href={commitUrl}
+              className="mt-6 hidden items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline lg:inline-flex"
+            >
+              <GitCommitIcon className="size-4" />
+              {caseStudy.verifiedBranch} @{" "}
+              {caseStudy.verifiedCommit.slice(0, 7)}
+            </ExternalLink>
+          ) : null}
         </aside>
 
         <div className="min-w-0 border-t">
@@ -523,7 +528,10 @@ export function ProjectCaseStudyPage({
               size="lg"
               className="ml-auto w-auto"
             >
-              <Link to="/projects/$slug" params={{ slug: nextCaseStudy.slug }}>
+              <Link
+                to="/case-studies/$slug"
+                params={{ slug: nextCaseStudy.slug }}
+              >
                 Next: {nextCaseStudy.project.title}
                 <ArrowRightCompactIcon />
               </Link>
