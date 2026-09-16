@@ -169,7 +169,7 @@
   {
     "id": "project-bugreceipt",
     "type": "extension",
-    "featured": false,
+    "featured": true,
     "title": "BugReceipt",
     "description": "Local-first Chrome extension for capturing privacy-filtered console, network, reproduction-step, and visual evidence in a reviewable bug report.",
     "technologies": [
@@ -948,7 +948,7 @@
   {
     "id": "project-b4joinacompany",
     "type": "website",
-    "featured": true,
+    "featured": false,
     "title": "b4joinacompany",
     "description": "Research a company before you apply, interview, or accept an offer.",
     "technologies": [
