@@ -24,6 +24,7 @@ const projectSchema = z.object({
   technologies: z.array(z.string().min(1)),
   topics: z.array(z.string().min(1)),
   imageUrl: z.string().nullable().optional(),
+  youtubeVideoId: z.string().min(1).optional(),
   liveUrl: optionalUrlSchema.optional(),
   npmUrl: optionalUrlSchema.optional(),
   releaseUrl: optionalUrlSchema.optional(),

@@ -32,6 +32,7 @@ import {
   ProjectReadmeDocument,
   type ProjectReadmeSource,
 } from "@/components/portfolio/project-readme-document"
+import { YouTubeVideo } from "@/components/shared/youtube-video"
 
 export function ProjectDetailPage({
   project,
@@ -120,6 +121,17 @@ export function ProjectDetailPage({
           </div>
         </div>
       </header>
+
+      {project.youtubeVideoId ? (
+        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+          <YouTubeVideo
+            videoId={project.youtubeVideoId}
+            title={`${project.title} product demonstration`}
+            loading="eager"
+            className="rounded-lg"
+          />
+        </figure>
+      ) : null}
 
       <div className="mt-12 w-full">
         <div>

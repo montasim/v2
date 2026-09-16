@@ -55,6 +55,7 @@ import type { BlogPost } from "@/lib/content/blog"
 import { projectCatalog } from "@/lib/content/projects"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { cn } from "@/lib/utils"
+import { YouTubeVideo } from "@/components/shared/youtube-video"
 import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 
 function formatDate(date: string) {
@@ -917,14 +918,23 @@ export function BlogDetailPage({
       </header>
 
       <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
-        <img
-          src={post.image.src}
-          alt={post.image.alt}
-          width="1600"
-          height="1000"
-          fetchPriority="high"
-          className="aspect-[16/10] w-full rounded-lg border object-cover"
-        />
+        {relatedProject?.youtubeVideoId ? (
+          <YouTubeVideo
+            videoId={relatedProject.youtubeVideoId}
+            title={`${relatedProject.title} product demonstration`}
+            loading="eager"
+            className="rounded-lg"
+          />
+        ) : (
+          <img
+            src={post.image.src}
+            alt={post.image.alt}
+            width="1600"
+            height="1000"
+            fetchPriority="high"
+            className="aspect-[16/10] w-full rounded-lg border object-cover"
+          />
+        )}
       </figure>
 
       <div className="mt-14 grid items-start gap-7 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">

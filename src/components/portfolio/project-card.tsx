@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import type { Project } from "@/lib/content/projects"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
+import { YouTubeVideo } from "@/components/shared/youtube-video"
 
 function projectImage(project: Project) {
   if (!project.imageUrl) return null
@@ -57,7 +58,14 @@ export function ProjectCard({ project }: { project: Project }) {
         className="scroll-mt-20 target:ring-2 target:ring-primary/40"
       >
         <div className="relative min-h-64 overflow-hidden border-b bg-muted/35 p-3 sm:p-4 lg:border-r lg:border-b-0">
-          {image ? (
+          {project.youtubeVideoId ? (
+            <div className="flex h-full min-h-56 items-center overflow-hidden rounded-lg border bg-black sm:min-h-64">
+              <YouTubeVideo
+                videoId={project.youtubeVideoId}
+                title={`${project.title} product demonstration`}
+              />
+            </div>
+          ) : image ? (
             caseStudy ? (
               <Link
                 to="/projects/$slug"

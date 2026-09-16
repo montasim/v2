@@ -31,6 +31,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { optimizedImage } from "@/lib/assets"
+import { YouTubeVideo } from "@/components/shared/youtube-video"
 import {
   getProjectViewCount,
   recordProjectView,
@@ -287,7 +288,16 @@ export function ProjectCaseStudyPage({
         </dl>
       </header>
 
-      {image && caseStudy.screenshot ? (
+      {project.youtubeVideoId ? (
+        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+          <YouTubeVideo
+            videoId={project.youtubeVideoId}
+            title={`${project.title} product demonstration`}
+            loading="eager"
+            className="rounded-lg"
+          />
+        </figure>
+      ) : image && caseStudy.screenshot ? (
         <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
           <img
             src={image}
