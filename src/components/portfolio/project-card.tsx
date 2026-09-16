@@ -155,6 +155,16 @@ export function ProjectCard({ project }: { project: Project }) {
                 Chrome Web Store
               </ExternalAction>
             ) : null}
+            {project.snapcraftUrl ? (
+              <ExternalAction
+                href={project.snapcraftUrl}
+                variant="link"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
+              >
+                <PackageIcon />
+                Snap Store
+              </ExternalAction>
+            ) : null}
             {separateNpmUrl ? (
               <ExternalAction
                 href={separateNpmUrl}

@@ -7,6 +7,7 @@ import {
   ChromeIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
+  PackageIcon,
   PencilSimpleIcon,
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
@@ -47,6 +48,10 @@ export function ProjectDetailPage({
   blogPost?: BlogPost
   readmeSource?: ProjectReadmeSource
 }) {
+  const hasStoreListing = Boolean(
+    project.chromeWebStoreUrl || project.snapcraftUrl
+  )
+
   return (
     <PageShell padded className="pb-20">
       <header>
@@ -98,15 +103,25 @@ export function ProjectDetailPage({
                 Chrome Web Store
               </ExternalAction>
             ) : null}
+            {project.snapcraftUrl ? (
+              <ExternalAction
+                href={project.snapcraftUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
+                <PackageIcon />
+                Snap Store
+              </ExternalAction>
+            ) : null}
             {project.liveUrl ? (
               <ExternalAction
                 href={project.liveUrl}
                 size="lg"
                 className={cn(
-                  !project.chromeWebStoreUrl &&
+                  !hasStoreListing &&
                     "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
                 )}
-                variant={project.chromeWebStoreUrl ? "outline" : "default"}
+                variant={hasStoreListing ? "outline" : "default"}
               >
                 Open product
                 <ArrowUpRightIcon />
@@ -135,6 +150,15 @@ export function ProjectDetailPage({
             className="rounded-lg"
           />
         </figure>
+      ) : null}
+
+      {project.snapcraftUrl ? (
+        <iframe
+          src={`${project.snapcraftUrl}/embedded?button=black`}
+          title={`${project.title} on the Snap Store`}
+          loading="eager"
+          className="mt-10 h-[380px] w-full rounded-xl border bg-card"
+        />
       ) : null}
 
       <div className="mt-12 w-full">

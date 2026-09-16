@@ -26,6 +26,7 @@ import {
   CircleDashedIcon,
   ClockIcon,
   EnvelopeSimpleIcon,
+  PackageIcon,
   ShareIcon,
   TrashIcon,
 } from "@/components/ui/icons"
@@ -849,6 +850,15 @@ export function BlogDetailPage({
                 >
                   <ChromeIcon />
                   Chrome Web Store
+                </ExternalAction>
+              ) : null}
+              {relatedProject?.snapcraftUrl ? (
+                <ExternalAction
+                  href={relatedProject.snapcraftUrl}
+                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                >
+                  <PackageIcon />
+                  Snap Store
                 </ExternalAction>
               ) : null}
               <Button

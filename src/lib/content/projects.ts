@@ -29,6 +29,7 @@ const projectSchema = z.object({
   npmUrl: optionalUrlSchema.optional(),
   releaseUrl: optionalUrlSchema.optional(),
   chromeWebStoreUrl: optionalUrlSchema.optional(),
+  snapcraftUrl: optionalUrlSchema.optional(),
   githubUrl: optionalUrlSchema.optional(),
   githubRepositoryPrivate: z.boolean().optional(),
   githubRepositoryCreatedAt: z.iso.datetime(),

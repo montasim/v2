@@ -11,6 +11,7 @@ import {
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
+  PackageIcon,
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
@@ -116,6 +117,9 @@ export function ProjectCaseStudyPage({
   const getViewCount = useServerFn(getProjectViewCount)
   const recordView = useServerFn(recordProjectView)
   const { project } = caseStudy
+  const hasStoreListing = Boolean(
+    project.chromeWebStoreUrl || project.snapcraftUrl
+  )
   const repositoryPath = githubRepositoryPath(project.githubUrl)
   const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
   const imageName = project.imageUrl?.split("/").at(-1)
@@ -245,15 +249,25 @@ export function ProjectCaseStudyPage({
                 Install extension
               </ExternalAction>
             ) : null}
+            {project.snapcraftUrl ? (
+              <ExternalAction
+                href={project.snapcraftUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
+                <PackageIcon />
+                Install from Snap Store
+              </ExternalAction>
+            ) : null}
             {project.liveUrl ? (
               <ExternalAction
                 href={project.liveUrl}
                 size="lg"
                 className={cn(
-                  !project.chromeWebStoreUrl &&
+                  !hasStoreListing &&
                     "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
                 )}
-                variant={project.chromeWebStoreUrl ? "outline" : "default"}
+                variant={hasStoreListing ? "outline" : "default"}
               >
                 Open product
                 <ArrowUpRightIcon />
