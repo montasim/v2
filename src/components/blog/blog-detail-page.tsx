@@ -845,7 +845,7 @@ export function BlogDetailPage({
               {relatedProject?.chromeWebStoreUrl ? (
                 <ExternalAction
                   href={relatedProject.chromeWebStoreUrl}
-                  variant="outline"
+                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
                 >
                   <ChromeIcon />
                   Chrome Web Store

@@ -89,7 +89,11 @@ export function ProjectDetailPage({
           </div>
           <div className="flex flex-wrap gap-3 lg:justify-end">
             {project.chromeWebStoreUrl ? (
-              <ExternalAction href={project.chromeWebStoreUrl} size="lg">
+              <ExternalAction
+                href={project.chromeWebStoreUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
                 <ChromeIcon />
                 Chrome Web Store
               </ExternalAction>
