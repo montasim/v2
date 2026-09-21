@@ -63,6 +63,7 @@ export function ProjectCard({ project }: { project: Project }) {
               <YouTubeVideo
                 videoId={project.youtubeVideoId}
                 title={`${project.title} product demonstration`}
+                mutedPreview
               />
             </div>
           ) : image ? (

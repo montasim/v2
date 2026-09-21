@@ -1,6 +1,5 @@
 import { useState } from "react"
 
-import { PlayIcon } from "@/components/ui/icons"
 import { cn } from "@/lib/utils"
 
 export function YouTubeVideo({
@@ -8,11 +7,13 @@ export function YouTubeVideo({
   title,
   loading = "lazy",
   className,
+  mutedPreview = false,
 }: {
   videoId: string
   title: string
   loading?: "eager" | "lazy"
   className?: string
+  mutedPreview?: boolean
 }) {
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -31,11 +32,18 @@ export function YouTubeVideo({
           src={`https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/maxresdefault.jpg`}
           alt=""
           loading={loading}
-          className="h-full w-full object-cover"
+          className={cn(
+            "h-full w-full object-cover",
+            mutedPreview &&
+              "grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] group-hover:grayscale-0 group-focus-visible:grayscale-0 motion-reduce:transition-none"
+          )}
         />
         <span className="absolute inset-0 bg-black/10 transition-colors duration-200 group-hover:bg-black/20 motion-reduce:transition-none" />
-        <span className="absolute top-1/2 left-1/2 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-2xl bg-red-600 shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition-[transform,background-color] duration-200 group-hover:scale-105 group-hover:bg-red-500 group-active:scale-95 motion-reduce:transition-none sm:size-18">
-          <PlayIcon className="size-8 fill-current" strokeWidth={2} />
+        <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_8px_24px_rgba(0,0,0,0.28)] transition-transform duration-200 group-hover:scale-105 group-active:scale-95 motion-reduce:transition-none">
+          <svg className="h-12 w-[4.25rem] sm:h-14 sm:w-[4.958rem]" viewBox="0 0 68 48" aria-hidden="true">
+            <path fill="#f00" d="M66.52 7.74a8 8 0 0 0-5.64-5.66C55.91.75 34 .75 34 .75S12.09.75 7.12 2.08a8 8 0 0 0-5.64 5.66C.15 12.72.15 24 .15 24s0 11.28 1.33 16.26a8 8 0 0 0 5.64 5.66C12.09 47.25 34 47.25 34 47.25s21.91 0 26.88-1.33a8 8 0 0 0 5.64-5.66C67.85 35.28 67.85 24 67.85 24s0-11.28-1.33-16.26Z" />
+            <path fill="#fff" d="M27 34.5 45 24 27 13.5v21Z" />
+          </svg>
         </span>
       </button>
     )
