@@ -31,6 +31,11 @@ export function ProjectCard({ project }: { project: Project }) {
     project.liveUrl || project.npmUrl || project.releaseUrl || project.githubUrl
   const separateNpmUrl =
     project.npmUrl && project.npmUrl !== primaryUrl ? project.npmUrl : undefined
+  const publicGithubUrl = project.githubRepositoryPrivate
+    ? undefined
+    : project.githubUrl
+  const primaryActionInHeading =
+    primaryUrl === project.liveUrl || primaryUrl === publicGithubUrl
   let primaryActionLabel = "Live site"
   if (project.npmUrl && !project.liveUrl) primaryActionLabel = "Package"
   else if (project.type === "skill" && project.liveUrl)
@@ -93,10 +98,48 @@ export function ProjectCard({ project }: { project: Project }) {
           )}
         </div>
         <CardContent className="flex min-w-0 flex-col p-5 sm:p-6">
-          <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-            <ProjectTypeIcon type={project.type} className="size-[1em]" />
-            {project.type === "desktop" ? "desktop app" : project.type}
-          </p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <ProjectTypeIcon type={project.type} className="size-[1em]" />
+              {project.type === "desktop" ? "desktop app" : project.type}
+            </p>
+            {project.liveUrl || publicGithubUrl ? (
+              <div className="flex shrink-0 items-center gap-1">
+                {publicGithubUrl ? (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="size-9 text-strong-foreground"
+                  >
+                    <ExternalLink
+                      href={publicGithubUrl}
+                      aria-label={`View ${project.title} source on GitHub`}
+                      title="GitHub source"
+                    >
+                      <GithubLogoIcon />
+                    </ExternalLink>
+                  </Button>
+                ) : null}
+                {project.liveUrl ? (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="size-9 text-strong-foreground"
+                  >
+                    <ExternalLink
+                      href={project.liveUrl}
+                      aria-label={`Visit ${project.title} live site`}
+                      title="Live site"
+                    >
+                      <ArrowUpRightIcon />
+                    </ExternalLink>
+                  </Button>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
           <h2 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-strong-foreground">
             <Link
               to="/projects/$slug"
@@ -132,7 +175,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 </Link>
               </Button>
             ) : null}
-            {primaryUrl ? (
+            {primaryUrl && !primaryActionInHeading ? (
               <ExternalAction
                 href={primaryUrl}
                 variant="link"
@@ -174,16 +217,6 @@ export function ProjectCard({ project }: { project: Project }) {
               >
                 <PackageIcon className="group-hover/action:-translate-y-0.5" />
                 npm
-              </ExternalAction>
-            ) : null}
-            {project.githubUrl && !project.githubRepositoryPrivate ? (
-              <ExternalAction
-                href={project.githubUrl}
-                variant="link"
-                className="group/action h-auto p-0 font-bold text-strong-foreground"
-              >
-                <GithubLogoIcon className="group-hover/action:-translate-y-0.5" />
-                Source
               </ExternalAction>
             ) : null}
           </div>
