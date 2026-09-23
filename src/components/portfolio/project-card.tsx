@@ -3,6 +3,7 @@ import {
   BookOpenTextIcon,
   ChromeIcon,
   GithubLogoIcon,
+  MicrosoftStoreIcon,
   PackageIcon,
   SquaresFourIcon,
 } from "@/components/ui/icons"
@@ -215,7 +216,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 variant="link"
                 className="group/action h-auto p-0 font-bold text-strong-foreground"
               >
-                <PackageIcon />
+                <MicrosoftStoreIcon />
                 Microsoft Store
               </ExternalAction>
             ) : null}

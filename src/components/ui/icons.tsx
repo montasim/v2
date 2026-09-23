@@ -278,6 +278,34 @@ export const ListChecksIcon = createIcon(HugeListChecksIcon, "ListChecksIcon")
 export const ListIcon = createIcon(HugeListIcon, "ListIcon")
 export const LogoutIcon = createIcon(HugeLogoutIcon, "LogoutIcon")
 export const MapPinIcon = createIcon(HugeMapPinIcon, "MapPinIcon")
+export const MicrosoftStoreIcon = forwardRef<SVGSVGElement, IconProps>(
+  function MicrosoftStoreIcon(
+    { size = 24, strokeWidth = 1.5, className, ...props },
+    ref
+  ) {
+    return (
+      <svg
+        ref={ref}
+        viewBox="0 0 24 24"
+        width={size}
+        height={size}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+        focusable="false"
+        aria-hidden={props["aria-label"] ? undefined : true}
+        {...props}
+      >
+        <path d="M5 8.5h14l1 12H4l1-12Z" />
+        <path d="M8.5 8.5V7a3.5 3.5 0 0 1 7 0v1.5" />
+        <path d="M8 12h3v3H8zM13 12h3v3h-3zM8 17h3v3H8zM13 17h3v3h-3z" />
+      </svg>
+    )
+  }
+)
 export const MoonIcon = createIcon(HugeMoonIcon, "MoonIcon")
 export const PackageIcon = createIcon(HugePackageIcon, "PackageIcon")
 export const PaperPlaneTiltIcon = createIcon(
