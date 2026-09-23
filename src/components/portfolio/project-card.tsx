@@ -209,6 +209,16 @@ export function ProjectCard({ project }: { project: Project }) {
                 Snap Store
               </ExternalAction>
             ) : null}
+            {project.microsoftStoreUrl ? (
+              <ExternalAction
+                href={project.microsoftStoreUrl}
+                variant="link"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
+              >
+                <PackageIcon />
+                Microsoft Store
+              </ExternalAction>
+            ) : null}
             {separateNpmUrl ? (
               <ExternalAction
                 href={separateNpmUrl}
