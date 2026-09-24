@@ -388,7 +388,7 @@ export function ProjectCaseStudyPage({
             className="scroll-mt-24 border-t py-10"
           >
             <SectionHeading id="constraints">Constraints</SectionHeading>
-            <ol className="mt-6 grid gap-px overflow-hidden rounded-lg border bg-border md:grid-cols-3">
+            <ol className="mt-6 grid gap-px overflow-hidden rounded-lg border bg-background md:grid-cols-3">
               {caseStudy.constraints.map((constraint, index) => (
                 <li key={constraint} className="bg-card p-5">
                   <span className="font-mono text-xs text-muted-foreground">
