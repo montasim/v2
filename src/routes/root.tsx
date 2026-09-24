@@ -3,6 +3,7 @@ import { createAuthClient } from "@neondatabase/auth"
 import { createFileRoute, redirect } from "@tanstack/react-router"
 
 import { PageShell } from "@/components/shared/page-shell"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -10,6 +11,7 @@ import {
   GoogleIcon,
   LogoutIcon,
   ShieldCheckIcon,
+  WarningCircleIcon,
 } from "@/components/ui/icons"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { OWNER_OAUTH_CALLBACK_PATH } from "@/features/owner-auth/infrastructure/oauth-callback"
@@ -58,9 +60,9 @@ function OwnerRootPage() {
       })
 
       if (!result.error) return
-      setError("Google sign-in could not be started. Try again.")
+      setError("Sign-in could not be started.")
     } catch {
-      setError("Google sign-in could not be started. Try again.")
+      setError("Sign-in could not be started.")
     } finally {
       setIsPending(false)
     }
@@ -113,11 +115,8 @@ function OwnerRootPage() {
             {auth.status === "forbidden" ? (
               <>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  <strong className="text-strong-foreground">
-                    {auth.email}
-                  </strong>{" "}
-                  does not have access to this area. Sign out and use the
-                  portfolio owner account.
+                  This account cannot access the private owner area. Use the
+                  authorized account to continue.
                 </p>
                 <Button
                   type="button"
@@ -125,26 +124,36 @@ function OwnerRootPage() {
                   className="mt-6"
                   disabled={isPending}
                   onClick={signOut}
+                  aria-busy={isPending}
                 >
-                  <LogoutIcon />
-                  {isPending ? "Preparing sign-in" : "Use another account"}
+                  {isPending ? (
+                    <CircleDashedIcon className="animate-spin motion-reduce:animate-none" />
+                  ) : (
+                    <LogoutIcon />
+                  )}
+                  {isPending ? "Signing out" : "Use another account"}
                 </Button>
               </>
             ) : auth.status === "unconfigured" ? (
-              <p className="text-sm leading-6 text-muted-foreground">
-                Owner access is not configured for this environment.
-              </p>
+              <Alert className="mt-5">
+                <WarningCircleIcon />
+                <AlertTitle>Sign-in unavailable</AlertTitle>
+                <AlertDescription>
+                  Sign-in is unavailable right now. Please try again later.
+                </AlertDescription>
+              </Alert>
             ) : (
               <>
                 <p className="text-sm leading-6 text-muted-foreground">
-                  Use the authorized Google account to manage blog comments. No
-                  other sign-in method is available.
+                  This page is reserved for the site owner. Continue with the
+                  authorized account.
                 </p>
                 <Button
                   type="button"
                   className="mt-6 min-w-[11.25rem] bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
                   disabled={isPending}
                   onClick={signInWithGoogle}
+                  aria-busy={isPending}
                 >
                   {isPending ? (
                     <CircleDashedIcon className="animate-spin motion-reduce:animate-none" />
@@ -155,13 +164,21 @@ function OwnerRootPage() {
                     {isPending ? "Opening Google" : "Continue with Google"}
                   </span>
                 </Button>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  Authentication is handled securely by Google.
+                </p>
               </>
             )}
 
             {error ? (
-              <p className="mt-4 text-sm text-destructive" role="alert">
-                {error}
-              </p>
+              <Alert variant="destructive" className="mt-5">
+                <WarningCircleIcon />
+                <AlertTitle>Sign-in did not start</AlertTitle>
+                <AlertDescription>
+                  <p>{error}</p>
+                  <p>Check your connection, then try again.</p>
+                </AlertDescription>
+              </Alert>
             ) : null}
           </div>
         </section>
