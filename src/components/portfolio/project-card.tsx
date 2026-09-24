@@ -5,7 +5,6 @@ import {
   GithubLogoIcon,
   MicrosoftStoreIcon,
   PackageIcon,
-  SquaresFourIcon,
 } from "@/components/ui/icons"
 import { Link } from "@tanstack/react-router"
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
@@ -26,6 +25,37 @@ function projectImage(project: Project) {
   const name = project.imageUrl.split("/").at(-1)
   return name ? optimizedImage(`/images/projects/${name}`) : null
 }
+
+function ProjectPreviewUnavailable({ project }: { project: Project }) {
+  return (
+    <div className="absolute inset-0 grid place-items-center p-8 text-center">
+      <div className="flex max-w-xs flex-col items-center">
+        <div
+          className="w-28 overflow-hidden rounded-xl border bg-background"
+          aria-hidden="true"
+        >
+          <div className="flex h-7 items-center gap-1.5 border-b px-3">
+            <span className="size-1.5 rounded-full bg-border" />
+            <span className="size-1.5 rounded-full bg-border" />
+            <span className="size-1.5 rounded-full bg-border" />
+          </div>
+          <div className="grid h-16 place-items-center text-muted-foreground">
+            <ProjectTypeIcon type={project.type} className="size-6" />
+          </div>
+        </div>
+        <p className="mt-5 text-sm font-semibold text-strong-foreground">
+          Preview not publicly available
+        </p>
+        <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+          {project.professionalWork || project.clientWork
+            ? "This professional project is documented without a public screenshot."
+            : "No public screenshot has been published for this project."}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export function ProjectCard({ project }: { project: Project }) {
   const image = projectImage(project)
   const publicGithubUrl = project.githubRepositoryPrivate
@@ -63,7 +93,7 @@ export function ProjectCard({ project }: { project: Project }) {
         id={project.id}
         className="scroll-mt-20 target:ring-2 target:ring-primary/40"
       >
-        <div className="relative min-h-64 overflow-hidden border-b bg-muted/35 p-3 sm:p-4 lg:border-r lg:border-b-0">
+        <div className="relative min-h-72 overflow-hidden border-b bg-muted/35 p-3 sm:p-4 lg:border-r lg:border-b-0">
           {project.youtubeVideoId ? (
             <div className="flex h-full min-h-56 items-center overflow-hidden rounded-lg border bg-black sm:min-h-64">
               <YouTubeVideo
@@ -90,12 +120,7 @@ export function ProjectCard({ project }: { project: Project }) {
               </ExternalLink>
             )
           ) : (
-            <div className="absolute inset-0 grid place-items-center text-muted-foreground">
-              <span className="flex flex-col items-center gap-3 text-sm">
-                <SquaresFourIcon size={30} />
-                Project preview unavailable
-              </span>
-            </div>
+            <ProjectPreviewUnavailable project={project} />
           )}
         </div>
         <CardContent className="flex min-w-0 flex-col p-5 sm:p-6">
