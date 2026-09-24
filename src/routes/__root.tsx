@@ -17,6 +17,7 @@ import { ConsoleBanner } from "@/components/shared/console-banner"
 import { ErrorPage } from "@/components/shared/error-page"
 import { PortfolioKeyboardShortcuts } from "@/components/shared/portfolio-keyboard-shortcuts"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 import { createMeta, site } from "@/lib/site"
 
@@ -60,12 +61,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-[100dvh] bg-background text-strong-foreground antialiased selection:bg-[#d8aa63] selection:text-[#151614] dark:text-foreground dark:selection:bg-ring/35 dark:selection:text-strong-foreground">
         <ThemeProvider>
+          <AppToaster />
           <ApplicationFrame>{children}</ApplicationFrame>
         </ThemeProvider>
         <Scripts />
       </body>
     </html>
   )
+}
+
+function AppToaster() {
+  return <Toaster position="bottom-center" />
 }
 
 function ApplicationFrame({ children }: { children: React.ReactNode }) {

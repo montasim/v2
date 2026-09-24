@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react"
-import type { ReactNode } from "react"
+import { useCallback, useRef, useState } from "react"
+import type { MouseEvent as ReactMouseEvent, ReactNode } from "react"
+import { toast } from "sonner"
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -22,17 +23,59 @@ import {
 import { usePortfolioCommands } from "@/hooks/use-portfolio-commands"
 import { sectionShortcuts } from "@/lib/portfolio-shortcuts"
 
+type CopyTarget = {
+  kind: "email" | "link" | "selection"
+  value: string
+}
+
+function getLinkCopyTarget(link: HTMLAnchorElement): CopyTarget {
+  if (link.protocol !== "mailto:") return { kind: "link", value: link.href }
+
+  const encodedAddress = link.href.slice("mailto:".length).split("?", 1)[0]
+  let address = encodedAddress
+  try {
+    address = decodeURIComponent(encodedAddress)
+  } catch {
+    // Keep the original address if the link contains invalid URL encoding.
+  }
+
+  return { kind: "email", value: address }
+}
+
 export function AppContextMenu({ children }: { children: ReactNode }) {
   const { executeAction, navigateToSection } = usePortfolioCommands()
-  const [hasSelection, setHasSelection] = useState(false)
+  const [copyTarget, setCopyTarget] = useState<CopyTarget | null>(null)
+  const contextLinkRef = useRef<CopyTarget | null>(null)
+  const copyTargetRef = useRef<CopyTarget | null>(null)
+
+  const handleContextMenu = useCallback((event: ReactMouseEvent) => {
+    const target = event.target instanceof Element ? event.target : null
+    const link = target?.closest<HTMLAnchorElement>("a[href]")
+    contextLinkRef.current = link ? getLinkCopyTarget(link) : null
+  }, [])
 
   const handleOpenChange = useCallback((open: boolean) => {
-    if (open) setHasSelection(Boolean(window.getSelection()?.toString()))
+    if (!open) return
+
+    const selection = window.getSelection()?.toString() || ""
+    const target =
+      contextLinkRef.current ||
+      (selection ? { kind: "selection", value: selection } : null)
+    copyTargetRef.current = target
+    setCopyTarget(target)
   }, [])
 
   async function handleCopy() {
-    const text = window.getSelection()?.toString() ?? ""
-    if (text) await navigator.clipboard.writeText(text).catch(() => undefined)
+    const target = copyTargetRef.current
+    if (!target) return
+
+    try {
+      await navigator.clipboard.writeText(target.value)
+      if (target.kind === "email") toast.success("Email copied")
+      if (target.kind === "link") toast.success("Link copied")
+    } catch {
+      // Clipboard access may be denied by browser permissions.
+    }
   }
 
   async function handlePaste() {
@@ -46,12 +89,15 @@ export function AppContextMenu({ children }: { children: ReactNode }) {
 
   return (
     <ContextMenu modal={false} onOpenChange={handleOpenChange}>
-      <ContextMenuTrigger className="min-h-[100dvh] select-text">
+      <ContextMenuTrigger
+        className="min-h-[100dvh] select-text"
+        onContextMenuCapture={handleContextMenu}
+      >
         {children}
       </ContextMenuTrigger>
       <ContextMenuContent className="w-60">
         <ContextMenuGroup>
-          <ContextMenuItem onSelect={handleCopy} disabled={!hasSelection}>
+          <ContextMenuItem onSelect={handleCopy} disabled={!copyTarget}>
             <CopyIcon />
             Copy
             <ContextMenuShortcut>⌘C</ContextMenuShortcut>
