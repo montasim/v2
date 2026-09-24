@@ -60,4 +60,16 @@ describe("project case-study catalog", () => {
       true
     )
   })
+
+  it("filters client work without replacing its project type", () => {
+    const clientWork = projectCaseStudyCatalog.filter("client", "")
+
+    expect(clientWork.map((record) => record.project.id)).toEqual([
+      "project-liftuno",
+      "project-coaching-management",
+    ])
+    expect(
+      clientWork.every((record) => record.project.type === "website")
+    ).toBe(true)
+  })
 })

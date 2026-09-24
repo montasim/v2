@@ -32,22 +32,22 @@ describe("portfolio content", () => {
   it("owns classifications and featured records inside catalogs", () => {
     expect(projectCatalog.featured.map((project) => project.id)).toEqual([
       "project-postcraft",
-      "project-b4joinacompany",
+      "project-bugreceipt",
       "project-ispcine",
     ])
     expect(
       projectCatalog.records.slice(0, 10).map((project) => project.id)
     ).toEqual([
       "project-postcraft",
+      "project-bugreceipt",
+      "project-mulalens",
+      "project-liftuno",
+      "project-coaching-management",
+      "project-formflow",
       "project-b4joinacompany",
       "project-devtools",
       "project-skillfoliox",
-      "project-formflow",
       "project-ispcine",
-      "project-bangladesh-location-registry",
-      "project-ship-agent-skill",
-      "project-mulalens",
-      "project-thoughtline",
     ])
     expect(
       educationCatalog.records.every((record) =>
@@ -125,7 +125,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-ispcine")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-liftuno")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)
@@ -160,8 +160,10 @@ describe("portfolio content", () => {
 
   it("publishes evidence-backed case studies for every project", () => {
     expect(
-      projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.projectId)
-    ).toEqual(projectCatalog.records.map((project) => project.id))
+      new Set(
+        projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.projectId)
+      )
+    ).toEqual(new Set(projectCatalog.records.map((project) => project.id)))
     expect(
       new Set(
         projectCaseStudyCatalog.records.map((caseStudy) => caseStudy.slug)

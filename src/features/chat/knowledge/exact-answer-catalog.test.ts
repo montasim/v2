@@ -222,7 +222,7 @@ describe("portfolio exact answers", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("35 project records")
+    expect(projectCount.text).toContain("37 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(

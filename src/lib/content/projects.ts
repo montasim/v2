@@ -19,6 +19,7 @@ const projectSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
   type: projectTypeSchema,
+  clientWork: z.boolean().optional(),
   featured: z.boolean(),
   description: z.string().min(1),
   technologies: z.array(z.string().min(1)),
@@ -40,7 +41,7 @@ const projectSchema = z.object({
 })
 
 export type Project = z.infer<typeof projectSchema>
-export type ProjectFilter = "all" | z.infer<typeof projectTypeSchema>
+export type ProjectFilter = "all" | "client" | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
 
@@ -51,6 +52,8 @@ const hiringPriority = [
   "project-postcraft",
   "project-bugreceipt",
   "project-mulalens",
+  "project-liftuno",
+  "project-coaching-management",
   "project-formflow",
   "project-b4joinacompany",
   "project-devtools",
@@ -122,6 +125,7 @@ const chronological = [...parsedRecords].sort((left, right) => {
 })
 const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "all", label: "All work" },
+  { value: "client", label: "Client work" },
   { value: "website", label: "Web apps" },
   { value: "desktop", label: "Desktop apps" },
   { value: "extension", label: "Extensions" },
@@ -141,6 +145,7 @@ export const projectCatalog = {
   filters,
   filterSchema: z.enum([
     "all",
+    "client",
     "website",
     "desktop",
     "extension",
@@ -159,6 +164,8 @@ export const projectCatalog = {
     return index === -1 ? undefined : records[(index + 1) % records.length]
   },
   matches(project: Project, filter: ProjectFilter) {
-    return filter === "all" || project.type === filter
+    if (filter === "all") return true
+    if (filter === "client") return project.clientWork === true
+    return project.type === filter
   },
 } as const

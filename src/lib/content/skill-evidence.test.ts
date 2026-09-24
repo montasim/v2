@@ -46,8 +46,8 @@ describe("skill evidence catalog", () => {
     expect(all[0]?.total).toBeGreaterThanOrEqual(all[1]?.total ?? 0)
     expect(data.map((record) => record.skill)).toEqual([
       "PostgreSQL",
-      "MongoDB",
       "Prisma",
+      "MongoDB",
       "Drizzle ORM",
       "SQLite",
       "Mongoose",

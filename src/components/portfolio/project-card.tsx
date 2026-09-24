@@ -28,13 +28,13 @@ function projectImage(project: Project) {
 }
 export function ProjectCard({ project }: { project: Project }) {
   const image = projectImage(project)
-  const primaryUrl =
-    project.liveUrl || project.npmUrl || project.releaseUrl || project.githubUrl
-  const separateNpmUrl =
-    project.npmUrl && project.npmUrl !== primaryUrl ? project.npmUrl : undefined
   const publicGithubUrl = project.githubRepositoryPrivate
     ? undefined
     : project.githubUrl
+  const primaryUrl =
+    project.liveUrl || project.npmUrl || project.releaseUrl || publicGithubUrl
+  const separateNpmUrl =
+    project.npmUrl && project.npmUrl !== primaryUrl ? project.npmUrl : undefined
   const primaryActionInHeading =
     primaryUrl === project.liveUrl || primaryUrl === publicGithubUrl
   let primaryActionLabel = "Live site"

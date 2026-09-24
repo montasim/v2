@@ -565,6 +565,24 @@
       "category": "Platform architecture",
       "topic": "product",
       "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-liftuno",
+      "slug": "gym-membership-debt-cannot-be-invented-by-a-calendar",
+      "title": "A Gym Membership Calendar Must Not Invent Debt",
+      "category": "Domain modeling",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-coaching-management",
+      "slug": "one-attendance-model-for-multiple-biometric-vendors",
+      "title": "One Attendance Model for Multiple Biometric Vendors",
+      "category": "Multi-tenant systems",
+      "topic": "product",
+      "featured": false
     }
   ]
 }

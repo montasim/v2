@@ -1398,5 +1398,85 @@
       "tanstack-start",
       "video-streaming"
     ]
+  },
+  {
+    "id": "project-liftuno",
+    "type": "website",
+    "clientWork": true,
+    "featured": false,
+    "title": "Liftuno",
+    "description": "A bilingual gym-management platform for Bangladesh that replaces paper ledgers with dependable membership coverage, billing, attendance, receipts, offers, and role-aware operations.",
+    "technologies": [
+      "Expo",
+      "React Native",
+      "React 19",
+      "TypeScript",
+      "Convex",
+      "Better Auth",
+      "Expo Router",
+      "Zod",
+      "Vitest",
+      "System Design"
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/AuraNetDev/Liftuno",
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2026-09-08T06:38:28Z",
+    "githubInitialCommitAt": "2026-09-08T06:44:54Z",
+    "githubInitialCommitSha": "41d4def8cc788d1fa36dc2bfbb6254fb0c2dc3d6",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": null,
+    "topics": [
+      "client-work",
+      "gym-management",
+      "multi-tenant",
+      "bilingual",
+      "billing",
+      "attendance",
+      "react-native",
+      "convex"
+    ]
+  },
+  {
+    "id": "project-coaching-management",
+    "type": "website",
+    "clientWork": true,
+    "featured": false,
+    "title": "Coaching Management",
+    "description": "A multi-tenant SaaS platform for coaching institutes to manage academic structure, students, teachers, attendance, payments, expenses, biometric devices, and SMS outreach.",
+    "technologies": [
+      "Next.js",
+      "React 19",
+      "TypeScript",
+      "PostgreSQL",
+      "Supabase",
+      "Prisma",
+      "TanStack Query",
+      "shadcn/ui",
+      "Tailwind CSS",
+      "Zod",
+      "Vitest",
+      "System Design"
+    ],
+    "liveUrl": "",
+    "githubUrl": "https://github.com/AuraNetDev/coaching-management",
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2025-09-22T17:29:41Z",
+    "githubInitialCommitAt": "2025-09-22T17:15:02Z",
+    "githubInitialCommitSha": "e4017ceaf2450524e42db8f32ac094e30c71ad3d",
+    "npmUrl": "",
+    "emoji": "",
+    "imageUrl": null,
+    "topics": [
+      "client-work",
+      "education-management",
+      "multi-tenant",
+      "rbac",
+      "biometric-attendance",
+      "payments",
+      "sms",
+      "nextjs"
+    ]
   }
 ]
