@@ -4,6 +4,7 @@ import HugeAirplaneTiltIcon from "@hugeicons/core-free-icons/Airplane02Icon"
 import HugeWarningCircleIcon from "@hugeicons/core-free-icons/AlertCircleIcon"
 import HugeCaretDownIcon from "@hugeicons/core-free-icons/ArrowDown01Icon"
 import HugeCaretLeftIcon from "@hugeicons/core-free-icons/ArrowLeft01Icon"
+import HugeCaretRightIcon from "@hugeicons/core-free-icons/ArrowRight01Icon"
 import HugeArrowLeftIcon from "@hugeicons/core-free-icons/ArrowLeft02Icon"
 import HugeArrowLeftCompactIcon from "@hugeicons/core-free-icons/ArrowLeft04Icon"
 import HugeArrowLeftDoubleIcon from "@hugeicons/core-free-icons/ArrowLeftDoubleIcon"
@@ -190,6 +191,7 @@ export const CalendarCheckIcon = createIcon(
 )
 export const CaretDownIcon = createIcon(HugeCaretDownIcon, "CaretDownIcon")
 export const CaretLeftIcon = createIcon(HugeCaretLeftIcon, "CaretLeftIcon")
+export const CaretRightIcon = createIcon(HugeCaretRightIcon, "CaretRightIcon")
 export const CertificateIcon = createIcon(
   HugeCertificateIcon,
   "CertificateIcon"

@@ -1,7 +1,8 @@
 import type { ReactNode } from "react"
 import { FunnelSimpleIcon } from "@/components/ui/icons"
 import { DetailPage } from "@/components/shared/detail-page"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { OverflowTabsList } from "@/components/ui/overflow-tabs-list"
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs"
 import type { CatalogFilter } from "@/lib/content/shared"
 
 export function CatalogPage<TRecord, TFilter extends string | number>({
@@ -45,7 +46,10 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
         }}
         className="mt-10"
       >
-        <TabsList aria-label="Filter results">
+        <OverflowTabsList
+          aria-label="Filter results"
+          activeValue={String(filter)}
+        >
           <span className="hidden shrink-0 items-center gap-1.5 pt-2 pb-3 text-xs font-medium text-muted-foreground sm:inline-flex">
             <FunnelSimpleIcon className="size-3" aria-hidden="true" />
             Filter
@@ -55,7 +59,7 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
               {item.label}
             </TabsTrigger>
           ))}
-        </TabsList>
+        </OverflowTabsList>
         <p className="sr-only" aria-live="polite">
           {visible.length} {resultLabel} shown
         </p>
