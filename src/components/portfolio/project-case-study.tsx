@@ -11,6 +11,7 @@ import {
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
+  MicrosoftStoreIcon,
   PackageIcon,
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
@@ -117,9 +118,6 @@ export function ProjectCaseStudyPage({
   const getViewCount = useServerFn(getProjectViewCount)
   const recordView = useServerFn(recordProjectView)
   const { project } = caseStudy
-  const hasStoreListing = Boolean(
-    project.chromeWebStoreUrl || project.snapcraftUrl
-  )
   const repositoryPath = githubRepositoryPath(project.githubUrl)
   const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
   const imageName = project.imageUrl?.split("/").at(-1)
@@ -206,7 +204,7 @@ export function ProjectCaseStudyPage({
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
+        <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:gap-14">
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-strong-foreground sm:text-3xl">
@@ -238,7 +236,11 @@ export function ProjectCaseStudyPage({
               {caseStudy.summary}
             </p>
           </div>
-          <div className="flex flex-wrap gap-3 lg:justify-end">
+          <div
+            className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:justify-end"
+            role="group"
+            aria-label={`${project.title} actions`}
+          >
             {project.chromeWebStoreUrl ? (
               <ExternalAction
                 href={project.chromeWebStoreUrl}
@@ -253,23 +255,29 @@ export function ProjectCaseStudyPage({
               <ExternalAction
                 href={project.snapcraftUrl}
                 size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                variant="outline"
               >
                 <PackageIcon />
-                Install from Snap Store
+                Snap Store
+              </ExternalAction>
+            ) : null}
+            {project.microsoftStoreUrl ? (
+              <ExternalAction
+                href={project.microsoftStoreUrl}
+                size="lg"
+                variant="outline"
+              >
+                <MicrosoftStoreIcon />
+                Microsoft Store
               </ExternalAction>
             ) : null}
             {project.liveUrl ? (
               <ExternalAction
                 href={project.liveUrl}
                 size="lg"
-                className={cn(
-                  !hasStoreListing &&
-                    "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-                )}
-                variant={hasStoreListing ? "outline" : "default"}
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
               >
-                Open product
+                Website
                 <ArrowUpRightIcon />
               </ExternalAction>
             ) : null}
@@ -319,12 +327,7 @@ export function ProjectCaseStudyPage({
             width="1600"
             height="1000"
             fetchPriority="high"
-            className={cn(
-              "aspect-[16/10] w-full rounded-lg border",
-              caseStudy.screenshot.fit === "contain"
-                ? "bg-muted object-contain"
-                : "object-cover object-top"
-            )}
+            className="aspect-[16/10] w-full rounded-lg border object-cover object-top"
           />
         </figure>
       ) : null}

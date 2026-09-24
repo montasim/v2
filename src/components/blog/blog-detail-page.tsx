@@ -20,12 +20,14 @@ import {
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
   ArrowUpCompactIcon,
+  ArrowUpRightIcon,
   ChatCenteredDotsIcon,
   CheckIcon,
   ChromeIcon,
   CircleDashedIcon,
   ClockIcon,
   EnvelopeSimpleIcon,
+  MicrosoftStoreIcon,
   PackageIcon,
   ShareIcon,
   TrashIcon,
@@ -828,7 +830,7 @@ export function BlogDetailPage({
 
       <header className="mt-8.5">
         <div className="flex flex-col items-start gap-3">
-          <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="contents sm:flex sm:w-full sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
               {post.publishedAt ? (
                 <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground tabular-nums">
@@ -842,7 +844,11 @@ export function BlogDetailPage({
                 {post.category}
               </Badge>
             </div>
-            <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+            <div
+              className="order-2 flex shrink-0 flex-wrap items-center gap-2 sm:order-none sm:justify-end lg:flex-nowrap"
+              role="group"
+              aria-label="Article actions"
+            >
               {relatedProject?.chromeWebStoreUrl ? (
                 <ExternalAction
                   href={relatedProject.chromeWebStoreUrl}
@@ -855,10 +861,28 @@ export function BlogDetailPage({
               {relatedProject?.snapcraftUrl ? (
                 <ExternalAction
                   href={relatedProject.snapcraftUrl}
-                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                  variant="outline"
                 >
                   <PackageIcon />
                   Snap Store
+                </ExternalAction>
+              ) : null}
+              {relatedProject?.microsoftStoreUrl ? (
+                <ExternalAction
+                  href={relatedProject.microsoftStoreUrl}
+                  variant="outline"
+                >
+                  <MicrosoftStoreIcon />
+                  Microsoft Store
+                </ExternalAction>
+              ) : null}
+              {relatedProject?.liveUrl ? (
+                <ExternalAction
+                  href={relatedProject.liveUrl}
+                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                >
+                  Website
+                  <ArrowUpRightIcon />
                 </ExternalAction>
               ) : null}
               <Button
@@ -867,11 +891,11 @@ export function BlogDetailPage({
                 className="bg-emphasis-foreground text-background"
               >
                 {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
-                {shareStatus === "Link copied" ? "Copied" : "Share article"}
+                {shareStatus === "Link copied" ? "Copied" : "Share"}
               </Button>
             </div>
           </div>
-          <h1 className="w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:text-3xl">
+          <h1 className="order-1 w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:order-none sm:text-3xl">
             {post.title}
           </h1>
         </div>

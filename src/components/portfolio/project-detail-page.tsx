@@ -7,6 +7,7 @@ import {
   ChromeIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
+  MicrosoftStoreIcon,
   PackageIcon,
   PencilSimpleIcon,
 } from "@/components/ui/icons"
@@ -27,7 +28,7 @@ import {
 import type { Project } from "@/lib/content/projects"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { BlogPost } from "@/lib/content/blog"
-import { cn } from "@/lib/utils"
+import { optimizedImage } from "@/lib/assets"
 import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
 import {
   ProjectReadmeDocument,
@@ -48,9 +49,11 @@ export function ProjectDetailPage({
   blogPost?: BlogPost
   readmeSource?: ProjectReadmeSource
 }) {
-  const hasStoreListing = Boolean(
-    project.chromeWebStoreUrl || project.snapcraftUrl
-  )
+  const imageName = project.imageUrl?.split("/").at(-1)
+  const image =
+    imageName && caseStudy?.screenshot
+      ? optimizedImage(`/images/projects/${imageName}`)
+      : undefined
 
   return (
     <PageShell padded className="pb-20">
@@ -92,7 +95,11 @@ export function ProjectDetailPage({
               {project.description}
             </p>
           </div>
-          <div className="flex flex-wrap gap-3 lg:justify-end">
+          <div
+            className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:justify-end"
+            role="group"
+            aria-label={`${project.title} actions`}
+          >
             {project.chromeWebStoreUrl ? (
               <ExternalAction
                 href={project.chromeWebStoreUrl}
@@ -107,23 +114,29 @@ export function ProjectDetailPage({
               <ExternalAction
                 href={project.snapcraftUrl}
                 size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                variant="outline"
               >
                 <PackageIcon />
                 Snap Store
+              </ExternalAction>
+            ) : null}
+            {project.microsoftStoreUrl ? (
+              <ExternalAction
+                href={project.microsoftStoreUrl}
+                size="lg"
+                variant="outline"
+              >
+                <MicrosoftStoreIcon />
+                Microsoft Store
               </ExternalAction>
             ) : null}
             {project.liveUrl ? (
               <ExternalAction
                 href={project.liveUrl}
                 size="lg"
-                className={cn(
-                  !hasStoreListing &&
-                    "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-                )}
-                variant={hasStoreListing ? "outline" : "default"}
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
               >
-                Open product
+                Website
                 <ArrowUpRightIcon />
               </ExternalAction>
             ) : null}
@@ -150,9 +163,18 @@ export function ProjectDetailPage({
             className="rounded-lg"
           />
         </figure>
-      ) : null}
-
-      {project.snapcraftUrl ? (
+      ) : image && caseStudy?.screenshot ? (
+        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+          <img
+            src={image}
+            alt={caseStudy.screenshot.alt}
+            width="1600"
+            height="1000"
+            fetchPriority="high"
+            className="aspect-[16/10] w-full rounded-lg border object-cover object-top"
+          />
+        </figure>
+      ) : project.snapcraftUrl ? (
         <iframe
           src={`${project.snapcraftUrl}/embedded?button=black`}
           title={`${project.title} on the Snap Store`}
