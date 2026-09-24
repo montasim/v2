@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { createAuthClient } from "@neondatabase/auth"
-import { createFileRoute, redirect } from "@tanstack/react-router"
+import { createFileRoute, Link, redirect } from "@tanstack/react-router"
 
 import { PageShell } from "@/components/shared/page-shell"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
+  ArrowLeftCompactIcon,
   CircleDashedIcon,
   GoogleIcon,
   LogoutIcon,
@@ -180,6 +181,17 @@ function OwnerRootPage() {
                 </AlertDescription>
               </Alert>
             ) : null}
+
+            <Button
+              asChild
+              variant="link"
+              className="mt-6 h-auto px-0 text-muted-foreground"
+            >
+              <Link to="/">
+                <ArrowLeftCompactIcon />
+                Back to portfolio
+              </Link>
+            </Button>
           </div>
         </section>
       </Card>
