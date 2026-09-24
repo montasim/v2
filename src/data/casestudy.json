@@ -481,7 +481,7 @@
     "scope": "Agent workflow, validation automation, and packaging",
     "status": "Publicly deployed",
     "verifiedBranch": "main",
-    "verifiedCommit": "7ec23cae440a5dae06a52a5f4a79e470ad261007",
+    "verifiedCommit": "6412bbb987a65781674442e0692fdbcccfc507c7",
     "problem": "Reusable SKILL.md capabilities are scattered across repositories and are difficult to compare by purpose, host compatibility, maturity, and install path.",
     "constraints": [
       "Catalog facts can drift from source repositories and package releases.",
@@ -541,14 +541,14 @@
     }
   },
   {
-    "slug": "ship-agent-skill",
-    "projectId": "project-ship-agent-skill",
-    "summary": "End-to-end Codex and Claude Code skill for validating, packaging, publishing, releasing, and verifying portable Agent Skills.",
+    "slug": "release-agent-skill",
+    "projectId": "project-release-agent-skill",
+    "summary": "Coordinates validation, packaging, publication, release, and consumer verification for Agent Skills.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "579c49367e6ab254b48c22cc9be74815eb58437e",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "Releasing a skill spans mutable local state and several independent remote systems, making partial success, version drift, and accidental publication easy.",
     "constraints": [
       "Publishing, pushing, releases, deployment, and catalog changes need separate authorization.",
@@ -600,14 +600,14 @@
     ]
   },
   {
-    "slug": "verify-project-release",
-    "projectId": "project-verify-project-release",
-    "summary": "Read-only Codex and Claude Code skill for verifying GitHub releases, npm packages, tags, CI, install commands, and catalog metadata.",
+    "slug": "verify-github-npm-release",
+    "projectId": "project-verify-github-npm-release",
+    "summary": "Performs a read-only audit across GitHub releases, npm packages, tags, CI, and install commands.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "0b947cba17e7b9b39e87ece974255c5b3f5aa052",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "A release can look complete in one system while its tag, package version, CI, install instructions, or catalog entry points elsewhere.",
     "constraints": [
       "Auditing must never mutate or repair release state.",
@@ -659,14 +659,14 @@
     ]
   },
   {
-    "slug": "write-project-readme",
-    "projectId": "project-write-project-readme",
-    "summary": "Install an evidence-based project README skill for Codex and Claude Code.",
+    "slug": "write-complete-project-readme",
+    "projectId": "project-write-complete-project-readme",
+    "summary": "Installs one portable skill for Codex, Claude Code, or both that creates complete project READMEs from verified repository evidence.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.4.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "f855eb892345c0700e113ee910055b78bdc3f764",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "README generators often preserve stale claims or produce generic sections because they do not inspect the actual project or distinguish evidence from inference.",
     "constraints": [
       "The skill may edit only the root README.",
@@ -718,14 +718,14 @@
     ]
   },
   {
-    "slug": "craft-github-release",
-    "projectId": "project-craft-github-release",
-    "summary": "Agent skill for Codex and Claude Code that turns verified repository evidence into trustworthy GitHub release notes and releases.",
+    "slug": "publish-verified-github-release",
+    "projectId": "project-publish-verified-github-release",
+    "summary": "Turns verified repository evidence into trustworthy GitHub release notes and authorized releases.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.2.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "da7df4509d46bbb1a4732f21feece6b37dc5c9fc",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "Commit logs are implementation-centric and can lead release authors to omit user impact, invent compatibility, or choose the wrong comparison boundary.",
     "constraints": [
       "Tag/version/range ambiguity can materially change the release.",
@@ -777,14 +777,14 @@
     ]
   },
   {
-    "slug": "sync-project-metadata",
-    "projectId": "project-sync-project-metadata",
-    "summary": "Agent skill for Codex and Claude Code that audits and synchronizes project metadata across manifests, documentation, releases, and catalogs.",
+    "slug": "fix-project-metadata-mismatches",
+    "projectId": "project-fix-project-metadata-mismatches",
+    "summary": "Audits and optionally synchronizes project identity and release metadata across authoritative local files.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "b44373b73378cfd73923d19775ca793964a0f125",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "Project identity and version details are duplicated across files and drift, leaving users with broken links, wrong install commands, or conflicting compatibility claims.",
     "constraints": [
       "Each field has a different authoritative source.",
@@ -836,14 +836,14 @@
     ]
   },
   {
-    "slug": "prepare-netlify-deployment",
-    "projectId": "project-prepare-netlify-deployment",
-    "summary": "Codex and Claude Code skill for auditing and preparing reliable Netlify deployments across static, SPA, SSR, and hybrid web apps.",
+    "slug": "make-app-netlify-ready",
+    "projectId": "project-make-app-netlify-ready",
+    "summary": "Audits and prepares reliable Netlify build contracts for static, SPA, SSR, and hybrid web apps.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "5f8f771ab59ba0c3e920449d278ae71fb0d9e967",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "A build can succeed locally yet fail on Netlify because base paths, publish directories, runtime models, redirects, adapters, or environment requirements are misidentified.",
     "constraints": [
       "Static, SPA, hybrid, and SSR routing require different contracts.",
@@ -895,14 +895,14 @@
     ]
   },
   {
-    "slug": "audit-frontend-consistency",
-    "projectId": "project-audit-frontend-consistency",
-    "summary": "Agent skill for auditing frontend typography, spacing, color, responsive behavior, states, motion, and accessibility consistency.",
+    "slug": "find-ui-inconsistencies",
+    "projectId": "project-find-ui-inconsistencies",
+    "summary": "Audits visual and interaction consistency across frontend routes, states, themes, and viewports.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "69f608bfae1033a1c46a8eb4c7c468834dd6262b",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "Visual inconsistencies are often reported from one screenshot without provenance, comparison points, responsive states, or a systemic root cause.",
     "constraints": [
       "Screenshots must be tied to route, viewport, time/build, and state.",
@@ -950,14 +950,14 @@
     ]
   },
   {
-    "slug": "prepare-github-project",
-    "projectId": "project-prepare-github-project",
-    "summary": "Agent skill for auditing and preparing professional GitHub repositories, metadata, topics, community files, security, and CI.",
+    "slug": "make-project-github-ready",
+    "projectId": "project-make-project-github-ready",
+    "summary": "Audits and prepares professional GitHub repositories with explicit local and remote mutation stages.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "da41975fe0bfc3f9c6b87d1e41a25a2a34d08b1c",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "A codebase can be technically ready while its Git identity, metadata, security guidance, community files, secret hygiene, and CI do not support professional public collaboration.",
     "constraints": [
       "Visibility, repository creation, branch/settings changes, and pushes are external mutations.",
@@ -1009,14 +1009,14 @@
     ]
   },
   {
-    "slug": "publish-skill-to-skillfolio",
-    "projectId": "project-publish-skill-to-skillfolio",
-    "summary": "Agent skill for adding verified Codex and Claude Code skills to Skillfolio catalogs with schema, README, sitemap, and build validation.",
+    "slug": "update-skillfolio-catalog",
+    "projectId": "project-update-skillfolio-catalog",
+    "summary": "Adds or updates one verified Agent Skill in an explicitly identified local Skillfolio catalog.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.1.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "8af5a17d68337226ac87dde3c8be436d5abce090",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "Adding a skill to a catalog touches duplicated consumers and can import stale package/repository facts or mistake \"publish\" for permission to deploy.",
     "constraints": [
       "Catalog schemas and consumers vary by target app.",
@@ -1068,14 +1068,14 @@
     ]
   },
   {
-    "slug": "ensure-social-preview",
-    "projectId": "project-ensure-social-preview",
-    "summary": "Audit, create, repair, and verify large-image social previews for web apps and websites.",
+    "slug": "fix-social-link-previews",
+    "projectId": "project-fix-social-link-previews",
+    "summary": "Audits, creates, repairs, and verifies large-image social previews for web apps and websites.",
     "role": "Agent workflow design and automation engineering",
     "scope": "Agent workflow, validation automation, and packaging",
-    "status": "Published npm package",
+    "status": "Published npm package v0.3.0",
     "verifiedBranch": "main",
-    "verifiedCommit": "ca3e4e6822d416e44f21f6c79a742de8c1b8c06c",
+    "verifiedCommit": "717ce21d66050e2a6c5ac51b19537a54047dde0d",
     "problem": "A page can look correct in a browser while link-card crawlers see missing/client-only metadata, an inaccessible/small image, or stale platform cache.",
     "constraints": [
       "Proprietary social platforms' selection and cache algorithms cannot be simulated or controlled.",
@@ -2386,6 +2386,387 @@
       "Granular roles separate platform administration, organization administration, finance, and academic coordination.",
       "Multiple biometric device vendors can feed one attendance model without leaking vendor-specific behavior into core workflows.",
       "Financial corrections and record removal retain audit evidence instead of erasing operational history."
+    ]
+  },
+  {
+    "slug": "mmh-patient-portal",
+    "projectId": "project-mmh-patient-portal",
+    "summary": "A production patient portal that connects onboarding, AI-assisted intake, movement assessment, exercises, reports, billing, appointments, and remote care across tenant-configured healthcare journeys.",
+    "role": "Frontend architecture and product engineering within the MyMedicalHub team",
+    "scope": "Patient journeys, movement and computer-vision workflows, tenant configuration, payments, reporting, and reliability",
+    "status": "Private employer-owned production system under active development",
+    "verifiedBranch": "user-story-26032-performance-issue-detected",
+    "verifiedCommit": "162ec221acb84cddeb91fe2a73aef938d6c1d8d4",
+    "problem": "Patients need to complete intake, assessments, guided movements, exercises, appointments, payments, and result review without navigating disconnected healthcare tools. The portal must keep those journeys understandable while adapting to different tenants, devices, clinical programs, and service configurations.",
+    "constraints": [
+      "Camera, audio, browser capability, network quality, and local ML performance vary across patient devices and directly affect clinical workflow reliability.",
+      "Tenant-specific features and branded journeys must coexist without duplicating the application or leaking one organization’s configuration into another.",
+      "Assessment and payment flows cross multiple services, redirects, session states, and expiry conditions that must recover predictably.",
+      "Patient-facing errors and progress states must remain clear without exposing internal healthcare or infrastructure details."
+    ],
+    "architecture": {
+      "summary": "A React application composes tenant-aware patient journeys, Redux and focused context boundaries coordinate long-running workflows, browser media and ML adapters support movement analysis, and guarded service integrations connect assessments, reporting, payments, appointments, and remote assistance.",
+      "layers": [
+        {
+          "title": "Patient experience",
+          "detail": "Responsive onboarding, dashboards, intake, assessments, exercises, reports, subscriptions, billing, calendars, and assistance flows."
+        },
+        {
+          "title": "Workflow state",
+          "detail": "Redux slices, React contexts, form state, and lifecycle hooks coordinate multi-step assessment, payment, callback, and chatbot journeys."
+        },
+        {
+          "title": "Media and intelligence",
+          "detail": "Webcam, MediaPipe, TensorFlow.js, speech, chatbot, and WebRTC boundaries support guided movement and remote-care interactions."
+        },
+        {
+          "title": "Tenant and service integration",
+          "detail": "Feature flags, tenant themes, authenticated APIs, payment redirects, reports, notifications, and remote-assistance services remain behind explicit adapters."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Keep tenant behavior configuration-driven",
+        "detail": "Tenant feature state and theme configuration select supported journeys without maintaining a separate frontend for every healthcare organization."
+      },
+      {
+        "title": "Treat movement capture as a state machine",
+        "detail": "Preparation, person detection, countdown, recording, processing, retake, and completion are coordinated explicitly so late media events cannot restart a finished assessment."
+      },
+      {
+        "title": "Isolate external redirects and payments",
+        "detail": "Payment, direct-to-consumer, mobile, callback, and remote-assistance redirects preserve the minimum required context and validate expiry or return states before resuming a workflow."
+      },
+      {
+        "title": "Expose device limitations before clinical work begins",
+        "detail": "Compatibility, network, and performance checks give patients actionable guidance before unreliable media or ML execution compromises an assessment."
+      }
+    ],
+    "contribution": [
+      "Contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces.",
+      "Refined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements.",
+      "Implemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior.",
+      "Added focused component and workflow tests while iterating on a large production React codebase shared by a multidisciplinary product team."
+    ],
+    "outcomes": [
+      "Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal.",
+      "Movement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state.",
+      "Feature configuration supports multiple healthcare programs while preserving a shared application foundation.",
+      "Operational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows."
+    ]
+  },
+  {
+    "slug": "mmh-re-annotation",
+    "projectId": "project-mmh-re-annotation",
+    "summary": "A human-in-the-loop clinical workspace for reviewing recorded movement frames and correcting AI-generated lines, angles, key points, and measurement values before results are saved.",
+    "role": "Frontend architecture and modernization within the MyMedicalHub team",
+    "scope": "Clinical review workflow, canvas geometry, legacy API integration, validation, error recovery, and automated testing",
+    "status": "Private employer-owned clinical tool under active modernization",
+    "verifiedBranch": "v2-ui",
+    "verifiedCommit": "67b5542c220906af43bc9bcbce1f4a1dbe3bab3d",
+    "problem": "Automated movement analysis can place measurement geometry on an imperfect frame or anatomical position. Clinical reviewers need a precise, explainable way to choose the right frame, correct lines and angles, compare reference guidance, and save revised measurements without losing the original exercise context.",
+    "constraints": [
+      "Measurement geometry must remain correct while media is scaled, points are dragged, and line types restrict movement to one axis.",
+      "The workflow depends on multiple tenant-specific legacy APIs and session values whose payloads can be missing, stale, or inconsistent.",
+      "Large video frames and rendered canvas images must be validated and processed without freezing the review interface.",
+      "Clinical reviewers need explicit unavailable, loading, validation, save, retake, and completion states rather than ambiguous canvas failures."
+    ],
+    "architecture": {
+      "summary": "A Next.js and React review shell separates workflow state from Konva geometry, validates upstream payloads through Zod, maps legacy responses into typed domain models, and coordinates frame selection, alignment, verification, and persistence through a reducer-driven controller.",
+      "layers": [
+        {
+          "title": "Review workflow",
+          "detail": "A reducer and controller own frame selection, alignment, verification, loading, failure, save, and completion transitions."
+        },
+        {
+          "title": "Geometry domain",
+          "detail": "Typed points, lines, angles, plumb references, scaling rules, and measurement calculations stay independent of rendering components."
+        },
+        {
+          "title": "Canvas interface",
+          "detail": "React Konva renders the patient frame, draggable key points, measurement geometry, reference guidance, and responsive controls."
+        },
+        {
+          "title": "Legacy integration boundary",
+          "detail": "Schema validation, response mappers, diagnostics, and an API client normalize tenant and session-specific upstream contracts."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate geometry from the canvas renderer",
+        "detail": "Pure coordinate and measurement functions can be tested without Konva, while the interface focuses on interaction and presentation."
+      },
+      {
+        "title": "Model the review as explicit steps",
+        "detail": "Frame selection, alignment, and verification form a controlled sequence so save behavior cannot run against incomplete media or geometry."
+      },
+      {
+        "title": "Validate at the legacy boundary",
+        "detail": "Upstream payloads are parsed and mapped before reaching UI state, turning malformed contracts into diagnosable unavailable states instead of downstream exceptions."
+      },
+      {
+        "title": "Preserve measurement semantics",
+        "detail": "Line type, direction, measurement type, left and right values, and plumb-line relationships remain explicit throughout editing and persistence."
+      }
+    ],
+    "contribution": [
+      "Rebuilt the re-annotation experience around Next.js, React, TypeScript, and a structured clinical review flow.",
+      "Separated annotation geometry, schemas, API mapping, reducer state, asset preloading, and canvas presentation into testable boundaries.",
+      "Implemented frame selection, draggable line and angle correction, automated-analysis comparison, reference guidance, save, retake, and completion states.",
+      "Added unit, integration, and browser-oriented coverage for geometry, upstream mappings, API contracts, and critical review interactions."
+    ],
+    "outcomes": [
+      "Reviewers can correct automated clinical measurements through a guided workflow instead of manipulating an opaque legacy canvas.",
+      "Typed domain models preserve line, angle, direction, and measurement semantics across load, edit, render, and save operations.",
+      "Malformed or unavailable upstream data produces explicit recovery guidance rather than partially initialized review state.",
+      "The modernized boundaries make geometry and API behavior independently testable while legacy services continue to operate."
+    ]
+  },
+  {
+    "slug": "mmh-telemedicine",
+    "projectId": "project-mmh-telemedicine",
+    "summary": "A real-time telehealth workflow that coordinates guided exercise, movement recording, pain and strength questions, provider collaboration, and tenant-configured assessment behavior.",
+    "role": "Frontend and real-time workflow engineering within the MyMedicalHub team",
+    "scope": "WebRTC sessions, media recording, exercise state, Socket.IO coordination, tenant features, and failure recovery",
+    "status": "Private employer-owned telehealth system used in ongoing product development",
+    "verifiedBranch": "development",
+    "verifiedCommit": "c63807976f6db138743dbb628a6cbd4444135e51",
+    "problem": "Remote movement assessment requires more than a video call. Patients and providers must stay synchronized while exercises change, instructions play, recordings start and stop, pain or strength questions appear, network conditions vary, and either participant can leave unexpectedly.",
+    "constraints": [
+      "Camera, microphone, permissions, network quality, and WebRTC lifecycle events differ across browsers and patient devices.",
+      "Exercise, recording, pain, strength, queue, and provider-presence state must not leak from one movement or session into the next.",
+      "Tenant feature flags alter available assessment behavior without allowing unsupported controls to appear or execute.",
+      "Disconnection, provider departure, stale media, and failed API responses require recoverable states that do not leave patients trapped on a loading screen."
+    ],
+    "architecture": {
+      "summary": "Next.js routes host tenant-aware telehealth rooms, focused React contexts own socket, recording, media, and error state, Redux coordinates assessment APIs, and Socket.IO synchronizes room and exercise events across participants.",
+      "layers": [
+        {
+          "title": "Session interface",
+          "detail": "Responsive patient and provider views present participants, exercise guidance, recording state, pain questions, and recovery messages."
+        },
+        {
+          "title": "Media lifecycle",
+          "detail": "WebRTC streams, camera switching, recording previews, device permissions, and network-quality hooks manage browser media explicitly."
+        },
+        {
+          "title": "Real-time coordination",
+          "detail": "Socket.IO room events synchronize connection, exercise, recording, audio, video, and participant departure behavior."
+        },
+        {
+          "title": "Assessment integration",
+          "detail": "Redux slices and authenticated services load exercises, verify tokens, persist recordings, track queue state, and apply tenant features."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Give each real-time concern a focused context",
+        "detail": "Socket, media, recording, and error lifecycles are separated so one high-frequency concern does not own every room transition."
+      },
+      {
+        "title": "Reset exercise-owned media on selection changes",
+        "detail": "Recorded previews, questions, and movement state are cleared when the exercise changes so stale clinical media cannot reappear in a new task."
+      },
+      {
+        "title": "Drive optional behavior from tenant features",
+        "detail": "Strength analysis, guidance, and related controls are enabled only when the current tenant contract supports them."
+      },
+      {
+        "title": "Treat departure and disconnection as product states",
+        "detail": "Provider exit, peer disconnect, API failure, and degraded network paths transition to explicit messages and redirects instead of indefinite loading."
+      }
+    ],
+    "contribution": [
+      "Contributed to the migration and ongoing development of the Next.js and TypeScript telemedicine experience.",
+      "Implemented strength-exercise recording and state support, tenant-feature handling, patient/provider messaging, and guided movement UI behavior.",
+      "Fixed stale movement media, provider-departure loading, invitation validation, queue updates, and other cross-session lifecycle defects.",
+      "Worked across WebRTC media hooks, Socket.IO coordination, Redux assessment state, authenticated services, and responsive room components."
+    ],
+    "outcomes": [
+      "Patients and providers can coordinate guided movement and exercise sessions through one real-time room experience.",
+      "Exercise changes no longer reuse stale recordings or question state from a previous movement.",
+      "Strength and other tenant-specific workflows can be introduced without forking the telehealth application.",
+      "Departure, connection, and service failures resolve into clearer recovery or redirect paths instead of trapping the session."
+    ]
+  },
+  {
+    "slug": "build-android-app-from-web",
+    "projectId": "project-build-android-app-from-web",
+    "summary": "Builds or audits Android applications from existing web products with explicit feature traceability and platform-aware parity.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Mobile Development, deterministic validation, and portable distribution",
+    "status": "Published npm package v0.1.0",
+    "verifiedBranch": "main",
+    "verifiedCommit": "6412bbb987a65781674442e0692fdbcccfc507c7",
+    "problem": "Turning an existing web product into an Android app can silently drop routes, states, integrations, and recovery paths when implementation starts before product capabilities are inventoried.",
+    "constraints": [
+      "Every web capability needs an explicit Android disposition and evidence trail.",
+      "Platform adaptation must preserve product behavior without forcing browser interaction patterns onto Android.",
+      "Deferred and unsupported capabilities must remain visible rather than disappearing from scope."
+    ],
+    "architecture": {
+      "summary": "Repository discovery and capability inventory; parity manifest with explicit dispositions and dependencies; Android adaptation guidance plus deterministic closure validation.",
+      "layers": [
+        {
+          "title": "Discovery",
+          "detail": "Inventory routes, workflows, data, states, and integrations from repository evidence."
+        },
+        {
+          "title": "Traceability",
+          "detail": "Map every capability to an Android implementation, adaptation, deferral, or justified exclusion."
+        },
+        {
+          "title": "Verification",
+          "detail": "Validate dependencies, provenance, and closure before claiming parity."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Inventory before implementation",
+        "detail": "Establish the complete product surface before choosing Android architecture or UI patterns."
+      },
+      {
+        "title": "Make parity machine-checkable",
+        "detail": "Use a structured manifest so omitted capabilities and unresolved dependencies fail validation."
+      },
+      {
+        "title": "Adapt instead of cloning",
+        "detail": "Preserve user outcomes while translating navigation, permissions, storage, and platform services to Android conventions."
+      }
+    ],
+    "contribution": [
+      "Designed an evidence-backed web capability discovery workflow.",
+      "Defined the parity manifest and dependency model.",
+      "Implemented deterministic manifest validation.",
+      "Documented Android-specific adaptation and verification gates."
+    ],
+    "outcomes": [
+      "Agents can expose parity gaps before implementation begins.",
+      "Every capability receives a reviewable Android disposition.",
+      "Deferred work remains explicit and justified.",
+      "Parity claims require evidence instead of visual similarity alone."
+    ]
+  },
+  {
+    "slug": "deploy-prebuilt-app-to-netlify",
+    "projectId": "project-deploy-prebuilt-app-to-netlify",
+    "summary": "Deploys a verified local build artifact to Netlify without asking Netlify to rebuild the source project.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Deployment, deterministic validation, and portable distribution",
+    "status": "Published npm package v0.1.0",
+    "verifiedBranch": "main",
+    "verifiedCommit": "16fee611daece8546129dc0dc8b0bc3f3347c189",
+    "problem": "Deploying an already-built application through a source-oriented hosting flow can trigger unnecessary rebuilds, publish the wrong directory, or upload unsafe local artifacts.",
+    "constraints": [
+      "The requested artifact must be validated before any remote mutation.",
+      "Secrets, source trees, caches, and unrelated files must never enter the deploy payload.",
+      "Site selection, production promotion, and deployment are separate authorization boundaries."
+    ],
+    "architecture": {
+      "summary": "Local artifact and publish-directory preflight; Netlify CLI flow selection with explicit mutation gates; deployed URL and content verification.",
+      "layers": [
+        {
+          "title": "Preflight",
+          "detail": "Validate the artifact tree, entry points, size, and excluded content."
+        },
+        {
+          "title": "Deployment",
+          "detail": "Choose the correct draft or production Netlify CLI path only after authorization."
+        },
+        {
+          "title": "Verification",
+          "detail": "Read back deployment state and confirm the delivered application at its public URL."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Deploy the artifact, not the repository",
+        "detail": "Keep prebuilt delivery separate from source builds and their dependency graph."
+      },
+      {
+        "title": "Block unsafe trees before login",
+        "detail": "Run local safety checks before requesting credentials or mutating remote state."
+      },
+      {
+        "title": "Verify the public result",
+        "detail": "Treat a successful CLI exit as incomplete until deployment state and served content are checked."
+      }
+    ],
+    "contribution": [
+      "Defined safe artifact-tree acceptance rules.",
+      "Implemented a deterministic preflight utility.",
+      "Separated draft, production, and site-selection authorization.",
+      "Added package and deployment-flow regression tests."
+    ],
+    "outcomes": [
+      "Agents can deploy a verified local build without asking Netlify to rebuild source.",
+      "Unsafe payloads fail before remote changes.",
+      "Authorization remains scoped to the requested deployment stage.",
+      "The final report distinguishes local validation, mutation, and public verification."
+    ]
+  },
+  {
+    "slug": "integrate-supportkori-widget",
+    "projectId": "project-integrate-supportkori-widget",
+    "summary": "Audits or integrates one theme-consistent SupportKori trigger across website and browser-extension surfaces.",
+    "role": "Agent workflow design and automation engineering",
+    "scope": "Frontend Quality, deterministic validation, and portable distribution",
+    "status": "Published npm package v0.1.0",
+    "verifiedBranch": "main",
+    "verifiedCommit": "a56fcc65d28eb535722b7fb17c64b0c05c32df04",
+    "problem": "A support widget can technically load while still conflicting with a site's design, mounting more than once, violating CSP, or failing inside browser-extension surfaces.",
+    "constraints": [
+      "Integration must use the repository's established SupportKori contract rather than inventing a generic embed.",
+      "Websites and extensions have different lifecycle, CSP, permission, and iframe boundaries.",
+      "Remote configuration and publication remain outside an ordinary local integration request."
+    ],
+    "architecture": {
+      "summary": "Host-surface and existing-integration audit; lifecycle-safe trigger and panel integration; CSP, extension, visual, and runtime verification.",
+      "layers": [
+        {
+          "title": "Discovery",
+          "detail": "Identify framework lifecycle, existing widget code, theme tokens, CSP, and extension constraints."
+        },
+        {
+          "title": "Integration",
+          "detail": "Mount one native-looking trigger and preserve the established embedded-panel contract."
+        },
+        {
+          "title": "Verification",
+          "detail": "Check duplication, cleanup, focus, responsive placement, CSP, and runtime behavior."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Integrate at the lifecycle boundary",
+        "detail": "Place initialization and cleanup where the host framework can guarantee one active widget instance."
+      },
+      {
+        "title": "Match the host interface",
+        "detail": "Reuse local tokens and interaction patterns so support feels native to the product."
+      },
+      {
+        "title": "Treat extensions as a separate environment",
+        "detail": "Validate manifest permissions, CSP, and extension-page behavior instead of assuming website rules apply."
+      }
+    ],
+    "contribution": [
+      "Codified SupportKori-specific discovery and integration rules.",
+      "Defined lifecycle and duplicate-mount safeguards.",
+      "Documented CSP and browser-extension constraints.",
+      "Added portable packaging and contract tests."
+    ],
+    "outcomes": [
+      "Agents can audit or integrate SupportKori without replacing an existing valid setup.",
+      "The widget follows host visual and interaction conventions.",
+      "Extension-specific security boundaries remain explicit.",
+      "Verification covers both rendered behavior and integration safety."
     ]
   }
 ]

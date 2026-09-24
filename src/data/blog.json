@@ -325,7 +325,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-ship-agent-skill",
+      "projectId": "project-release-agent-skill",
       "slug": "shipping-across-npm-github-and-agent-hosts",
       "title": "Shipping Across npm, GitHub, and Agent Hosts Without Pretending It Is Atomic",
       "category": "Release engineering",
@@ -334,7 +334,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-verify-project-release",
+      "projectId": "project-verify-github-npm-release",
       "slug": "one-green-dashboard-does-not-prove-a-release",
       "title": "A Release Is Not Done Because One Dashboard Is Green",
       "category": "Release engineering",
@@ -343,7 +343,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-write-project-readme",
+      "projectId": "project-write-complete-project-readme",
       "slug": "readme-generation-must-start-with-evidence",
       "title": "Why I Made README Generation Start With Evidence",
       "category": "Documentation systems",
@@ -352,7 +352,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-craft-github-release",
+      "projectId": "project-publish-verified-github-release",
       "slug": "release-notes-users-can-trust",
       "title": "Turning Commit History Into Release Notes Users Can Trust",
       "category": "Release engineering",
@@ -361,7 +361,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-sync-project-metadata",
+      "projectId": "project-fix-project-metadata-mismatches",
       "slug": "no-single-source-of-truth-for-project-metadata",
       "title": "There Is No Single Source of Truth for Project Metadata",
       "category": "Developer tooling",
@@ -370,7 +370,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-prepare-netlify-deployment",
+      "projectId": "project-make-app-netlify-ready",
       "slug": "local-build-does-not-prove-deployability",
       "title": "A Successful Local Build Does Not Prove a Deployable System",
       "category": "Platform engineering",
@@ -379,7 +379,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-audit-frontend-consistency",
+      "projectId": "project-find-ui-inconsistencies",
       "slug": "audit-design-systems-before-screenshots",
       "title": "Why I Audit Design Systems Before Fixing Screenshots",
       "category": "Frontend architecture",
@@ -388,7 +388,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-prepare-github-project",
+      "projectId": "project-make-project-github-ready",
       "slug": "making-a-codebase-public-safely",
       "title": "Making a Codebase Public Is a Security and Operations Change",
       "category": "Platform engineering",
@@ -397,7 +397,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-publish-skill-to-skillfolio",
+      "projectId": "project-update-skillfolio-catalog",
       "slug": "publishing-one-entry-without-breaking-consumers",
       "title": "Publishing One Catalog Entry Without Breaking Every Consumer",
       "category": "Agent engineering",
@@ -406,7 +406,7 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-ensure-social-preview",
+      "projectId": "project-fix-social-link-previews",
       "slug": "when-the-page-is-right-but-the-link-card-is-wrong",
       "title": "The Page Looked Right. The Link Card Was Still Broken",
       "category": "Web platform",
@@ -582,6 +582,60 @@
       "title": "One Attendance Model for Multiple Biometric Vendors",
       "category": "Multi-tenant systems",
       "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-mmh-patient-portal",
+      "slug": "movement-capture-is-a-state-machine",
+      "title": "Patient Movement Capture Is a State Machine",
+      "category": "Frontend architecture",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-mmh-re-annotation",
+      "slug": "human-review-needs-a-geometry-domain",
+      "title": "Human Review of AI Measurements Needs a Geometry Domain",
+      "category": "Clinical systems",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-mmh-telemedicine",
+      "slug": "a-video-call-is-not-a-clinical-workflow",
+      "title": "A Video Call Is Not a Clinical Workflow",
+      "category": "Real-time systems",
+      "topic": "product",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "slug": "web-to-android-parity-needs-an-evidence-trail",
+      "projectId": "project-build-android-app-from-web",
+      "title": "Web-to-Android Parity Needs an Evidence Trail",
+      "category": "Mobile engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "slug": "deploy-the-artifact-not-the-repository",
+      "projectId": "project-deploy-prebuilt-app-to-netlify",
+      "title": "Deploy the Artifact, Not the Repository",
+      "category": "Platform engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "slug": "a-support-widget-is-part-of-the-product-interface",
+      "projectId": "project-integrate-supportkori-widget",
+      "title": "A Support Widget Is Part of the Product Interface",
+      "category": "Frontend architecture",
+      "topic": "tools",
       "featured": false
     }
   ]

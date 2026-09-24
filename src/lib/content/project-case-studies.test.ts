@@ -72,4 +72,17 @@ describe("project case-study catalog", () => {
       clientWork.every((record) => record.project.type === "website")
     ).toBe(true)
   })
+
+  it("filters professional work without replacing its project type", () => {
+    const professionalWork = projectCaseStudyCatalog.filter("professional", "")
+
+    expect(professionalWork.map((record) => record.project.id)).toEqual([
+      "project-mmh-re-annotation",
+      "project-mmh-telemedicine",
+      "project-mmh-patient-portal",
+    ])
+    expect(
+      professionalWork.every((record) => record.project.type === "website")
+    ).toBe(true)
+  })
 })

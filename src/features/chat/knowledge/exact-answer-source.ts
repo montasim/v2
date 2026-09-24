@@ -271,11 +271,17 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
   return projectCatalog.records.flatMap((project) => {
     const type = projectTypeLabel(project.type)
     const caseStudy = requiredCaseStudy(project.id)
+    const projectAttribution = project.professionalWork
+      ? `Montasim contributed to ${project.title}, ${indefiniteArticle(type)} ${type} project delivered within the MyMedicalHub team.`
+      : `Montasim built ${project.title}, ${indefiniteArticle(type)} ${type} project.`
+    const technologyAttribution = project.professionalWork
+      ? `Montasim's documented work on ${project.title} used ${project.technologies.join(", ")}.`
+      : `Montasim built ${project.title} with ${project.technologies.join(", ")}.`
     const answers = [
       answer("project", {
         id: `${project.id}:overview`,
         question: `What is Montasim's ${project.title} project?`,
-        text: `Montasim built ${project.title}, ${indefiniteArticle(type)} ${type} project. ${sentence(project.description)} His role covered ${lowercaseFirst(caseStudy.role)}, with scope spanning ${lowercaseFirst(caseStudy.scope)}. ${sentence(caseStudy.outcomes[0])} A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary.`,
+        text: `${projectAttribution} ${sentence(project.description)} His role covered ${lowercaseFirst(caseStudy.role)}, with scope spanning ${lowercaseFirst(caseStudy.scope)}. ${sentence(caseStudy.outcomes[0])} A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary.`,
         evidence: [
           projectReference(project),
           caseStudyReference(caseStudy, "problem"),
@@ -285,7 +291,7 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
       answer("project", {
         id: `${project.id}:technology`,
         question: `Which technologies did Montasim use for ${project.title}?`,
-        text: `Montasim built ${project.title} with ${project.technologies.join(", ")}. The product goal is clear: ${sentence(project.description)} More importantly, the architecture is explicit: ${sentence(caseStudy.architecture.summary)} That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords.`,
+        text: `${technologyAttribution} The product goal is clear: ${sentence(project.description)} More importantly, the architecture is explicit: ${sentence(caseStudy.architecture.summary)} That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords.`,
         evidence: [
           projectReference(project),
           caseStudyReference(caseStudy, "architecture"),
@@ -323,29 +329,35 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
 }
 
 function buildCaseStudyAnswers(): readonly ExactAnswer[] {
-  return projectCaseStudyCatalog.records.flatMap((caseStudy) => [
-    answer("case-study", {
-      id: `${caseStudy.slug}:problem`,
-      question: `What problem did Montasim address in the ${caseStudy.project.title} case study?`,
-      text: `${sentence(caseStudy.problem)} Montasim owned ${lowercaseFirst(caseStudy.role)}, covering ${lowercaseFirst(caseStudy.scope)}. The solution also had to respect ${quotedList(caseStudy.constraints.slice(0, 2))}. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request.`,
-      evidence: [caseStudyReference(caseStudy, "problem")],
-    }),
-    answer("case-study", {
-      id: `${caseStudy.slug}:architecture`,
-      question: `How did Montasim structure the ${caseStudy.project.title} solution?`,
-      text: `${sentence(caseStudy.architecture.summary)} A representative decision was “${caseStudy.decisions[0].title}”: ${sentence(caseStudy.decisions[0].detail)} The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve.`,
-      evidence: [caseStudyReference(caseStudy, "architecture")],
-    }),
-    answer("case-study", {
-      id: `${caseStudy.slug}:delivery`,
-      question: `What did Montasim deliver and achieve with ${caseStudy.project.title}?`,
-      text: `${attributedContributionSentences(caseStudy.contribution)} The resulting capabilities and outcomes are ${quotedList(caseStudy.outcomes)}. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed.`,
-      evidence: [
-        caseStudyReference(caseStudy, "contribution"),
-        caseStudyReference(caseStudy, "outcomes"),
-      ],
-    }),
-  ])
+  return projectCaseStudyCatalog.records.flatMap((caseStudy) => {
+    const roleAttribution = caseStudy.project.professionalWork
+      ? `Within the MyMedicalHub team, his role covered ${lowercaseFirst(caseStudy.role)}, spanning ${lowercaseFirst(caseStudy.scope)}.`
+      : `Montasim owned ${lowercaseFirst(caseStudy.role)}, covering ${lowercaseFirst(caseStudy.scope)}.`
+
+    return [
+      answer("case-study", {
+        id: `${caseStudy.slug}:problem`,
+        question: `What problem did Montasim address in the ${caseStudy.project.title} case study?`,
+        text: `${sentence(caseStudy.problem)} ${roleAttribution} The solution also had to respect ${quotedList(caseStudy.constraints.slice(0, 2))}. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request.`,
+        evidence: [caseStudyReference(caseStudy, "problem")],
+      }),
+      answer("case-study", {
+        id: `${caseStudy.slug}:architecture`,
+        question: `How did Montasim structure the ${caseStudy.project.title} solution?`,
+        text: `${sentence(caseStudy.architecture.summary)} A representative decision was “${caseStudy.decisions[0].title}”: ${sentence(caseStudy.decisions[0].detail)} The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve.`,
+        evidence: [caseStudyReference(caseStudy, "architecture")],
+      }),
+      answer("case-study", {
+        id: `${caseStudy.slug}:delivery`,
+        question: `What did Montasim deliver and achieve with ${caseStudy.project.title}?`,
+        text: `${attributedContributionSentences(caseStudy.contribution)} The resulting capabilities and outcomes are ${quotedList(caseStudy.outcomes)}. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed.`,
+        evidence: [
+          caseStudyReference(caseStudy, "contribution"),
+          caseStudyReference(caseStudy, "outcomes"),
+        ],
+      }),
+    ]
+  })
 }
 
 function buildBlogAnswers(): readonly ExactAnswer[] {
@@ -1564,7 +1576,7 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
       evidence: [
         software,
         skillReference(cloudSkills),
-        projectReference(requiredProject("project-prepare-netlify-deployment")),
+        projectReference(requiredProject("project-make-app-netlify-ready")),
       ],
     },
     {
@@ -1574,9 +1586,9 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
       evidence: [
         software,
         skillReference(cloudSkills),
-        projectReference(requiredProject("project-verify-project-release")),
+        projectReference(requiredProject("project-verify-github-npm-release")),
         caseStudyReference(
-          requiredCaseStudy("project-verify-project-release"),
+          requiredCaseStudy("project-verify-github-npm-release"),
           "architecture"
         ),
       ],
@@ -1675,7 +1687,7 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
       evidence: [
         caseStudyReference(postcraftCaseStudy, "architecture"),
         caseStudyReference(
-          requiredCaseStudy("project-ship-agent-skill"),
+          requiredCaseStudy("project-release-agent-skill"),
           "architecture"
         ),
       ],
@@ -2114,15 +2126,15 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       text: `His release-oriented agent skills validate builds, packages, tags, CI, install instructions, metadata, deployments, and public documentation as separate verifiable states. That approach makes partial failure visible and reduces the risk of declaring a release complete based on one system alone.`,
       evidence: [
         caseStudyReference(
-          requiredCaseStudy("project-ship-agent-skill"),
+          requiredCaseStudy("project-release-agent-skill"),
           "architecture"
         ),
         caseStudyReference(
-          requiredCaseStudy("project-verify-project-release"),
+          requiredCaseStudy("project-verify-github-npm-release"),
           "outcomes"
         ),
         caseStudyReference(
-          requiredCaseStudy("project-prepare-netlify-deployment"),
+          requiredCaseStudy("project-make-app-netlify-ready"),
           "architecture"
         ),
       ],

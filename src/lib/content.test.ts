@@ -41,13 +41,22 @@ describe("portfolio content", () => {
       "project-postcraft",
       "project-bugreceipt",
       "project-mulalens",
-      "project-liftuno",
-      "project-coaching-management",
       "project-formflow",
       "project-b4joinacompany",
       "project-devtools",
       "project-skillfoliox",
       "project-ispcine",
+      "project-bangladesh-location-registry",
+      "project-thoughtline",
+    ])
+    expect(
+      projectCatalog.records.slice(-5).map((project) => project.id)
+    ).toEqual([
+      "project-mmh-patient-portal",
+      "project-mmh-re-annotation",
+      "project-mmh-telemedicine",
+      "project-liftuno",
+      "project-coaching-management",
     ])
     expect(
       educationCatalog.records.every((record) =>

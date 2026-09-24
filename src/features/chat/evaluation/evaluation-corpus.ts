@@ -8,10 +8,10 @@ import type {
 } from "@/features/chat/knowledge/exact-answer-catalog"
 
 export const evaluationCategoryTargets = {
-  project: 42,
+  project: 43,
   "case-study": 62,
   blog: 22,
-  certification: 32,
+  certification: 31,
   experience: 9,
   skill: 7,
   recommendation: 11,

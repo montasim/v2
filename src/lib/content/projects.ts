@@ -20,6 +20,7 @@ const projectSchema = z.object({
   title: z.string().min(1),
   type: projectTypeSchema,
   clientWork: z.boolean().optional(),
+  professionalWork: z.boolean().optional(),
   featured: z.boolean(),
   description: z.string().min(1),
   technologies: z.array(z.string().min(1)),
@@ -41,19 +42,18 @@ const projectSchema = z.object({
 })
 
 export type Project = z.infer<typeof projectSchema>
-export type ProjectFilter = "all" | "client" | z.infer<typeof projectTypeSchema>
+export type ProjectFilter =
+  "all" | "client" | "professional" | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
 
-// Curated for recruiter review: lead with shipped AI products and substantial
-// full-stack systems, then show agent workflows, data engineering, reusable
-// infrastructure, and focused experiments. Filters preserve this order.
+// Preserve the established recruiter-facing sequence for the original catalog.
+// Newly documented professional and client work is appended afterward so those
+// additions do not reshuffle the existing portfolio. Filters preserve this order.
 const hiringPriority = [
   "project-postcraft",
   "project-bugreceipt",
   "project-mulalens",
-  "project-liftuno",
-  "project-coaching-management",
   "project-formflow",
   "project-b4joinacompany",
   "project-devtools",
@@ -61,7 +61,7 @@ const hiringPriority = [
   "project-ispcine",
   "project-bangladesh-location-registry",
   "project-thoughtline",
-  "project-ship-agent-skill",
+  "project-release-agent-skill",
   "project-1snap",
   "project-vidquery",
   "project-shrnkly",
@@ -74,18 +74,26 @@ const hiringPriority = [
   "project-http-status-lite",
   "project-client-parser",
   "project-mime-types-lite",
-  "project-verify-project-release",
-  "project-prepare-github-project",
-  "project-prepare-netlify-deployment",
-  "project-audit-frontend-consistency",
-  "project-sync-project-metadata",
-  "project-craft-github-release",
-  "project-publish-skill-to-skillfolio",
-  "project-write-project-readme",
-  "project-ensure-social-preview",
+  "project-verify-github-npm-release",
+  "project-make-project-github-ready",
+  "project-make-app-netlify-ready",
+  "project-find-ui-inconsistencies",
+  "project-fix-project-metadata-mismatches",
+  "project-publish-verified-github-release",
+  "project-update-skillfolio-catalog",
+  "project-write-complete-project-readme",
+  "project-fix-social-link-previews",
+  "project-build-android-app-from-web",
+  "project-deploy-prebuilt-app-to-netlify",
+  "project-integrate-supportkori-widget",
   "project-educanvas",
   "project-book-heaven",
   "project-github-readme-counter",
+  "project-mmh-patient-portal",
+  "project-mmh-re-annotation",
+  "project-mmh-telemedicine",
+  "project-liftuno",
+  "project-coaching-management",
 ] as const
 
 const hiringRank = new Map<string, number>(
@@ -125,6 +133,7 @@ const chronological = [...parsedRecords].sort((left, right) => {
 })
 const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "all", label: "All work" },
+  { value: "professional", label: "Professional work" },
   { value: "client", label: "Client work" },
   { value: "website", label: "Web apps" },
   { value: "desktop", label: "Desktop apps" },
@@ -145,6 +154,7 @@ export const projectCatalog = {
   filters,
   filterSchema: z.enum([
     "all",
+    "professional",
     "client",
     "website",
     "desktop",
@@ -166,6 +176,7 @@ export const projectCatalog = {
   matches(project: Project, filter: ProjectFilter) {
     if (filter === "all") return true
     if (filter === "client") return project.clientWork === true
+    if (filter === "professional") return project.professionalWork === true
     return project.type === filter
   },
 } as const

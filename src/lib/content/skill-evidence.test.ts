@@ -27,7 +27,7 @@ describe("skill evidence catalog", () => {
       skillEvidenceCatalog
         .forSkill("Git")
         ?.projects.map((project) => project.title)
-    ).toContain("verify-project-release")
+    ).toContain("verify-github-npm-release")
   })
 
   it("rejects invalid shareable URL state", () => {
