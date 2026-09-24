@@ -271,7 +271,7 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
   return projectCatalog.records.flatMap((project) => {
     const type = projectTypeLabel(project.type)
     const caseStudy = requiredCaseStudy(project.id)
-    return [
+    const answers = [
       answer("project", {
         id: `${project.id}:overview`,
         question: `What is Montasim's ${project.title} project?`,
@@ -292,6 +292,33 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
         ],
       }),
     ]
+
+    if (project.microsoftStoreUrl || project.snapcraftUrl) {
+      const downloads = [
+        project.microsoftStoreUrl
+          ? `Windows users can install it from the Microsoft Store: ${project.microsoftStoreUrl}.`
+          : undefined,
+        project.snapcraftUrl
+          ? `Linux users can install it from the Snap Store: ${project.snapcraftUrl}.`
+          : undefined,
+      ]
+        .filter((item): item is string => Boolean(item))
+        .join(" ")
+
+      answers.push(
+        answer("project", {
+          id: `${project.id}:download`,
+          question: `Where can I download ${project.title}?`,
+          text: `${downloads} Developers and clients can use the project page to review the current public product site, packaged releases, and the product capabilities behind those downloads.`,
+          evidence: [
+            projectReference(project),
+            caseStudyReference(caseStudy, "outcomes"),
+          ],
+        })
+      )
+    }
+
+    return answers
   })
 }
 

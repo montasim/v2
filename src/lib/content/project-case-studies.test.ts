@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { projectCaseStudyCatalog } from "./project-case-studies"
+import { githubHistoryStartedAt } from "./projects"
 
 describe("project case-study catalog", () => {
   it("keeps every record connected to a unique project and route", () => {
@@ -27,7 +28,17 @@ describe("project case-study catalog", () => {
   it("derives the featured carousel from featured projects", () => {
     expect(
       projectCaseStudyCatalog.featured.map((record) => record.project.title)
-    ).toEqual(["PostCraft", "b4joinacompany", "ISPCine"])
+    ).toEqual(["ISPCine", "BugReceipt", "PostCraft"])
+  })
+
+  it("orders case studies from newest to oldest", () => {
+    const dates = projectCaseStudyCatalog.records.map((record) =>
+      githubHistoryStartedAt(record.project)
+    )
+
+    expect(dates).toEqual(
+      [...dates].sort((left, right) => right.localeCompare(left))
+    )
   })
 
   it("searches project and case-study evidence", () => {

@@ -234,7 +234,7 @@ describe("PortfolioKnowledge", () => {
       historyStartedAt: "2026-08-31T08:51:02Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
-      recordId: "video-qa-without-processing-video",
+      recordId: "one-cinema-interface-for-incompatible-isp-catalogs",
       publishedAt: "2026-08-28",
       tieBreak: "catalog-order",
     })

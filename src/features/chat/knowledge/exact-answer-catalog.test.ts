@@ -88,13 +88,17 @@ describe("createExactAnswerCatalog", () => {
 describe("portfolio exact answers", () => {
   it("contains the approved number of independently traceable records", () => {
     const records = getExactAnswerCatalog()
+    const expectedCount = Object.values(exactAnswerCategoryTargets).reduce(
+      (total, count) => total + count,
+      0
+    )
 
-    expect(records).toHaveLength(474)
-    expect(new Set(records.map((record) => record.id)).size).toBe(474)
+    expect(records).toHaveLength(expectedCount)
+    expect(new Set(records.map((record) => record.id)).size).toBe(expectedCount)
     expect(
       new Set(records.map((record) => normalizeExactQuestion(record.question)))
         .size
-    ).toBe(474)
+    ).toBe(expectedCount)
 
     for (const record of records) {
       expect(record.text.trim().length, record.id).toBeGreaterThan(40)
@@ -266,6 +270,16 @@ describe("portfolio exact answers", () => {
       "case-study:1snap:problem",
       "case-study:1snap:outcomes",
     ])
+  })
+
+  it("publishes the ISPCine Microsoft Store download answer", () => {
+    const answer = findExactAnswer("Where can I download ISPCine?")
+
+    expect(answer?.text).toContain(
+      "https://apps.microsoft.com/detail/9PKXHXJQPM8G"
+    )
+    expect(answer?.text).toContain("https://snapcraft.io/ispcine")
+    expect(answer?.factIds).toContain("project:project-ispcine")
   })
 
   it("exposes one immutable runtime catalog seam", () => {

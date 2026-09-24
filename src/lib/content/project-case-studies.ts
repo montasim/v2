@@ -2,6 +2,7 @@ import { z } from "zod"
 import caseStudiesJson from "@/data/casestudy.json"
 import { projectCatalog } from "@/lib/content/projects"
 import type { ProjectFilter } from "@/lib/content/projects"
+import { githubHistoryStartedAt } from "@/lib/content/projects"
 
 export const projectCaseStudySlugSchema = z
   .string()
@@ -56,10 +57,6 @@ const caseStudyRecords = z.array(caseStudySchema).parse(caseStudiesJson)
 const projectsById = new Map(
   projectCatalog.records.map((project) => [project.id, project])
 )
-const projectRank = new Map(
-  projectCatalog.records.map((project, index) => [project.id, index])
-)
-
 const records = caseStudyRecords.map((caseStudy) => {
   const project = projectsById.get(caseStudy.projectId)
   if (!project) {
@@ -77,11 +74,12 @@ const records = caseStudyRecords.map((caseStudy) => {
   }
 })
 
-records.sort(
-  (left, right) =>
-    (projectRank.get(left.projectId) ?? Number.MAX_SAFE_INTEGER) -
-    (projectRank.get(right.projectId) ?? Number.MAX_SAFE_INTEGER)
-)
+records.sort((left, right) => {
+  const historyOrder = githubHistoryStartedAt(right.project).localeCompare(
+    githubHistoryStartedAt(left.project)
+  )
+  return historyOrder || left.slug.localeCompare(right.slug)
+})
 
 export type ProjectCaseStudy = (typeof records)[number]
 export type ProjectCaseStudyFilter = ProjectFilter

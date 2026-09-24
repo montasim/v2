@@ -28,14 +28,22 @@ describe("blog catalog", () => {
   it("provides routable featured articles", () => {
     expect(blogCatalog.featured.featured).toBe(true)
     expect(blogCatalog.featuredPosts.map((post) => post.slug)).toEqual([
-      "the-linkedin-page-is-untrusted-input",
       "company-research-without-a-fake-score",
       "scheduled-publishing-cannot-depend-on-an-open-tab",
+      "the-linkedin-page-is-untrusted-input",
     ])
     expect(blogCatalog.featuredPosts.every((post) => post.featured)).toBe(true)
     expect(blogCatalog.featured.sections.length).toBeGreaterThan(0)
     expect(blogCatalog.find(blogCatalog.featured.slug)).toBe(
       blogCatalog.featured
+    )
+  })
+
+  it("orders posts from newest to oldest", () => {
+    const dates = blogCatalog.posts.map((post) => post.publishedAt)
+
+    expect(dates).toEqual(
+      [...dates].sort((left, right) => (right ?? "").localeCompare(left ?? ""))
     )
   })
 

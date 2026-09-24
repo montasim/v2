@@ -4,7 +4,7 @@ import { z } from "zod"
 import exactAnswersToon from "@/features/chat/knowledge/exact-answers.toon?raw"
 
 export const exactAnswerCategoryTargets = {
-  project: 70,
+  project: 71,
   "case-study": 105,
   blog: 36,
   certification: 47,
@@ -21,6 +21,11 @@ export const exactAnswerCategoryTargets = {
   "client-delivery-product-thinking": 15,
   "contributions-learning": 7,
 } as const
+
+const exactAnswerTargetTotal = Object.values(exactAnswerCategoryTargets).reduce(
+  (total, count) => total + count,
+  0
+)
 
 export type ExactAnswerCategory = keyof typeof exactAnswerCategoryTargets
 
@@ -89,7 +94,7 @@ const exactAnswerArtifactSchema = z
           })
           .strict()
       )
-      .length(474),
+      .length(exactAnswerTargetTotal),
   })
   .strict()
 

@@ -162,14 +162,35 @@ function resolveCaseStudyPost(
   })
 }
 
+const resolvedPosts = blogSource.posts.map((post) =>
+  post.kind === "authored"
+    ? post
+    : resolveCaseStudyPost(post, blogSource.caseStudyPublishedAt)
+)
+
+resolvedPosts.sort((left, right) => {
+  const publishedOrder = (right.publishedAt ?? "").localeCompare(
+    left.publishedAt ?? ""
+  )
+  if (publishedOrder) return publishedOrder
+
+  const leftCaseStudy = left.projectId
+    ? projectCaseStudyCatalog.findByProjectId(left.projectId)
+    : undefined
+  const rightCaseStudy = right.projectId
+    ? projectCaseStudyCatalog.findByProjectId(right.projectId)
+    : undefined
+  const projectOrder = (
+    rightCaseStudy?.project.githubInitialCommitAt ?? ""
+  ).localeCompare(leftCaseStudy?.project.githubInitialCommitAt ?? "")
+
+  return projectOrder || left.slug.localeCompare(right.slug)
+})
+
 const blog = blogSchema.parse({
   author: blogSource.author,
   caseStudyPublishedAt: blogSource.caseStudyPublishedAt,
-  posts: blogSource.posts.map((post) =>
-    post.kind === "authored"
-      ? post
-      : resolveCaseStudyPost(post, blogSource.caseStudyPublishedAt)
-  ),
+  posts: resolvedPosts,
 })
 type ResolvedBlogPost = z.infer<typeof resolvedPostSchema>
 type DatedBlogPost = ResolvedBlogPost & { publishedAt: string }

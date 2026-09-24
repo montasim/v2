@@ -103,7 +103,7 @@ const recordsBySlug = new Map(
 // handles both local-first commits and repositories whose default-branch
 // history was later rewritten. The recruiter-facing records keep their curated
 // order; chronology is exposed separately.
-function githubHistoryStartedAt(project: Project) {
+export function githubHistoryStartedAt(project: Project) {
   return project.githubInitialCommitAt < project.githubRepositoryCreatedAt
     ? project.githubInitialCommitAt
     : project.githubRepositoryCreatedAt
