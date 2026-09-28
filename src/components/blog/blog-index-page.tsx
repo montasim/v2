@@ -30,12 +30,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { InputGroup } from "@/components/ui/input-group"
 import { Label } from "@/components/ui/label"
+import {
+  Pagination,
+  PaginationButton,
+  PaginationContent,
+  PaginationItem,
+} from "@/components/ui/pagination"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import { subscribeToNewsletter } from "@/features/newsletter/application/subscribe"
 import { getNewsletterSubscriptionError } from "@/features/newsletter/domain/subscriber"
 import { blogCatalog, blogTopicNavigation } from "@/lib/content/blog"
 import type { BlogPost, BlogTopic } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
+
+const ARTICLES_PER_PAGE = 6
 
 function formatShortDate(date: string) {
   return new Intl.DateTimeFormat("en", {
@@ -56,14 +64,16 @@ function ArticleCard({ post }: { post: BlogPost }) {
           aria-label={`Read ${post.title}`}
           className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
         >
-          <img
-            src={post.image.src}
-            alt={post.image.alt}
-            width="720"
-            height="450"
-            loading="lazy"
-            className="aspect-[16/10] w-full rounded-lg object-cover"
-          />
+          {post.image ? (
+            <img
+              src={post.image.src}
+              alt={post.image.alt}
+              width="720"
+              height="450"
+              loading="lazy"
+              className="aspect-[16/10] w-full rounded-lg object-cover"
+            />
+          ) : null}
           <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
             <div className="flex items-center justify-between gap-3">
               <p className="text-[0.6875rem] font-bold tracking-[0.06em] text-strong-foreground uppercase">
@@ -90,6 +100,8 @@ function ArticleCard({ post }: { post: BlogPost }) {
 }
 
 function FeaturedArticle({ post }: { post: BlogPost }) {
+  if (!post.image) return null
+
   return (
     <article>
       <Card asChild>
@@ -392,13 +404,24 @@ function SubscriptionCard() {
 export function BlogIndexPage({
   topic,
   query,
+  page,
   onQueryChange,
+  onPageChange,
 }: {
   topic: BlogTopic
   query: string
+  page: number
   onQueryChange: (query: string) => void
+  onPageChange: (page: number) => void
 }) {
   const posts = blogCatalog.filter(topic, query)
+  const pageCount = Math.max(1, Math.ceil(posts.length / ARTICLES_PER_PAGE))
+  const currentPage = Math.min(page, pageCount)
+  const firstArticleIndex = (currentPage - 1) * ARTICLES_PER_PAGE
+  const visiblePosts = posts.slice(
+    firstArticleIndex,
+    firstArticleIndex + ARTICLES_PER_PAGE
+  )
 
   return (
     <PageShell className="pt-10 pb-24">
@@ -433,10 +456,15 @@ export function BlogIndexPage({
         <FeaturedCarousel posts={blogCatalog.featuredPosts} />
       </section>
 
-      <section aria-labelledby="browse-writing-heading" className="pt-13.5">
+      <section
+        id="browse-writing-section"
+        aria-labelledby="browse-writing-heading"
+        className="scroll-mt-14 pt-13.5"
+      >
         <div className="mb-6 flex items-end justify-between gap-8 max-sm:flex-col max-sm:items-start max-sm:gap-2">
           <h2
             id="browse-writing-heading"
+            tabIndex={-1}
             className="text-xl font-bold tracking-[-0.035em] text-strong-foreground sm:text-2xl"
           >
             Browse writing
@@ -476,7 +504,7 @@ export function BlogIndexPage({
               <Link
                 key={item.value}
                 to="/blog"
-                search={{ topic: item.value, q: query }}
+                search={{ topic: item.value, q: query, page: 1 }}
                 resetScroll={false}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
@@ -498,12 +526,12 @@ export function BlogIndexPage({
           <div
             className={cn(
               "mt-3 grid gap-4",
-              posts.length === 1 && "max-w-95 grid-cols-1",
-              posts.length === 2 && "sm:grid-cols-2",
-              posts.length > 2 && "sm:grid-cols-2 lg:grid-cols-3"
+              visiblePosts.length === 1 && "max-w-95 grid-cols-1",
+              visiblePosts.length === 2 && "sm:grid-cols-2",
+              visiblePosts.length > 2 && "sm:grid-cols-2 lg:grid-cols-3"
             )}
           >
-            {posts.map((post) => (
+            {visiblePosts.map((post) => (
               <ArticleCard key={post.slug} post={post} />
             ))}
           </div>
@@ -519,7 +547,102 @@ export function BlogIndexPage({
         )}
       </section>
 
+      {posts.length ? (
+        <BlogPagination
+          page={currentPage}
+          pageCount={pageCount}
+          total={posts.length}
+          onPageChange={onPageChange}
+        />
+      ) : null}
+
       <SubscriptionCard />
     </PageShell>
+  )
+}
+
+function BlogPagination({
+  page,
+  pageCount,
+  total,
+  onPageChange,
+}: {
+  page: number
+  pageCount: number
+  total: number
+  onPageChange: (page: number) => void
+}) {
+  const first = (page - 1) * ARTICLES_PER_PAGE + 1
+  const last = Math.min(page * ARTICLES_PER_PAGE, total)
+
+  return (
+    <Pagination
+      className="mt-8 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center"
+      aria-label="Blog pagination"
+    >
+      <p className="text-xs text-muted-foreground" aria-live="polite">
+        Showing{" "}
+        <span className="font-medium text-strong-foreground tabular-nums">
+          {first}–{last}
+        </span>{" "}
+        of{" "}
+        <span className="font-medium text-strong-foreground tabular-nums">
+          {total}
+        </span>{" "}
+        articles
+      </p>
+
+      {pageCount > 1 ? (
+        <PaginationContent className="sm:ml-auto">
+          <PaginationItem>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-10 sm:size-8"
+              disabled={page === 1}
+              onClick={() => onPageChange(page - 1)}
+              aria-label="Previous articles page"
+            >
+              <ArrowLeftCompactIcon />
+            </Button>
+          </PaginationItem>
+
+          {Array.from({ length: pageCount }, (_, index) => index + 1).map(
+            (pageNumber) => (
+              <PaginationItem key={pageNumber}>
+                <PaginationButton
+                  type="button"
+                  isActive={pageNumber === page}
+                  className={cn(
+                    "size-10 shrink-0 text-xs tabular-nums sm:size-8",
+                    pageNumber === page &&
+                      "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/85"
+                  )}
+                  onClick={() => onPageChange(pageNumber)}
+                  aria-label={`Page ${pageNumber}`}
+                >
+                  {pageNumber}
+                </PaginationButton>
+              </PaginationItem>
+            )
+          )}
+
+          <PaginationItem>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="size-10 sm:size-8"
+              disabled={page === pageCount}
+              onClick={() => onPageChange(page + 1)}
+              aria-label="Next articles page"
+            >
+              <ArrowRightCompactIcon />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      ) : null}
+    </Pagination>
   )
 }

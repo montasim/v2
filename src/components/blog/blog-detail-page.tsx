@@ -736,6 +736,7 @@ export function BlogDetailPage({
   const relatedProject = post.projectId
     ? projectCatalog.records.find((project) => project.id === post.projectId)
     : undefined
+  const hasMedia = Boolean(relatedProject?.youtubeVideoId || post.image)
   const viewCount = useVisitorCount({
     resourceKey: "blog",
     slug: post.slug,
@@ -852,7 +853,7 @@ export function BlogDetailPage({
               {relatedProject?.chromeWebStoreUrl ? (
                 <ExternalAction
                   href={relatedProject.chromeWebStoreUrl}
-                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                  variant="outline"
                 >
                   <ChromeIcon />
                   Chrome Web Store
@@ -876,6 +877,10 @@ export function BlogDetailPage({
                   Microsoft Store
                 </ExternalAction>
               ) : null}
+              <Button type="button" onClick={shareArticle} variant="outline">
+                {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
+                {shareStatus === "Link copied" ? "Copied" : "Share"}
+              </Button>
               {relatedProject?.liveUrl ? (
                 <ExternalAction
                   href={relatedProject.liveUrl}
@@ -885,14 +890,6 @@ export function BlogDetailPage({
                   <ArrowUpRightIcon />
                 </ExternalAction>
               ) : null}
-              <Button
-                type="button"
-                onClick={shareArticle}
-                className="bg-emphasis-foreground text-background"
-              >
-                {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
-                {shareStatus === "Link copied" ? "Copied" : "Share"}
-              </Button>
             </div>
           </div>
           <h1 className="order-1 w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:order-none sm:text-3xl">
@@ -902,7 +899,12 @@ export function BlogDetailPage({
         <p className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground">
           {post.excerpt}
         </p>
-        <div className="mt-5 flex flex-col gap-3 border-b pb-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div
+          className={cn(
+            "mt-5 flex flex-col gap-3 pb-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between",
+            hasMedia && "border-b"
+          )}
+        >
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <div className="flex min-w-0 items-center gap-2.5">
               <img
@@ -951,25 +953,27 @@ export function BlogDetailPage({
         </p>
       </header>
 
-      <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
-        {relatedProject?.youtubeVideoId ? (
-          <YouTubeVideo
-            videoId={relatedProject.youtubeVideoId}
-            title={`${relatedProject.title} product demonstration`}
-            loading="eager"
-            className="rounded-lg"
-          />
-        ) : (
-          <img
-            src={post.image.src}
-            alt={post.image.alt}
-            width="1600"
-            height="1000"
-            fetchPriority="high"
-            className="aspect-[16/10] w-full rounded-lg border object-cover"
-          />
-        )}
-      </figure>
+      {hasMedia ? (
+        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
+          {relatedProject?.youtubeVideoId ? (
+            <YouTubeVideo
+              videoId={relatedProject.youtubeVideoId}
+              title={`${relatedProject.title} product demonstration`}
+              loading="eager"
+              className="rounded-lg"
+            />
+          ) : post.image ? (
+            <img
+              src={post.image.src}
+              alt={post.image.alt}
+              width="1600"
+              height="1000"
+              fetchPriority="high"
+              className="aspect-[16/10] w-full rounded-lg border object-cover"
+            />
+          ) : null}
+        </figure>
+      ) : null}
 
       <div className="mt-14 grid items-start gap-7 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">
         <aside className="sticky top-14 z-30 flex items-center gap-2.5 overflow-x-auto rounded-xl border bg-background/95 px-2.5 py-2 backdrop-blur-sm lg:top-24 lg:grid lg:gap-0 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
@@ -1000,7 +1004,7 @@ export function BlogDetailPage({
         </aside>
 
         <div className="min-w-0">
-          <article className="border-t">
+          <article className={cn(hasMedia && "border-t")}>
             {post.sections.map((section, index) => (
               <section
                 key={section.id}

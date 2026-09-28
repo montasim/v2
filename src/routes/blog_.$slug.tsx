@@ -18,8 +18,8 @@ export const Route = createFileRoute("/blog_/$slug")({
           `/blog/${loaderData.slug}`,
           {
             type: "article",
-            image: loaderData.image.src,
-            imageAlt: loaderData.image.alt,
+            image: loaderData.image?.src,
+            imageAlt: loaderData.image?.alt,
             publishedTime: loaderData.publishedAt
               ? `${loaderData.publishedAt}T00:00:00.000Z`
               : undefined,

@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import blogJson from "@/data/blog.json"
+import { optimizedImage } from "@/lib/assets"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 
 export const blogTopicSchema = z.enum(["all", "product", "career", "tools"])
@@ -19,6 +20,11 @@ const sectionSchema = z.object({
   callout: z.string().min(1).optional(),
 })
 
+const imageSchema = z.object({
+  src: z.string().startsWith("/"),
+  alt: z.string().min(1),
+})
+
 const resolvedPostSchema = z.object({
   kind: z.enum(["authored", "case-study-derived"]),
   slug: blogPostSlugSchema,
@@ -31,10 +37,7 @@ const resolvedPostSchema = z.object({
   publishedAt: z.iso.date().optional(),
   readingMinutes: z.number().int().positive(),
   featured: z.boolean(),
-  image: z.object({
-    src: z.string().startsWith("/"),
-    alt: z.string().min(1),
-  }),
+  image: imageSchema.nullable(),
   sections: z.array(sectionSchema).min(1),
 })
 
@@ -42,6 +45,7 @@ const authoredPostSchema = resolvedPostSchema
   .extend({
     kind: z.literal("authored"),
     publishedAt: z.iso.date(),
+    image: imageSchema,
   })
   .strict()
 
@@ -79,10 +83,8 @@ const blogSchema = blogSourceSchema.extend({
 
 const blogSource = blogSourceSchema.parse(blogJson)
 
-function projectImagePath(imageUrl: string | null | undefined, type: string) {
-  if (imageUrl) return `/images/${imageUrl.replace(/^assets\//, "")}`
-  if (type === "skill") return "/images/projects/skillfoliox.webp"
-  return "/images/projects/devtools.webp"
+function projectImagePath(imageUrl: string) {
+  return optimizedImage(`/images/${imageUrl.replace(/^assets\//, "")}`)
 }
 
 function estimateReadingMinutes(
@@ -154,10 +156,13 @@ function resolveCaseStudyPost(
     excerpt,
     publishedAt,
     readingMinutes: estimateReadingMinutes(metadata.title, excerpt, sections),
-    image: {
-      src: projectImagePath(caseStudy.project.imageUrl, caseStudy.project.type),
-      alt: caseStudy.screenshot?.alt ?? `${caseStudy.project.title} project`,
-    },
+    image: caseStudy.project.imageUrl
+      ? {
+          src: projectImagePath(caseStudy.project.imageUrl),
+          alt:
+            caseStudy.screenshot?.alt ?? `${caseStudy.project.title} project`,
+        }
+      : null,
     sections,
   })
 }
@@ -194,7 +199,10 @@ const blog = blogSchema.parse({
 })
 type ResolvedBlogPost = z.infer<typeof resolvedPostSchema>
 type DatedBlogPost = ResolvedBlogPost & { publishedAt: string }
-type AuthoredBlogPost = DatedBlogPost & { kind: "authored" }
+type AuthoredBlogPost = DatedBlogPost & {
+  kind: "authored"
+  image: z.infer<typeof imageSchema>
+}
 
 function assertBlogCatalogIntegrity(posts: readonly ResolvedBlogPost[]) {
   const slugs = posts.map((post) => post.slug)
@@ -222,7 +230,7 @@ function assertBlogCatalogIntegrity(posts: readonly ResolvedBlogPost[]) {
 assertBlogCatalogIntegrity(blog.posts)
 
 function isAuthoredBlogPost(post: ResolvedBlogPost): post is AuthoredBlogPost {
-  return post.kind === "authored" && Boolean(post.publishedAt)
+  return post.kind === "authored" && Boolean(post.publishedAt && post.image)
 }
 
 function isDatedBlogPost(post: ResolvedBlogPost): post is DatedBlogPost {

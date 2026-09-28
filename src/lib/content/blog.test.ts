@@ -7,9 +7,9 @@ import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
   it("loads authored and case-study-derived posts from one catalog", () => {
-    expect(blogCatalog.posts).toHaveLength(44)
+    expect(blogCatalog.posts).toHaveLength(43)
     expect(blogCatalog.authoredPosts).toHaveLength(4)
-    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(40)
+    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(39)
     expect(
       blogCatalog.authoredPosts.every((post) => Boolean(post.publishedAt))
     ).toBe(true)
@@ -86,7 +86,7 @@ describe("blog catalog", () => {
         post.excerpt,
         `/blog/${post.slug}`,
         {
-          image: post.image.src,
+          image: post.image?.src,
         }
       )
       const socialImageUrl = metadata.meta.find(
@@ -102,7 +102,7 @@ describe("blog catalog", () => {
   })
 
   it("builds article-specific social preview metadata", () => {
-    const post = blogCatalog.datedPosts[0]
+    const post = blogCatalog.authoredPosts[0]
     const socialImage = post.image.src.replace(/\.webp$/i, ".png")
     const metadata = createMeta(
       post.title,
@@ -152,8 +152,6 @@ describe("blog catalog", () => {
       `/blog/${post!.slug}`,
       {
         type: "article",
-        image: post!.image.src,
-        imageAlt: post!.image.alt,
         author: blogCatalog.author.name,
         section: post!.category,
         publishedTime: `${post!.publishedAt}T00:00:00.000Z`,
