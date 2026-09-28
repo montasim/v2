@@ -128,9 +128,14 @@ export function ProjectCard({ project }: { project: Project }) {
         id={project.id}
         className="scroll-mt-20 target:ring-2 target:ring-primary/40"
       >
-        <div className="relative min-h-72 overflow-hidden border-b bg-muted/35 p-3 sm:p-4 lg:border-r lg:border-b-0">
+        <div
+          className={cn(
+            "relative overflow-hidden border-b bg-muted/35 p-3 sm:p-4 lg:border-r lg:border-b-0",
+            project.youtubeVideoId ? "min-h-0" : "min-h-72"
+          )}
+        >
           {project.youtubeVideoId ? (
-            <div className="flex h-full min-h-56 items-center overflow-hidden rounded-lg border bg-black sm:min-h-64">
+            <div className="aspect-video w-full overflow-hidden rounded-lg border bg-black">
               <YouTubeVideo
                 videoId={project.youtubeVideoId}
                 title={`${project.title} product demonstration`}
