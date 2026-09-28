@@ -25,7 +25,7 @@ function Page() {
       description={descriptions.projects}
       filter={filter}
       filters={projectCatalog.filters}
-      records={projectCatalog.records}
+      records={projectCatalog.orderedForFilter(filter)}
       matches={projectCatalog.matches}
       onFilterChange={(nextFilter) =>
         navigate({

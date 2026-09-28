@@ -218,6 +218,18 @@ describe("portfolio content", () => {
     expect(npmProjects).toEqual(expect.arrayContaining(releasedSkills))
     expect(npmProjects.every((project) => Boolean(project.npmUrl))).toBe(true)
     expect(
+      projectCatalog
+        .orderedForFilter("package")
+        .filter((project) => projectCatalog.matches(project, "package"))
+        .slice(0, 4)
+        .map((project) => project.id)
+    ).toEqual([
+      "project-content-types-lite",
+      "project-http-status-lite",
+      "project-client-parser",
+      "project-mime-types-lite",
+    ])
+    expect(
       projectCatalog.matches(
         projectCatalog.records.find(
           (project) => project.id === "project-skillfoliox"

@@ -172,6 +172,14 @@ export const projectCatalog = {
     const index = records.findIndex((project) => project.id === projectId)
     return index === -1 ? undefined : records[(index + 1) % records.length]
   },
+  orderedForFilter(filter: ProjectFilter) {
+    if (filter !== "package") return records
+
+    return [...records].sort(
+      (left, right) =>
+        Number(left.type !== "package") - Number(right.type !== "package")
+    )
+  },
   matches(project: Project, filter: ProjectFilter) {
     if (filter === "all") return true
     if (filter === "client") return project.clientWork === true
