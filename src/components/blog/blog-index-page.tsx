@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
+import { ProjectPreviewUnavailable } from "@/components/portfolio/project-card"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -41,9 +42,10 @@ import { subscribeToNewsletter } from "@/features/newsletter/application/subscri
 import { getNewsletterSubscriptionError } from "@/features/newsletter/domain/subscriber"
 import { blogCatalog, blogTopicNavigation } from "@/lib/content/blog"
 import type { BlogPost, BlogTopic } from "@/lib/content/blog"
+import { projectCatalog } from "@/lib/content/projects"
 import { cn } from "@/lib/utils"
 
-const ARTICLES_PER_PAGE = 6
+const ARTICLES_PER_PAGE = 9
 
 function formatShortDate(date: string) {
   return new Intl.DateTimeFormat("en", {
@@ -55,6 +57,10 @@ function formatShortDate(date: string) {
 }
 
 function ArticleCard({ post }: { post: BlogPost }) {
+  const relatedProject = post.projectId
+    ? projectCatalog.records.find((project) => project.id === post.projectId)
+    : undefined
+
   return (
     <Card asChild>
       <article className="group flex min-w-0 flex-col overflow-hidden p-2 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-emphasis-foreground motion-reduce:transition-none">
@@ -73,6 +79,10 @@ function ArticleCard({ post }: { post: BlogPost }) {
               loading="lazy"
               className="aspect-[16/10] w-full rounded-lg object-cover"
             />
+          ) : relatedProject ? (
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg border bg-background">
+              <ProjectPreviewUnavailable project={relatedProject} compact />
+            </div>
           ) : null}
           <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
             <div className="flex items-center justify-between gap-3">
