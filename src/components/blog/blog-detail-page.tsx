@@ -119,9 +119,7 @@ function BlogDiscussion({
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
   const [website, setWebsite] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [loadError, setLoadError] = useState("")
   const [submissionError, setSubmissionError] = useState("")
   const [nameError, setNameError] = useState("")
   const [emailError, setEmailError] = useState("")
@@ -137,21 +135,12 @@ function BlogDiscussion({
     let active = true
     setComments([])
     setReplyTo(null)
-    setLoadError("")
-    setIsLoading(true)
 
     void getComments({ data: post.slug })
       .then((loadedComments) => {
         if (active) setComments(loadedComments)
       })
-      .catch(() => {
-        if (active) {
-          setLoadError("Comments are unavailable for this article right now.")
-        }
-      })
-      .finally(() => {
-        if (active) setIsLoading(false)
-      })
+      .catch(() => undefined)
 
     return () => {
       active = false
@@ -320,95 +309,71 @@ function BlogDiscussion({
 
   return (
     <div id="discussion" className="scroll-mt-24">
-      <Card asChild className="mt-4 overflow-hidden rounded-2xl bg-background">
-        <section aria-labelledby="discussion-heading">
-          <header className="flex items-center gap-4 border-b px-4 py-5 sm:px-6">
-            <div className="min-w-0 flex-1">
-              <h2
-                id="discussion-heading"
-                className="text-lg leading-[1.4] font-semibold tracking-[-0.015em] text-strong-foreground"
-              >
-                Discussion
-              </h2>
-              <p className="mt-0.5 text-[0.8125rem] text-muted-foreground">
-                Join the conversation about this article
-              </p>
-            </div>
-            <span className="shrink-0 text-xs text-muted-foreground">
-              {comments.length} {comments.length === 1 ? "comment" : "comments"}
-            </span>
-          </header>
+      {comments.length > 0 ? (
+        <Card
+          asChild
+          className="mt-4 overflow-hidden rounded-2xl bg-background"
+        >
+          <section aria-labelledby="discussion-heading">
+            <header className="flex items-center gap-4 border-b px-4 py-5 sm:px-6">
+              <div className="min-w-0 flex-1">
+                <h2
+                  id="discussion-heading"
+                  className="text-lg leading-[1.4] font-semibold tracking-[-0.015em] text-strong-foreground"
+                >
+                  Discussion
+                </h2>
+                <p className="mt-0.5 text-[0.8125rem] text-muted-foreground">
+                  Join the conversation about this article
+                </p>
+              </div>
+              <span className="shrink-0 text-xs text-muted-foreground">
+                {comments.length}{" "}
+                {comments.length === 1 ? "comment" : "comments"}
+              </span>
+            </header>
 
-          <div className="divide-y" aria-live="polite" aria-busy={isSubmitting}>
-            {isLoading ? (
-              <div className="px-5 py-10 text-center">
-                <p className="text-sm font-semibold text-strong-foreground">
-                  Loading discussion
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Fetching the latest comments.
-                </p>
-              </div>
-            ) : loadError ? (
-              <div className="px-5 py-10 text-center">
-                <p className="text-sm font-semibold text-strong-foreground">
-                  No discussion available
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {loadError}
-                </p>
-              </div>
-            ) : (
-              <>
-                {commentThreads.length
-                  ? commentThreads.map(({ comment, replies }) => (
-                      <div key={comment.id}>
-                        {renderComment(comment)}
-                        {replies.map((reply) => renderComment(reply, true))}
-                      </div>
-                    ))
-                  : !isSubmitting && (
-                      <div className="px-5 py-10 text-center">
-                        <p className="text-sm font-semibold text-strong-foreground">
-                          Start the discussion
-                        </p>
-                        <p className="mt-1 text-xs text-muted-foreground">
-                          Share a question, observation, or useful
-                          counterexample.
-                        </p>
-                      </div>
-                    )}
-                {isSubmitting ? (
-                  <article className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3.5 px-4 py-5 sm:px-6">
-                    <span className="sr-only" role="status">
-                      Saving your comment
-                    </span>
-                    <div aria-hidden="true" className="contents">
-                      <Skeleton className="size-10 rounded-full" />
-                      <div className="min-w-0 pt-0.5">
-                        <div className="flex items-center gap-2">
-                          <Skeleton className="h-3.5 w-24" />
-                          <Skeleton className="h-2.5 w-12" />
-                        </div>
-                        <Skeleton className="mt-3 h-3 w-[min(100%,34rem)]" />
-                        <Skeleton className="mt-2 h-3 w-[min(72%,24rem)]" />
-                      </div>
-                    </div>
-                  </article>
-                ) : null}
-              </>
-            )}
-          </div>
-          {deletionError ? (
-            <p
-              className="border-t px-4 py-3 text-xs text-destructive sm:px-6"
-              role="alert"
+            <div
+              className="divide-y"
+              aria-live="polite"
+              aria-busy={isSubmitting}
             >
-              {deletionError}
-            </p>
-          ) : null}
-        </section>
-      </Card>
+              {commentThreads.map(({ comment, replies }) => (
+                <div key={comment.id}>
+                  {renderComment(comment)}
+                  {replies.map((reply) => renderComment(reply, true))}
+                </div>
+              ))}
+              {isSubmitting ? (
+                <article className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-3.5 px-4 py-5 sm:px-6">
+                  <span className="sr-only" role="status">
+                    Saving your comment
+                  </span>
+                  <div aria-hidden="true" className="contents">
+                    <Skeleton className="size-10 rounded-full" />
+                    <div className="min-w-0 pt-0.5">
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-3.5 w-24" />
+                        <Skeleton className="h-2.5 w-12" />
+                      </div>
+                      <Skeleton className="mt-3 h-3 w-[min(100%,34rem)]" />
+                      <Skeleton className="mt-2 h-3 w-[min(72%,24rem)]" />
+                    </div>
+                  </div>
+                </article>
+              ) : null}
+            </div>
+            {deletionError ? (
+              <p
+                className="border-t px-4 py-3 text-xs text-destructive sm:px-6"
+                role="alert"
+              >
+                {deletionError}
+              </p>
+            ) : null}
+          </section>
+        </Card>
+      ) : null}
 
       <Card asChild className="mt-4 overflow-hidden rounded-2xl bg-background">
         <section aria-labelledby="reply-heading">
@@ -1010,7 +975,11 @@ export function BlogDetailPage({
                 key={section.id}
                 id={section.id}
                 aria-labelledby={`${section.id}-heading`}
-                className={cn("scroll-mt-24 py-10", index > 0 && "border-t")}
+                className={cn(
+                  "scroll-mt-24 pb-10",
+                  index > 0 && "border-t pt-10",
+                  index === 0 && hasMedia && "pt-10"
+                )}
               >
                 <h2
                   id={`${section.id}-heading`}
