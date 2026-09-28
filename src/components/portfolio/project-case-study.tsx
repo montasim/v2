@@ -125,6 +125,7 @@ export function ProjectCaseStudyPage({
     imageName && caseStudy.screenshot
       ? optimizedImage(`/images/projects/${imageName}`)
       : undefined
+  const hasMedia = Boolean(project.youtubeVideoId || image)
   const sectionLinks = image
     ? [...coreSectionLinks, screenshotSectionLink]
     : coreSectionLinks
@@ -245,7 +246,7 @@ export function ProjectCaseStudyPage({
               <ExternalAction
                 href={project.chromeWebStoreUrl}
                 size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                variant="outline"
               >
                 <ChromeIcon />
                 Install extension
@@ -271,16 +272,6 @@ export function ProjectCaseStudyPage({
                 Microsoft Store
               </ExternalAction>
             ) : null}
-            {project.liveUrl ? (
-              <ExternalAction
-                href={project.liveUrl}
-                size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-              >
-                Website
-                <ArrowUpRightIcon />
-              </ExternalAction>
-            ) : null}
             {!project.githubRepositoryPrivate ? (
               <ExternalAction
                 href={project.githubUrl}
@@ -289,6 +280,16 @@ export function ProjectCaseStudyPage({
               >
                 <GithubLogoIcon />
                 Source
+              </ExternalAction>
+            ) : null}
+            {project.liveUrl ? (
+              <ExternalAction
+                href={project.liveUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
+                Website
+                <ArrowUpRightIcon />
               </ExternalAction>
             ) : null}
           </div>
@@ -370,7 +371,7 @@ export function ProjectCaseStudyPage({
           ) : null}
         </aside>
 
-        <div className="min-w-0 border-t">
+        <div className={cn("min-w-0", hasMedia && "border-t")}>
           <section
             id="problem"
             aria-labelledby="problem-heading"

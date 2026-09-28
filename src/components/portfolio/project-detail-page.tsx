@@ -104,7 +104,7 @@ export function ProjectDetailPage({
               <ExternalAction
                 href={project.chromeWebStoreUrl}
                 size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                variant="outline"
               >
                 <ChromeIcon />
                 Chrome Web Store
@@ -130,16 +130,6 @@ export function ProjectDetailPage({
                 Microsoft Store
               </ExternalAction>
             ) : null}
-            {project.liveUrl ? (
-              <ExternalAction
-                href={project.liveUrl}
-                size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-              >
-                Website
-                <ArrowUpRightIcon />
-              </ExternalAction>
-            ) : null}
             {!project.githubRepositoryPrivate && project.githubUrl ? (
               <ExternalAction
                 href={project.githubUrl}
@@ -148,6 +138,16 @@ export function ProjectDetailPage({
               >
                 <GithubLogoIcon />
                 Source
+              </ExternalAction>
+            ) : null}
+            {project.liveUrl ? (
+              <ExternalAction
+                href={project.liveUrl}
+                size="lg"
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
+                Website
+                <ArrowUpRightIcon />
               </ExternalAction>
             ) : null}
           </div>

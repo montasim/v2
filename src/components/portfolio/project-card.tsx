@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import type { Project } from "@/lib/content/projects"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
+import { cn } from "@/lib/utils"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
 
 function projectImage(project: Project) {
@@ -26,31 +27,65 @@ function projectImage(project: Project) {
   return name ? optimizedImage(`/images/projects/${name}`) : null
 }
 
-function ProjectPreviewUnavailable({ project }: { project: Project }) {
+export function ProjectPreviewUnavailable({
+  project,
+  compact = false,
+}: {
+  project: Project
+  compact?: boolean
+}) {
   return (
-    <div className="absolute inset-0 grid place-items-center p-8 text-center">
+    <div
+      className={cn(
+        "absolute inset-0 grid place-items-center text-center",
+        compact ? "p-4" : "p-8"
+      )}
+    >
       <div className="flex max-w-xs flex-col items-center">
         <div
-          className="w-28 overflow-hidden rounded-xl border bg-background"
+          className={cn(
+            "overflow-hidden rounded-xl border bg-background",
+            compact ? "w-20" : "w-28"
+          )}
           aria-hidden="true"
         >
-          <div className="flex h-7 items-center gap-1.5 border-b px-3">
+          <div
+            className={cn(
+              "flex items-center gap-1.5 border-b",
+              compact ? "h-5 px-2" : "h-7 px-3"
+            )}
+          >
             <span className="size-1.5 rounded-full bg-border" />
             <span className="size-1.5 rounded-full bg-border" />
             <span className="size-1.5 rounded-full bg-border" />
           </div>
-          <div className="grid h-16 place-items-center text-muted-foreground">
-            <ProjectTypeIcon type={project.type} className="size-6" />
+          <div
+            className={cn(
+              "grid place-items-center text-muted-foreground",
+              compact ? "h-11" : "h-16"
+            )}
+          >
+            <ProjectTypeIcon
+              type={project.type}
+              className={compact ? "size-5" : "size-6"}
+            />
           </div>
         </div>
-        <p className="mt-5 text-sm font-semibold text-strong-foreground">
+        <p
+          className={cn(
+            "font-semibold text-strong-foreground",
+            compact ? "mt-3 text-xs" : "mt-5 text-sm"
+          )}
+        >
           Preview not publicly available
         </p>
-        <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
-          {project.professionalWork || project.clientWork
-            ? "This professional project is documented without a public screenshot."
-            : "No public screenshot has been published for this project."}
-        </p>
+        {!compact ? (
+          <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+            {project.professionalWork || project.clientWork
+              ? "This professional project is documented without a public screenshot."
+              : "No public screenshot has been published for this project."}
+          </p>
+        ) : null}
       </div>
     </div>
   )

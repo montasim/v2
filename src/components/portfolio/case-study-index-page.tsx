@@ -21,7 +21,6 @@ import {
 import {
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
-  BookOpenTextIcon,
   FunnelSimpleIcon,
   SearchIcon,
 } from "@/components/ui/icons"
@@ -65,14 +64,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
               loading="lazy"
               className="aspect-[16/10] w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
             />
-          ) : (
-            <div className="grid aspect-[16/10] place-items-center rounded-lg border bg-muted/35 text-muted-foreground">
-              <span className="flex flex-col items-center gap-2 text-xs font-medium">
-                <BookOpenTextIcon className="size-6" />
-                Documentation-led case study
-              </span>
-            </div>
-          )}
+          ) : null}
 
           <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
             <div className="flex items-center justify-between gap-3 text-[0.6875rem]">
@@ -124,10 +116,13 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
           to="/case-studies/$slug"
           params={{ slug: caseStudy.slug }}
           aria-label={`Read the ${project.title} case study`}
-          className="group grid gap-0 overflow-hidden p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none lg:grid-cols-[13fr_7fr] lg:p-2.5"
+          className={cn(
+            "group grid gap-0 overflow-hidden p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none lg:p-2.5",
+            image && "lg:grid-cols-[13fr_7fr]"
+          )}
         >
-          <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
-            {image ? (
+          {image ? (
+            <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
               <img
                 src={image}
                 alt={`${project.title} interface preview`}
@@ -136,15 +131,8 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
                 fetchPriority="high"
                 className="h-full w-full object-cover object-top contrast-[1.02] grayscale transition-[transform,filter] duration-300 group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
               />
-            ) : (
-              <div className="grid h-full min-h-57.5 place-items-center text-muted-foreground sm:min-h-85 lg:min-h-100">
-                <span className="flex flex-col items-center gap-3 text-sm font-medium">
-                  <BookOpenTextIcon className="size-8" />
-                  Documentation-led case study
-                </span>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : null}
 
           <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">
             <div>
