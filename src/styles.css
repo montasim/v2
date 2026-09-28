@@ -100,6 +100,10 @@
     @apply my-5 border-l bg-muted/50 px-5 py-3 text-muted-foreground;
   }
 
+  .project-readme blockquote p {
+    @apply mt-0;
+  }
+
   .project-readme code {
     @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.875em] text-strong-foreground;
   }
