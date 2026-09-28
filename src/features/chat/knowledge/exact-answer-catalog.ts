@@ -4,9 +4,9 @@ import { z } from "zod"
 import exactAnswersToon from "@/features/chat/knowledge/exact-answers.toon?raw"
 
 export const exactAnswerCategoryTargets = {
-  project: 87,
-  "case-study": 129,
-  blog: 44,
+  project: 84,
+  "case-study": 126,
+  blog: 43,
   certification: 47,
   experience: 14,
   skill: 11,

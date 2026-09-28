@@ -49,9 +49,9 @@ describe("skill evidence catalog", () => {
       "Prisma",
       "MongoDB",
       "Drizzle ORM",
-      "SQLite",
       "Mongoose",
       "Redis",
+      "SQLite",
       "PhpMyAdmin",
     ])
     expect(data.every((record) => record.groupId === "skills-databases")).toBe(

@@ -33,7 +33,7 @@ describe("portfolio content", () => {
     expect(projectCatalog.featured.map((project) => project.id)).toEqual([
       "project-postcraft",
       "project-bugreceipt",
-      "project-ispcine",
+      "project-devtools",
     ])
     expect(
       projectCatalog.records.slice(0, 10).map((project) => project.id)
@@ -45,9 +45,9 @@ describe("portfolio content", () => {
       "project-b4joinacompany",
       "project-devtools",
       "project-skillfoliox",
-      "project-ispcine",
       "project-bangladesh-location-registry",
       "project-thoughtline",
+      "project-release-agent-skill",
     ])
     expect(
       projectCatalog.records.slice(-5).map((project) => project.id)

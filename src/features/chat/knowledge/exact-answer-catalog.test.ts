@@ -222,7 +222,7 @@ describe("portfolio exact answers", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("43 project records")
+    expect(projectCount.text).toContain("42 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(
@@ -270,16 +270,6 @@ describe("portfolio exact answers", () => {
       "case-study:1snap:problem",
       "case-study:1snap:outcomes",
     ])
-  })
-
-  it("publishes the ISPCine Microsoft Store download answer", () => {
-    const answer = findExactAnswer("Where can I download ISPCine?")
-
-    expect(answer?.text).toContain(
-      "https://apps.microsoft.com/detail/9PKXHXJQPM8G"
-    )
-    expect(answer?.text).toContain("https://snapcraft.io/ispcine")
-    expect(answer?.factIds).toContain("project:project-ispcine")
   })
 
   it("exposes one immutable runtime catalog seam", () => {

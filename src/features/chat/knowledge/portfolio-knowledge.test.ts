@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 7 }),
-      expect.objectContaining({ id: "projects", recordCount: 43 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 43 }),
-      expect.objectContaining({ id: "blog", recordCount: 44 }),
+      expect.objectContaining({ id: "projects", recordCount: 42 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 42 }),
+      expect.objectContaining({ id: "blog", recordCount: 43 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -238,27 +238,26 @@ describe("PortfolioKnowledge", () => {
       publishedAt: "2026-08-28",
       tieBreak: "catalog-order",
     })
-    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(40)
-    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(40)
+    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(39)
+    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(39)
     expect(
       knowledge.textForFact(knowledge.derived.latestDatedBlog.factId)
-    ).toContain("40")
+    ).toContain("39")
 
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 44,
+      total: 43,
       authored: 4,
-      caseStudyDerived: 40,
+      caseStudyDerived: 39,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 43,
+      total: 42,
       byType: {
         api: 1,
         dataset: 2,
-        desktop: 1,
         extension: 5,
         package: 4,
         skill: 14,

@@ -15,18 +15,4 @@ describe("project README content", () => {
       expect(readme.length).toBeGreaterThan(500)
     }
   })
-
-  it("keeps ISPCine's tailored promotional documentation", () => {
-    const project = projectCatalog.findBySlug("ispcine")
-    const caseStudy = project
-      ? projectCaseStudyCatalog.findByProjectId(project.id)
-      : undefined
-    expect(project).toBeTruthy()
-    expect(caseStudy).toBeTruthy()
-    if (!project || !caseStudy) return
-
-    const readme = getProjectReadme(project, caseStudy)
-    expect(readme).toContain("A simpler viewing experience")
-    expect(readme).toContain("Try ISPCine")
-  })
 })

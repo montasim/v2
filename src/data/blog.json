@@ -559,15 +559,6 @@
     },
     {
       "kind": "case-study-derived",
-      "projectId": "project-ispcine",
-      "slug": "one-cinema-interface-for-incompatible-isp-catalogs",
-      "title": "One Cinema Interface for Incompatible ISP Catalogs",
-      "category": "Platform architecture",
-      "topic": "product",
-      "featured": false
-    },
-    {
-      "kind": "case-study-derived",
       "projectId": "project-liftuno",
       "slug": "gym-membership-debt-cannot-be-invented-by-a-calendar",
       "title": "A Gym Membership Calendar Must Not Invent Debt",

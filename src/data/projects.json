@@ -1183,7 +1183,7 @@
   {
     "id": "project-devtools",
     "type": "tool",
-    "featured": false,
+    "featured": true,
     "title": "DevTools",
     "description": "A comprehensive suite of 30+ free developer tools for formatting, validating, generating, and transforming data. All tools run entirely in your browser.",
     "technologies": [
@@ -1352,54 +1352,6 @@
     ]
   },
   {
-    "id": "project-ispcine",
-    "type": "desktop",
-    "featured": true,
-    "title": "ISPCine",
-    "description": "A local-first cinema that turns authorized ISP media catalogs into one cross-platform browsing, playback, download, subtitle, and account-sync experience.",
-    "technologies": [
-      "TanStack Start",
-      "React 19",
-      "TypeScript",
-      "Tailwind CSS",
-      "Electron",
-      "Capacitor",
-      "Kotlin",
-      "Android TV",
-      "SQLite",
-      "Drizzle ORM",
-      "Better Auth",
-      "Vidstack",
-      "FFmpeg",
-      "Vitest",
-      "Playwright",
-      "GitHub Actions",
-      "System Design"
-    ],
-    "liveUrl": "https://ispcine.netlify.app",
-    "snapcraftUrl": "https://snapcraft.io/ispcine",
-    "microsoftStoreUrl": "https://apps.microsoft.com/detail/9PKXHXJQPM8G",
-    "githubUrl": "https://github.com/montasim/ISPCine",
-    "githubRepositoryPrivate": true,
-    "githubRepositoryCreatedAt": "2026-08-31T09:01:09Z",
-    "githubInitialCommitAt": "2026-08-31T08:51:02Z",
-    "githubInitialCommitSha": "1722d09897646b48652072c8f41a973522f623a6",
-    "releaseUrl": "https://github.com/montasim/ISPCine/releases/latest",
-    "npmUrl": "",
-    "emoji": "",
-    "imageUrl": "assets/projects/ispcine.png",
-    "topics": [
-      "android-tv",
-      "cross-platform",
-      "desktop-app",
-      "electron",
-      "local-first",
-      "media-player",
-      "tanstack-start",
-      "video-streaming"
-    ]
-  },
-  {
     "id": "project-liftuno",
     "type": "website",
     "clientWork": true,
@@ -1418,7 +1370,7 @@
       "Vitest",
       "System Design"
     ],
-    "liveUrl": "",
+    "liveUrl": "https://liftuno-website.vercel.app",
     "githubUrl": "https://github.com/AuraNetDev/Liftuno",
     "githubRepositoryPrivate": true,
     "githubRepositoryCreatedAt": "2026-09-08T06:38:28Z",
@@ -1426,7 +1378,7 @@
     "githubInitialCommitSha": "41d4def8cc788d1fa36dc2bfbb6254fb0c2dc3d6",
     "npmUrl": "",
     "emoji": "",
-    "imageUrl": null,
+    "imageUrl": "assets/projects/liftuno.png",
     "topics": [
       "client-work",
       "gym-management",
