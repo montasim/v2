@@ -176,6 +176,7 @@ export const projectCatalog = {
     if (filter === "all") return true
     if (filter === "client") return project.clientWork === true
     if (filter === "professional") return project.professionalWork === true
+    if (filter === "package") return Boolean(project.npmUrl)
     return project.type === filter
   },
 } as const

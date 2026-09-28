@@ -16,11 +16,14 @@ describe("project case-study catalog", () => {
     ).toBe(true)
   })
 
-  it("filters case studies by project type", () => {
+  it("filters case studies by npm release availability", () => {
     const packages = projectCaseStudyCatalog.filter("package", "")
 
     expect(packages.length).toBeGreaterThan(0)
-    expect(packages.every((record) => record.project.type === "package")).toBe(
+    expect(packages.every((record) => Boolean(record.project.npmUrl))).toBe(
+      true
+    )
+    expect(packages.some((record) => record.project.type === "skill")).toBe(
       true
     )
   })

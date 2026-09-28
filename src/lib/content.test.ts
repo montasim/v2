@@ -206,6 +206,27 @@ describe("portfolio content", () => {
     })
   })
 
+  it("includes npm-released skills in the package filter", () => {
+    const npmProjects = projectCatalog.records.filter((project) =>
+      projectCatalog.matches(project, "package")
+    )
+    const releasedSkills = projectCatalog.records.filter(
+      (project) => project.type === "skill" && project.npmUrl
+    )
+
+    expect(releasedSkills).toHaveLength(13)
+    expect(npmProjects).toEqual(expect.arrayContaining(releasedSkills))
+    expect(npmProjects.every((project) => Boolean(project.npmUrl))).toBe(true)
+    expect(
+      projectCatalog.matches(
+        projectCatalog.records.find(
+          (project) => project.id === "project-skillfoliox"
+        )!,
+        "package"
+      )
+    ).toBe(false)
+  })
+
   it("builds canonical social metadata", () => {
     expect(site.url).toBe("https://montasim.dev")
 
