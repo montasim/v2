@@ -31,8 +31,14 @@ function PaginationContent({
   )
 }
 
-function PaginationItem(props: React.ComponentProps<"li">) {
-  return <li data-slot="pagination-item" {...props} />
+function PaginationItem({ className, ...props }: React.ComponentProps<"li">) {
+  return (
+    <li
+      data-slot="pagination-item"
+      className={cn("flex shrink-0 items-center", className)}
+      {...props}
+    />
+  )
 }
 
 function PaginationButton({
@@ -61,7 +67,7 @@ function PaginationEllipsis({
       data-slot="pagination-ellipsis"
       aria-hidden="true"
       className={cn(
-        "flex size-7 items-center justify-center text-xs text-muted-foreground",
+        "flex size-8 items-center justify-center text-xs text-muted-foreground",
         className
       )}
       {...props}

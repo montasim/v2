@@ -11,11 +11,12 @@ export const Route = createFileRoute("/projects")({
   head: () => createMeta("Projects", descriptions.projects, "/projects"),
   validateSearch: z.object({
     filter: projectCatalog.filterSchema.catch("all").default("all"),
+    page: z.coerce.number().int().min(1).catch(1).default(1),
   }),
   component: Page,
 })
 function Page() {
-  const { filter } = Route.useSearch()
+  const { filter, page } = Route.useSearch()
   const navigate = Route.useNavigate()
 
   return (
@@ -27,8 +28,25 @@ function Page() {
       records={projectCatalog.records}
       matches={projectCatalog.matches}
       onFilterChange={(nextFilter) =>
-        navigate(catalogFilterNavigation(nextFilter))
+        navigate({
+          ...catalogFilterNavigation(nextFilter),
+          search: { filter: nextFilter, page: 1 },
+        })
       }
+      page={page}
+      pageSize={5}
+      resultsId="project-results"
+      onPageChange={async (nextPage) => {
+        await navigate({
+          resetScroll: false,
+          search: (previous) => ({ ...previous, page: nextPage }),
+        })
+        requestAnimationFrame(() => {
+          const results = document.getElementById("project-results")
+          results?.focus({ preventScroll: true })
+          results?.scrollIntoView({ block: "start" })
+        })
+      }}
       resultLabel="projects"
       renderRecord={(project) => (
         <ProjectCard key={project.id} project={project} />
