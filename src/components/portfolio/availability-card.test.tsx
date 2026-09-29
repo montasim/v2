@@ -19,7 +19,7 @@ describe("AvailabilityCard", () => {
     expect(screen.queryByText("Immediately")).toBeNull()
     expect(screen.getAllByText("Ask me")).toHaveLength(1)
     expect(
-      screen.getByRole("button", { name: "Discuss a role" }).className
+      screen.getByRole("link", { name: "Discuss a role" }).className
     ).toContain("bg-emphasis-foreground")
   })
 

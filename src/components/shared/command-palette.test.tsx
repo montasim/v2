@@ -5,11 +5,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { CommandPalette } from "@/components/shared/command-palette"
 
+const route = vi.hoisted(() => ({ pathname: "/" }))
 const navigate = vi.hoisted(() => vi.fn())
 const toggleTheme = vi.hoisted(() => vi.fn())
 
 vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => navigate,
+  useRouterState: ({
+    select,
+  }: {
+    select: (state: { location: { pathname: string } }) => unknown
+  }) => select({ location: route }),
 }))
 
 vi.mock("@/components/theme-provider", () => ({
@@ -18,6 +24,7 @@ vi.mock("@/components/theme-provider", () => ({
 
 describe("CommandPalette", () => {
   beforeEach(() => {
+    route.pathname = "/"
     navigate.mockClear()
     toggleTheme.mockClear()
     Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
@@ -39,6 +46,14 @@ describe("CommandPalette", () => {
   function openCommandMenu() {
     fireEvent.keyDown(document, { key: "k", ctrlKey: true })
   }
+
+  it("omits the assistant command on contact", () => {
+    route.pathname = "/contact"
+    render(<CommandPalette />)
+    fireEvent.keyDown(document, { key: "k", ctrlKey: true })
+    expect(screen.queryByText("Open / close assistant")).toBeNull()
+    expect(screen.getByRole("dialog")).toBeTruthy()
+  })
 
   it("opens with the v1 keyboard shortcut and shows both command groups", () => {
     render(<CommandPalette />)

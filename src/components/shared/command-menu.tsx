@@ -72,7 +72,8 @@ export function CommandMenu({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const { executeAction, navigateToSection, theme } = usePortfolioCommands()
+  const { executeAction, navigateToSection, theme, chatEnabled } =
+    usePortfolioCommands()
 
   const run = React.useCallback(
     (action: () => void) => {
@@ -111,34 +112,36 @@ export function CommandMenu({
         <CommandSeparator />
 
         <CommandGroup heading="Actions">
-          {actionShortcuts.map((item) => {
-            const ActionIcon =
-              item.action === "theme" && theme === "dark"
-                ? SunIcon
-                : item.action === "theme"
-                  ? MoonIcon
-                  : actionIconMap[item.action]
-            const label =
-              item.action === "theme"
-                ? theme === "dark"
-                  ? "Light Mode"
-                  : "Dark Mode"
-                : item.label
+          {actionShortcuts
+            .filter((item) => item.action !== "assistant" || chatEnabled)
+            .map((item) => {
+              const ActionIcon =
+                item.action === "theme" && theme === "dark"
+                  ? SunIcon
+                  : item.action === "theme"
+                    ? MoonIcon
+                    : actionIconMap[item.action]
+              const label =
+                item.action === "theme"
+                  ? theme === "dark"
+                    ? "Light Mode"
+                    : "Dark Mode"
+                  : item.label
 
-            return (
-              <CommandItem
-                key={item.action}
-                value={label}
-                onSelect={() => run(() => executeAction(item.action))}
-              >
-                <ActionIcon className="text-muted-foreground" />
-                {label}
-                <span className="ml-auto text-sm text-muted-foreground">
-                  {item.key}
-                </span>
-              </CommandItem>
-            )
-          })}
+              return (
+                <CommandItem
+                  key={item.action}
+                  value={label}
+                  onSelect={() => run(() => executeAction(item.action))}
+                >
+                  <ActionIcon className="text-muted-foreground" />
+                  {label}
+                  <span className="ml-auto text-sm text-muted-foreground">
+                    {item.key}
+                  </span>
+                </CommandItem>
+              )
+            })}
         </CommandGroup>
       </CommandList>
     </CommandDialog>

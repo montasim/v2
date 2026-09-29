@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Link } from "@tanstack/react-router"
+import { Link, useRouterState } from "@tanstack/react-router"
 import {
   ArrowLeftCompactIcon,
   DownloadSimpleIcon,
@@ -19,7 +19,7 @@ import {
   InternalAction,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
-import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
+import { contactHref } from "@/features/contact/domain/contact"
 import { profileCatalog } from "@/lib/content/profile"
 
 export function DetailPage({
@@ -33,6 +33,9 @@ export function DetailPage({
   introAction?: ReactNode
   children: ReactNode
 }) {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
   const actionClassName =
     "group/action h-auto gap-2 rounded-md bg-background px-4 py-2.5 font-medium text-strong-foreground"
 
@@ -85,10 +88,12 @@ export function DetailPage({
           variant="outline"
           size="lg"
           className={actionClassName}
-          onClick={() => requestPortfolioInquiry({ inquiryType: "general" })}
+          asChild
         >
-          <EnvelopeSimpleIcon />
-          Contact me
+          <a href={contactHref({ topic: "question", from: pathname })}>
+            <EnvelopeSimpleIcon />
+            Contact me
+          </a>
         </Button>
       </footer>
     </PageShell>

@@ -23,6 +23,11 @@ vi.mock("sonner", () => ({
 
 vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => navigate,
+  useRouterState: ({
+    select,
+  }: {
+    select: (state: { location: { pathname: string } }) => unknown
+  }) => select({ location: { pathname: "/" } }),
 }))
 
 vi.mock("@/components/theme-provider", () => ({

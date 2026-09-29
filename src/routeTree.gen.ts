@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CaseStudiesRouteImport } from './routes/case-studies'
 import { Route as CertificationsRouteImport } from './routes/certifications'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as EducationRouteImport } from './routes/education'
 import { Route as ExperienceRouteImport } from './routes/experience'
@@ -53,6 +54,11 @@ const CaseStudiesRoute = CaseStudiesRouteImport.update({
 const CertificationsRoute = CertificationsRouteImport.update({
   id: '/certifications',
   path: '/certifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRoute
   '/case-studies': typeof CaseStudiesRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
@@ -193,6 +200,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogRoute
   '/case-studies': typeof CaseStudiesRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
   '/projects': typeof ProjectsRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/blog': typeof BlogRoute
   '/case-studies': typeof CaseStudiesRoute
   '/certifications': typeof CertificationsRoute
+  '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/education': typeof EducationRoute
   '/experience': typeof ExperienceRoute
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/case-studies'
     | '/certifications'
+    | '/contact'
     | '/dashboard'
     | '/education'
     | '/experience'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/case-studies'
     | '/certifications'
+    | '/contact'
     | '/education'
     | '/experience'
     | '/projects'
@@ -302,6 +313,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/case-studies'
     | '/certifications'
+    | '/contact'
     | '/dashboard'
     | '/education'
     | '/experience'
@@ -330,6 +342,7 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRoute
   CaseStudiesRoute: typeof CaseStudiesRoute
   CertificationsRoute: typeof CertificationsRoute
+  ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   EducationRoute: typeof EducationRoute
   ExperienceRoute: typeof ExperienceRoute
@@ -374,6 +387,13 @@ declare module '@tanstack/react-router' {
       path: '/certifications'
       fullPath: '/certifications'
       preLoaderRoute: typeof CertificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -555,6 +575,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRoute,
   CaseStudiesRoute: CaseStudiesRoute,
   CertificationsRoute: CertificationsRoute,
+  ContactRoute: ContactRoute,
   DashboardRoute: DashboardRouteWithChildren,
   EducationRoute: EducationRoute,
   ExperienceRoute: ExperienceRoute,

@@ -1,5 +1,6 @@
+import { isContactPath } from "@/features/contact/domain/contact"
 import * as React from "react"
-import { useNavigate } from "@tanstack/react-router"
+import { useNavigate, useRouterState } from "@tanstack/react-router"
 
 import { useTheme } from "@/components/theme-provider"
 import { profileCatalog } from "@/lib/content/profile"
@@ -10,6 +11,9 @@ import type {
 
 export function usePortfolioCommands() {
   const navigate = useNavigate()
+  const chatEnabled = useRouterState({
+    select: (state) => !isContactPath(state.location.pathname),
+  })
   const { theme, toggleTheme } = useTheme()
   const { profile } = profileCatalog
 
@@ -34,6 +38,7 @@ export function usePortfolioCommands() {
           toggleTheme()
           break
         case "assistant": {
+          if (!chatEnabled) return
           const assistantToggle =
             document.querySelector<HTMLElement>(
               '[aria-label="Close assistant"]'
@@ -65,8 +70,8 @@ export function usePortfolioCommands() {
         }
       }
     },
-    [profile, toggleTheme]
+    [profile, toggleTheme, chatEnabled]
   )
 
-  return { executeAction, navigateToSection, theme }
+  return { executeAction, navigateToSection, theme, chatEnabled }
 }

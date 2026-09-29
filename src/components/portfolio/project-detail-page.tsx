@@ -29,11 +29,9 @@ import type { Project } from "@/lib/content/projects"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { BlogPost } from "@/lib/content/blog"
 import { optimizedImage } from "@/lib/assets"
-import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
-import {
-  ProjectReadmeDocument,
-  type ProjectReadmeSource,
-} from "@/components/portfolio/project-readme-document"
+import { contactHref } from "@/features/contact/domain/contact"
+import { ProjectReadmeDocument } from "@/components/portfolio/project-readme-document"
+import type { ProjectReadmeSource } from "@/components/portfolio/project-readme-document"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
 
 export function ProjectDetailPage({
@@ -237,6 +235,19 @@ export function ProjectDetailPage({
           ) : null}
         </section>
 
+        <p className="mt-10 text-sm text-muted-foreground">
+          Need help with this project?{" "}
+          <a
+            className="font-medium text-strong-foreground underline underline-offset-4"
+            href={contactHref({
+              app: project.id.replace(/^project-/, ""),
+              topic: "support",
+            })}
+          >
+            Get project support
+          </a>
+        </p>
+
         <section
           aria-labelledby="project-feedback-heading"
           className="mt-12 border-y py-8 sm:py-10"
@@ -253,10 +264,17 @@ export function ProjectDetailPage({
           </p>
           <Button
             className="mt-6 bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
-            onClick={() => requestPortfolioInquiry({ inquiryType: "project" })}
+            asChild
           >
-            <EnvelopeSimpleIcon />
-            Discuss a project
+            <a
+              href={contactHref({
+                topic: "collaboration",
+                from: `/projects/${project.id.replace(/^project-/, "")}`,
+              })}
+            >
+              <EnvelopeSimpleIcon />
+              Discuss a project
+            </a>
           </Button>
         </section>
 

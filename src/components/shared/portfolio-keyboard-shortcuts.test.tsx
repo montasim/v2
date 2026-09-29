@@ -5,11 +5,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { PortfolioKeyboardShortcuts } from "@/components/shared/portfolio-keyboard-shortcuts"
 
+const route = vi.hoisted(() => ({ pathname: "/" }))
 const navigate = vi.hoisted(() => vi.fn())
 const toggleTheme = vi.hoisted(() => vi.fn())
 
 vi.mock("@tanstack/react-router", () => ({
   useNavigate: () => navigate,
+  useRouterState: ({
+    select,
+  }: {
+    select: (state: { location: { pathname: string } }) => unknown
+  }) => select({ location: route }),
 }))
 
 vi.mock("@/components/theme-provider", () => ({
@@ -18,6 +24,7 @@ vi.mock("@/components/theme-provider", () => ({
 
 describe("PortfolioKeyboardShortcuts", () => {
   beforeEach(() => {
+    route.pathname = "/"
     navigate.mockClear()
     toggleTheme.mockClear()
     vi.spyOn(window, "open").mockImplementation(() => null)
@@ -41,6 +48,21 @@ describe("PortfolioKeyboardShortcuts", () => {
     fireEvent.keyDown(document, { key })
 
     expect(navigate).toHaveBeenCalledWith(destination)
+  })
+
+  it("does not trigger chat on contact, including trailing slashes, while theme remains usable", () => {
+    route.pathname = "/contact/"
+    const openAssistant = vi.fn()
+    render(
+      <>
+        <button aria-label="Ask about Montasim" onClick={openAssistant} />
+        <PortfolioKeyboardShortcuts />
+      </>
+    )
+    fireEvent.keyDown(document, { key: "c" })
+    fireEvent.keyDown(document, { key: "t" })
+    expect(openAssistant).not.toHaveBeenCalled()
+    expect(toggleTheme).toHaveBeenCalledOnce()
   })
 
   it("runs the theme shortcut", () => {

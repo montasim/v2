@@ -24,7 +24,7 @@ import { ExperienceList } from "@/components/portfolio/experience-list"
 import { ProjectCard } from "@/components/portfolio/project-card"
 import { RecommendationCarousel } from "@/components/portfolio/recommendations"
 import { SkillGroups } from "@/components/portfolio/skill-groups"
-import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
+import { contactHref } from "@/features/contact/domain/contact"
 import { affiliationCatalog } from "@/lib/content/affiliations"
 import { experienceCatalog } from "@/lib/content/experience"
 import { profileCatalog } from "@/lib/content/profile"
@@ -92,37 +92,37 @@ function OverviewPage() {
               <ExternalAction
                 href={profile.resumeUrl}
                 variant="outline"
-                className="font-medium text-strong-foreground"
+                className="h-11 font-medium text-strong-foreground"
               >
-                <DownloadSimpleIcon className="size-[18px] sm:size-4" />
+                <DownloadSimpleIcon className="size-[18px]" />
                 Download resume
               </ExternalAction>
               <ExternalAction
                 href={profileCatalog.socialUrl("linkedin")}
                 variant="ghost"
                 size="icon"
-                className="size-9 sm:size-8 xl:hidden"
+                className="size-11 xl:hidden"
               >
                 <span className="sr-only">LinkedIn profile</span>
-                <LinkedinLogoIcon className="size-5 sm:size-4" />
+                <LinkedinLogoIcon className="size-[18px]" />
               </ExternalAction>
               <ExternalAction
                 href={profileCatalog.socialUrl("github")}
                 variant="ghost"
                 size="icon"
-                className="size-9 sm:size-8 xl:hidden"
+                className="size-11 xl:hidden"
               >
                 <span className="sr-only">GitHub profile</span>
-                <GithubLogoIcon className="size-5 sm:size-4" />
+                <GithubLogoIcon className="size-[18px]" />
               </ExternalAction>
               <MailAction
                 email={profile.email}
                 variant="ghost"
                 size="icon"
-                className="size-9 sm:size-8 xl:hidden"
+                className="size-11 xl:hidden"
               >
                 <span className="sr-only">Send email</span>
-                <EnvelopeSimpleIcon className="size-5 sm:size-4" />
+                <EnvelopeSimpleIcon className="size-[18px]" />
               </MailAction>
             </div>
           </div>
@@ -241,10 +241,12 @@ function OverviewPage() {
           <Button
             size="lg"
             className="w-fit bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80 sm:justify-self-end"
-            onClick={() => requestPortfolioInquiry({ inquiryType: "general" })}
+            asChild
           >
-            <ChatCircleDotsIcon aria-hidden="true" />
-            Start a conversation
+            <a href={contactHref({ topic: "general" })}>
+              <ChatCircleDotsIcon aria-hidden="true" />
+              Start a conversation
+            </a>
           </Button>
         </div>
       </PageSection>

@@ -8,7 +8,7 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
+import { contactHref } from "@/features/contact/domain/contact"
 import { defaultAvailabilitySettings } from "@/features/availability/domain/settings"
 import type { AvailabilitySettings } from "@/features/availability/domain/settings"
 
@@ -53,10 +53,17 @@ export function AvailabilityCard({
           </p>
           <Button
             className="mt-6 w-fit bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80 active:scale-[0.98] md:mt-auto"
-            onClick={() => requestPortfolioInquiry({ inquiryType: "hire" })}
+            asChild
           >
-            <EnvelopeSimpleIcon aria-hidden="true" />
-            {settings.ctaLabel}
+            <a
+              href={contactHref({
+                topic: "collaboration",
+                from: "/experience",
+              })}
+            >
+              <EnvelopeSimpleIcon aria-hidden="true" />
+              {settings.ctaLabel}
+            </a>
           </Button>
         </div>
 

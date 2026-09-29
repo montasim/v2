@@ -1,3 +1,4 @@
+import { isContactPath } from "@/features/contact/domain/contact"
 import {
   HeadContent,
   Scripts,
@@ -74,10 +75,11 @@ function AppToaster() {
   return <Toaster position="bottom-center" />
 }
 
-function ApplicationFrame({ children }: { children: React.ReactNode }) {
-  const isDashboard = useRouterState({
-    select: (state) => state.location.pathname.startsWith("/dashboard"),
+export function ApplicationFrame({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
   })
+  const isDashboard = pathname.startsWith("/dashboard")
 
   if (isDashboard) return children
 
@@ -96,7 +98,7 @@ function ApplicationFrame({ children }: { children: React.ReactNode }) {
         <SiteHeader />
         <SideRails />
         <KonamiCommandCenter />
-        <PortfolioAssistant />
+        {!isContactPath(pathname) && <PortfolioAssistant />}
         {children}
         <SiteFooter />
       </AppContextMenu>

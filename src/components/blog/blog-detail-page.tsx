@@ -51,7 +51,7 @@ import type { BlogComment } from "@/features/blog-comments/domain/comment"
 import { getCommentSubmissionModerationError } from "@/features/blog-comments/domain/moderation"
 import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
-import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
+import { contactHref } from "@/features/contact/domain/contact"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { blogCatalog } from "@/lib/content/blog"
 import type { BlogPost } from "@/lib/content/blog"
@@ -650,7 +650,7 @@ function BlogDiscussion({
   )
 }
 
-function BlogProjectInquiry() {
+function BlogProjectInquiry({ slug }: { slug: string }) {
   return (
     <section
       aria-labelledby="blog-project-inquiry-heading"
@@ -669,10 +669,17 @@ function BlogProjectInquiry() {
       <div className="mt-6 flex flex-wrap gap-3">
         <Button
           className="bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
-          onClick={() => requestPortfolioInquiry({ inquiryType: "project" })}
+          asChild
         >
-          <EnvelopeSimpleIcon />
-          Discuss a project
+          <a
+            href={contactHref({
+              topic: "collaboration",
+              from: `/blog/${slug}`,
+            })}
+          >
+            <EnvelopeSimpleIcon />
+            Discuss a project
+          </a>
         </Button>
       </div>
     </section>
@@ -1007,7 +1014,7 @@ export function BlogDetailPage({
             ))}
           </article>
 
-          <BlogProjectInquiry />
+          <BlogProjectInquiry slug={post.slug} />
 
           <BlogDiscussion post={post} onCommentCountChange={setCommentCount} />
 

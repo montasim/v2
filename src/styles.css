@@ -592,3 +592,10 @@
     animation: none;
   }
 }
+
+/* Radix Select locks wheel/touch scrolling itself. Keep the page scrollbar
+   visible without its replacement margin; leave nested/modal locks untouched. */
+body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
+  overflow: visible !important;
+  margin-right: 0 !important;
+}

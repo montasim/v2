@@ -38,7 +38,7 @@ import {
   getProjectViewCount,
   recordProjectView,
 } from "@/features/project-views/application/project-views"
-import { requestPortfolioInquiry } from "@/features/chat/ui/assistant-request"
+import { contactHref } from "@/features/contact/domain/contact"
 import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import { cn } from "@/lib/utils"
@@ -79,7 +79,7 @@ function githubRepositoryPath(githubUrl: string) {
     .replace(/\.git$/, "")
 }
 
-function CaseStudyFeedback() {
+function CaseStudyFeedback({ slug }: { slug: string }) {
   return (
     <section
       aria-labelledby="case-study-feedback-heading"
@@ -98,10 +98,17 @@ function CaseStudyFeedback() {
       <div className="mt-6 flex flex-wrap gap-3">
         <Button
           className="bg-emphasis-foreground px-[0.65625rem] text-background hover:bg-emphasis-foreground/80"
-          onClick={() => requestPortfolioInquiry({ inquiryType: "project" })}
+          asChild
         >
-          <EnvelopeSimpleIcon />
-          Discuss a project
+          <a
+            href={contactHref({
+              topic: "collaboration",
+              from: `/case-studies/${slug}`,
+            })}
+          >
+            <EnvelopeSimpleIcon />
+            Discuss a project
+          </a>
         </Button>
       </div>
     </section>
@@ -541,7 +548,7 @@ export function ProjectCaseStudyPage({
             />
           </section>
 
-          <CaseStudyFeedback />
+          <CaseStudyFeedback slug={caseStudy.slug} />
 
           <footer className="mt-8 flex flex-wrap gap-3">
             <Button asChild variant="outline" size="lg" className="w-auto">

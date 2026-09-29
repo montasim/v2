@@ -14,7 +14,8 @@ function isEditableTarget(target: EventTarget | null) {
 }
 
 export function PortfolioKeyboardShortcuts() {
-  const { executeAction, navigateToSection } = usePortfolioCommands()
+  const { executeAction, navigateToSection, chatEnabled } =
+    usePortfolioCommands()
 
   React.useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -39,7 +40,9 @@ export function PortfolioKeyboardShortcuts() {
       }
 
       const action = actionShortcuts.find(
-        (item) => item.key.toLowerCase() === key
+        (item) =>
+          item.key.toLowerCase() === key &&
+          (item.action !== "assistant" || chatEnabled)
       )
       if (action) {
         event.preventDefault()
@@ -56,7 +59,7 @@ export function PortfolioKeyboardShortcuts() {
 
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [executeAction, navigateToSection])
+  }, [executeAction, navigateToSection, chatEnabled])
 
   return null
 }
