@@ -2,6 +2,7 @@
   {
     "id": "experience-mymedicalhub-senior-software-engineer",
     "company": "MyMedicalHub International Ltd.",
+    "category": "employment",
     "companyUrl": "https://mymedicalhub.com",
     "logo": "M",
     "logoUrl": "/images/organizations/mymedicalhub.png",
@@ -22,6 +23,7 @@
   {
     "id": "experience-mymedicalhub-software-engineer",
     "company": "MyMedicalHub International Ltd.",
+    "category": "employment",
     "companyUrl": "https://mymedicalhub.com",
     "logo": "M",
     "logoUrl": "/images/organizations/mymedicalhub.png",
@@ -43,6 +45,7 @@
   {
     "id": "experience-mymedicalhub-junior-software-engineer",
     "company": "MyMedicalHub International Ltd.",
+    "category": "employment",
     "companyUrl": "https://mymedicalhub.com",
     "logo": "M",
     "logoUrl": "/images/organizations/mymedicalhub.png",
@@ -64,6 +67,7 @@
   {
     "id": "experience-multiversal-junior-frontend-developer",
     "company": "Multiversal Software Ltd.",
+    "category": "employment",
     "companyUrl": "",
     "logo": "M",
     "logoUrl": "/images/organizations/multiversal.jpg",
@@ -76,6 +80,7 @@
   {
     "id": "experience-drra-mis-officer",
     "company": "Disabled Rehabilitation and Research Association (DRRA)",
+    "category": "employment",
     "companyUrl": "",
     "logo": "D",
     "logoUrl": "/images/organizations/drra.jpg",
@@ -93,6 +98,7 @@
   {
     "id": "experience-drra-computer-instructor",
     "company": "Disabled Rehabilitation and Research Association (DRRA)",
+    "category": "employment",
     "companyUrl": "",
     "logo": "D",
     "logoUrl": "/images/organizations/drra.jpg",
@@ -110,6 +116,7 @@
   {
     "id": "experience-codez-web-developer",
     "company": "Codez Info Tech.",
+    "category": "employment",
     "companyUrl": "",
     "logo": "C",
     "logoUrl": "/images/organizations/codez.png",

@@ -28,6 +28,8 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
   onFilterChange,
   resultLabel,
   renderRecord,
+  renderRecords,
+  emptyState,
   introAction,
   page,
   pageSize,
@@ -42,7 +44,9 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
   matches: (record: TRecord, filter: TFilter) => boolean
   onFilterChange: (filter: TFilter) => void
   resultLabel: string
-  renderRecord: (record: TRecord, index: number) => ReactNode
+  renderRecord?: (record: TRecord, index: number) => ReactNode
+  renderRecords?: (records: readonly TRecord[]) => ReactNode
+  emptyState?: ReactNode
   introAction?: ReactNode
   page?: number
   pageSize?: number
@@ -100,9 +104,13 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
           className="grid scroll-mt-20 gap-5"
           aria-label={resultLabel}
         >
-          {visiblePage.map((record, index) =>
-            renderRecord(record, firstRecordIndex + index)
-          )}
+          {visiblePage.length === 0
+            ? emptyState
+            : renderRecords
+              ? renderRecords(visiblePage)
+              : visiblePage.map((record, index) =>
+                  renderRecord?.(record, firstRecordIndex + index)
+                )}
         </TabsContent>
 
         {paginationEnabled && visible.length ? (
