@@ -1,7 +1,39 @@
 import { useState } from "react"
 import { Command } from "cmdk"
 import { Popover } from "radix-ui"
-import { CheckIcon, CaretDownIcon, SearchIcon } from "@/components/ui/icons"
+import {
+  CheckIcon,
+  CaretDownIcon,
+  SearchIcon,
+  SquaresFourIcon,
+} from "@/components/ui/icons"
+
+type ProjectOption = { id: string; title: string; iconUrl?: string }
+
+function ProjectIcon({ src }: { src?: string }) {
+  const [failedSource, setFailedSource] = useState<string>()
+  return (
+    <span
+      aria-hidden="true"
+      className="flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-sm"
+    >
+      {src && failedSource !== src ? (
+        <img
+          src={src}
+          alt=""
+          width={20}
+          height={20}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={() => setFailedSource(src)}
+          className="size-5 object-contain"
+        />
+      ) : (
+        <SquaresFourIcon className="size-4 text-muted-foreground" />
+      )}
+    </span>
+  )
+}
 
 export function ProjectPicker({
   projects,
@@ -11,7 +43,7 @@ export function ProjectPicker({
   disabled,
   ...props
 }: {
-  projects: Array<{ id: string; title: string }>
+  projects: Array<ProjectOption>
   value: string
   onValueChange: (value: string) => void
   placeholder: string
@@ -21,11 +53,12 @@ export function ProjectPicker({
   "aria-describedby"?: string
 }) {
   const [open, setOpen] = useState(false)
-  const options = [
+  const options: Array<ProjectOption> = [
     { id: "none", title: placeholder },
     ...projects,
     { id: "other", title: "Other / not listed" },
   ]
+  const selected = options.find((option) => option.id === value)
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
@@ -44,9 +77,9 @@ export function ProjectPicker({
           disabled={disabled}
           className="flex h-11 w-full min-w-0 items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 text-left text-sm outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-50 aria-invalid:border-destructive"
         >
-          <span className="truncate">
-            {options.find((option) => option.id === value)?.title ??
-              placeholder}
+          <span className="flex min-w-0 items-center gap-2">
+            <ProjectIcon src={selected?.iconUrl} />
+            <span className="truncate">{selected?.title ?? placeholder}</span>
           </span>
           <CaretDownIcon
             aria-hidden="true"
@@ -88,7 +121,10 @@ export function ProjectPicker({
                   }}
                   className="flex cursor-pointer items-center justify-between gap-2 rounded-sm px-2 py-2 text-sm data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
                 >
-                  <span>{option.title}</span>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <ProjectIcon src={option.iconUrl} />
+                    <span className="truncate">{option.title}</span>
+                  </span>
                   {value === option.id && (
                     <CheckIcon aria-hidden="true" className="size-4 shrink-0" />
                   )}

@@ -28,6 +28,19 @@ const contact = {
 }
 
 describe("direct contact contract", () => {
+  it("uses verified project icons instead of guessing the hosting favicon", () => {
+    const { projects } = loadContactContext({})
+    expect(
+      projects.find((project) => project.id === "project-bugreceipt")?.iconUrl
+    ).toBe("https://bugreceipt.netlify.app/brand/bugreceipt-mark.svg")
+    expect(
+      projects.find((project) => project.id === "project-mulalens")?.iconUrl
+    ).toBe("https://mulalens.netlify.app/brand/logo.png")
+    expect(
+      projects.find((project) => project.id === "project-formflow")?.iconUrl
+    ).toBeUndefined()
+  })
+
   it("includes catalog store links for contact products without empty destinations", () => {
     const { projects } = loadContactContext({ app: "bugreceipt" })
     expect(

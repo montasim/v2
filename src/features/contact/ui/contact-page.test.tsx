@@ -40,6 +40,7 @@ const initial = {
       id: "project-example",
       title: "Example app",
       description: "A useful example app.",
+      iconUrl: undefined,
       href: "/projects/example",
       links: [
         {

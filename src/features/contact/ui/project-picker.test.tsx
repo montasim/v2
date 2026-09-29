@@ -58,3 +58,22 @@ it("filters projects, handles no matches, and selects a result using the keyboar
   expect(onValueChange).toHaveBeenCalledWith("mulalens")
   expect(screen.queryByRole("dialog")).toBeNull()
 })
+
+it("falls back when a project icon cannot load", () => {
+  const { container } = render(
+    <ProjectPicker
+      id="project"
+      projects={[
+        { id: "app", title: "App", iconUrl: "https://example.com/favicon.ico" },
+      ]}
+      value="app"
+      placeholder="Choose an app"
+      onValueChange={vi.fn()}
+    />
+  )
+  const image = container.querySelector("img")!
+  expect(image.getAttribute("src")).toBe("https://example.com/favicon.ico")
+  fireEvent.error(image)
+  expect(container.querySelector("img")).toBeNull()
+  expect(screen.getByRole("combobox").textContent).toContain("App")
+})

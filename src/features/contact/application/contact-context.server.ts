@@ -59,6 +59,7 @@ export function loadContactContext(search: ContactSearch) {
       id: project.id,
       title: project.title,
       description: project.description,
+      iconUrl: project.logoUrl,
       href:
         project.liveUrl || `/projects/${project.id.replace(/^project-/, "")}`,
       links: [
