@@ -1,0 +1,27 @@
+# Contact page and app store support requirements
+
+Checked 2026-09-29 against official store documentation. This is research for a proposed shared `/contact` page; no application implementation is included.
+
+## Finding
+
+A central contact page is a sensible support destination for multiple apps. The reviewed documentation requires reachable support/contact information; it does not require a separate support website for every app. That conclusion is an inference from the requirements below, not a guarantee of store approval. A shared page should clearly identify the developer and the app being discussed.
+
+| Store | Verified requirement | Implication for `/contact` |
+| --- | --- | --- |
+| Apple App Store | Support URL is required and must lead to actual contact information for app issues, feedback, and feature requests. Contact information includes legal address, email, and phone as required by local law. Guideline 1.5 requires an easy way to contact the developer in the app and at its Support URL. | Publish an easy direct contact route with a visible email address. A chatbot alone is a weak fit. Keep the URL functional and information current. [Support URL field](https://developer.apple.com/help/app-store-connect/reference/app-information/platform-version-information/), [review guidelines 1.5 and 2.1](https://developer.apple.com/app-store/review/guidelines/) |
+| Google Play | A valid support email is required for each app. A website is recommended and can be entered with the app's store listing contact details. | Use `/contact` as the website while also filling the mandatory email field in Play Console. The page does not replace developer account verification. [App user support](https://support.google.com/googleplay/android-developer/answer/113477?hl=en), [account identity verification](https://support.google.com/googleplay/android-developer/answer/10841920?hl=en) |
+| Microsoft Store | Support contact info accepts a support webpage URL or email. It is recommended for MSI/EXE apps; MSIX guidance makes it required for apps/games available on Xbox, otherwise optional but recommended. | A shared contact page can supply the support destination. The separate app website field is intended for the app's webpage on the developer's own website. [MSIX support info](https://learn.microsoft.com/en-us/windows/apps/publish/publish-your-app/msix/support-info), [MSI/EXE support info](https://learn.microsoft.com/en-us/windows/apps/publish/publish-your-app/msi/support-info) |
+
+Google also requires replies to support questions about paid apps or in-app purchases within three business days, and within 24 hours when Google contacts the developer about an urgent product issue. Avoid inventing a universal public response promise; choose one the owner can maintain. [Google support requirements](https://support.google.com/googleplay/android-developer/answer/113477?hl=en)
+
+## Separate purposes
+
+- **Privacy:** A contact form is not a privacy policy. Apple requires a privacy policy link in App Store Connect and within the app; Google requires one in Play Console and a policy link or text in the app, including for apps without personal/sensitive data access. Microsoft has its own privacy-policy submission requirements. Link to policies that accurately cover each app and the contact form's data handling. [Apple guideline 5.1.1](https://developer.apple.com/app-store/review/guidelines/), [Google User Data policy](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en-GB), [Microsoft privacy/support guidance](https://learn.microsoft.com/en-us/windows/apps/publish/publish-your-app/msix/support-info)
+- **Google account deletion:** For apps supporting account creation, Google requires in-app and external paths to request account/data deletion. Its external page must work, prominently expose the deletion pathway, and reference the app or developer name as listed in the store. An email or form can support this, but a generic unlabelled contact page is insufficient. [Google account deletion guidance](https://support.google.com/googleplay/android-developer/answer/13327111?hl=en)
+- **Apple account deletion:** Apps supporting account creation must let users initiate deletion in the app. If completion is on a website, link directly to that process. Ordinary apps cannot require email, a phone call, or a customer support flow to delete an account; highly regulated industries have an exception. A general contact page therefore cannot substitute for the required deletion experience. [Apple account deletion guidance](https://developer.apple.com/support/offering-account-deletion-in-your-app)
+
+## Recommended design, not store mandates
+
+Keep `/contact` as the permanent general address. Allow contextual links such as `/contact?app=example-app&topic=support` to preselect the app and topic, visibly show “Support for Example App,” and carry that context into the owner's inbox. Keep manual app selection and a general question option available. Stable per-app paths can be added later if an app needs substantial FAQs or dedicated policies.
+
+The initial form should ask only for reply email, topic, relevant app/project when applicable, and message; name can be optional. Reveal troubleshooting details only for app support. Offer a visible email fallback, plain acknowledgement, and realistic response expectations. Keep any portfolio assistant optional, so contacting the owner does not depend on an AI conversation. Link privacy/account-deletion resources separately where relevant.

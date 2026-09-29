@@ -23,6 +23,7 @@ The result is designed for two audiences:
 - System-aware light and dark themes with a persistent manual toggle
 - Buffered, portfolio-grounded AI assistant with a pinned zero-cost OpenRouter primary, Gemini fallback, and Groq final fallback
 - Focused citation-ready TOON evidence, exact-question answers, deterministic claim validation, durable limits, and provider telemetry
+- A dedicated `/contact` page with contextual app support, feedback, collaboration, and direct messages; chat is disabled on this route. See the [contact release checklist](docs/plans/contact-page-release.md) for migration and Sheets column setup.
 - Guided role and project inquiry workflows with Neon as the source of truth plus idempotent Google Sheets and Resend delivery
 - Shareable, validated URL filters for project, education, certification, and recommendation catalogs
 - Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
@@ -86,6 +87,7 @@ GOOGLE_SHEET_ID=your_spreadsheet_id
 # Optional; these defaults keep inquiry types in separate tabs
 GOOGLE_ROLE_INQUIRIES_RANGE="'Role Inquiries'!A:J"
 GOOGLE_PROJECT_INQUIRIES_RANGE="'Project Inquiries'!A:J"
+GOOGLE_GENERAL_INQUIRIES_RANGE="'Project Inquiries'!A:R"
 ```
 
 OpenRouter is attempted first with one pinned, reviewed `:free` model. The app does not pass an OpenRouter model pool or the random `openrouter/free` router, so the primary model and its answer quality remain stable. The request sends no tools or plugins, sets every OpenRouter price ceiling to zero, and rejects a response unless reported cost is exactly zero. Gemini `gemini-3.5-flash` is the first direct generation fallback; Groq `openai/gpt-oss-120b` is the final generation fallback. Exact catalog matches use no model request. Dynamic questions select at most 12 relevant facts from the compiled portfolio and send that compact TOON packet to each provider. Models return prose claims and fact IDs; the server validates the IDs, numbers, dates, names, evidence roles, and citations before accepting an answer. The live path does not spend another model call on review; independent quality judging remains an offline evaluation gate. Every visitor is limited to 60 total chat requests per 10 minutes; dynamic generations also have 180-per-10-minute and 900-per-day safeguards, while OpenRouter receives a separate shared safety budget of 18 requests per minute and 900 per day. Attempt budgets are 12 seconds for OpenRouter, 22 seconds for Gemini, and 10 seconds for Groq inside a 50-second shared deadline. If all three fail validation or availability checks, the endpoint returns a safe streamed handoff. OpenRouter is the only provider for which the code proves zero spend; Gemini and Groq billing remain governed by their account quotas.
@@ -264,7 +266,7 @@ The deployment configuration pins the project's supported Node.js and pnpm
 versions. Verify server-side rendering, static assets, canonical URLs, and the
 social preview after the first deployment.
 
-Configure the server-only variables from [`.env.example`](.env.example) in Netlify; never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The two inquiry-range variables and `OPENROUTER_FREE_MODEL` are optional.
+Configure the server-only variables from [`.env.example`](.env.example) in Netlify; never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The inquiry-range variables and `OPENROUTER_FREE_MODEL` are optional.
 
 The application no longer reads the legacy portfolio evidence tables. Forward migration `0008_solid_raider` removes both evidence tables and the database vector extension. On an existing deployment, deploy and verify the focused-evidence runtime before applying that cleanup migration; a fresh environment can apply the complete migration chain before receiving traffic.
 
