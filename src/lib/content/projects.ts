@@ -20,6 +20,7 @@ const projectSchema = z.object({
   title: z.string().min(1),
   type: projectTypeSchema,
   clientWork: z.boolean().optional(),
+  collaborativeWork: z.boolean().optional(),
   professionalWork: z.boolean().optional(),
   featured: z.boolean(),
   description: z.string().min(1),
@@ -54,7 +55,11 @@ const projectSchema = z.object({
 
 export type Project = z.infer<typeof projectSchema>
 export type ProjectFilter =
-  "all" | "client" | "professional" | z.infer<typeof projectTypeSchema>
+  | "all"
+  | "client"
+  | "collaborative"
+  | "professional"
+  | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
 
@@ -146,6 +151,7 @@ const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "all", label: "All work" },
   { value: "professional", label: "Professional work" },
   { value: "client", label: "Client work" },
+  { value: "collaborative", label: "Collaborative work" },
   { value: "website", label: "Web apps" },
   { value: "desktop", label: "Desktop apps" },
   { value: "extension", label: "Extensions" },
@@ -167,6 +173,7 @@ export const projectCatalog = {
     "all",
     "professional",
     "client",
+    "collaborative",
     "website",
     "desktop",
     "extension",
@@ -195,6 +202,7 @@ export const projectCatalog = {
   matches(project: Project, filter: ProjectFilter) {
     if (filter === "all") return true
     if (filter === "client") return project.clientWork === true
+    if (filter === "collaborative") return project.collaborativeWork === true
     if (filter === "professional") return project.professionalWork === true
     if (filter === "package") return Boolean(project.npmUrl)
     return project.type === filter

@@ -71,13 +71,21 @@ describe("portfolio content", () => {
       "project-release-agent-skill",
     ])
     expect(
-      projectCatalog.records.slice(-5).map((project) => project.id)
+      projectCatalog.records.slice(-13).map((project) => project.id)
     ).toEqual([
       "project-mmh-patient-portal",
       "project-mmh-re-annotation",
       "project-mmh-telemedicine",
       "project-liftuno",
       "project-coaching-management",
+      "project-mcq-topper-backend",
+      "project-school-management-backend",
+      "project-school-management",
+      "project-survey-module-backend",
+      "project-warehouse-management-client",
+      "project-inventory-management-system-server",
+      "project-technofire",
+      "project-project-management",
     ])
     expect(
       educationCatalog.records.every((record) =>
@@ -206,7 +214,9 @@ describe("portfolio content", () => {
           caseStudy.decisions.length >= 3 &&
           caseStudy.contribution.length >= 3 &&
           caseStudy.outcomes.length >= 3 &&
-          caseStudy.project.githubUrl &&
+          (caseStudy.project.clientWork ||
+            caseStudy.project.collaborativeWork ||
+            caseStudy.project.githubUrl) &&
           Boolean(caseStudy.screenshot) === Boolean(caseStudy.project.imageUrl)
       )
     ).toBe(true)

@@ -67,13 +67,41 @@ describe("project case-study catalog", () => {
   it("filters client work without replacing its project type", () => {
     const clientWork = projectCaseStudyCatalog.filter("client", "")
 
-    expect(clientWork.map((record) => record.project.id)).toEqual([
-      "project-liftuno",
+    expect(clientWork.every((record) => !record.project.githubUrl)).toBe(true)
+
+    expect(clientWork.map((record) => record.project.id).sort()).toEqual(
+      [
+        "project-mcq-topper-backend",
+        "project-school-management-backend",
+        "project-school-management",
+        "project-survey-module-backend",
+        "project-warehouse-management-client",
+        "project-inventory-management-system-server",
+        "project-technofire",
+      ].sort()
+    )
+    expect(new Set(clientWork.map((record) => record.project.type))).toEqual(
+      new Set(["website", "api"])
+    )
+  })
+
+  it("filters collaborative work immediately after client work", () => {
+    const projects = projectCaseStudyCatalog.filter("collaborative", "")
+    expect(projects.map((record) => record.project.id).sort()).toEqual([
       "project-coaching-management",
+      "project-liftuno",
+      "project-project-management",
     ])
-    expect(
-      clientWork.every((record) => record.project.type === "website")
-    ).toBe(true)
+    expect(projects.every((record) => !record.project.clientWork)).toBe(true)
+    const filters = projectCaseStudyCatalog.filters
+    const clientIndex = filters.findIndex((filter) => filter.value === "client")
+    expect(filters[clientIndex + 1]).toEqual({
+      value: "collaborative",
+      label: "Collaborative work",
+    })
+    expect(projectCaseStudyCatalog.filterSchema.parse("collaborative")).toBe(
+      "collaborative"
+    )
   })
 
   it("filters professional work without replacing its project type", () => {

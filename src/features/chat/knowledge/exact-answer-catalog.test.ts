@@ -86,6 +86,35 @@ describe("createExactAnswerCatalog", () => {
 })
 
 describe("portfolio exact answers", () => {
+  it.each([
+    ["School Management Backend", "MongoDB"],
+    ["School Management", "Next.js"],
+    ["Survey Module Backend", "Mongoose"],
+    ["POSDash Client", "Firebase Authentication"],
+    ["Inventory Management System Server", "MongoDB"],
+    ["TechnoFire", "PHP"],
+    ["Project Management", "Tailwind CSS"],
+  ])("answers technology questions about %s", (title, technology) => {
+    expect(
+      findExactAnswer(`Which technologies did Montasim use for ${title}?`)?.text
+    ).toContain(technology)
+  })
+
+  it("grounds MCQ Topper answers in its scaffold implementation", () => {
+    const answers = getExactAnswerCatalog().filter((record) =>
+      record.factIds.some((id) => id.includes("mcq-topper-backend"))
+    )
+    expect(answers.length).toBeGreaterThanOrEqual(5)
+    expect(answers.some((answer) => answer.text.includes("scaffold"))).toBe(
+      true
+    )
+    expect(
+      findExactAnswer(
+        "Which technologies did Montasim use for MCQ Topper Backend?"
+      )?.text
+    ).toContain("Express.js")
+  })
+
   it("answers Air Traffic Control download and architecture questions", () => {
     expect(
       findExactAnswer("Where can I download Air Traffic Control?")?.text
@@ -233,7 +262,7 @@ describe("portfolio exact answers", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("43 project records")
+    expect(projectCount.text).toContain("51 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(

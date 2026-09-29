@@ -94,9 +94,10 @@ export function ProjectPreviewUnavailable({
 
 export function ProjectCard({ project }: { project: Project }) {
   const image = projectImage(project)
-  const publicGithubUrl = project.githubRepositoryPrivate
-    ? undefined
-    : project.githubUrl
+  const publicGithubUrl =
+    project.clientWork || project.githubRepositoryPrivate
+      ? undefined
+      : project.githubUrl
   const primaryUrl =
     project.liveUrl || project.npmUrl || project.releaseUrl || publicGithubUrl
   const separateNpmUrl =

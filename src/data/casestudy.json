@@ -2770,5 +2770,481 @@
       "alt": "Air Traffic Control promotional preview showing the game and flight-routing theme",
       "caption": "Project social preview from the Air Traffic Control repository."
     }
+  },
+  {
+    "slug": "mcq-topper-backend",
+    "projectId": "project-mcq-topper-backend",
+    "summary": "An MCQ learning-platform API scaffold that organizes a broad education domain into versioned Express modules, with shared request controls, response utilities, and exception notifications.",
+    "role": "Backend API structure and shared infrastructure development",
+    "scope": "Versioned routing, domain controller scaffolds, request middleware, response utilities, error notifications, and deployment configuration",
+    "status": "API scaffold; business logic and persistence remain incomplete; no verified live deployment",
+    "verifiedBranch": "main",
+    "verifiedCommit": "26e8d7b6c1483d9067d4992dca3b502687a7216c",
+    "problem": "An MCQ learning platform spans questions, exams, courses, enrolment, and results. The backend needs a consistent place for each domain and common request handling before those learning workflows can be implemented end to end.",
+    "constraints": [
+      "Most domain controllers return placeholder messages rather than completed learning workflows.",
+      "Database wiring is not active in the inspected request and server lifecycle; MongoDB-related files do not establish working persistence.",
+      "Authentication and authorization require route-level verification before deployment.",
+      "Deployment and test tooling are present, but configuration alone does not establish a working deployment or passing test suite."
+    ],
+    "architecture": {
+      "summary": "An Express application applies shared middleware before mounting a configurable API version prefix. Domain routers call controller scaffolds and common response utilities, while error handling attempts administrator email notification.",
+      "layers": [
+        {
+          "title": "Request boundary",
+          "detail": "Helmet, HPP, CORS, JSON payload limits, timeouts, and rate limiting are configured in the application before routing."
+        },
+        {
+          "title": "Versioned domain routing",
+          "detail": "The /api/{API_VERSION} router composes modules for questions, exams, courses, enrolment, results, and supporting content."
+        },
+        {
+          "title": "Controllers and responses",
+          "detail": "Domain controller scaffolds use shared controller and response helpers. The inspected question controller returns a fixed message instead of creating a persisted question."
+        },
+        {
+          "title": "Operations and delivery assets",
+          "detail": "Nodemailer utilities support error notifications. Docker, Compose, PM2, and Vercel files provide deployment starting points, with runtime readiness still requiring verification."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate domain routes behind a version prefix",
+        "detail": "A configurable API prefix and separate domain modules give questions, courses, and exams explicit routing boundaries without implying that their business logic is complete."
+      },
+      {
+        "title": "Centralize request and response behavior",
+        "detail": "Shared middleware and response utilities give controller implementations common entry and exit paths instead of repeating the same request handling in every domain."
+      },
+      {
+        "title": "Treat operational configuration as a starting point",
+        "detail": "Email notifications and deployment files document intended operation, while incomplete persistence and controller behavior keep the verified status at scaffold stage."
+      }
+    ],
+    "contribution": [
+      "Structured versioned Express routes around the learning platform’s domains.",
+      "Added shared request middleware, controller wrappers, and response/error utilities.",
+      "Included administrator email notifications and container/process deployment configuration."
+    ],
+    "outcomes": [
+      "The repository provides an inspectable API structure for extending MCQ learning workflows.",
+      "Common middleware and response helpers establish shared conventions across domain modules.",
+      "The inspected source demonstrates backend scaffolding, without evidence of completed exam delivery, persisted results, production adoption, or measured performance improvements."
+    ]
+  },
+  {
+    "slug": "school-management-backend",
+    "projectId": "project-school-management-backend",
+    "summary": "A modular Express and MongoDB prototype for school administration and website content, with admission resources, student records, academic downloads, and Google Drive file integration.",
+    "role": "Backend API and school-content service development",
+    "scope": "Domain routes and services, MongoDB access, validation, admission-file handling, and shared middleware",
+    "status": "Backend prototype with database services; runtime and production readiness unverified",
+    "verifiedBranch": "main",
+    "verifiedCommit": "e6c594d5762f60504c5e2bab88f0ba8171a3b37e",
+    "problem": "School websites need to organize admissions, notices, results, and downloadable documents alongside administrative records. These resources need consistent service boundaries and a way to associate stored files with database metadata.",
+    "constraints": [
+      "The repository is a prototype; its test command is a failing placeholder and no automated suite is included.",
+      "Database, email, and Google Drive operations require configured external services; they were not executed during this review.",
+      "Access control and file handling need production validation; no school adoption or live availability is claimed."
+    ],
+    "architecture": {
+      "summary": "A modular Express and MongoDB prototype for school administration and website content, with admission resources, student records, academic downloads, and Google Drive file integration.",
+      "layers": [
+        {
+          "title": "HTTP and domain modules",
+          "detail": "Express composes school resource routes with domain controllers, services, and Joi validation."
+        },
+        {
+          "title": "Database access",
+          "detail": "MongoDB connection middleware and shared collection helpers support resource operations."
+        },
+        {
+          "title": "Admission documents",
+          "detail": "The admission-form service uploads files to Google Drive and records file identifiers and links in MongoDB."
+        },
+        {
+          "title": "Shared infrastructure",
+          "detail": "Request logging, rate limiting, response helpers, and email utilities support the API."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate school resources into modules",
+        "detail": "Admissions, academic resources, and site content have separate route and service boundaries so each area can evolve independently."
+      },
+      {
+        "title": "Keep file metadata alongside domain records",
+        "detail": "The admission-form service pairs a Drive upload with a database record, making the document and its school-facing metadata addressable together."
+      },
+      {
+        "title": "Validate resource input at module boundaries",
+        "detail": "Joi schemas and validators sit alongside the school resource modules, keeping input rules close to the operations that consume them."
+      }
+    ],
+    "contribution": [
+      "Organized school resources into controller, service, and validation modules.",
+      "Implemented MongoDB collection helpers and admission-document integration with Google Drive.",
+      "Added resource-specific Joi validation alongside shared request and response infrastructure."
+    ],
+    "outcomes": [
+      "The inspected source includes database-backed service implementations rather than only route placeholders.",
+      "The prototype provides a reusable structure for school-site resources; deployment behavior and operational reliability remain unverified.",
+      "Admission-document service code connects file upload results to school-content metadata."
+    ]
+  },
+  {
+    "slug": "school-management",
+    "projectId": "project-school-management",
+    "summary": "A responsive Next.js school website prototype for notices, admissions, routines, results, downloads, staff, and galleries, using local sample content and a demonstration admin interface.",
+    "role": "Frontend information architecture and React interface development",
+    "scope": "Next.js routes, reusable school-content components, responsive navigation, and a demonstration admin area",
+    "status": "Frontend prototype with static sample content and demonstration admin state",
+    "verifiedBranch": "master",
+    "verifiedCommit": "34d267a0c0039720f518811e2ac0c57a7f1d1603",
+    "problem": "Students and guardians need familiar routes to notices, routines, results, and admission information. A school-site prototype can explore that navigation and content organization before introducing a live content service.",
+    "constraints": [
+      "Public pages use repository-local sample content rather than a connected school database.",
+      "Admin login uses client-side in-memory state and does not establish server-side authentication or authorization.",
+      "The teacher admin route is a placeholder, and forms should not be assumed to persist submissions.",
+      "No integration with the separate school-management backend was verified."
+    ],
+    "architecture": {
+      "summary": "A responsive Next.js school website prototype for notices, admissions, routines, results, downloads, staff, and galleries, using local sample content and a demonstration admin interface.",
+      "layers": [
+        {
+          "title": "Page structure",
+          "detail": "Next.js App Router pages separate admissions, notices, routines, results, downloads, gallery, and other school information."
+        },
+        {
+          "title": "Reusable presentation",
+          "detail": "React components and Tailwind CSS provide shared navigation, content cards, and responsive layouts; Swiper supports carousel presentation."
+        },
+        {
+          "title": "Local content",
+          "detail": "Pages read bundled sample data and static assets, including sample downloadable documents."
+        },
+        {
+          "title": "Admin demonstration",
+          "detail": "A React authentication context holds a demonstration user in memory; admin navigation and layouts illustrate the interface without a secure backend."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Prototype navigation with local content",
+        "detail": "Bundled content makes the public information structure inspectable without depending on a live database or content-management service."
+      },
+      {
+        "title": "Keep admin behavior explicitly demonstrative",
+        "detail": "The portfolio describes the in-memory login and placeholder management routes as interface exploration rather than completed school administration."
+      },
+      {
+        "title": "Share presentation across public resource pages",
+        "detail": "Reusable cards and navigation support several types of school information without requiring a separate layout implementation for every page."
+      }
+    ],
+    "contribution": [
+      "Composed school information into dedicated Next.js pages and reusable React components.",
+      "Added responsive navigation, document views, gallery presentation, and an admin interface demonstration.",
+      "Kept public demonstration content in repository-local data and static assets."
+    ],
+    "outcomes": [
+      "The source provides a multi-page school information prototype with clear public-resource navigation.",
+      "The work demonstrates frontend composition; it does not establish persisted administration or a connected full-stack school system.",
+      "Bundled content allows the public interface to be explored without configuring a school database."
+    ]
+  },
+  {
+    "slug": "survey-module-backend",
+    "projectId": "project-survey-module-backend",
+    "summary": "An Express and Mongoose API prototype for school-dropout research, separating surveys, templates, and completed survey records alongside user, role, permission, and authentication modules.",
+    "role": "Survey-domain modeling and backend API development",
+    "scope": "Survey resource models, database services, versioned routes, and shared request infrastructure",
+    "status": "Survey API prototype with Mongoose services; runtime and production readiness unverified",
+    "verifiedBranch": "main",
+    "verifiedCommit": "2d063a80f68076505d1aabd836b2d8b3a467ec8d",
+    "problem": "School-dropout research needs a consistent way to organize survey definitions and completed field records. Separate resources make those responsibilities explicit while account-related modules provide a foundation for managing access.",
+    "constraints": [
+      "Automated test scripts exist, but no checked-in test files establish passing coverage.",
+      "No live deployment, hosted API documentation, or research outcomes were verified.",
+      "The completed-survey model contains domain-specific school and location fields; this is not evidence of a general-purpose form builder.",
+      "Management endpoints and external integrations require authorization and runtime validation before production use."
+    ],
+    "architecture": {
+      "summary": "An Express and Mongoose API prototype for school-dropout research, separating surveys, templates, and completed survey records alongside user, role, permission, and authentication modules.",
+      "layers": [
+        {
+          "title": "Versioned API",
+          "detail": "Express mounts survey, survey-template, perform-survey, authentication, user, role, and permission routers."
+        },
+        {
+          "title": "Domain models",
+          "detail": "Separate Mongoose models represent surveys, templates, and completed survey records with school and location fields."
+        },
+        {
+          "title": "Persistence services",
+          "detail": "Survey services call Mongoose create, find, update, and delete operations with common service-error handling."
+        },
+        {
+          "title": "Request infrastructure",
+          "detail": "Application middleware includes request sanitization, compression, rate limiting, and database connection handling."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate survey definitions from completed records",
+        "detail": "Dedicated survey, template, and perform-survey modules keep setup data and collected field records in separate domain boundaries."
+      },
+      {
+        "title": "Place persistence behind services",
+        "detail": "Mongoose operations live in service modules, keeping database work separate from route composition and controller response handling."
+      },
+      {
+        "title": "Model the actual field-record domain",
+        "detail": "Completed survey records include school and location fields rather than presenting the API as an unrestricted form-building engine."
+      }
+    ],
+    "contribution": [
+      "Implemented survey-domain models and CRUD services using Mongoose.",
+      "Composed versioned survey and account resource routes with shared middleware and error handling.",
+      "Defined school and location fields for completed survey records."
+    ],
+    "outcomes": [
+      "The inspected source contains concrete survey persistence operations and separate models for survey setup and completed records.",
+      "The project demonstrates research-oriented backend modeling; production operation and real-world research impact remain unverified.",
+      "Service modules isolate persistence work from the API route table, giving later validation and testing a concrete boundary."
+    ]
+  },
+  {
+    "slug": "warehouse-management-client",
+    "projectId": "project-warehouse-management-client",
+    "summary": "A legacy React inventory client with Firebase sign-in, item browsing, stock update and delivery controls, and user-specific item pages. Data workflows depend on a separate POSDash API.",
+    "role": "React frontend and inventory workflow development",
+    "scope": "Client routing, Firebase authentication integration, inventory request flows, and item-management screens",
+    "status": "Legacy learning/reference project; current runtime and production readiness unverified",
+    "verifiedBranch": "master",
+    "verifiedCommit": "76916f89869f7d900f1473f69ccc7709f21cb1cf",
+    "problem": "An inventory interface needs to connect sign-in, item browsing, stock updates, and personal item lists while coordinating browser state with a separate API.",
+    "constraints": [
+      "The client embeds a legacy Heroku API address; current end-to-end operation was not verified.",
+      "Only some account-oriented routes use the client authentication guard; backend authorization remains a separate responsibility.",
+      "This client references warehouse-management-server, not inventory-management-system-server."
+    ],
+    "architecture": {
+      "summary": "A legacy React inventory client with Firebase sign-in, item browsing, stock update and delivery controls, and user-specific item pages. Data workflows depend on a separate POSDash API.",
+      "layers": [
+        {
+          "title": "Client routes",
+          "detail": "React Router maps inventory, item details, account, and static information screens."
+        },
+        {
+          "title": "Identity and requests",
+          "detail": "Firebase handles client sign-in; a token hook sends an email to the API and stores the returned token locally for requests."
+        },
+        {
+          "title": "Inventory interaction",
+          "detail": "Item-detail request code loads records and submits stock and delivery updates to the separate API."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Separate client and API responsibilities",
+        "detail": "React screens manage interaction while inventory persistence depends on a separately hosted service."
+      },
+      {
+        "title": "Reuse identity and request helpers",
+        "detail": "Firebase initialization, authentication guards, and a token hook centralize parts of the client integration."
+      },
+      {
+        "title": "Distinguish route behavior from authorization",
+        "detail": "Client guards describe navigation behavior and do not establish server-side permission enforcement."
+      }
+    ],
+    "contribution": [
+      "Built inventory browsing and item-management routes.",
+      "Integrated Firebase sign-in and API token request helpers.",
+      "Added request flows for stock updates and delivery controls."
+    ],
+    "outcomes": [
+      "The source demonstrates a browser-to-API inventory workflow.",
+      "Account and inventory screens share routing and identity helpers.",
+      "The project records early React integration work; hosted workflow success and business impact are unverified."
+    ]
+  },
+  {
+    "slug": "inventory-management-system-server",
+    "projectId": "project-inventory-management-system-server",
+    "summary": "A legacy Express and MongoDB API organizing pharmacy and non-pharmacy products, orders, returns, customers, employees, and supplier records into resource routers.",
+    "role": "Inventory resource routing and database CRUD development",
+    "scope": "Express resource endpoints, MongoDB collection operations, and inventory-related record organization",
+    "status": "Legacy learning/reference project; current runtime and production readiness unverified",
+    "verifiedBranch": "master",
+    "verifiedCommit": "72744ca3b2bbc133a9c99f0eb23bd4a47006c52c",
+    "problem": "Inventory administration involves more than product lists: orders, returns, supplier records, and setup data need separate resource paths and persistent records.",
+    "constraints": [
+      "The source lacks authentication and authorization middleware for data-changing endpoints.",
+      "Purchase paths mount order routers in the inspected entry point, so distinct purchase behavior is not established.",
+      "Legacy connection configuration requires remediation, and no automated tests or working deployment were verified."
+    ],
+    "architecture": {
+      "summary": "A legacy Express and MongoDB API organizing pharmacy and non-pharmacy products, orders, returns, customers, employees, and supplier records into resource routers.",
+      "layers": [
+        {
+          "title": "HTTP composition",
+          "detail": "An Express entry point mounts product, order, setup, people, return, and supplier routers with JSON parsing and CORS."
+        },
+        {
+          "title": "Resource routers",
+          "detail": "Pharmacy and non-pharmacy routes are grouped separately; other modules handle related inventory records."
+        },
+        {
+          "title": "MongoDB operations",
+          "detail": "The inspected product router uses collection reads, insertOne, updateOne, and deleteOne directly from request handlers."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Organize endpoints by resource",
+        "detail": "Dedicated route prefixes separate products from people, returns, and supplier records."
+      },
+      {
+        "title": "Split product domains",
+        "detail": "Pharmacy and non-pharmacy routers provide separate entry points for the two inventory categories."
+      },
+      {
+        "title": "Keep the legacy implementation boundary explicit",
+        "detail": "Direct database calls demonstrate CRUD implementation without implying transactional inventory accounting or production access control."
+      }
+    ],
+    "contribution": [
+      "Composed resource routers in the Express application.",
+      "Implemented MongoDB product reads, creates, updates, and deletes.",
+      "Organized inventory-related setup, people, returns, and supplier endpoints."
+    ],
+    "outcomes": [
+      "The source provides inspectable resource-level MongoDB CRUD code.",
+      "The API structure covers several related inventory record types.",
+      "The project demonstrates early backend implementation; security, transaction behavior, and deployment remain unverified."
+    ]
+  },
+  {
+    "slug": "technofire",
+    "projectId": "project-technofire",
+    "summary": "A legacy PHP and MariaDB fire-safety catalog prototype with database-backed product pages, galleries, client content, and a session-based administration area, co-developed with Abid Hasan Piash.",
+    "role": "Collaborative PHP website development with Abid Hasan Piash",
+    "scope": "Public catalog pages, reusable PHP includes, and administration interfaces; individual file ownership is not established",
+    "status": "Legacy learning/reference project; current runtime and production readiness unverified",
+    "verifiedBranch": "master",
+    "verifiedCommit": "0086f2a050e2bb791121ec3c80383ca70d5acb9e",
+    "problem": "A business catalog needs product categories, detail pages, gallery images, and company content presented consistently, with an administration interface for maintaining those resources.",
+    "constraints": [
+      "The repository documents legacy authentication, SQL handling, and upload weaknesses; it is a reference prototype rather than a production-ready system.",
+      "No automated tests, verified deployment, or measured business outcomes were established.",
+      "The project credits both Montasim and Abid Hasan Piash; the inspected source does not establish exclusive authorship of individual features."
+    ],
+    "architecture": {
+      "summary": "A legacy PHP and MariaDB fire-safety catalog prototype with database-backed product pages, galleries, client content, and a session-based administration area, co-developed with Abid Hasan Piash.",
+      "layers": [
+        {
+          "title": "Public pages",
+          "detail": "Server-rendered PHP pages compose shared includes for navigation, catalog sections, galleries, and company information."
+        },
+        {
+          "title": "Database content",
+          "detail": "MySQLi queries read MariaDB catalog and settings records for public and administrative views."
+        },
+        {
+          "title": "Administration",
+          "detail": "The admin area includes session-based login and screens for product, category, gallery, client, and site-setting management."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Compose pages from shared includes",
+        "detail": "Reusable PHP sections keep public page composition consistent across the catalog."
+      },
+      {
+        "title": "Store catalog content in a relational database",
+        "detail": "Product and category pages read database records rather than duplicating every catalog item in static markup."
+      },
+      {
+        "title": "Represent collaborative ownership accurately",
+        "detail": "The portfolio attributes this as co-developed work and describes repository capabilities without claiming exclusive implementation ownership."
+      }
+    ],
+    "contribution": [
+      "Collaborated on the PHP catalog and administration project.",
+      "Contributed to a shared codebase combining database-backed content and reusable page includes.",
+      "Worked within a project that credits Montasim and Abid Hasan Piash as designers and developers."
+    ],
+    "outcomes": [
+      "The repository contains public catalog pages and content-management interfaces.",
+      "Shared includes and database-backed content demonstrate an early server-rendered website architecture.",
+      "The artifact documents collaborative PHP experience while keeping production readiness and individual feature ownership unclaimed."
+    ]
+  },
+  {
+    "slug": "project-management",
+    "projectId": "project-project-management",
+    "summary": "A collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces.",
+    "role": "Frontend developer on a collaborative project",
+    "scope": "React interface development and responsive Tailwind CSS presentation for project and team workflows",
+    "status": "Collaborative legacy application; current deployment and end-to-end operation unverified",
+    "verifiedBranch": "master",
+    "verifiedCommit": "bf2cf38800043d6f6aefea380c0b663116825e1a",
+    "problem": "Software teams need to review tasks, bugs, discussions, and membership in one project context. The frontend must organize these related workflows without forcing users to reconstruct project status across unrelated screens.",
+    "constraints": [
+      "The README explicitly identifies Montasim as the frontend developer; backend capabilities are application context, not a claim of personal backend ownership.",
+      "The repository includes legacy React and backend dependencies; no current live deployment or end-to-end execution was verified.",
+      "The backend test command is a placeholder; the reviewed source does not establish production reliability or measured team productivity gains.",
+      "The linked repository was created in September 2020; repository chronology is not a verified start date for Montasim’s contribution."
+    ],
+    "architecture": {
+      "summary": "React routes and Redux state connect project interfaces to an Express API. The repository also contains Mongoose project models and controllers for tasks, subtasks, bugs, discussions, and membership.",
+      "layers": [
+        {
+          "title": "Project interface",
+          "detail": "React components separate overview, activities, discussions, tasks, bugs, and project-detail editing, with responsive Tailwind classes in the inspected overview."
+        },
+        {
+          "title": "State and requests",
+          "detail": "Redux actions call a shared HTTP helper for project updates, completion state, and membership operations, then refresh project data."
+        },
+        {
+          "title": "Application backend",
+          "detail": "Express routes apply authentication middleware and dispatch to project controllers; Mongoose models hold project and related work records. These are shared application capabilities, not attributed frontend contributions."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Organize views around project workflows",
+        "detail": "Dedicated overview, task, bug, and discussion components keep each workflow focused while retaining a common project context."
+      },
+      {
+        "title": "Reuse state and request handling",
+        "detail": "Redux actions and an HTTP helper connect interactive controls to API updates instead of embedding all request behavior in presentation components."
+      },
+      {
+        "title": "Preserve contribution boundaries",
+        "detail": "The case study highlights the frontend role documented in the README and uses backend source only to explain how the interface fits into the shared application."
+      }
+    ],
+    "contribution": [
+      "Contributed frontend development to the collaborative Project Management application.",
+      "Used Tailwind CSS to create responsive interface presentation, as documented in the project README.",
+      "Worked on a frontend spanning project dashboards and team workflows; individual backend implementation ownership is not claimed."
+    ],
+    "outcomes": [
+      "The repository presents project overview, task, bug, discussion, and member-management interfaces.",
+      "Frontend source connects project controls to Redux actions and API request handling.",
+      "The project provides evidence of collaborative frontend work without asserting deployment availability or measured productivity improvements."
+    ]
   }
 ]

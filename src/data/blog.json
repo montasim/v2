@@ -682,6 +682,78 @@
           ]
         }
       ]
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-mcq-topper-backend",
+      "slug": "structuring-an-mcq-learning-api",
+      "title": "Structuring an MCQ Learning API Before Completing the Workflows",
+      "category": "Backend engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-school-management-backend",
+      "slug": "organizing-school-resources-and-document-storage",
+      "title": "Organizing School Resources and Document Storage",
+      "category": "Backend engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-school-management",
+      "slug": "prototyping-a-school-information-architecture",
+      "title": "Prototyping a School Information Architecture with Next.js",
+      "category": "Frontend engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-survey-module-backend",
+      "slug": "separating-surveys-from-completed-field-records",
+      "title": "Separating Surveys from Completed Field Records",
+      "category": "Backend engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-warehouse-management-client",
+      "slug": "connecting-inventory-screens-to-a-separate-api",
+      "title": "Connecting Inventory Screens to a Separate API",
+      "category": "Web development",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-inventory-management-system-server",
+      "slug": "organizing-an-inventory-api-by-resource",
+      "title": "Organizing an Inventory API by Resource",
+      "category": "Backend engineering",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-technofire",
+      "slug": "building-a-catalog-with-shared-php-pages",
+      "title": "Building a Catalog with Shared PHP Pages",
+      "category": "Web development",
+      "topic": "tools",
+      "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-project-management",
+      "slug": "organizing-team-work-in-a-project-dashboard",
+      "title": "Organizing Team Work in a Project Dashboard",
+      "category": "Frontend engineering",
+      "topic": "tools",
+      "featured": false
     }
   ]
 }

@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 7 }),
-      expect.objectContaining({ id: "projects", recordCount: 43 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 43 }),
-      expect.objectContaining({ id: "blog", recordCount: 44 }),
+      expect.objectContaining({ id: "projects", recordCount: 51 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 51 }),
+      expect.objectContaining({ id: "blog", recordCount: 52 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -185,8 +185,8 @@ describe("PortfolioKnowledge", () => {
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
-    expect(knowledge.toon.length).toBeLessThan(460_000)
-    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(115_000)
+    expect(knowledge.toon.length).toBeLessThan(520_000)
+    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(130_000)
     expect(knowledge.findFact("project:project-postcraft")).toMatchObject({
       recordId: "project-postcraft",
       evidenceRole: "first-party-portfolio",
@@ -247,16 +247,16 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 44,
+      total: 52,
       authored: 5,
-      caseStudyDerived: 39,
+      caseStudyDerived: 47,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 43,
+      total: 51,
       byType: {
-        api: 1,
+        api: 5,
         desktop: 1,
         dataset: 2,
         extension: 5,
@@ -264,7 +264,7 @@ describe("PortfolioKnowledge", () => {
         skill: 14,
         template: 1,
         tool: 2,
-        website: 13,
+        website: 17,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({

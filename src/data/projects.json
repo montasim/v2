@@ -1384,7 +1384,6 @@
   {
     "id": "project-liftuno",
     "type": "website",
-    "clientWork": true,
     "featured": false,
     "title": "Liftuno",
     "description": "A bilingual gym-management platform for Bangladesh that replaces paper ledgers with dependable membership coverage, billing, attendance, receipts, offers, and role-aware operations.",
@@ -1401,7 +1400,6 @@
       "System Design"
     ],
     "liveUrl": "https://liftuno-website.vercel.app",
-    "githubUrl": "https://github.com/AuraNetDev/Liftuno",
     "githubRepositoryPrivate": true,
     "githubRepositoryCreatedAt": "2026-09-08T06:38:28Z",
     "githubInitialCommitAt": "2026-09-08T06:44:54Z",
@@ -1419,12 +1417,12 @@
       "react-native",
       "convex"
     ],
-    "logoUrl": "https://liftuno-website.vercel.app/favicon.ico"
+    "logoUrl": "https://liftuno-website.vercel.app/favicon.ico",
+    "collaborativeWork": true
   },
   {
     "id": "project-coaching-management",
     "type": "website",
-    "clientWork": true,
     "featured": false,
     "title": "Coaching Management",
     "description": "A multi-tenant SaaS platform for coaching institutes to manage academic structure, students, teachers, attendance, payments, expenses, biometric devices, and SMS outreach.",
@@ -1443,7 +1441,6 @@
       "System Design"
     ],
     "liveUrl": "",
-    "githubUrl": "https://github.com/AuraNetDev/coaching-management",
     "githubRepositoryPrivate": true,
     "githubRepositoryCreatedAt": "2025-09-22T17:29:41Z",
     "githubInitialCommitAt": "2025-09-22T17:15:02Z",
@@ -1460,7 +1457,8 @@
       "payments",
       "sms",
       "nextjs"
-    ]
+    ],
+    "collaborativeWork": true
   },
   {
     "id": "project-mmh-patient-portal",
@@ -1745,5 +1743,176 @@
       "game-development"
     ],
     "logoUrl": "https://airtrafficcontrol.netlify.app/icon.svg"
+  },
+  {
+    "id": "project-mcq-topper-backend",
+    "title": "MCQ Topper Backend",
+    "type": "api",
+    "featured": false,
+    "description": "An Express API foundation for an MCQ learning platform, with versioned domain routes, shared response handling, request middleware, and email error notifications. Domain operations remain scaffold implementations.",
+    "technologies": [
+      "JavaScript",
+      "Node.js",
+      "Express.js",
+      "Nodemailer",
+      "Docker",
+      "PM2"
+    ],
+    "topics": ["mcq", "education", "rest-api", "backend", "api-scaffold"],
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2024-01-28T06:08:31Z",
+    "githubInitialCommitAt": "2024-03-03T14:51:20Z",
+    "githubInitialCommitSha": "977f5de42ec89ba65a4f292441ef283cc237259a",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-school-management-backend",
+    "title": "School Management Backend",
+    "type": "api",
+    "featured": false,
+    "description": "A modular Express and MongoDB prototype for school administration and website content, with admission resources, student records, academic downloads, and Google Drive file integration.",
+    "technologies": [
+      "JavaScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Joi",
+      "Google Drive API"
+    ],
+    "topics": ["education", "school-management", "rest-api", "file-storage"],
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2023-10-23T11:10:46Z",
+    "githubInitialCommitAt": "2023-10-23T11:10:07Z",
+    "githubInitialCommitSha": "46554def6f1ba0bcdf8dafe1be535edeb26e45e2",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-school-management",
+    "title": "School Management",
+    "type": "website",
+    "featured": false,
+    "description": "A responsive Next.js school website prototype for notices, admissions, routines, results, downloads, staff, and galleries, using local sample content and a demonstration admin interface.",
+    "technologies": [
+      "JavaScript",
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Swiper"
+    ],
+    "topics": ["education", "school-website", "frontend", "prototype"],
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2023-10-23T07:56:28Z",
+    "githubInitialCommitAt": "2023-10-01T16:29:05Z",
+    "githubInitialCommitSha": "0954d29c89234f2257fbe2a519acc25b0b40e00d",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-survey-module-backend",
+    "title": "Survey Module Backend",
+    "type": "api",
+    "featured": false,
+    "description": "An Express and Mongoose API prototype for school-dropout research, separating surveys, templates, and completed survey records alongside user, role, permission, and authentication modules.",
+    "technologies": [
+      "JavaScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose",
+      "Joi",
+      "Docker"
+    ],
+    "topics": ["surveys", "education-research", "rest-api", "data-modeling"],
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2024-03-05T20:30:00Z",
+    "githubInitialCommitAt": "2024-03-05T20:27:32Z",
+    "githubInitialCommitSha": "7405c0b5eb0ae06aefca71d8e35657b95453eda5",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-warehouse-management-client",
+    "title": "POSDash Client",
+    "type": "website",
+    "featured": false,
+    "description": "A legacy React inventory client with Firebase sign-in, item browsing, stock update and delivery controls, and user-specific item pages. Data workflows depend on a separate POSDash API.",
+    "technologies": [
+      "JavaScript",
+      "React",
+      "React Router",
+      "Firebase Authentication",
+      "Axios",
+      "Tailwind CSS"
+    ],
+    "topics": ["legacy-project", "inventory"],
+    "githubRepositoryPrivate": false,
+    "githubRepositoryCreatedAt": "2022-05-08T14:48:29Z",
+    "githubInitialCommitAt": "2022-04-29T16:39:44Z",
+    "githubInitialCommitSha": "5533ac7ed486888f623f87681f057f602db19928",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-inventory-management-system-server",
+    "title": "Inventory Management System Server",
+    "type": "api",
+    "featured": false,
+    "description": "A legacy Express and MongoDB API organizing pharmacy and non-pharmacy products, orders, returns, customers, employees, and supplier records into resource routers.",
+    "technologies": ["JavaScript", "Node.js", "Express.js", "MongoDB"],
+    "topics": ["legacy-project", "inventory"],
+    "githubRepositoryPrivate": false,
+    "githubRepositoryCreatedAt": "2022-07-20T15:29:12Z",
+    "githubInitialCommitAt": "2022-07-20T15:29:19Z",
+    "githubInitialCommitSha": "a1e65bb3271ffe306f7af644fdcd1dc968fe1a3d",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-technofire",
+    "title": "TechnoFire",
+    "type": "website",
+    "featured": false,
+    "description": "A legacy PHP and MariaDB fire-safety catalog prototype with database-backed product pages, galleries, client content, and a session-based administration area, co-developed with Abid Hasan Piash.",
+    "technologies": ["PHP", "MariaDB", "MySQLi", "Bootstrap", "JavaScript"],
+    "topics": ["legacy-project", "product-catalog"],
+    "githubRepositoryPrivate": false,
+    "githubRepositoryCreatedAt": "2021-12-16T06:33:45Z",
+    "githubInitialCommitAt": "2021-12-16T06:33:52Z",
+    "githubInitialCommitSha": "937049ff5f8c896a2d5858e2d9d21bce5a74127b",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
+    "id": "project-project-management",
+    "title": "Project Management",
+    "type": "website",
+    "featured": false,
+    "description": "A collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces.",
+    "technologies": [
+      "JavaScript",
+      "React",
+      "Redux",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Mongoose"
+    ],
+    "topics": [
+      "project-management",
+      "team-collaboration",
+      "task-management",
+      "frontend"
+    ],
+    "githubUrl": "https://github.com/mdjahidhasan009/Project_Management",
+    "githubRepositoryPrivate": false,
+    "githubRepositoryCreatedAt": "2020-09-19T04:26:11Z",
+    "githubInitialCommitAt": "2020-10-01T04:35:09Z",
+    "githubInitialCommitSha": "77d8ead1a20cc7d2156d53673758efe0ef4c0abf",
+    "youtubeVideoId": "xUIwzkTh7Ho",
+    "imageUrl": null,
+    "collaborativeWork": true
   }
 ]

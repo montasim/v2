@@ -2,6 +2,197 @@ import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { Project } from "@/lib/content/projects"
 
 export const projectReadmes: Readonly<Record<string, string>> = {
+  "project-management": `
+# Project Management
+
+A collaborative application for project tasks, subtasks, bugs, discussions,
+membership, and progress. Montasim's documented role was frontend development
+with responsive Tailwind CSS interfaces.
+
+## Interface and architecture
+
+React components organize project overviews and team workflows. Redux actions
+and a shared HTTP helper connect controls to project updates and membership
+operations. The repository also includes an Express and Mongoose backend;
+these describe the overall application, not Montasim's individual backend work.
+
+## Evidence and limits
+
+The README documents the frontend contribution and links a video preview.
+Current deployment, end-to-end operation, and productivity improvements were
+not verified. The backend test command is a placeholder. The linked repository
+was created in 2020; that date does not establish when Montasim joined the work.
+`,
+  "warehouse-management-client": `
+# POSDash Client
+
+A legacy React inventory client with Firebase sign-in, item browsing, stock update and delivery controls, and user-specific item pages. Data workflows depend on a separate POSDash API.
+
+## Architecture
+
+React Router maps inventory, item details, account, and static information screens.
+
+Firebase handles client sign-in; a token hook sends an email to the API and stores the returned token locally for requests.
+
+Item-detail request code loads records and submits stock and delivery updates to the separate API.
+
+## Implementation boundaries
+
+The client embeds a legacy Heroku API address; current end-to-end operation was not verified.
+
+Only some account-oriented routes use the client authentication guard; backend authorization remains a separate responsibility.
+
+This client references warehouse-management-server, not inventory-management-system-server.
+`,
+  "inventory-management-system-server": `
+# Inventory Management System Server
+
+A legacy Express and MongoDB API organizing pharmacy and non-pharmacy products, orders, returns, customers, employees, and supplier records into resource routers.
+
+## Architecture
+
+An Express entry point mounts product, order, setup, people, return, and supplier routers with JSON parsing and CORS.
+
+Pharmacy and non-pharmacy routes are grouped separately; other modules handle related inventory records.
+
+The inspected product router uses collection reads, insertOne, updateOne, and deleteOne directly from request handlers.
+
+## Implementation boundaries
+
+The source lacks authentication and authorization middleware for data-changing endpoints.
+
+Purchase paths mount order routers in the inspected entry point, so distinct purchase behavior is not established.
+
+Legacy connection configuration requires remediation, and no automated tests or working deployment were verified.
+`,
+  technofire: `
+# TechnoFire
+
+A legacy PHP and MariaDB fire-safety catalog prototype with database-backed product pages, galleries, client content, and a session-based administration area, co-developed with Abid Hasan Piash.
+
+## Architecture
+
+Server-rendered PHP pages compose shared includes for navigation, catalog sections, galleries, and company information.
+
+MySQLi queries read MariaDB catalog and settings records for public and administrative views.
+
+The admin area includes session-based login and screens for product, category, gallery, client, and site-setting management.
+
+## Implementation boundaries
+
+The repository documents legacy authentication, SQL handling, and upload weaknesses; it is a reference prototype rather than a production-ready system.
+
+No automated tests, verified deployment, or measured business outcomes were established.
+
+The project credits both Montasim and Abid Hasan Piash; the inspected source does not establish exclusive authorship of individual features.
+`,
+
+  "school-management-backend": `
+# School Management Backend
+
+A modular Express and MongoDB prototype for school administration and website content, with admission resources, student records, academic downloads, and Google Drive file integration.
+
+## Architecture
+
+Express composes school resource routes with domain controllers, services, and Joi validation.
+
+MongoDB connection middleware and shared collection helpers support resource operations.
+
+The admission-form service uploads files to Google Drive and records file identifiers and links in MongoDB.
+
+Request logging, rate limiting, response helpers, and email utilities support the API.
+
+## Implementation status
+
+The repository is a prototype; its test command is a failing placeholder and no automated suite is included.
+
+Database, email, and Google Drive operations require configured external services; they were not executed during this review.
+
+Access control and file handling need production validation; no school adoption or live availability is claimed.
+
+The source repository is private.
+`,
+  "school-management": `
+# School Management
+
+A responsive Next.js school website prototype for notices, admissions, routines, results, downloads, staff, and galleries, using local sample content and a demonstration admin interface.
+
+## Architecture
+
+Next.js App Router pages separate admissions, notices, routines, results, downloads, gallery, and other school information.
+
+React components and Tailwind CSS provide shared navigation, content cards, and responsive layouts; Swiper supports carousel presentation.
+
+Pages read bundled sample data and static assets, including sample downloadable documents.
+
+A React authentication context holds a demonstration user in memory; admin navigation and layouts illustrate the interface without a secure backend.
+
+## Implementation status
+
+Public pages use repository-local sample content rather than a connected school database.
+
+Admin login uses client-side in-memory state and does not establish server-side authentication or authorization.
+
+The teacher admin route is a placeholder, and forms should not be assumed to persist submissions.
+
+No integration with the separate school-management backend was verified.
+
+The source repository is private.
+`,
+  "survey-module-backend": `
+# Survey Module Backend
+
+An Express and Mongoose API prototype for school-dropout research, separating surveys, templates, and completed survey records alongside user, role, permission, and authentication modules.
+
+## Architecture
+
+Express mounts survey, survey-template, perform-survey, authentication, user, role, and permission routers.
+
+Separate Mongoose models represent surveys, templates, and completed survey records with school and location fields.
+
+Survey services call Mongoose create, find, update, and delete operations with common service-error handling.
+
+Application middleware includes request sanitization, compression, rate limiting, and database connection handling.
+
+## Implementation status
+
+Automated test scripts exist, but no checked-in test files establish passing coverage.
+
+No live deployment, hosted API documentation, or research outcomes were verified.
+
+The completed-survey model contains domain-specific school and location fields; this is not evidence of a general-purpose form builder.
+
+Management endpoints and external integrations require authorization and runtime validation before production use.
+
+The source repository is private.
+`,
+
+  "mcq-topper-backend": `
+# MCQ Topper Backend
+
+An Express API foundation for a multiple-choice-question learning platform.
+
+## What is implemented
+
+Versioned domain routers organize questions, exams, courses, enrolment, results,
+and supporting content. Shared middleware configures Helmet, HPP, CORS, payload
+limits, request timeouts, and rate limiting. Controller and response helpers
+provide common handling, and Nodemailer utilities support error notifications.
+
+## Implementation boundaries
+
+This is a scaffold. Most domain operations return placeholder responses;
+persistence is not active in the inspected server flow. Route names do not
+establish completed authentication, authorization, question storage, exam
+execution, or result calculation. No live deployment or measured product
+outcomes are verified.
+
+## Delivery assets
+
+The repository includes Docker, Compose, PM2, and Vercel configuration, plus
+Swagger and Postman resources. These are starting points for implementation
+and validation. The source repository is private.
+`,
   "air-traffic-control": `
 # Air Traffic Control
 

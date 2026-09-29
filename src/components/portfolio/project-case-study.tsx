@@ -126,7 +126,13 @@ export function ProjectCaseStudyPage({
   const getViewCount = useServerFn(getProjectViewCount)
   const recordView = useServerFn(recordProjectView)
   const { project } = caseStudy
-  const repositoryPath = githubRepositoryPath(project.githubUrl)
+  const publicGithubUrl =
+    !project.clientWork && !project.githubRepositoryPrivate
+      ? project.githubUrl
+      : undefined
+  const repositoryPath = publicGithubUrl
+    ? githubRepositoryPath(publicGithubUrl)
+    : undefined
   const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
   const media = getProjectMedia(project, caseStudy.screenshot?.alt)
   const hasMedia = Boolean(project.youtubeVideoId || media.length > 0)
@@ -221,7 +227,7 @@ export function ProjectCaseStudyPage({
                 {project.type === "desktop" ? "desktop app" : project.type}
               </Badge>
               <VisitorCountBadge count={viewCount} />
-              {!project.githubRepositoryPrivate ? (
+              {publicGithubUrl ? (
                 <ExternalLink
                   href={`${project.githubUrl}/commits/${caseStudy.verifiedBranch}`}
                   aria-label={`View the latest commits for ${project.title}`}
@@ -277,9 +283,9 @@ export function ProjectCaseStudyPage({
                 Microsoft Store
               </ExternalAction>
             ) : null}
-            {!project.githubRepositoryPrivate ? (
+            {publicGithubUrl ? (
               <ExternalAction
-                href={project.githubUrl}
+                href={publicGithubUrl}
                 variant="outline"
                 size="lg"
               >
@@ -357,7 +363,7 @@ export function ProjectCaseStudyPage({
               ))}
             </ul>
           </nav>
-          {!project.githubRepositoryPrivate ? (
+          {publicGithubUrl ? (
             <ExternalLink
               href={commitUrl}
               className="mt-6 hidden items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline lg:inline-flex"

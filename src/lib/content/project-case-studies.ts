@@ -60,7 +60,7 @@ const records = caseStudyRecords.map((caseStudy) => {
   if (!project) {
     throw new Error(`Unknown case-study project: ${caseStudy.projectId}`)
   }
-  if (!project.githubUrl) {
+  if (!project.githubUrl && !project.clientWork && !project.collaborativeWork) {
     throw new Error(`Case-study project lacks a repository: ${project.id}`)
   }
   return {

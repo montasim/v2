@@ -125,7 +125,9 @@ export function ProjectDetailPage({
                 Microsoft Store
               </ExternalAction>
             ) : null}
-            {!project.githubRepositoryPrivate && project.githubUrl ? (
+            {!project.clientWork &&
+            !project.githubRepositoryPrivate &&
+            project.githubUrl ? (
               <ExternalAction
                 href={project.githubUrl}
                 variant="outline"
