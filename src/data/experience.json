@@ -125,5 +125,66 @@
     "role": "Web Developer",
     "description": "Developed and maintained **web applications with PHP and JavaScript**. Analyzed **client needs** and developed appropriate functionality. Created and executed **test scenarios** to ensure quality deliverables.",
     "technologies": ["PHP", "JavaScript", "HTML", "CSS"]
+  },
+  {
+    "id": "experience-infomax-freelance-developer",
+    "company": "Infomax",
+    "category": "independent",
+    "role": "Freelance Developer",
+    "description": "Built the **backend foundation for an MCQ learning platform**, organizing questions, exams, courses, enrolment, and results into separate Express modules behind a versioned API. Centralized controller wrappers, response formatting, and error handling so new learning features could follow a shared implementation pattern. Configured request limits, timeouts, and security middleware at the application boundary, alongside administrator email notifications and Docker/PM2 deployment configuration. This established shared API infrastructure; exam execution and result persistence remained outside the completed scope.",
+    "technologies": [
+      "JavaScript",
+      "Node.js",
+      "Express",
+      "Docker",
+      "PM2",
+      "Nodemailer"
+    ],
+    "period": "Mar 2024 - Mar 2024",
+    "startDate": "2024-03-03",
+    "endDate": "2024-03-05"
+  },
+  {
+    "id": "experience-talendit-freelance-developer",
+    "company": "TalendIT",
+    "category": "independent",
+    "role": "Freelance Developer",
+    "description": "Translated **school administration and research workflows into structured web interfaces and backend services**. Implemented admission-document handling that uploads files to Google Drive and stores their identifiers and links in MongoDB, linking documents to school records. Separated controllers, persistence services, and Joi validation to keep input rules and database operations explicit. Modeled survey definitions, reusable templates, and completed school/location records separately to distinguish research setup from collected responses. Built reusable Next.js pages for admissions, notices, routines, and results, and co-developed database-backed PHP catalog and administration interfaces.",
+    "technologies": [
+      "JavaScript",
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Mongoose",
+      "PHP",
+      "MySQL"
+    ],
+    "period": "Oct 2023 - Nov 2023",
+    "startDate": "2023-10-01",
+    "endDate": "2023-11-28"
+  },
+  {
+    "id": "experience-ndevers-freelance-developer",
+    "company": "nDevers",
+    "category": "independent",
+    "role": "Freelance Developer",
+    "description": "Implemented **inventory workflows spanning account access, item browsing, stock updates, and delivery actions** in React. Integrated Firebase sign-in, shared authentication and token-request helpers, and stock-update API calls alongside user-specific item views. In a separate Express backend, implemented MongoDB product reads, creates, updates, and deletes, with distinct routes for pharmacy and non-pharmacy inventory. Organized orders, returns, suppliers, customers, and employees into dedicated resource endpoints, to separate the records supporting inventory operations.",
+    "technologies": [
+      "JavaScript",
+      "React",
+      "React Router",
+      "Tailwind CSS",
+      "Firebase",
+      "Axios",
+      "Node.js",
+      "Express",
+      "MongoDB"
+    ],
+    "period": "Apr 2022 - Aug 2022",
+    "startDate": "2022-04-29",
+    "endDate": "2022-08-03"
   }
 ]

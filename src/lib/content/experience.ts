@@ -6,12 +6,14 @@ const experienceSchema = z.object({
   id: z.string().min(1),
   company: z.string().min(1),
   category: z.enum(["employment", "independent"]),
-  companyUrl: optionalUrlSchema,
-  logo: z.string().min(1),
-  logoUrl: z.string().startsWith("/"),
+  companyUrl: optionalUrlSchema.optional(),
+  logo: z.string().min(1).optional(),
+  logoUrl: z.string().startsWith("/").optional(),
   role: z.string().min(1),
-  period: z.string().min(1),
-  location: z.string().min(1),
+  period: z.string().min(1).optional(),
+  startDate: z.iso.date().optional(),
+  endDate: z.iso.date().optional(),
+  location: z.string().min(1).optional(),
   description: z.string().min(1),
   technologies: z.array(z.string().min(1)),
 })
@@ -19,13 +21,16 @@ const experienceSchema = z.object({
 export type Experience = z.infer<typeof experienceSchema>
 
 const records = z.array(experienceSchema).parse(experienceJson)
-const current =
-  records.find((experience) => experience.period.includes("Present")) ??
+const currentRecord =
+  records.find((experience) => experience.period?.includes("Present")) ??
   records.at(0)
 
-if (!current) throw new Error("At least one experience record is required")
+if (!currentRecord?.period)
+  throw new Error("The current experience record requires a period")
 
-const filterSchema = z.enum(["all", "employment", "independent"])
+const current = { ...currentRecord, period: currentRecord.period }
+
+const filterSchema = z.enum(["employment", "independent"])
 export type ExperienceFilter = z.infer<typeof filterSchema>
 
 export const experienceCatalog = {
@@ -33,11 +38,10 @@ export const experienceCatalog = {
   records,
   filterSchema,
   filters: [
-    { value: "all", label: "All experience" },
     { value: "employment", label: "Employment" },
     { value: "independent", label: "Independent Work & Ventures" },
   ],
   matches(record: Experience, filter: ExperienceFilter) {
-    return filter === "all" || record.category === filter
+    return record.category === filter
   },
 } as const

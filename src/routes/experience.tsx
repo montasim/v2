@@ -10,7 +10,9 @@ import { catalogFilterNavigation } from "@/lib/content/shared"
 export const Route = createFileRoute("/experience")({
   head: () => createMeta("Experience", descriptions.experience, "/experience"),
   validateSearch: z.object({
-    filter: experienceCatalog.filterSchema.catch("all").default("all"),
+    filter: experienceCatalog.filterSchema
+      .catch("employment")
+      .default("employment"),
   }),
   component: Page,
 })

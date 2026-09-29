@@ -33,8 +33,8 @@ function RoleDetails({
 function CompanyPeriod({ roles }: { roles: Experience[] }) {
   return (
     <>
-      {roles.at(-1)?.period.split(" - ")[0]} -{" "}
-      {roles[0]?.period.split(" - ").at(-1)}
+      {roles.at(-1)?.period?.split(" - ")[0]} -{" "}
+      {roles[0]?.period?.split(" - ").at(-1)}
     </>
   )
 }
@@ -56,17 +56,26 @@ function CompanyCard({
           className="scroll-mt-20 target:ring-2 target:ring-primary/40"
         >
           <header className="flex items-start gap-3">
-            <EntityAvatar
-              src={first.logoUrl}
-              fallback={first.logo}
-              className="mt-0.5 size-9 border-0"
-              imageClassName="object-contain"
-            />
+            {first.logoUrl && first.logo && (
+              <EntityAvatar
+                src={first.logoUrl}
+                fallback={first.logo}
+                className="mt-0.5 size-9 border-0"
+                imageClassName="object-contain"
+              />
+            )}
             <div>
-              <h2 className="text-sm font-semibold">{first.role}</h2>
+              <h2 className="text-sm font-semibold">
+                {first.category === "independent" ? company : first.role}
+              </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                {company}&nbsp;&nbsp;·&nbsp;&nbsp;{first.period}
-                &nbsp;&nbsp;·&nbsp;&nbsp;{first.location}
+                {[
+                  first.category === "independent" ? first.role : company,
+                  first.period,
+                  first.location,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
               </p>
             </div>
           </header>
@@ -80,17 +89,19 @@ function CompanyCard({
     <Card asChild className={cardInsetClassName}>
       <article>
         <header className="flex items-start gap-3">
-          <EntityAvatar
-            src={first.logoUrl}
-            fallback={first.logo}
-            className="border-0"
-            imageClassName="object-contain"
-          />
+          {first.logoUrl && first.logo && (
+            <EntityAvatar
+              src={first.logoUrl}
+              fallback={first.logo}
+              className="border-0"
+              imageClassName="object-contain"
+            />
+          )}
           <div>
             <h2 className="font-semibold">{company}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               <CompanyPeriod roles={roles} />
-              &nbsp;&nbsp;·&nbsp;&nbsp;{first.location}
+              {first.location && <> · {first.location}</>}
             </p>
           </div>
         </header>
