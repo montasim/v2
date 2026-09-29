@@ -67,7 +67,10 @@ describe("Resend inquiry destinations", () => {
     })
 
     expect(sendEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ to: "amina@example.com" }),
+      expect.objectContaining({
+        to: "amina@example.com",
+        replyTo: "owner@example.com",
+      }),
       {
         idempotencyKey:
           "portfolio-inquiry-inquiry-project-idempotent-resend-acknowledgement-v1",

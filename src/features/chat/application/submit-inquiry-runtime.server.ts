@@ -1,3 +1,4 @@
+import { resolveContactSubmission } from "@/features/contact/application/contact-context.server"
 import { getRequestHeader } from "@tanstack/react-start/server"
 
 import { runInquiryWithDeadline } from "@/features/chat/application/inquiry-deadline.server"
@@ -27,13 +28,17 @@ export async function submitInquiryOnServer(data: {
 
   return runInquiryServerOperation(
     async (signal) => {
-      const moderationError = await getInquiryModerationError(data.inquiry)
+      const inquiry =
+        data.inquiry.type === "contact"
+          ? resolveContactSubmission(data.inquiry)
+          : data.inquiry
+      const moderationError = await getInquiryModerationError(inquiry)
       if (moderationError) throw new Error(moderationError)
 
       const subjectHasher = createInquirySubjectHasher()
       const portfolioInquiry = createDefaultPortfolioInquiry(subjectHasher)
       return portfolioInquiry.submit({
-        inquiry: data.inquiry,
+        inquiry,
         website: data.website,
         signal,
         visitorHash: subjectHasher.hash(

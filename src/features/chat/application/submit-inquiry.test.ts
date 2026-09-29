@@ -169,6 +169,30 @@ function createHarness(options?: {
 }
 
 describe("PortfolioInquiry.submit", () => {
+  it("accepts a direct contact message even if secondary delivery fails", async () => {
+    const harness = createHarness({ deliveryFailure: "resend-owner" })
+    await expect(
+      harness.module.submit({
+        inquiry: {
+          id: inquiry.id,
+          type: "contact",
+          topic: "general",
+          email: inquiry.email,
+          context: "A question about your work.",
+        },
+        visitorHash: "visitor",
+      })
+    ).resolves.toEqual({ delivered: true })
+    expect(harness.calls).toContain("store")
+    expect(
+      harness.deliveryUpdates.some(
+        (update) =>
+          update.channel === "resend-owner" &&
+          update.outcome.status === "pending"
+      )
+    ).toBe(true)
+  })
+
   it("stores in Neon-authoritative persistence before secondary delivery", async () => {
     const harness = createHarness()
 

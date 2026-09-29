@@ -1,3 +1,4 @@
+import { contactTopicLabels } from "@/features/contact/domain/contact"
 import { Resend } from "resend"
 
 import type { InquiryDestination } from "@/features/chat/application/ports/portfolio-inquiry"
@@ -74,6 +75,7 @@ export class ResendAcknowledgementInquiryDelivery implements InquiryDestination 
       {
         from: config.from,
         to: inquiry.email,
+        replyTo: config.owner,
         subject: "Thanks for reaching out - Montasim",
         text: formatAcknowledgement(inquiry),
       },
@@ -114,7 +116,7 @@ export function formatAcknowledgement(inquiry: InquirySubmission) {
   const details = inquiryEmailDetails(inquiry)
 
   return [
-    `Hi ${inquiry.name},`,
+    inquiry.name ? `Hi ${inquiry.name},` : "Hello,",
     introduction,
     "I've received your inquiry. I will review it personally and reply directly to this email as soon as I can.",
     `Here's what you shared:\n${details.join("\n")}`,
@@ -123,6 +125,8 @@ export function formatAcknowledgement(inquiry: InquirySubmission) {
 }
 
 export function formatOwnerSubject(inquiry: InquirySubmission) {
+  if (inquiry.type === "contact")
+    return `${contactTopicLabels[inquiry.topic]}${inquiry.projectTitle || inquiry.unlistedProject ? ` — ${inquiry.projectTitle ?? inquiry.unlistedProject}` : ""}`
   if (inquiry.type === "hire") {
     return `${inquiry.name} wants to discuss a ${inquiry.role} role`
   }
@@ -139,13 +143,15 @@ export function formatOwnerNotification(inquiry: InquirySubmission) {
   return [
     "Hi Montasim,",
     summary,
-    `You can reply directly to this email to continue the conversation with ${inquiry.name}. Their email address is ${inquiry.email}.`,
-    `Inquiry details\nName: ${inquiry.name}\n${details.join("\n")}`,
+    `You can reply directly to this email to continue the conversation with ${inquiry.name || "the sender"}. Their email address is ${inquiry.email}.`,
+    `Inquiry details\nName: ${inquiry.name || "Not provided"}\n${details.join("\n")}`,
     "This inquiry was submitted through your portfolio.",
   ].join("\n\n")
 }
 
 function acknowledgementIntroduction(inquiry: InquirySubmission) {
+  if (inquiry.type === "contact")
+    return `Thanks for your message about ${contactTopicLabels[inquiry.topic].toLowerCase()}.`
   if (inquiry.type === "hire") {
     return `Thanks for reaching out about the ${inquiry.role} role. I appreciate you taking the time to share what you are looking for.`
   }
@@ -156,6 +162,20 @@ function acknowledgementIntroduction(inquiry: InquirySubmission) {
 }
 
 function inquiryEmailDetails(inquiry: InquirySubmission) {
+  if (inquiry.type === "contact")
+    return [
+      `Topic: ${contactTopicLabels[inquiry.topic]}`,
+      inquiry.projectTitle || inquiry.unlistedProject
+        ? `App/project: ${inquiry.projectTitle ?? inquiry.unlistedProject}`
+        : undefined,
+      inquiry.projectId ? `Project ID: ${inquiry.projectId}` : undefined,
+      inquiry.relatedPath
+        ? `Related page: ${inquiry.relatedTitle} (${inquiry.relatedPath})`
+        : undefined,
+      inquiry.platform ? `Platform: ${inquiry.platform}` : undefined,
+      inquiry.appVersion ? `App version: ${inquiry.appVersion}` : undefined,
+      `Message: ${inquiry.context}`,
+    ].filter((line): line is string => Boolean(line))
   if (inquiry.type === "hire") {
     const details = [
       `Role: ${inquiry.role}`,
@@ -176,6 +196,8 @@ function inquiryEmailDetails(inquiry: InquirySubmission) {
 }
 
 function ownerInquirySummary(inquiry: InquirySubmission) {
+  if (inquiry.type === "contact")
+    return `${inquiry.name || "A visitor"} sent a message through the contact page.`
   if (inquiry.type === "hire") {
     return `${inquiry.name} is interested in discussing a ${inquiry.role} opportunity with you. They indicated that the role would be ${inquiry.arrangement.toLowerCase()}.`
   }

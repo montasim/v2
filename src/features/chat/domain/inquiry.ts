@@ -2,6 +2,9 @@ import { z } from "zod"
 
 import { visitorEmailSchema } from "@/features/email-verification/domain/email-verification"
 
+import { contactSubmissionSchema } from "@/features/contact/domain/contact"
+
+// Assistant flow types intentionally exclude the direct contact form.
 export const inquiryTypeSchema = z.enum(["hire", "project", "general"])
 export const inquiryIdSchema = z.uuid()
 
@@ -13,6 +16,7 @@ const baseInquirySchema = z.object({
 })
 
 export const inquirySubmissionSchema = z.discriminatedUnion("type", [
+  contactSubmissionSchema,
   baseInquirySchema.extend({
     type: z.literal("hire"),
     role: z.string().trim().min(1).max(100),

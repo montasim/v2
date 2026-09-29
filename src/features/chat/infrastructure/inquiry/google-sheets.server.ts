@@ -127,6 +127,30 @@ export function inquiryToRow(
   inquiry: InquirySubmission,
   timestamp = new Date().toISOString()
 ) {
+  if (inquiry.type === "contact") {
+    return [
+      timestamp,
+      safeSheetValue(inquiry.id),
+      "contact",
+      safeSheetValue(inquiry.name ?? ""),
+      safeSheetValue(inquiry.email),
+      "",
+      "",
+      "",
+      "",
+      safeSheetValue(inquiry.context),
+      ...[
+        inquiry.topic,
+        inquiry.projectId,
+        inquiry.projectTitle,
+        inquiry.relatedPath,
+        inquiry.relatedTitle,
+        inquiry.unlistedProject,
+        inquiry.platform,
+        inquiry.appVersion,
+      ].map((value) => safeSheetValue(value ?? "")),
+    ]
+  }
   if (inquiry.type === "hire") {
     return [
       timestamp,

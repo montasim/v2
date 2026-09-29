@@ -121,7 +121,7 @@ export class DatabaseInquiryRepository implements InquiryRepository {
       .values({
         id: inquiry.id,
         type: inquiry.type,
-        name: inquiry.name,
+        name: inquiry.name ?? null,
         email: inquiry.email,
         visitorHash,
         emailHash,
@@ -401,7 +401,15 @@ function acceptedStoredInquiry(
   const inquiry = inquirySubmissionSchema.parse({
     id: stored.id,
     type: stored.type,
-    name: stored.name,
+    name: stored.name ?? undefined,
+    topic: stored.topic,
+    projectId: stored.projectId ?? undefined,
+    projectTitle: stored.projectTitle ?? undefined,
+    relatedPath: stored.relatedPath ?? undefined,
+    relatedTitle: stored.relatedTitle ?? undefined,
+    unlistedProject: stored.unlistedProject ?? undefined,
+    platform: stored.platform ?? undefined,
+    appVersion: stored.appVersion ?? undefined,
     email: stored.email,
     context: stored.context ?? undefined,
     role: stored.role ?? undefined,
@@ -417,6 +425,18 @@ function acceptedStoredInquiry(
 }
 
 function inquiryDetails(inquiry: InquirySubmission) {
+  if (inquiry.type === "contact") {
+    return {
+      topic: inquiry.topic,
+      projectId: inquiry.projectId,
+      projectTitle: inquiry.projectTitle,
+      relatedPath: inquiry.relatedPath,
+      relatedTitle: inquiry.relatedTitle,
+      unlistedProject: inquiry.unlistedProject,
+      platform: inquiry.platform,
+      appVersion: inquiry.appVersion,
+    }
+  }
   if (inquiry.type === "hire") {
     return {
       role: inquiry.role,
@@ -457,6 +477,20 @@ function sameInquiry(first: InquirySubmission, second: InquirySubmission) {
       first.projectType === second.projectType &&
       first.timeline === second.timeline
     )
+  }
+  if (first.type === "contact" && second.type === "contact") {
+    return (
+      [
+        "topic",
+        "projectId",
+        "projectTitle",
+        "relatedPath",
+        "relatedTitle",
+        "unlistedProject",
+        "platform",
+        "appVersion",
+      ] as const
+    ).every((key) => first[key] === second[key])
   }
   return first.type === "general" && second.type === "general"
 }

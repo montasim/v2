@@ -14,6 +14,9 @@ export async function getInquiryModerationError(inquiry: InquirySubmission) {
   const values = [
     inquiry.name,
     inquiry.context,
+    ...(inquiry.type === "contact"
+      ? [inquiry.unlistedProject, inquiry.platform, inquiry.appVersion]
+      : []),
     inquiry.type === "hire" ? inquiry.role : undefined,
     inquiry.type === "hire" ? inquiry.arrangement : undefined,
     inquiry.type === "project" ? inquiry.projectType : undefined,

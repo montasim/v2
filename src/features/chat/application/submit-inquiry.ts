@@ -16,6 +16,7 @@ export const inquiryRequestSchema = z.object({
 })
 
 export const MAX_INQUIRY_REQUEST_BYTES = 4_096
+export const MAX_CONTACT_REQUEST_BYTES = 32_768
 export function parseInquiryRequest(input: unknown) {
   let serialized: string | undefined
   try {
@@ -24,8 +25,17 @@ export function parseInquiryRequest(input: unknown) {
     throw new Error("The inquiry request is invalid.")
   }
 
+  const isContact =
+    typeof input === "object" &&
+    input !== null &&
+    "inquiry" in input &&
+    typeof input.inquiry === "object" &&
+    input.inquiry !== null &&
+    "type" in input.inquiry &&
+    input.inquiry.type === "contact"
   if (
-    new TextEncoder().encode(serialized).byteLength > MAX_INQUIRY_REQUEST_BYTES
+    new TextEncoder().encode(serialized).byteLength >
+    (isContact ? MAX_CONTACT_REQUEST_BYTES : MAX_INQUIRY_REQUEST_BYTES)
   ) {
     throw new Error("The inquiry request is too large.")
   }
