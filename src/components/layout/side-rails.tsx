@@ -3,6 +3,7 @@ import {
   GithubLogoIcon,
   LinkedinLogoIcon,
   WhatsappLogoIcon,
+  YoutubeLogoIcon,
 } from "@/components/ui/icons"
 import { Separator } from "@/components/ui/separator"
 import { ExternalAction } from "@/components/shared/navigation-action"
@@ -23,6 +24,11 @@ const iconLinks = [
     href: profileCatalog.socialUrl("whatsapp"),
     label: "Chat on WhatsApp",
     icon: WhatsappLogoIcon,
+  },
+  {
+    href: "https://www.youtube.com/@montasim",
+    label: "YouTube channel",
+    icon: YoutubeLogoIcon,
   },
   {
     href: "https://www.supportkori.com/montasim",

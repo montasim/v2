@@ -101,6 +101,7 @@ import HugeUserFocusIcon from "@hugeicons/core-free-icons/UserSearch01Icon"
 import HugeVideoIcon from "@hugeicons/core-free-icons/Video01Icon"
 import HugeViewIcon from "@hugeicons/core-free-icons/ViewIcon"
 import HugeWhatsappLogoIcon from "@hugeicons/core-free-icons/WhatsappIcon"
+import HugeYoutubeLogoIcon from "@hugeicons/core-free-icons/YoutubeIcon"
 import HugeWindIcon from "@hugeicons/core-free-icons/WindIcon"
 import HugeWrenchIcon from "@hugeicons/core-free-icons/Wrench01Icon"
 import HugeLightningIcon from "@hugeicons/core-free-icons/ZapIcon"
@@ -369,3 +370,8 @@ export const WhatsappLogoIcon = createIcon(
 export const WindIcon = createIcon(HugeWindIcon, "WindIcon")
 export const WrenchIcon = createIcon(HugeWrenchIcon, "WrenchIcon")
 export const XIcon = createIcon(HugeXIcon, "XIcon")
+
+export const YoutubeLogoIcon = createIcon(
+  HugeYoutubeLogoIcon,
+  "YoutubeLogoIcon"
+)
