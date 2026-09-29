@@ -25,6 +25,7 @@ const inquiryTypeLabels: Record<Exclude<InquiryTypeFilter, "all">, string> = {
   hire: "Role inquiries",
   project: "Project inquiries",
   general: "General inquiries",
+  contact: "Contact messages",
 }
 
 function isInquiryTypeFilter(value: string): value is InquiryTypeFilter {

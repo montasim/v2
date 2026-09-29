@@ -10,7 +10,10 @@ import {
 } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 import { CONVERSATION_MODEL_ALL } from "@/features/owner-dashboard/domain/conversation-filters"
 import { EMAIL_DOMAIN_ALL } from "@/features/owner-dashboard/domain/email-domain-filters"
-import { inquiryTypeFilters } from "@/features/owner-dashboard/domain/inquiry-filters"
+import {
+  inquiryTypeFilters,
+  inquiryTopicFilters,
+} from "@/features/owner-dashboard/domain/inquiry-filters"
 import { loadOwnerStaticAnswers } from "@/features/owner-dashboard/infrastructure/static-answers.server"
 import { loadAvailabilitySettings } from "@/features/availability/infrastructure/settings.server"
 import { requirePortfolioOwner } from "@/features/owner-auth/infrastructure/neon-auth.server"
@@ -29,6 +32,7 @@ const ownerPageSchema = z.object({
 const ownerInquiryQuerySchema = ownerPageSchema.extend({
   query: z.string().trim().max(120).catch(""),
   type: z.enum(inquiryTypeFilters).catch("all"),
+  topic: z.enum(inquiryTopicFilters).catch("all"),
 })
 
 const ownerConversationQuerySchema = ownerPageSchema.extend({

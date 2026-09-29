@@ -82,7 +82,7 @@ function dashboardSearchPattern(query: string) {
   return `%${escaped}%`
 }
 
-function inquiryFilters({ query, type }: OwnerInquiryFilters) {
+function inquiryFilters({ query, type, topic }: OwnerInquiryFilters) {
   const trimmedQuery = query.trim()
   const pattern = trimmedQuery ? dashboardSearchPattern(trimmedQuery) : null
   const search = pattern
@@ -93,13 +93,20 @@ function inquiryFilters({ query, type }: OwnerInquiryFilters) {
         ilike(portfolioInquiries.role, pattern),
         ilike(portfolioInquiries.arrangement, pattern),
         ilike(portfolioInquiries.projectType, pattern),
-        ilike(portfolioInquiries.timeline, pattern)
+        ilike(portfolioInquiries.timeline, pattern),
+        ilike(portfolioInquiries.projectTitle, pattern),
+        ilike(portfolioInquiries.unlistedProject, pattern),
+        ilike(portfolioInquiries.relatedTitle, pattern)
       )
     : undefined
   const inquiryType =
     type === "all" ? undefined : eq(portfolioInquiries.type, type)
 
-  return and(inquiryType, search)
+  return and(
+    inquiryType,
+    search,
+    topic && topic !== "all" ? eq(portfolioInquiries.topic, topic) : undefined
+  )
 }
 
 const conversationModelKey = sql<string>`

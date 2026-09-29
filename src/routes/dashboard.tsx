@@ -1,3 +1,7 @@
+import {
+  contactTopicLabels,
+  contactTopicSchema,
+} from "@/features/contact/domain/contact"
 import { lazy, Suspense, useEffect, useRef, useState } from "react"
 import { createAuthClient } from "@neondatabase/auth"
 import {
@@ -399,11 +403,13 @@ export function Overview({ data }: { data: DashboardData }) {
                   className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4"
                 >
                   <Avatar className="size-9 ring-1 ring-border">
-                    <AvatarFallback>{initials(item.name)}</AvatarFallback>
+                    <AvatarFallback>
+                      {initials(item.name || "Visitor")}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-strong-foreground">
-                      {item.name}
+                      {item.name || "Unnamed visitor"}
                     </p>
                     <p className="mt-0.5 truncate text-xs text-muted-foreground">
                       {item.type === "hire"
@@ -488,14 +494,16 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
           <article aria-labelledby={`inquiry-${item.id}`}>
             <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
               <Avatar className="size-10 ring-1 ring-border">
-                <AvatarFallback>{initials(item.name)}</AvatarFallback>
+                <AvatarFallback>
+                  {initials(item.name || "Visitor")}
+                </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <h2
                   id={`inquiry-${item.id}`}
                   className="truncate text-sm font-semibold text-strong-foreground"
                 >
-                  {item.name}
+                  {item.name || "Unnamed visitor"}
                 </h2>
                 <a
                   href={`mailto:${item.email}`}
@@ -510,7 +518,7 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
             </header>
 
             <div className="p-5 sm:p-6">
-              {item.type !== "general" ? (
+              {item.type === "hire" || item.type === "project" ? (
                 <dl className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
                   <Detail
                     label={item.type === "hire" ? "Role" : "Project type"}
@@ -523,13 +531,45 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
                 </dl>
               ) : null}
 
+              {item.type === "contact" ? (
+                <dl className="grid gap-4 sm:grid-cols-2">
+                  {[
+                    [
+                      "Topic",
+                      contactTopicSchema.safeParse(item.topic).success
+                        ? contactTopicLabels[
+                            contactTopicSchema.parse(item.topic)
+                          ]
+                        : item.topic,
+                    ],
+                    ["App/project", item.projectTitle || item.unlistedProject],
+                    [
+                      "Related page",
+                      item.relatedTitle
+                        ? `${item.relatedTitle} (${item.relatedPath})`
+                        : item.relatedPath,
+                    ],
+                    ["Platform", item.platform],
+                    ["App version", item.appVersion],
+                  ]
+                    .filter(([, value]) => value)
+                    .map(([label, value]) => (
+                      <div key={label}>
+                        <dt className="text-xs text-muted-foreground">
+                          {label}
+                        </dt>
+                        <dd className="mt-1 text-sm break-words">{value}</dd>
+                      </div>
+                    ))}
+                </dl>
+              ) : null}
               {item.context ? (
                 <section className="mt-4 rounded-lg bg-muted/45 p-4">
                   <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                     <ChatCenteredDotsIcon className="size-3.5" />
                     Message
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-strong-foreground">
+                  <p className="mt-2 text-sm leading-6 break-words whitespace-pre-wrap text-strong-foreground">
                     {item.context}
                   </p>
                 </section>
@@ -559,6 +599,7 @@ export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
 }
 
 function inquiryTypeLabel(type: string) {
+  if (type === "contact") return "Contact"
   if (type === "hire") return "Role"
   if (type === "project") return "Project"
   return "General"
@@ -654,14 +695,16 @@ export function Comments({
             <article aria-labelledby={`comment-${item.id}`}>
               <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
                 <Avatar className="size-10 ring-1 ring-border">
-                  <AvatarFallback>{initials(item.name)}</AvatarFallback>
+                  <AvatarFallback>
+                    {initials(item.name || "Visitor")}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
                   <h2
                     id={`comment-${item.id}`}
                     className="truncate text-sm font-semibold text-strong-foreground"
                   >
-                    {item.name}
+                    {item.name || "Unnamed visitor"}
                   </h2>
                   <a
                     href={`mailto:${item.email}`}
@@ -701,7 +744,7 @@ export function Comments({
                     size="icon-sm"
                     className="shrink-0 text-muted-foreground hover:text-destructive"
                     onClick={() => setConfirming(item.id)}
-                    aria-label={`Delete comment by ${item.name}`}
+                    aria-label={`Delete comment by ${item.name || "Unnamed visitor"}`}
                   >
                     <TrashIcon />
                   </Button>
