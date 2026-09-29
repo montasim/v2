@@ -13,7 +13,7 @@ describe("PortfolioKnowledge", () => {
 
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
-      expect.objectContaining({ id: "experience", recordCount: 7 }),
+      expect.objectContaining({ id: "experience", recordCount: 10 }),
       expect.objectContaining({ id: "projects", recordCount: 51 }),
       expect.objectContaining({ id: "casestudy", recordCount: 51 }),
       expect.objectContaining({ id: "blog", recordCount: 52 }),
@@ -185,8 +185,8 @@ describe("PortfolioKnowledge", () => {
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
-    expect(knowledge.toon.length).toBeLessThan(520_000)
-    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(130_000)
+    expect(knowledge.toon.length).toBeLessThan(525_000)
+    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(131_250)
     expect(knowledge.findFact("project:project-postcraft")).toMatchObject({
       recordId: "project-postcraft",
       evidenceRole: "first-party-portfolio",

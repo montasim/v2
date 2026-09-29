@@ -248,7 +248,7 @@ function experienceReference(
 ) {
   return reference(
     `experience:${experience.id}`,
-    `${experience.role}. ${experience.company}. ${experience.period}. ${experience.location}. ${experience.description} ${experience.technologies.join(" ")}`
+    `${experience.role}. ${experience.company}. ${[experience.period, experience.location].filter(Boolean).join(". ")}${experience.period || experience.location ? ". " : ""}${experience.description} ${experience.technologies.join(" ")}`
   )
 }
 
@@ -419,7 +419,7 @@ function buildExperienceAnswers(): readonly ExactAnswer[] {
       answer("experience", {
         id: `${experience.id}:responsibility`,
         question: `What did Montasim do as ${experience.role} at ${experience.company}?`,
-        text: `As ${experience.role} at ${experience.company} (${experience.period}), Montasim ${work.replace(/^Montasim /, "")} For a hiring manager, this is role-specific evidence of what he owned, delivered, or improved at that stage of his career—not a title-only claim.`,
+        text: `As ${experience.role} at ${experience.company}${experience.period ? ` (${experience.period})` : ""}, Montasim ${work.replace(/^Montasim /, "")} For a hiring manager, this is role-specific evidence of what he owned, delivered, or improved at that stage of his career—not a title-only claim.`,
         evidence: [experienceReference(experience)],
       }),
       answer("experience", {
@@ -430,6 +430,48 @@ function buildExperienceAnswers(): readonly ExactAnswer[] {
       }),
     ]
   })
+}
+
+function buildIndependentWorkAnswers(): readonly ExactAnswer[] {
+  const roles = experienceCatalog.records.filter(
+    (record) => record.category === "independent"
+  )
+  const evidence: readonly [EvidenceReference, ...EvidenceReference[]] = [
+    experienceReference(
+      requiredExperience("experience-infomax-freelance-developer")
+    ),
+    ...roles
+      .filter((record) => record.company !== "Infomax")
+      .map(experienceReference),
+  ]
+  return [
+    answer("experience", {
+      id: "independent-work-overview",
+      question: "What freelance or independent work has Montasim done?",
+      text: `Montasim documents freelance developer engagements with ${roles.map((role) => role.company).join(", ")}. Infomax covers the API foundation for an MCQ learning platform; TalendIT covers school administration, admission-document handling, survey modeling, and web interfaces; nDevers covers inventory interfaces and backend resource operations. These engagements are listed separately from employment under Independent Work & Ventures.`,
+      evidence,
+    }),
+    answer("experience", {
+      id: "independent-work-ventures-meaning",
+      question:
+        "Does Independent Work & Ventures mean Montasim works in venture capital or owns these companies?",
+      text: "The published entries describe freelance developer roles for Infomax, TalendIT, and nDevers. The section name does not establish venture-capital investing, company ownership, founder status, or a partnership in those companies. No such role is documented in the current independent experience records.",
+      evidence,
+    }),
+    ...roles.map((role) =>
+      answer("experience", {
+        id: `${role.id}:dates`,
+        question: `When did Montasim work as a freelance developer for ${role.company}?`,
+        text: `Montasim's documented freelance developer engagement with ${role.company} ran from ${role.startDate} to ${role.endDate}. The experience card displays ${role.period}. These engagement dates incorporate his corrections and should not be extended using later repository maintenance commits.`,
+        evidence: [
+          reference(
+            `experience:${role.id}`,
+            `${role.company}. ${role.role}. ${role.startDate} to ${role.endDate}. ${role.period}.`
+          ),
+        ],
+      })
+    ),
+  ]
 }
 
 function buildSkillAnswers(): readonly ExactAnswer[] {
@@ -1886,7 +1928,7 @@ function buildCatalogAnswers(): readonly ExactAnswer[] {
     {
       id: "experience-count",
       question: "How many professional experience records does Montasim list?",
-      text: `The experience catalog contains ${experienceCatalog.records.length} records, ranging from early web development and IT or teaching responsibilities to frontend telemedicine and three successive engineering levels at MyMedicalHub.`,
+      text: `The experience catalog contains ${experienceCatalog.records.length} records: ${experienceCatalog.records.filter((record) => record.category === "employment").length} employment roles and ${experienceCatalog.records.filter((record) => record.category === "independent").length} freelance engagements. Employment spans roles ranging from early web development and IT or teaching responsibilities to frontend telemedicine and three successive engineering levels at MyMedicalHub.`,
       evidence: [
         catalogCountReference("experience", experienceCatalog.records.length),
       ],
@@ -2317,6 +2359,7 @@ export function buildPortfolioExactAnswers(): readonly ExactAnswer[] {
     ...buildBlogAnswers(),
     ...buildCertificationAnswers(),
     ...buildExperienceAnswers(),
+    ...buildIndependentWorkAnswers(),
     ...buildSkillAnswers(),
     ...buildRecommendationAnswers(),
     ...buildAffiliationAnswers(),

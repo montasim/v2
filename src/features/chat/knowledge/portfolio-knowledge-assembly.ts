@@ -659,7 +659,20 @@ function addDerivedFacts(
       id,
       sourceSnapshot.id,
       `${sourceSnapshot.id} record count`,
-      { source: sourceSnapshot.id, count: sourceSnapshot.records.length },
+      {
+        source: sourceSnapshot.id,
+        count: sourceSnapshot.records.length,
+        ...(sourceSnapshot.id === "experience"
+          ? {
+              employment: experienceCatalog.records.filter(
+                (record) => record.category === "employment"
+              ).length,
+              independent: experienceCatalog.records.filter(
+                (record) => record.category === "independent"
+              ).length,
+            }
+          : {}),
+      },
       factCitation.id
     )
     return {
