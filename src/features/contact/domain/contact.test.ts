@@ -28,6 +28,21 @@ const contact = {
 }
 
 describe("direct contact contract", () => {
+  it("includes catalog store links for contact products without empty destinations", () => {
+    const { projects } = loadContactContext({ app: "bugreceipt" })
+    expect(
+      projects.find((project) => project.id === "project-bugreceipt")?.links
+    ).toContainEqual({
+      label: "Chrome Web Store",
+      href: "https://chromewebstore.google.com/detail/bugreceipt/dcjbnkadoenmkcimidcbhhckdpaondae",
+    })
+    expect(
+      projects.every((project) =>
+        project.links.every((link) => Boolean(link.href))
+      )
+    ).toBe(true)
+  })
+
   it("normalizes unknown search values and builds contextual links without personal data", () => {
     expect(contactSearchSchema.parse({ topic: "invalid", app: 3 })).toEqual({
       topic: undefined,

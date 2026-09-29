@@ -41,6 +41,12 @@ const initial = {
       title: "Example app",
       description: "A useful example app.",
       href: "/projects/example",
+      links: [
+        {
+          label: "Chrome Web Store",
+          href: "https://chromewebstore.google.com/example",
+        },
+      ],
     },
   ],
 }
@@ -69,6 +75,23 @@ function fillMessage() {
   })
 }
 describe("ContactPage", () => {
+  it("shows the selected product's available links", () => {
+    render(
+      <ContactPage
+        initial={{ ...initial, topic: "support", projectId: "project-example" }}
+      />
+    )
+    expect(
+      screen
+        .getByRole("link", { name: "Chrome Web Store" })
+        .getAttribute("href")
+    ).toBe("https://chromewebstore.google.com/example")
+    expect(
+      screen.getByRole("link", { name: "View product" }).getAttribute("href")
+    ).toBe("/projects/example")
+    expect(screen.queryByRole("link", { name: "App Store" })).toBeNull()
+  })
+
   it("sends directly, prevents duplicate clicks, and confirms durable acceptance without chat", async () => {
     let finish!: (value: { delivered: true }) => void
     submit.mockImplementation(

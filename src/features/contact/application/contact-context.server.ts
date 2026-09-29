@@ -45,20 +45,38 @@ export function resolveRelatedPage(input?: string) {
     : undefined
 }
 export function loadContactContext(search: ContactSearch) {
-  const project = search.app ? projectCatalog.findBySlug(search.app) : undefined
+  const selectedProject = search.app
+    ? projectCatalog.findBySlug(search.app)
+    : undefined
   return {
     topic: search.topic ?? (search.app ? "support" : "general"),
-    projectId: project?.id ?? (search.app === "other" ? "other" : ""),
-    unknownApp: Boolean(search.app && search.app !== "other" && !project),
-    related: resolveRelatedPage(search.from),
-    projects: projectCatalog.records.map(
-      ({ id, title, description, liveUrl }) => ({
-        id,
-        title,
-        description,
-        href: liveUrl || `/projects/${id.replace(/^project-/, "")}`,
-      })
+    projectId: selectedProject?.id ?? (search.app === "other" ? "other" : ""),
+    unknownApp: Boolean(
+      search.app && search.app !== "other" && !selectedProject
     ),
+    related: resolveRelatedPage(search.from),
+    projects: projectCatalog.records.map((project) => ({
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      href:
+        project.liveUrl || `/projects/${project.id.replace(/^project-/, "")}`,
+      links: [
+        { label: "Chrome Web Store", href: project.chromeWebStoreUrl },
+        { label: "App Store", href: project.appStoreUrl },
+        { label: "Google Play", href: project.googlePlayUrl },
+        { label: "Microsoft Store", href: project.microsoftStoreUrl },
+        { label: "Snap Store", href: project.snapcraftUrl },
+        { label: "npm", href: project.npmUrl },
+        { label: "Releases", href: project.releaseUrl },
+        {
+          label: "Source on GitHub",
+          href: project.githubRepositoryPrivate ? undefined : project.githubUrl,
+        },
+      ].filter((link): link is { label: string; href: string } =>
+        Boolean(link.href)
+      ),
+    })),
   }
 }
 export function resolveContactSubmission(

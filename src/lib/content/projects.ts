@@ -30,6 +30,8 @@ const projectSchema = z.object({
   liveUrl: optionalUrlSchema.optional(),
   npmUrl: optionalUrlSchema.optional(),
   releaseUrl: optionalUrlSchema.optional(),
+  appStoreUrl: optionalUrlSchema.optional(),
+  googlePlayUrl: optionalUrlSchema.optional(),
   chromeWebStoreUrl: optionalUrlSchema.optional(),
   snapcraftUrl: optionalUrlSchema.optional(),
   microsoftStoreUrl: optionalUrlSchema.optional(),

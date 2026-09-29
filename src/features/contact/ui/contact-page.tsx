@@ -638,13 +638,27 @@ export function ContactPage({
                   Built and supported by Montasim.
                 </p>
                 {selectedProject && (
-                  <a
-                    href={selectedProject.href}
-                    className="inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4"
+                  <nav
+                    aria-label={`${selectedProject.title} links`}
+                    className="flex flex-col items-start gap-3"
                   >
-                    View product{" "}
-                    <ArrowUpRightIcon aria-hidden="true" className="size-4" />
-                  </a>
+                    {[
+                      { label: "View product", href: selectedProject.href },
+                      ...selectedProject.links,
+                    ].map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                      >
+                        {link.label}
+                        <ArrowUpRightIcon
+                          aria-hidden="true"
+                          className="size-4 shrink-0"
+                        />
+                      </a>
+                    ))}
+                  </nav>
                 )}
               </div>
             ) : (
