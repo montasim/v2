@@ -83,6 +83,3 @@ export function contactHref(search: ContactSearch = {}) {
     if (value) params.set(key, value)
   return `/contact${params.size ? `?${params}` : ""}`
 }
-export function isContactPath(pathname: string) {
-  return pathname.replace(/\/+$/, "") === "/contact"
-}

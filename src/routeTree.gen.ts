@@ -35,6 +35,7 @@ import { Route as DashboardStaticAnswersRouteImport } from './routes/dashboard.s
 import { Route as DashboardSubscribersRouteImport } from './routes/dashboard.subscribers'
 import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as ProjectsSlugContactRouteImport } from './routes/projects_.$slug_.contact'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -166,6 +167,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsSlugContactRoute = ProjectsSlugContactRouteImport.update({
+  id: '/projects_/$slug_/contact',
+  path: '/projects/$slug/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/projects/$slug/contact': typeof ProjectsSlugContactRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/projects/$slug/contact': typeof ProjectsSlugContactRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -250,6 +258,7 @@ export interface FileRoutesById {
   '/projects_/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/projects_/$slug_/contact': typeof ProjectsSlugContactRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -280,6 +289,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/dashboard/'
     | '/api/auth/$'
+    | '/projects/$slug/contact'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/dashboard'
     | '/api/auth/$'
+    | '/projects/$slug/contact'
   id:
     | '__root__'
     | '/'
@@ -335,6 +346,7 @@ export interface FileRouteTypes {
     | '/projects_/$slug'
     | '/dashboard/'
     | '/api/auth/$'
+    | '/projects_/$slug_/contact'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -357,6 +369,7 @@ export interface RootRouteChildren {
   CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
   ProjectsSlugRoute: typeof ProjectsSlugRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ProjectsSlugContactRoute: typeof ProjectsSlugContactRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -543,6 +556,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects_/$slug_/contact': {
+      id: '/projects_/$slug_/contact'
+      path: '/projects/$slug/contact'
+      fullPath: '/projects/$slug/contact'
+      preLoaderRoute: typeof ProjectsSlugContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -590,6 +610,7 @@ const rootRouteChildren: RootRouteChildren = {
   CaseStudiesSlugRoute: CaseStudiesSlugRoute,
   ProjectsSlugRoute: ProjectsSlugRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ProjectsSlugContactRoute: ProjectsSlugContactRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

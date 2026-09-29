@@ -275,8 +275,8 @@ describe("ContactPage", () => {
     expect(screen.getByText("A little about me")).toBeTruthy()
     expect(screen.getByRole("link", { name: /View my projects/ })).toBeTruthy()
     expect(
-      screen.getByRole("button", { name: "Ask about Montasim" })
-    ).toBeTruthy()
+      screen.queryByRole("button", { name: "Ask about Montasim" })
+    ).toBeNull()
     expect(screen.queryByRole("button", { name: "Change app" })).toBeNull()
     fireEvent.click(screen.getByRole("button", { name: "Send message" }))
     await screen.findByRole("heading", { name: "Your message is saved." })

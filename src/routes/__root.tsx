@@ -1,4 +1,3 @@
-import { isContactPath } from "@/features/contact/domain/contact"
 import {
   HeadContent,
   Scripts,
@@ -98,7 +97,7 @@ export function ApplicationFrame({ children }: { children: React.ReactNode }) {
         <SiteHeader />
         <SideRails />
         <KonamiCommandCenter />
-        {!isContactPath(pathname) && <PortfolioAssistant />}
+        <PortfolioAssistant />
         {children}
         <SiteFooter />
       </AppContextMenu>

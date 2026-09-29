@@ -3,7 +3,6 @@ import {
   contactHref,
   contactSearchSchema,
   contactSubmissionSchema,
-  isContactPath,
 } from "./contact"
 import {
   loadContactContext,
@@ -64,8 +63,6 @@ describe("direct contact contract", () => {
     expect(contactHref({ topic: "question", from: "/experience" })).toBe(
       "/contact?topic=question&from=%2Fexperience"
     )
-    expect(isContactPath("/contact/")).toBe(true)
-    expect(isContactPath("/contact-other")).toBe(false)
     expect(loadContactContext({ app: "missing-app" })).toMatchObject({
       topic: "support",
       unknownApp: true,

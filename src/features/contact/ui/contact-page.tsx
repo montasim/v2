@@ -18,7 +18,6 @@ import {
   CheckIcon,
   EnvelopeSimpleIcon,
 } from "@/components/ui/icons"
-import { PortfolioAssistant } from "@/features/chat/ui/portfolio-assistant"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
 import { getInquiryMessageModerationError } from "@/features/chat/domain/inquiry-moderation"
 import { verifyVisitorEmail } from "@/features/email-verification/application/verify-visitor-email"
@@ -69,10 +68,14 @@ function Field({
 
 export function ContactPage({
   initial,
+  breadcrumb,
   onSelectionChange,
+  showContextControls = true,
 }: {
   initial: ContactContext
+  breadcrumb?: ReactNode
   onSelectionChange?: (search: ContactSearch) => void
+  showContextControls?: boolean
 }) {
   const submit = useServerFn(submitInquiry)
   const verifyEmail = useServerFn(verifyVisitorEmail)
@@ -248,435 +251,435 @@ export function ContactPage({
   }
 
   return (
-    <>
-      <PageShell padded>
-        <header className="max-w-2xl">
-          <h1 className="text-3xl font-bold tracking-tight text-strong-foreground sm:text-4xl">
-            {heading}
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-            {appPresentation
-              ? `Report a problem, suggest an improvement, or ask a question about ${selectedProject.title}.`
-              : isSupport
-                ? "Choose the app or project you need help with and tell me what happened."
-                : "Have an opportunity to discuss, need help with one of my products, or want to share a question or idea? Send me a message."}
-          </p>
-        </header>
-        <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
-          <section aria-label="Send a message" className="min-w-0">
-            {status === "success" ? (
-              <div className="border-y py-10">
-                <CheckIcon
-                  className="size-6 text-strong-foreground"
-                  aria-hidden="true"
-                />
-                <h2
-                  ref={successRef}
-                  tabIndex={-1}
-                  className="mt-4 text-2xl font-semibold tracking-tight text-strong-foreground outline-none"
-                >
-                  Your message is saved.
-                </h2>
-                <p
-                  role="status"
-                  className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground"
-                >
-                  Thank you for reaching out. I’ll review your message and reply
-                  to the email address you provided.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="mt-6"
-                  onClick={() => {
-                    attempt.current = null
-                    setStatus("idle")
-                  }}
-                >
-                  Send another message
-                </Button>
-              </div>
-            ) : (
-              <form
-                ref={formRef}
-                noValidate
-                onSubmit={handleSubmit}
-                className="space-y-6"
-                aria-busy={status === "pending"}
+    <PageShell padded>
+      {breadcrumb}
+      <header className={breadcrumb ? "mt-8 max-w-2xl" : "max-w-2xl"}>
+        <h1 className="text-3xl font-bold tracking-tight text-strong-foreground sm:text-4xl">
+          {heading}
+        </h1>
+        <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+          {appPresentation
+            ? `Report a problem, suggest an improvement, or ask a question about ${selectedProject.title}.`
+            : isSupport
+              ? "Choose the app or project you need help with and tell me what happened."
+              : "Have an opportunity to discuss, need help with one of my products, or want to share a question or idea? Send me a message."}
+        </p>
+      </header>
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+        <section aria-label="Send a message" className="min-w-0">
+          {status === "success" ? (
+            <div className="border-y py-10">
+              <CheckIcon
+                className="size-6 text-strong-foreground"
+                aria-hidden="true"
+              />
+              <h2
+                ref={successRef}
+                tabIndex={-1}
+                className="mt-4 text-2xl font-semibold tracking-tight text-strong-foreground outline-none"
               >
-                <fieldset
-                  disabled={status === "pending"}
-                  className="min-w-0 space-y-6 disabled:opacity-70"
-                >
-                  <legend className="sr-only">Message details</legend>
-                  <div
-                    className={
-                      showProject ? "grid gap-6 sm:grid-cols-2" : "grid gap-6"
-                    }
-                  >
-                    <Field
-                      name="topic"
-                      label="What would you like to discuss?"
-                      error={errors.topic}
+                Your message is saved.
+              </h2>
+              <p
+                role="status"
+                className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground"
+              >
+                Thank you for reaching out. I’ll review your message and reply
+                to the email address you provided.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-6"
+                onClick={() => {
+                  attempt.current = null
+                  setStatus("idle")
+                }}
+              >
+                Send another message
+              </Button>
+            </div>
+          ) : (
+            <form
+              ref={formRef}
+              noValidate
+              onSubmit={handleSubmit}
+              className="space-y-6"
+              aria-busy={status === "pending"}
+            >
+              <fieldset
+                disabled={status === "pending"}
+                className="min-w-0 space-y-6 disabled:opacity-70"
+              >
+                <legend className="sr-only">Message details</legend>
+                {showContextControls ? (
+                  <>
+                    <div
+                      className={
+                        showProject ? "grid gap-6 sm:grid-cols-2" : "grid gap-6"
+                      }
                     >
-                      <Select
+                      <Field
                         name="topic"
-                        value={topic}
-                        disabled={status === "pending"}
-                        onValueChange={(value) => {
-                          const nextTopic = value as ContactTopic
-                          setTopic(nextTopic)
-                          if (
-                            nextTopic === "general" ||
-                            nextTopic === "collaboration"
-                          ) {
-                            setProjectId("")
-                            setIncludeProject(false)
-                          }
-                          syncSelection(nextTopic)
-                          setErrors({})
-                        }}
+                        label="What would you like to discuss?"
+                        error={errors.topic}
                       >
-                        <SelectTrigger
-                          {...fieldProps("topic")}
-                          className="h-11 min-w-0 aria-invalid:border-destructive [&_[data-slot=select-value]]:truncate"
-                        >
-                          <SelectValue>
-                            {appPresentation && topic === "support"
-                              ? "Report a problem"
-                              : appPresentation && topic === "question"
-                                ? "Ask a question"
-                                : contactTopicLabels[topic]}
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {contactTopics.map((value) => (
-                            <SelectItem key={value} value={value}>
-                              {appPresentation && value === "support"
-                                ? "Report a problem"
-                                : appPresentation && value === "question"
-                                  ? "Ask a question"
-                                  : contactTopicLabels[value]}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </Field>
-                    {showProject &&
-                      (selectedProject && !editingProject ? (
-                        <div className="min-w-0 space-y-2">
-                          <p className="text-sm font-medium text-strong-foreground">
-                            Selected app or project
-                          </p>
-                          <div className="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-input px-3">
-                            <span className="min-w-0 text-sm text-strong-foreground">
-                              {selectedProject.title}
-                            </span>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setEditingProject(true)}
-                            >
-                              Change app
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <Field
-                          name="projectId"
-                          label={
-                            isSupport
-                              ? "Which app or project?"
-                              : "Related app or project (optional)"
-                          }
-                          error={errors.projectId}
-                        >
-                          <ProjectPicker
-                            {...fieldProps("projectId")}
-                            projects={initial.projects}
-                            value={projectId || "none"}
-                            placeholder={
-                              isSupport
-                                ? "Choose an app or project"
-                                : "No specific project"
+                        <Select
+                          name="topic"
+                          value={topic}
+                          disabled={status === "pending"}
+                          onValueChange={(value) => {
+                            const nextTopic = value as ContactTopic
+                            setTopic(nextTopic)
+                            if (
+                              nextTopic === "general" ||
+                              nextTopic === "collaboration"
+                            ) {
+                              setProjectId("")
+                              setIncludeProject(false)
                             }
-                            onValueChange={(value) => {
-                              const nextProject = value === "none" ? "" : value
-                              setProjectId(nextProject)
-                              syncSelection(topic, nextProject)
-                              setEditingProject(false)
-                              setErrors({})
-                            }}
-                            disabled={status === "pending"}
-                          />
-                        </Field>
-                      ))}
-                  </div>
-                  {allowsProject && !isSupport && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setIncludeProject(!includeProject)
-                        if (includeProject) setProjectId("")
-                        syncSelection(
-                          topic,
-                          includeProject ? "" : projectId,
-                          !includeProject
-                        )
-                      }}
-                    >
-                      {includeProject
-                        ? "Remove project context"
-                        : "Add an app or project (optional)"}
-                    </Button>
-                  )}
-                  {initial.unknownApp && isSupport && !projectId ? (
-                    <p className="text-sm leading-6 text-muted-foreground">
-                      The app in this link wasn’t found. Choose it above, or
-                      select “Other / not listed” and tell me its name.
-                    </p>
-                  ) : null}
-                  {showProject && projectId === "other" ? (
-                    <Field
-                      name="unlistedProject"
-                      label="App or project name"
-                      error={errors.unlistedProject}
-                    >
-                      <Input
-                        {...fieldProps("unlistedProject")}
-                        maxLength={160}
-                        required
-                      />
-                    </Field>
-                  ) : null}
-                  {related ? (
-                    <div className="flex items-start justify-between gap-4 rounded-lg bg-muted/50 px-4 py-3 text-sm">
-                      <p className="min-w-0 leading-6 text-muted-foreground">
-                        Regarding{" "}
-                        <a
-                          href={related.path}
-                          className="font-medium text-strong-foreground underline underline-offset-4"
+                            syncSelection(nextTopic)
+                            setErrors({})
+                          }}
                         >
-                          {related.title}
-                        </a>
-                      </p>
+                          <SelectTrigger
+                            {...fieldProps("topic")}
+                            className="h-11 min-w-0 aria-invalid:border-destructive [&_[data-slot=select-value]]:truncate"
+                          >
+                            <SelectValue>
+                              {appPresentation && topic === "support"
+                                ? "Report a problem"
+                                : appPresentation && topic === "question"
+                                  ? "Ask a question"
+                                  : contactTopicLabels[topic]}
+                            </SelectValue>
+                          </SelectTrigger>
+                          <SelectContent>
+                            {contactTopics.map((value) => (
+                              <SelectItem key={value} value={value}>
+                                {appPresentation && value === "support"
+                                  ? "Report a problem"
+                                  : appPresentation && value === "question"
+                                    ? "Ask a question"
+                                    : contactTopicLabels[value]}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </Field>
+                      {showProject &&
+                        (selectedProject && !editingProject ? (
+                          <div className="min-w-0 space-y-2">
+                            <p className="text-sm font-medium text-strong-foreground">
+                              Selected app or project
+                            </p>
+                            <div className="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-input px-3">
+                              <span className="min-w-0 text-sm text-strong-foreground">
+                                {selectedProject.title}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setEditingProject(true)}
+                              >
+                                Change app
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <Field
+                            name="projectId"
+                            label={
+                              isSupport
+                                ? "Which app or project?"
+                                : "Related app or project (optional)"
+                            }
+                            error={errors.projectId}
+                          >
+                            <ProjectPicker
+                              {...fieldProps("projectId")}
+                              projects={initial.projects}
+                              value={projectId || "none"}
+                              placeholder={
+                                isSupport
+                                  ? "Choose an app or project"
+                                  : "No specific project"
+                              }
+                              onValueChange={(value) => {
+                                const nextProject =
+                                  value === "none" ? "" : value
+                                setProjectId(nextProject)
+                                syncSelection(topic, nextProject)
+                                setEditingProject(false)
+                                setErrors({})
+                              }}
+                              disabled={status === "pending"}
+                            />
+                          </Field>
+                        ))}
+                    </div>
+                    {allowsProject && !isSupport && (
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => {
-                          setRelated(undefined)
-                          onSelectionChange?.({
+                          setIncludeProject(!includeProject)
+                          if (includeProject) setProjectId("")
+                          syncSelection(
                             topic,
-                            app:
-                              showProject && projectId
-                                ? projectId.replace(/^project-/, "")
-                                : undefined,
-                          })
+                            includeProject ? "" : projectId,
+                            !includeProject
+                          )
                         }}
                       >
-                        Remove
+                        {includeProject
+                          ? "Remove project context"
+                          : "Add an app or project (optional)"}
                       </Button>
-                    </div>
-                  ) : null}
-                  <Field
-                    name="context"
-                    label="Your message"
-                    error={errors.context}
-                  >
-                    <Textarea
-                      {...fieldProps("context")}
-                      required
-                      minLength={10}
-                      maxLength={5000}
-                      rows={7}
-                      className="min-h-40 resize-y"
-                      placeholder={
-                        isSupport
-                          ? "What happened, and what did you expect? Include any steps that help me understand the issue."
-                          : "Share your question, suggestion, or what you have in mind."
-                      }
-                    />
-                    <p className="text-xs leading-5 text-muted-foreground">
-                      Up to 5,000 characters. Please leave out passwords and
-                      other sensitive information.
-                    </p>
-                  </Field>
-                  {isSupport ? (
-                    <div className="grid gap-5 sm:grid-cols-2">
+                    )}
+                    {initial.unknownApp && isSupport && !projectId ? (
+                      <p className="text-sm leading-6 text-muted-foreground">
+                        The app in this link wasn’t found. Choose it above, or
+                        select “Other / not listed” and tell me its name.
+                      </p>
+                    ) : null}
+                    {showProject && projectId === "other" ? (
                       <Field
-                        name="platform"
-                        label="Device or platform (optional)"
-                        error={errors.platform}
+                        name="unlistedProject"
+                        label="App or project name"
+                        error={errors.unlistedProject}
                       >
                         <Input
-                          {...fieldProps("platform")}
-                          maxLength={100}
-                          placeholder="e.g. Android, iOS, Windows"
+                          {...fieldProps("unlistedProject")}
+                          maxLength={160}
+                          required
                         />
                       </Field>
-                      <Field
-                        name="appVersion"
-                        label="App version (optional)"
-                        error={errors.appVersion}
-                      >
-                        <Input
-                          {...fieldProps("appVersion")}
-                          maxLength={100}
-                          placeholder="e.g. 1.2.0"
-                        />
-                      </Field>
-                    </div>
-                  ) : null}
+                    ) : null}
+                    {related ? (
+                      <div className="flex items-start justify-between gap-4 rounded-lg bg-muted/50 px-4 py-3 text-sm">
+                        <p className="min-w-0 leading-6 text-muted-foreground">
+                          Regarding{" "}
+                          <a
+                            href={related.path}
+                            className="font-medium text-strong-foreground underline underline-offset-4"
+                          >
+                            {related.title}
+                          </a>
+                        </p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setRelated(undefined)
+                            onSelectionChange?.({
+                              topic,
+                              app:
+                                showProject && projectId
+                                  ? projectId.replace(/^project-/, "")
+                                  : undefined,
+                            })
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ) : null}
+                  </>
+                ) : null}
+                <Field
+                  name="context"
+                  label="Your message"
+                  error={errors.context}
+                >
+                  <Textarea
+                    {...fieldProps("context")}
+                    required
+                    minLength={10}
+                    maxLength={5000}
+                    rows={7}
+                    className="min-h-40 resize-y"
+                    placeholder={
+                      isSupport
+                        ? "What happened, and what did you expect? Include any steps that help me understand the issue."
+                        : "Share your question, suggestion, or what you have in mind."
+                    }
+                  />
+                  <p className="text-xs leading-5 text-muted-foreground">
+                    Up to 5,000 characters. Please leave out passwords and other
+                    sensitive information.
+                  </p>
+                </Field>
+                {isSupport ? (
                   <div className="grid gap-5 sm:grid-cols-2">
-                    <Field name="email" label="Your email" error={errors.email}>
+                    <Field
+                      name="platform"
+                      label="Device or platform (optional)"
+                      error={errors.platform}
+                    >
                       <Input
-                        {...fieldProps("email")}
-                        type="email"
-                        autoComplete="email"
-                        maxLength={254}
-                        required
-                        placeholder="you@example.com"
+                        {...fieldProps("platform")}
+                        maxLength={100}
+                        placeholder="e.g. Android, iOS, Windows"
                       />
                     </Field>
                     <Field
-                      name="name"
-                      label="Your name (optional)"
-                      error={errors.name}
+                      name="appVersion"
+                      label="App version (optional)"
+                      error={errors.appVersion}
                     >
                       <Input
-                        {...fieldProps("name")}
-                        autoComplete="name"
-                        maxLength={80}
+                        {...fieldProps("appVersion")}
+                        maxLength={100}
+                        placeholder="e.g. 1.2.0"
                       />
                     </Field>
                   </div>
-                  <div aria-hidden="true" className="hidden">
-                    <label htmlFor="contact-website">Website</label>
-                    <input
-                      id="contact-website"
-                      name="website"
-                      tabIndex={-1}
-                      autoComplete="off"
+                ) : null}
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <Field name="email" label="Your email" error={errors.email}>
+                    <Input
+                      {...fieldProps("email")}
+                      type="email"
+                      autoComplete="email"
+                      maxLength={254}
+                      required
+                      placeholder="you@example.com"
                     />
-                  </div>
-                  <p className="text-xs leading-5 text-muted-foreground">
-                    Your email and message are used to respond to this inquiry.
-                    Submitting won’t subscribe you to a newsletter.
-                  </p>
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                  </Field>
+                  <Field
+                    name="name"
+                    label="Your name (optional)"
+                    error={errors.name}
                   >
-                    <EnvelopeSimpleIcon aria-hidden="true" />
-                    {status === "pending"
-                      ? "Sending…"
-                      : status === "error"
-                        ? "Try sending again"
-                        : "Send message"}
-                  </Button>
-                </fieldset>
-                {status === "pending" ? (
-                  <p role="status" className="text-sm text-muted-foreground">
-                    Checking and saving your message…
-                  </p>
-                ) : null}
-                {submissionError ? (
-                  <p
-                    role="alert"
-                    className="text-sm leading-6 text-destructive"
-                  >
-                    {submissionError} Your message is still here.
-                  </p>
-                ) : null}
-                <noscript>
-                  <p className="text-sm">
-                    Enable JavaScript to use the form, or email{" "}
-                    <a href={`mailto:${profileCatalog.profile.email}`}>
-                      {profileCatalog.profile.email}
+                    <Input
+                      {...fieldProps("name")}
+                      autoComplete="name"
+                      maxLength={80}
+                    />
+                  </Field>
+                </div>
+                <div aria-hidden="true" className="hidden">
+                  <label htmlFor="contact-website">Website</label>
+                  <input
+                    id="contact-website"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+                <p className="text-xs leading-5 text-muted-foreground">
+                  Your email and message are used to respond to this inquiry.
+                  Submitting won’t subscribe you to a newsletter.
+                </p>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                >
+                  <EnvelopeSimpleIcon aria-hidden="true" />
+                  {status === "pending"
+                    ? "Sending…"
+                    : status === "error"
+                      ? "Try sending again"
+                      : "Send message"}
+                </Button>
+              </fieldset>
+              {status === "pending" ? (
+                <p role="status" className="text-sm text-muted-foreground">
+                  Checking and saving your message…
+                </p>
+              ) : null}
+              {submissionError ? (
+                <p role="alert" className="text-sm leading-6 text-destructive">
+                  {submissionError} Your message is still here.
+                </p>
+              ) : null}
+              <noscript>
+                <p className="text-sm">
+                  Enable JavaScript to use the form, or email{" "}
+                  <a href={`mailto:${profileCatalog.profile.email}`}>
+                    {profileCatalog.profile.email}
+                  </a>
+                  .
+                </p>
+              </noscript>
+            </form>
+          )}
+        </section>
+        <aside
+          aria-label="Other ways to connect"
+          className="space-y-8 border-t pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
+        >
+          {isSupport || appPresentation ? (
+            <div className="space-y-3">
+              <h2 className="text-base font-semibold text-strong-foreground">
+                {selectedProject?.title ?? "Product support"}
+              </h2>
+              <p className="text-sm leading-6 text-muted-foreground">
+                {selectedProject?.description ??
+                  "Choose a product in the form, or select Other / not listed and enter its name."}
+              </p>
+              <p className="text-sm text-strong-foreground">
+                Built and supported by Montasim.
+              </p>
+              {selectedProject && (
+                <nav
+                  aria-label={`${selectedProject.title} links`}
+                  className="flex flex-col items-start gap-3"
+                >
+                  {[
+                    { label: "View product", href: selectedProject.href },
+                    ...selectedProject.links,
+                  ].map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                    >
+                      {link.label}
+                      <ArrowUpRightIcon
+                        aria-hidden="true"
+                        className="size-4 shrink-0"
+                      />
                     </a>
-                    .
-                  </p>
-                </noscript>
-              </form>
-            )}
-          </section>
-          <aside
-            aria-label="Other ways to connect"
-            className="space-y-8 border-t pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
-          >
-            {isSupport || appPresentation ? (
-              <div className="space-y-3">
-                <h2 className="text-base font-semibold text-strong-foreground">
-                  {selectedProject?.title ?? "Product support"}
-                </h2>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  {selectedProject?.description ??
-                    "Choose a product in the form, or select Other / not listed and enter its name."}
-                </p>
-                <p className="text-sm text-strong-foreground">
-                  Built and supported by Montasim.
-                </p>
-                {selectedProject && (
-                  <nav
-                    aria-label={`${selectedProject.title} links`}
-                    className="flex flex-col items-start gap-3"
-                  >
-                    {[
-                      { label: "View product", href: selectedProject.href },
-                      ...selectedProject.links,
-                    ].map((link) => (
-                      <a
-                        key={link.label}
-                        href={link.href}
-                        className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-                      >
-                        {link.label}
-                        <ArrowUpRightIcon
-                          aria-hidden="true"
-                          className="size-4 shrink-0"
-                        />
-                      </a>
-                    ))}
-                  </nav>
-                )}
-              </div>
-            ) : (
-              <div>
-                <h2 className="text-base font-semibold text-strong-foreground">
-                  A little about me
-                </h2>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                  I’m Montasim, a software engineer based in{" "}
-                  {profileCatalog.profile.location}. I build apps, websites, and
-                  developer tools. You can reach out about engineering
-                  opportunities, collaboration, or something I’ve built or
-                  written.
-                </p>
-                <a
-                  href="/experience"
-                  className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
-                >
-                  Explore my experience
-                  <ArrowUpRightIcon aria-hidden="true" className="size-4" />
-                </a>
-                <a
-                  href="/projects"
-                  className="mt-3 flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
-                >
-                  View my projects{" "}
-                  <ArrowUpRightIcon aria-hidden="true" className="size-4" />
-                </a>
-              </div>
-            )}
-          </aside>
-        </div>
-      </PageShell>
-      {!isSupport && !appPresentation && <PortfolioAssistant />}
-    </>
+                  ))}
+                </nav>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-base font-semibold text-strong-foreground">
+                A little about me
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                I’m Montasim, a software engineer based in{" "}
+                {profileCatalog.profile.location}. I build apps, websites, and
+                developer tools. You can reach out about engineering
+                opportunities, collaboration, or something I’ve built or
+                written.
+              </p>
+              <a
+                href="/experience"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
+              >
+                Explore my experience
+                <ArrowUpRightIcon aria-hidden="true" className="size-4" />
+              </a>
+              <a
+                href="/projects"
+                className="mt-3 flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
+              >
+                View my projects{" "}
+                <ArrowUpRightIcon aria-hidden="true" className="size-4" />
+              </a>
+            </div>
+          )}
+        </aside>
+      </div>
+    </PageShell>
   )
 }

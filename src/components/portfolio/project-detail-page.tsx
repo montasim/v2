@@ -227,15 +227,13 @@ export function ProjectDetailPage({
 
         <p className="mt-10 text-sm text-muted-foreground">
           Need help with this project?{" "}
-          <a
+          <Link
             className="font-medium text-strong-foreground underline underline-offset-4"
-            href={contactHref({
-              app: project.id.replace(/^project-/, ""),
-              topic: "support",
-            })}
+            to="/projects/$slug/contact"
+            params={{ slug: project.id.replace(/^project-/, "") }}
           >
             Get project support
-          </a>
+          </Link>
         </p>
 
         <section
