@@ -86,6 +86,17 @@ describe("createExactAnswerCatalog", () => {
 })
 
 describe("portfolio exact answers", () => {
+  it("answers Air Traffic Control download and architecture questions", () => {
+    expect(
+      findExactAnswer("Where can I download Air Traffic Control?")?.text
+    ).toContain("https://snapcraft.io/air-traffic-control")
+    expect(
+      findExactAnswer(
+        "Which technologies did Montasim use for Air Traffic Control?"
+      )?.text
+    ).toContain("Phaser")
+  })
+
   it("contains the approved number of independently traceable records", () => {
     const records = getExactAnswerCatalog()
     const expectedCount = Object.values(exactAnswerCategoryTargets).reduce(
@@ -222,7 +233,7 @@ describe("portfolio exact answers", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("42 project records")
+    expect(projectCount.text).toContain("43 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(

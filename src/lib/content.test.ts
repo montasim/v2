@@ -1,3 +1,5 @@
+import { blogCatalog } from "./content/blog"
+import { loadContactContext } from "@/features/contact/application/contact-context.server"
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { affiliationCatalog } from "./content/affiliations"
@@ -14,6 +16,25 @@ import { catalogFilterNavigation } from "./content/shared"
 import { createMeta, site } from "./site"
 
 describe("portfolio content", () => {
+  it("connects Air Traffic Control across project, case study, blog, and contact", () => {
+    const project = projectCatalog.findBySlug("air-traffic-control")
+    expect(project?.liveUrl).toBe("https://airtrafficcontrol.netlify.app")
+    expect(project?.snapcraftUrl).toBe(
+      "https://snapcraft.io/air-traffic-control"
+    )
+    expect(
+      projectCaseStudyCatalog.findBySlug("air-traffic-control")?.project.id
+    ).toBe(project?.id)
+    expect(
+      blogCatalog.find("separating-flight-rules-from-the-renderer")?.projectId
+    ).toBe(project?.id)
+    const contact = loadContactContext({ app: "air-traffic-control" })
+    expect(contact.projectId).toBe(project?.id)
+    expect(
+      contact.projects.find((item) => item.id === project?.id)?.links
+    ).toContainEqual({ label: "Snap Store", href: project?.snapcraftUrl })
+  })
+
   it("validates every required JSON catalog", () => {
     expect(profileCatalog.profile.name).toContain("Montasim")
     expect(profileCatalog.profile.workPreferences.timeZone).toBe("UTC+6")

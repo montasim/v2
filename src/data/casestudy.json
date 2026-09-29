@@ -2699,5 +2699,78 @@
       "Extension-specific security boundaries remain explicit.",
       "Verification covers both rendered behavior and integration safety."
     ]
+  },
+  {
+    "slug": "air-traffic-control",
+    "projectId": "project-air-traffic-control",
+    "summary": "A browser and Linux arcade game that separates flight simulation, rendering, and local progression so routing rules remain testable across delivery targets.",
+    "role": "Game design and TypeScript engineering",
+    "scope": "Traffic simulation, pointer routing, local progression, browser delivery, and Linux desktop packaging",
+    "status": "Browser deployment and Snap Store distribution",
+    "verifiedBranch": "main",
+    "verifiedCommit": "897159962c163a7c40c618701e6cb41d7b64c213",
+    "problem": "A flight-path drawing game needs collision and landing rules that agree with what players see, while keeping progress meaningful across short sessions and different screen layouts.",
+    "constraints": [
+      "Flight paths require mouse, touch, or pen input; keyboard navigation alone does not cover gameplay.",
+      "Browser and Linux desktop saves are separate and local, with no cloud sync or save export.",
+      "Browser offline play requires an initial online visit and successful asset caching.",
+      "Resizing or changing orientation can invalidate an active airfield layout; broader real-device testing and difficulty tuning remain ongoing."
+    ],
+    "architecture": {
+      "summary": "A framework-independent TypeScript simulation feeds Phaser rendering and pointer interactions. DOM menus coordinate sessions, IndexedDB persists local progression, and Vite builds browser and Electron delivery targets.",
+      "layers": [
+        {
+          "title": "Simulation",
+          "detail": "Fixed-step updates at 1/60 second, seeded random traffic, flight-path geometry, and aircraft-shaped collision polygons live outside Phaser."
+        },
+        {
+          "title": "Interaction and rendering",
+          "detail": "Phaser scenes render airfields and aircraft, while pointer routes guide aircraft to matching landing zones. DOM menus expose difficulty, career, achievements, and settings."
+        },
+        {
+          "title": "Local progression",
+          "detail": "IndexedDB stores versioned saves, career progression, achievements, and records. Completed shifts contribute progress; practice and abandoned shifts do not."
+        },
+        {
+          "title": "Delivery",
+          "detail": "Vite and a service worker support cached browser play. Electron loads bundled assets through a restricted custom protocol, with AppImage and Snap packaging for Linux."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Keep simulation independent from rendering",
+        "detail": "A fixed-step simulation and seeded traffic make gameplay rules testable without a browser renderer; this is an update interval, not a measured frame-rate guarantee."
+      },
+      {
+        "title": "Match collisions to visible aircraft",
+        "detail": "Collision outlines follow the airframe heading and exclude selection halos, shadows, and rotor blur so visual effects do not become fatal collision surfaces."
+      },
+      {
+        "title": "Commit progression at session completion",
+        "detail": "Recording outcomes only when a shift finishes keeps practice, restarts, and abandoned sessions from inflating career progress."
+      },
+      {
+        "title": "Ship the same game with explicit storage boundaries",
+        "detail": "The browser uses cached assets and site-local saves; the Linux app bundles assets and maintains separate local saves rather than implying cross-device synchronization."
+      }
+    ],
+    "contribution": [
+      "Implemented aircraft routing, traffic pacing, landing checks, and collision geometry.",
+      "Built nine airfields, three difficulty levels, seven career ranks, and nine achievements.",
+      "Integrated IndexedDB persistence, offline browser assets, and Electron Linux distribution.",
+      "Added automated coverage for simulation, progression, storage, audio, and UI behavior."
+    ],
+    "outcomes": [
+      "Players can draw routes for three aircraft types across nine airfields in the browser or Linux desktop app.",
+      "Local career progression and achievements persist between completed sessions without requiring an account.",
+      "The simulation can be tested independently of Phaser rendering.",
+      "The product provides a browser entry point and a Snap Store installation path."
+    ],
+    "screenshot": {
+      "alt": "Air Traffic Control promotional preview showing the game and flight-routing theme",
+      "caption": "Project social preview from the Air Traffic Control repository.",
+      "fit": "contain"
+    }
   }
 ]

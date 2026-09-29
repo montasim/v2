@@ -390,3 +390,12 @@ The ten entries in this group share a deliberate package shape: an npm CLI insta
 - Preserve status qualifiers: Foliofarer, Skillfoliox, MulaLens, DevTools, and deployed utilities have public surfaces; Book Heaven is broad beta; Ramadan Clock is pre-release; Bangladesh Location Registry is public preview; EduCanvas is a starter; several packages are pre-1.0 or infrastructure rather than UI products.
 - For libraries and Agent Skills, replace an artificial app-style screenshot narrative with package/workflow evidence. Their most meaningful “outcomes” are supported APIs, validation guarantees, installability, and safe automation boundaries.
 - Re-check live URLs separately before presenting availability; repository evidence verifies implementation and documented deployment claims at the pinned revision, not current uptime.
+
+## Air Traffic Control — 2026-09-29
+
+- Local source: `/home/montasim/Work/Personal/Air Control`, branch `main`, commit `897159962c163a7c40c618701e6cb41d7b64c213`.
+- Public repository: https://github.com/montasim/air-traffic-control. GitHub API confirms public visibility and creation at `2026-09-29T10:11:38Z`; first local commit is `25a7fceed2b68c3f93e9727261980baf82486bef` at `2026-09-01T12:31:21Z`.
+- User-provided destinations: https://airtrafficcontrol.netlify.app and https://snapcraft.io/air-traffic-control. README documents both distribution paths. Web fetch could not inspect these destinations during this update; no uptime claim is made.
+- Evidence: README and package.json describe the nine airfields, three aircraft types, three difficulties, local career, Phaser/TypeScript stack, browser offline caching, and Electron Linux build. `src/core/Simulation.ts` confirms fixed-step updates and seeded traffic; `src/core/aircraftCollision.ts` documents aircraft outlines and excluded visual effects. `src/storage/persistence.ts` implements IndexedDB storage. `electron/main.cjs` restricts navigation and serves bundled assets through a custom protocol.
+- Preview: existing `public/social-preview-v1.png` from the source repository, converted to WebP for portfolio delivery. Caption identifies it as a promotional preview, not a captured gameplay screenshot.
+- Limits retained in published content: separate browser/desktop saves, no cloud sync or export, initial browser caching requirement, pointer-based gameplay, resize/orientation handling, and further real-device testing. No measured frame rate, adoption, or benchmark claims added.

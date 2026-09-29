@@ -1,7 +1,35 @@
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { Project } from "@/lib/content/projects"
 
-export const projectReadmes: Readonly<Record<string, string>> = {}
+export const projectReadmes: Readonly<Record<string, string>> = {
+  "air-traffic-control": `
+# Air Traffic Control
+
+Draw flight paths. Land aircraft. Avoid collisions.
+
+Air Traffic Control is an arcade game for browsers and Linux. Guide airliners, commuter aircraft, and helicopters to their matching runways or helipads while keeping traffic apart.
+
+## How to play
+
+Choose an airfield and difficulty, then press an aircraft with a mouse, finger, or pen and draw its route. Release when the matching landing area lights up. Each safe landing earns a point; a collision or an aircraft leaving the sector ends the shift. A practice flight introduces the controls without changing your records.
+
+## Build a local career
+
+Start at Saltmarsh Gateway or River Bend and unlock more locations through career promotions. Nine airfields, three difficulty levels, seven ranks, and nine achievements provide different traffic challenges. Completed shifts count toward progression; practice, restarts, and abandoned shifts do not.
+
+## Play in your browser or on Linux
+
+[Play in the browser](https://airtrafficcontrol.netlify.app) or [install from the Snap Store](https://snapcraft.io/air-traffic-control). The browser version caches assets for offline use after an online visit. The Electron Linux version bundles the game for offline play.
+
+## Saves and controls
+
+Progress and settings are stored locally in IndexedDB. Browser and desktop saves are separate, with no cloud synchronization or save export. Clearing site data can erase browser progress. Menus support keyboard navigation, but drawing flight paths requires a pointer. Resizing or changing orientation can require a shift restart.
+
+## Engineering
+
+A TypeScript simulation handles traffic pacing, route geometry, and aircraft-shaped collision checks independently of Phaser rendering. Versioned local saves track progression. Vite produces the browser build and the assets bundled by Electron. Automated tests cover simulation, progression, storage, audio, and UI behavior; broader real-device testing and difficulty balancing remain ongoing.
+`,
+}
 
 const projectTypeLabels: Record<Project["type"], string> = {
   website: "web application",

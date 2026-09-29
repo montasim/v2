@@ -34,7 +34,8 @@
       "productivity",
       "routine",
       "tracking"
-    ]
+    ],
+    "logoUrl": "https://routempo.netlify.app/logo.svg"
   },
   {
     "id": "project-foliofarer",
@@ -76,7 +77,8 @@
       "threejs",
       "typescript",
       "webgl"
-    ]
+    ],
+    "logoUrl": "https://foliofarer.netlify.app/favicon.ico?favicon.bd4e147e.ico"
   },
   {
     "id": "project-vidquery",
@@ -118,7 +120,8 @@
       "typescript",
       "video-transcript",
       "youtube"
-    ]
+    ],
+    "logoUrl": "https://vidquery.netlify.app/brand/logo.svg"
   },
   {
     "id": "project-thoughtline",
@@ -164,7 +167,8 @@
       "react",
       "typescript",
       "writing-assistant"
-    ]
+    ],
+    "logoUrl": "https://thoughtline.netlify.app/brand/thoughtline-mark.svg"
   },
   {
     "id": "project-bugreceipt",
@@ -210,7 +214,8 @@
       "react",
       "screen-recording",
       "typescript"
-    ]
+    ],
+    "logoUrl": "https://bugreceipt.netlify.app/brand/bugreceipt-mark.svg"
   },
   {
     "id": "project-1snap",
@@ -256,7 +261,8 @@
       "screenshot",
       "typescript",
       "wxt"
-    ]
+    ],
+    "logoUrl": "https://1snap.netlify.app/favicon-32.png"
   },
   {
     "id": "project-mulalens",
@@ -301,7 +307,8 @@
       "productivity-tool",
       "salary-lookup",
       "sentiment-analysis"
-    ]
+    ],
+    "logoUrl": "https://mulalens.netlify.app/brand/logo.png"
   },
   {
     "id": "project-skillfoliox",
@@ -345,7 +352,8 @@
       "tailwindcss",
       "tanstack-start",
       "typescript"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-release-agent-skill",
@@ -380,7 +388,8 @@
       "release-automation",
       "skill-validation",
       "software-supply-chain"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-verify-github-npm-release",
@@ -415,7 +424,8 @@
       "npm-package",
       "release-verification",
       "software-supply-chain"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-write-complete-project-readme",
@@ -446,7 +456,8 @@
       "documentation",
       "readme",
       "readme-generator"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-publish-verified-github-release",
@@ -481,7 +492,8 @@
       "npm",
       "release-notes",
       "semantic-versioning"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-fix-project-metadata-mismatches",
@@ -515,7 +527,8 @@
       "npm",
       "project-metadata",
       "release-automation"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-make-app-netlify-ready",
@@ -551,7 +564,8 @@
       "server-side-rendering",
       "single-page-application",
       "web-development"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-find-ui-inconsistencies",
@@ -586,7 +600,8 @@
       "frontend",
       "responsive-design",
       "user-interface"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-make-project-github-ready",
@@ -621,7 +636,8 @@
       "github",
       "repository-management",
       "repository-metadata"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-update-skillfolio-catalog",
@@ -656,7 +672,8 @@
       "sitemap",
       "skill-catalog",
       "skillfolio"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-fix-social-link-previews",
@@ -690,7 +707,8 @@
       "seo",
       "social-preview",
       "twitter-cards"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-bangladesh-location-registry",
@@ -812,7 +830,8 @@
       "typescript",
       "validation",
       "zero-dependency"
-    ]
+    ],
+    "logoUrl": "https://content-types-lite.netlify.app/favicon.svg"
   },
   {
     "id": "project-http-status-lite",
@@ -860,7 +879,8 @@
       "type-safe",
       "typescript",
       "zero-dependency"
-    ]
+    ],
+    "logoUrl": "https://http-status-lite.netlify.app/favicon.svg"
   },
   {
     "id": "project-mime-types-lite",
@@ -903,7 +923,8 @@
       "uploads",
       "validation",
       "zero-dependency"
-    ]
+    ],
+    "logoUrl": "https://mime-types-lite.netlify.app/favicon.svg"
   },
   {
     "id": "project-client-parser",
@@ -944,7 +965,8 @@
       "user-agent",
       "user-agent-parser",
       "zero-dependency"
-    ]
+    ],
+    "logoUrl": "https://client-parser.netlify.app/favicon.svg"
   },
   {
     "id": "project-b4joinacompany",
@@ -981,7 +1003,8 @@
       "employment",
       "job-search",
       "web-application"
-    ]
+    ],
+    "logoUrl": "https://b4joinacompany.netlify.app/icon.svg?icon.10kda_g1712l_.svg"
   },
   {
     "id": "project-book-heaven",
@@ -1024,7 +1047,8 @@
       "shadcn-ui",
       "tailwindcss",
       "typescript"
-    ]
+    ],
+    "logoUrl": "https://bookheavenbeta.vercel.app/favicon.ico?favicon.0b3bf435.ico"
   },
   {
     "id": "project-markdown-typing-svg",
@@ -1060,7 +1084,8 @@
       "typescript",
       "typing",
       "typing-animation"
-    ]
+    ],
+    "logoUrl": "https://markdown-typing-svg.netlify.app/favicon.ico?favicon.b64cfb76.ico"
   },
   {
     "id": "project-shrnkly",
@@ -1106,7 +1131,8 @@
       "text-sharing",
       "url-shortener",
       "url-shortening"
-    ]
+    ],
+    "logoUrl": "https://shrnkly.netlify.app/favicon.ico"
   },
   {
     "id": "project-github-readme-counter",
@@ -1178,7 +1204,8 @@
     "npmUrl": "",
     "emoji": "",
     "imageUrl": "assets/projects/ramadan-clock.png",
-    "topics": ["iftar", "islamic-calendar", "prayer-times", "ramadan", "sehar"]
+    "topics": ["iftar", "islamic-calendar", "prayer-times", "ramadan", "sehar"],
+    "logoUrl": "https://fasttimes.netlify.app/favicon.ico"
   },
   {
     "id": "project-devtools",
@@ -1229,7 +1256,8 @@
       "regex-tester",
       "url-encoder",
       "websocket-tester"
-    ]
+    ],
+    "logoUrl": "https://devtoolsn.vercel.app/icon.svg?icon.0qz0rw08sizuj.svg"
   },
   {
     "id": "project-postcraft",
@@ -1273,7 +1301,8 @@
       "content-creation-tool",
       "post-generator",
       "social-media-automation"
-    ]
+    ],
+    "logoUrl": "https://aipostcraft.vercel.app/favicon.ico?favicon.8ffa2b51.ico"
   },
   {
     "id": "project-tin-audit-checker",
@@ -1307,7 +1336,8 @@
       "risk-based-audit",
       "tax-return-audit",
       "tin-checker"
-    ]
+    ],
+    "logoUrl": "https://tin-audit-checker.netlify.app/favicon.ico?favicon.0x3dzn~oxb6tn.ico"
   },
   {
     "id": "project-formflow",
@@ -1388,7 +1418,8 @@
       "attendance",
       "react-native",
       "convex"
-    ]
+    ],
+    "logoUrl": "https://liftuno-website.vercel.app/favicon.ico"
   },
   {
     "id": "project-coaching-management",
@@ -1587,7 +1618,8 @@
       "mobile-development",
       "platform-adaptation",
       "web-to-android"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-deploy-prebuilt-app-to-netlify",
@@ -1620,7 +1652,8 @@
       "prebuilt-artifacts",
       "release-verification",
       "static-hosting"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
   },
   {
     "id": "project-integrate-supportkori-widget",
@@ -1654,6 +1687,41 @@
       "frontend-integration",
       "supportkori",
       "widget"
-    ]
+    ],
+    "logoUrl": "https://skillfoliox.netlify.app/favicon.svg"
+  },
+  {
+    "id": "project-air-traffic-control",
+    "type": "desktop",
+    "featured": false,
+    "title": "Air Traffic Control",
+    "description": "A flight-path drawing arcade game for browsers and Linux. Guide three aircraft types across nine airfields, avoid collisions, and build a local career with offline play.",
+    "technologies": [
+      "TypeScript",
+      "Phaser",
+      "Vite",
+      "Electron",
+      "IndexedDB",
+      "Progressive Web App",
+      "Vitest",
+      "Playwright"
+    ],
+    "liveUrl": "https://airtrafficcontrol.netlify.app",
+    "snapcraftUrl": "https://snapcraft.io/air-traffic-control",
+    "githubUrl": "https://github.com/montasim/air-traffic-control",
+    "githubRepositoryCreatedAt": "2026-09-29T10:11:38Z",
+    "githubInitialCommitAt": "2026-09-01T12:31:21Z",
+    "githubInitialCommitSha": "25a7fceed2b68c3f93e9727261980baf82486bef",
+    "imageUrl": "assets/projects/air-traffic-control.webp",
+    "topics": [
+      "arcade-game",
+      "air-traffic-control",
+      "air-control",
+      "linux",
+      "offline-first",
+      "simulation",
+      "game-development"
+    ],
+    "logoUrl": "https://airtrafficcontrol.netlify.app/icon.svg"
   }
 ]

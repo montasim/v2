@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 7 }),
-      expect.objectContaining({ id: "projects", recordCount: 42 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 42 }),
-      expect.objectContaining({ id: "blog", recordCount: 43 }),
+      expect.objectContaining({ id: "projects", recordCount: 43 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 43 }),
+      expect.objectContaining({ id: "blog", recordCount: 44 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -234,29 +234,30 @@ describe("PortfolioKnowledge", () => {
       historyStartedAt: "2026-09-08T06:38:28Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
-      recordId: "gym-membership-debt-cannot-be-invented-by-a-calendar",
-      publishedAt: "2026-08-28",
+      recordId: "separating-flight-rules-from-the-renderer",
+      publishedAt: "2026-09-29",
       tieBreak: "catalog-order",
     })
-    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(39)
-    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(39)
+    expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(1)
+    expect(knowledge.derived.latestDatedBlog.tiedCount).toBe(1)
     expect(
       knowledge.textForFact(knowledge.derived.latestDatedBlog.factId)
-    ).toContain("39")
+    ).toContain("1")
 
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 43,
-      authored: 4,
+      total: 44,
+      authored: 5,
       caseStudyDerived: 39,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 42,
+      total: 43,
       byType: {
         api: 1,
+        desktop: 1,
         dataset: 2,
         extension: 5,
         package: 4,

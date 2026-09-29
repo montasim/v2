@@ -43,4 +43,7 @@
   <url><loc>https://montasim.dev/recommendations</loc></url>
   <url><loc>https://montasim.dev/resume</loc></url>
   <url><loc>https://montasim.dev/contact</loc></url>
+  <url><loc>https://montasim.dev/projects/air-traffic-control</loc></url>
+  <url><loc>https://montasim.dev/case-studies/air-traffic-control</loc></url>
+  <url><loc>https://montasim.dev/blog/separating-flight-rules-from-the-renderer</loc></url>
 </urlset>
