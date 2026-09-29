@@ -3,9 +3,14 @@ import {
   ArrowClockwiseIcon,
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
+  DownloadSimpleIcon,
 } from "@/components/ui/icons"
-import { InternalAction } from "@/components/shared/navigation-action"
+import {
+  ExternalAction,
+  InternalAction,
+} from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
+import { profileCatalog } from "@/lib/content/profile"
 
 type ErrorPageProps =
   | {
@@ -79,15 +84,26 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
               </InternalAction>
             )}
             {status === "404" ? (
-              <InternalAction
-                to="/projects"
-                variant="outline"
-                size="lg"
-                className={actionClassName}
-              >
-                View projects
-                <ArrowRightCompactIcon />
-              </InternalAction>
+              <>
+                <ExternalAction
+                  href={profileCatalog.profile.resumeUrl}
+                  variant="outline"
+                  size="lg"
+                  className={actionClassName}
+                >
+                  <DownloadSimpleIcon />
+                  Download resume
+                </ExternalAction>
+                <InternalAction
+                  to="/projects"
+                  variant="outline"
+                  size="lg"
+                  className={actionClassName}
+                >
+                  View projects
+                  <ArrowRightCompactIcon />
+                </InternalAction>
+              </>
             ) : (
               <InternalAction
                 to="/"
