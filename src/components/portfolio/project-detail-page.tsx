@@ -169,7 +169,11 @@ export function ProjectDetailPage({
             width="1600"
             height="1000"
             fetchPriority="high"
-            className="aspect-[16/10] w-full rounded-lg border object-cover object-top"
+            className={
+              caseStudy.screenshot.fit === "contain"
+                ? "h-auto w-full rounded-lg border object-contain"
+                : "aspect-[16/10] w-full rounded-lg border object-cover object-top"
+            }
           />
         </figure>
       ) : project.snapcraftUrl ? (
