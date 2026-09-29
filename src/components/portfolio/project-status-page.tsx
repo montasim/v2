@@ -182,8 +182,7 @@ function StatusLabel({ status }: { status: ProjectStatus }) {
         presentation.textClassName
       )}
       style={{
-        backgroundColor:
-          "color-mix(in oklch, currentColor 10%, transparent)",
+        backgroundColor: "color-mix(in oklch, currentColor 10%, transparent)",
         boxShadow:
           "inset 0 0 0 1px color-mix(in oklch, currentColor 25%, transparent)",
       }}
@@ -236,9 +235,7 @@ export function ProjectStatusPage({
   const status = statusCopy(snapshot)
   const OverallIcon = overallPresentation.Icon
   const attentionCount =
-    snapshot.summary.down +
-    snapshot.summary.degraded +
-    snapshot.summary.unknown
+    snapshot.summary.down + snapshot.summary.degraded + snapshot.summary.unknown
   const attentionValueClassName =
     snapshot.summary.down > 0
       ? "text-red-700 dark:text-red-300"
@@ -364,10 +361,7 @@ export function ProjectStatusPage({
                 />
               </div>
               <div className="border-r">
-                <SummaryMetric
-                  label="Paused"
-                  value={snapshot.summary.paused}
-                />
+                <SummaryMetric label="Paused" value={snapshot.summary.paused} />
               </div>
               <SummaryMetric label="Total" value={snapshot.summary.total} />
             </dl>
@@ -409,8 +403,7 @@ export function ProjectStatusPage({
                         type="button"
                         className={cn(
                           "relative flex min-h-11 shrink-0 items-center gap-2 rounded-sm pt-2 pb-3 text-sm font-medium text-muted-foreground transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] outline-none after:absolute after:right-0 after:bottom-[-1px] after:left-0 after:h-0.5 after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-200 after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ring motion-reduce:transition-none motion-reduce:after:transition-none",
-                          selected &&
-                            "text-strong-foreground after:scale-x-100"
+                          selected && "text-strong-foreground after:scale-x-100"
                         )}
                         aria-pressed={selected}
                         onClick={() => setFilter(option.value)}

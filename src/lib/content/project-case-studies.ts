@@ -1,8 +1,7 @@
 import { z } from "zod"
 import caseStudiesJson from "@/data/casestudy.json"
-import { projectCatalog } from "@/lib/content/projects"
+import { projectCatalog, githubHistoryStartedAt } from "@/lib/content/projects"
 import type { ProjectFilter } from "@/lib/content/projects"
-import { githubHistoryStartedAt } from "@/lib/content/projects"
 
 export const projectCaseStudySlugSchema = z
   .string()
