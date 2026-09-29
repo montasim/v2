@@ -51,6 +51,14 @@ const initial = {
   ],
 }
 beforeEach(() => {
+  vi.stubGlobal(
+    "ResizeObserver",
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+  )
   submit.mockReset()
   verifyEmail.mockReset().mockResolvedValue({ accepted: true })
   Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {

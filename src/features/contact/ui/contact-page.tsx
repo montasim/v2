@@ -1,3 +1,4 @@
+import { ProjectPicker } from "./project-picker"
 import { useEffect, useRef, useState } from "react"
 import type { FormEvent, ReactNode } from "react"
 import { useServerFn } from "@tanstack/react-start"
@@ -391,9 +392,15 @@ export function ContactPage({
                           }
                           error={errors.projectId}
                         >
-                          <Select
-                            name="projectId"
+                          <ProjectPicker
+                            {...fieldProps("projectId")}
+                            projects={initial.projects}
                             value={projectId || "none"}
+                            placeholder={
+                              isSupport
+                                ? "Choose an app or project"
+                                : "No specific project"
+                            }
                             onValueChange={(value) => {
                               const nextProject = value === "none" ? "" : value
                               setProjectId(nextProject)
@@ -402,30 +409,7 @@ export function ContactPage({
                               setErrors({})
                             }}
                             disabled={status === "pending"}
-                            required={isSupport}
-                          >
-                            <SelectTrigger
-                              {...fieldProps("projectId")}
-                              className="h-11 min-w-0 aria-invalid:border-destructive [&_[data-slot=select-value]]:truncate"
-                            >
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="none">
-                                {isSupport
-                                  ? "Choose an app or project"
-                                  : "No specific project"}
-                              </SelectItem>
-                              {initial.projects.map((project) => (
-                                <SelectItem key={project.id} value={project.id}>
-                                  {project.title}
-                                </SelectItem>
-                              ))}
-                              <SelectItem value="other">
-                                Other / not listed
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                          />
                         </Field>
                       ))}
                   </div>
