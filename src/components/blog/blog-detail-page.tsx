@@ -59,6 +59,9 @@ import { projectCatalog } from "@/lib/content/projects"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { cn } from "@/lib/utils"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
+import { ContentMediaGallery } from "@/components/shared/content-media-gallery"
+import { getProjectMedia } from "@/lib/content/project-media"
 import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 
 function formatDate(date: string) {
@@ -708,7 +711,10 @@ export function BlogDetailPage({
   const relatedProject = post.projectId
     ? projectCatalog.records.find((project) => project.id === post.projectId)
     : undefined
-  const hasMedia = Boolean(relatedProject?.youtubeVideoId || post.image)
+  const projectMedia = relatedProject ? getProjectMedia(relatedProject) : []
+  const hasMedia = Boolean(
+    relatedProject?.youtubeVideoId || projectMedia.length > 0 || post.image
+  )
   const viewCount = useVisitorCount({
     resourceKey: "blog",
     slug: post.slug,
@@ -934,14 +940,16 @@ export function BlogDetailPage({
               loading="eager"
               className="rounded-lg"
             />
+          ) : projectMedia.length > 0 ? (
+            <ContentMediaGallery media={projectMedia} priority />
           ) : post.image ? (
-            <img
+            <ContentPreviewImage
               src={post.image.src}
               alt={post.image.alt}
               width="1600"
               height="1000"
               fetchPriority="high"
-              className="aspect-[16/10] w-full rounded-lg border object-cover"
+              className="h-auto w-full rounded-lg border"
             />
           ) : null}
         </figure>

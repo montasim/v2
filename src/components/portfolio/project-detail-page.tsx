@@ -28,11 +28,12 @@ import {
 import type { Project } from "@/lib/content/projects"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { BlogPost } from "@/lib/content/blog"
-import { optimizedImage } from "@/lib/assets"
 import { contactHref } from "@/features/contact/domain/contact"
 import { ProjectReadmeDocument } from "@/components/portfolio/project-readme-document"
 import type { ProjectReadmeSource } from "@/components/portfolio/project-readme-document"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
+import { ContentMediaGallery } from "@/components/shared/content-media-gallery"
+import { getProjectMedia } from "@/lib/content/project-media"
 
 export function ProjectDetailPage({
   project,
@@ -47,11 +48,7 @@ export function ProjectDetailPage({
   blogPost?: BlogPost
   readmeSource?: ProjectReadmeSource
 }) {
-  const imageName = project.imageUrl?.split("/").at(-1)
-  const image =
-    imageName && caseStudy?.screenshot
-      ? optimizedImage(`/images/projects/${imageName}`)
-      : undefined
+  const media = getProjectMedia(project, caseStudy?.screenshot?.alt)
 
   return (
     <PageShell padded className="pb-20">
@@ -161,20 +158,9 @@ export function ProjectDetailPage({
             className="rounded-lg"
           />
         </figure>
-      ) : image && caseStudy?.screenshot ? (
+      ) : media.length > 0 ? (
         <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
-          <img
-            src={image}
-            alt={caseStudy.screenshot.alt}
-            width="1600"
-            height="1000"
-            fetchPriority="high"
-            className={
-              caseStudy.screenshot.fit === "contain"
-                ? "h-auto w-full rounded-lg border object-contain"
-                : "aspect-[16/10] w-full rounded-lg border object-cover object-top"
-            }
-          />
+          <ContentMediaGallery media={media} priority />
         </figure>
       ) : project.snapcraftUrl ? (
         <iframe

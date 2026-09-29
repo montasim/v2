@@ -32,7 +32,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { optimizedImage } from "@/lib/assets"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
 import {
   getProjectViewCount,
@@ -42,6 +41,8 @@ import { contactHref } from "@/features/contact/domain/contact"
 import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import { cn } from "@/lib/utils"
+import { ContentMediaGallery } from "@/components/shared/content-media-gallery"
+import { getProjectMedia } from "@/lib/content/project-media"
 
 const coreSectionLinks = [
   ["problem", "Problem"],
@@ -127,15 +128,12 @@ export function ProjectCaseStudyPage({
   const { project } = caseStudy
   const repositoryPath = githubRepositoryPath(project.githubUrl)
   const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
-  const imageName = project.imageUrl?.split("/").at(-1)
-  const image =
-    imageName && caseStudy.screenshot
-      ? optimizedImage(`/images/projects/${imageName}`)
-      : undefined
-  const hasMedia = Boolean(project.youtubeVideoId || image)
-  const sectionLinks = image
-    ? [...coreSectionLinks, screenshotSectionLink]
-    : coreSectionLinks
+  const media = getProjectMedia(project, caseStudy.screenshot?.alt)
+  const hasMedia = Boolean(project.youtubeVideoId || media.length > 0)
+  const sectionLinks =
+    media.length > 0
+      ? [...coreSectionLinks, screenshotSectionLink]
+      : coreSectionLinks
   const commitUrl = `${project.githubUrl}/tree/${caseStudy.verifiedCommit}`
   const [activeSection, setActiveSection] = useState<SectionId>(
     coreSectionLinks[0][0]
@@ -185,7 +183,7 @@ export function ProjectCaseStudyPage({
       window.removeEventListener("scroll", updateActiveSection)
       window.removeEventListener("resize", updateActiveSection)
     }
-  }, [caseStudy.slug, image])
+  }, [caseStudy.slug, media.length])
 
   return (
     <PageShell padded className="pb-20">
@@ -327,20 +325,9 @@ export function ProjectCaseStudyPage({
             className="rounded-lg"
           />
         </figure>
-      ) : image && caseStudy.screenshot ? (
+      ) : media.length > 0 ? (
         <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
-          <img
-            src={image}
-            alt={caseStudy.screenshot.alt}
-            width="1600"
-            height="1000"
-            fetchPriority="high"
-            className={
-              caseStudy.screenshot.fit === "contain"
-                ? "h-auto w-full rounded-lg border object-contain"
-                : "aspect-[16/10] w-full rounded-lg border object-cover object-top"
-            }
-          />
+          <ContentMediaGallery media={media} priority />
         </figure>
       ) : null}
 
@@ -509,30 +496,18 @@ export function ProjectCaseStudyPage({
             </section>
           </div>
 
-          {image && caseStudy.screenshot ? (
+          {media.length > 0 && caseStudy.screenshot ? (
             <section
               id="screenshots"
               aria-labelledby="screenshots-heading"
               className="scroll-mt-24 border-t py-10"
             >
               <SectionHeading id="screenshots">
-                Product screenshot
+                Product {media.length > 1 ? "screenshots" : "screenshot"}
               </SectionHeading>
               <figure className="mt-6">
                 <div className="overflow-hidden rounded-lg border bg-card p-2">
-                  <img
-                    src={image}
-                    alt={caseStudy.screenshot.alt}
-                    width="1600"
-                    height="1000"
-                    loading="lazy"
-                    className={cn(
-                      "aspect-[16/10] w-full rounded-md border",
-                      caseStudy.screenshot.fit === "contain"
-                        ? "bg-muted object-contain"
-                        : "object-cover object-top"
-                    )}
-                  />
+                  <ContentMediaGallery media={media} />
                 </div>
                 <figcaption className="mt-3 max-w-[68ch] text-sm leading-6 text-muted-foreground">
                   {caseStudy.screenshot.caption}

@@ -26,6 +26,14 @@ const projectSchema = z.object({
   technologies: z.array(z.string().min(1)),
   topics: z.array(z.string().min(1)),
   imageUrl: z.string().nullable().optional(),
+  gallery: z
+    .array(
+      z.object({
+        src: z.string().startsWith("/"),
+        alt: z.string().min(1),
+      })
+    )
+    .optional(),
   logoUrl: z.union([z.string().startsWith("/"), z.url()]).optional(),
   youtubeVideoId: z.string().min(1).optional(),
   liveUrl: optionalUrlSchema.optional(),

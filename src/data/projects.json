@@ -1713,6 +1713,28 @@
     "githubInitialCommitAt": "2026-09-01T12:31:21Z",
     "githubInitialCommitSha": "25a7fceed2b68c3f93e9727261980baf82486bef",
     "imageUrl": "assets/projects/air-traffic-control.webp",
+    "gallery": [
+      {
+        "src": "/images/projects/air-traffic-control-home.webp",
+        "alt": "Air Traffic Control home screen with play, career, achievements, and settings actions"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-airfields.webp",
+        "alt": "Air Traffic Control airfield selection showing unlocked locations and career progress"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-how-to-play.webp",
+        "alt": "Air Traffic Control instructions explaining route drawing, landing zones, and collision avoidance"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-saltmarsh.webp",
+        "alt": "Air Traffic Control gameplay at Saltmarsh Gateway with aircraft routes and landing zones"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-river-bend.webp",
+        "alt": "Air Traffic Control gameplay at River Bend with multiple aircraft in the sector"
+      }
+    ],
     "topics": [
       "arcade-game",
       "air-traffic-control",
