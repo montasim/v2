@@ -60,7 +60,7 @@ function CompanyCard({
               src={first.logoUrl}
               fallback={first.logo}
               className="mt-0.5 size-9 border-0"
-              imageClassName="object-cover"
+              imageClassName="object-contain"
             />
             <div>
               <h2 className="text-sm font-semibold">{first.role}</h2>
@@ -84,7 +84,7 @@ function CompanyCard({
             src={first.logoUrl}
             fallback={first.logo}
             className="border-0"
-            imageClassName="object-cover"
+            imageClassName="object-contain"
           />
           <div>
             <h2 className="font-semibold">{company}</h2>

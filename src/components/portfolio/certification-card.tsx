@@ -11,6 +11,7 @@ import {
 } from "@/components/shared/navigation-action"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 import type { Certification } from "@/lib/content/certifications"
 
 const actionClassName =
@@ -36,12 +37,12 @@ export function CertificationCard({ item }: { item: Certification }) {
             className="block aspect-[13/10] bg-muted p-3 sm:aspect-auto sm:p-5"
             aria-label={`View ${item.title} credential`}
           >
-            <img
+            <ContentPreviewImage
               src={item.image}
               width="520"
               height="420"
               alt={`${item.title} certificate preview`}
-              className="h-full w-full object-contain transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] motion-reduce:transition-none"
+              className="h-full w-full"
             />
           </ExternalLink>
         ) : (

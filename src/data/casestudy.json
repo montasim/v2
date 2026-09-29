@@ -2175,8 +2175,7 @@
     ],
     "screenshot": {
       "alt": "FormFlow preview showing a bilingual forms platform and a traceable service-request workflow",
-      "caption": "FormFlow keeps configurable forms, role-aware work, and requester-visible progress connected through one accountable record.",
-      "fit": "contain"
+      "caption": "FormFlow keeps configurable forms, role-aware work, and requester-visible progress connected through one accountable record."
     }
   },
   {
@@ -2769,8 +2768,7 @@
     ],
     "screenshot": {
       "alt": "Air Traffic Control promotional preview showing the game and flight-routing theme",
-      "caption": "Project social preview from the Air Traffic Control repository.",
-      "fit": "contain"
+      "caption": "Project social preview from the Air Traffic Control repository."
     }
   }
 ]

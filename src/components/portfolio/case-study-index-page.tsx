@@ -34,6 +34,7 @@ import type {
   ProjectCaseStudyFilter,
 } from "@/lib/content/project-case-studies"
 import { cn } from "@/lib/utils"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 
 function projectImage(caseStudy: ProjectCaseStudy) {
   const source = caseStudy.project.imageUrl
@@ -56,13 +57,13 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
           className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           {image ? (
-            <img
+            <ContentPreviewImage
               src={image}
               alt={`${project.title} interface preview`}
               width="720"
               height="450"
               loading="lazy"
-              className="aspect-[16/10] w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
+              className="aspect-[16/10] w-full rounded-lg border grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:grayscale-0 motion-reduce:transition-none"
             />
           ) : null}
 
@@ -123,13 +124,13 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
         >
           {image ? (
             <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
-              <img
+              <ContentPreviewImage
                 src={image}
                 alt={`${project.title} interface preview`}
                 width="1200"
                 height="900"
                 fetchPriority="high"
-                className="h-full w-full object-cover object-top contrast-[1.02] grayscale transition-[transform,filter] duration-300 group-hover:scale-[1.012] group-hover:grayscale-0 motion-reduce:transition-none"
+                className="h-full w-full contrast-[1.02] grayscale transition-[filter] duration-300 group-hover:grayscale-0 motion-reduce:transition-none"
               />
             </div>
           ) : null}

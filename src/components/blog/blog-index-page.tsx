@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 import { ProjectPreviewUnavailable } from "@/components/portfolio/project-card"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -71,13 +72,13 @@ function ArticleCard({ post }: { post: BlogPost }) {
           className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           {post.image ? (
-            <img
+            <ContentPreviewImage
               src={post.image.src}
               alt={post.image.alt}
               width="720"
               height="450"
               loading="lazy"
-              className="aspect-[16/10] w-full rounded-lg object-cover"
+              className="aspect-[16/10] w-full rounded-lg"
             />
           ) : relatedProject ? (
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg border bg-background">
@@ -122,13 +123,13 @@ function FeaturedArticle({ post }: { post: BlogPost }) {
           aria-label={`Read ${post.title}`}
         >
           <div className="min-h-57.5 overflow-hidden rounded-lg sm:min-h-85 lg:min-h-100">
-            <img
+            <ContentPreviewImage
               src={post.image.src}
               alt={post.image.alt}
               width="1200"
               height="900"
               fetchPriority="high"
-              className="h-full w-full object-cover contrast-[1.02] saturate-[0.84] transition-[transform,filter] duration-300 group-hover:scale-[1.012] group-hover:saturate-100"
+              className="h-full w-full contrast-[1.02] saturate-[0.84] transition-[filter] duration-300 group-hover:saturate-100"
             />
           </div>
           <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">

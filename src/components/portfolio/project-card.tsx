@@ -20,6 +20,7 @@ import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
 import { cn } from "@/lib/utils"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 
 function projectImage(project: Project) {
   if (!project.imageUrl) return null
@@ -110,13 +111,13 @@ export function ProjectCard({ project }: { project: Project }) {
     primaryActionLabel = "Homepage"
   const caseStudy = projectCaseStudyCatalog.findByProjectId(project.id)
   const preview = image ? (
-    <img
+    <ContentPreviewImage
       src={image}
       alt={`${project.title} interface preview`}
       width="1600"
       height="1000"
       loading="lazy"
-      className="h-full w-full rounded-lg border object-cover object-top grayscale transition-[filter,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015] group-hover:grayscale-0 motion-reduce:transition-none"
+      className="h-full w-full rounded-lg border grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:grayscale-0 motion-reduce:transition-none"
     />
   ) : null
   return (
