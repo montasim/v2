@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   ExternalAction,
+  InternalAction,
   MailAction,
 } from "@/components/shared/navigation-action"
 import { PageSection } from "@/components/shared/page-section"
@@ -89,14 +90,14 @@ function OverviewPage() {
               {profile.tagline}
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
-              <ExternalAction
-                href={profile.resumeUrl}
+              <InternalAction
+                to="/resume"
                 variant="outline"
                 className="h-11 font-medium text-strong-foreground"
               >
                 <DownloadSimpleIcon className="size-[18px]" />
-                Download resume
-              </ExternalAction>
+                View resume
+              </InternalAction>
               <ExternalAction
                 href={profileCatalog.socialUrl("linkedin")}
                 variant="ghost"

@@ -46,7 +46,7 @@ export function usePortfolioCommands() {
           break
         }
         case "resume":
-          openExternal(profile.resumeUrl)
+          void navigate({ to: "/resume" })
           break
         case "linkedin":
           openExternal(profileCatalog.socialUrl("linkedin"))
@@ -66,7 +66,7 @@ export function usePortfolioCommands() {
         }
       }
     },
-    [profile, toggleTheme]
+    [navigate, profile, toggleTheme]
   )
 
   return { executeAction, navigateToSection, theme, chatEnabled }

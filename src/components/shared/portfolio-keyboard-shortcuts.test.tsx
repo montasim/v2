@@ -99,11 +99,14 @@ describe("PortfolioKeyboardShortcuts", () => {
     expect(openAssistant).not.toHaveBeenCalled()
   })
 
+  it("opens the resume page with P", () => {
+    render(<PortfolioKeyboardShortcuts />)
+    fireEvent.keyDown(document, { key: "p" })
+    expect(navigate).toHaveBeenCalledWith({ to: "/resume" })
+    expect(window.open).not.toHaveBeenCalled()
+  })
+
   it.each([
-    [
-      "p",
-      "https://drive.google.com/file/d/1v0RP3PyBB6KdsfXhonIHJXU-wgAUSIRT/view?usp=sharing",
-    ],
     ["l", "https://linkedin.com/in/montasim"],
     ["g", "https://github.com/montasim"],
     ["e", "mailto:montasimmamun@gmail.com"],

@@ -6,7 +6,7 @@ import {
   DownloadSimpleIcon,
 } from "@/components/ui/icons"
 import {
-  ExternalAction,
+  DownloadAction,
   InternalAction,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
@@ -85,15 +85,15 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
             )}
             {status === "404" ? (
               <>
-                <ExternalAction
-                  href={profileCatalog.profile.resumeUrl}
+                <DownloadAction
+                  href={profileCatalog.profile.resumeDownloadUrl}
                   variant="outline"
                   size="lg"
                   className={actionClassName}
                 >
                   <DownloadSimpleIcon />
                   Download resume
-                </ExternalAction>
+                </DownloadAction>
                 <InternalAction
                   to="/projects"
                   variant="outline"

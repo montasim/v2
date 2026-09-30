@@ -13,6 +13,7 @@ type ActionContent = ButtonStyle & {
 
 export type InternalPath =
   | "/"
+  | "/resume"
   | "/experience"
   | "/projects"
   | "/skills"

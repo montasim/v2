@@ -19,10 +19,12 @@ import { Route as EducationRouteImport } from './routes/education'
 import { Route as ExperienceRouteImport } from './routes/experience'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
+import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as RootRouteImport } from './routes/root'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiResumeRouteImport } from './routes/api/resume'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as CaseStudiesSlugRouteImport } from './routes/case-studies_.$slug'
@@ -87,6 +89,11 @@ const RecommendationsRoute = RecommendationsRouteImport.update({
   path: '/recommendations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResumeRoute = ResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RootRoute = RootRouteImport.update({
   id: '/root',
   path: '/root',
@@ -105,6 +112,11 @@ const StatusRoute = StatusRouteImport.update({
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiResumeRoute = ApiResumeRouteImport.update({
+  id: '/api/resume',
+  path: '/api/resume',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
@@ -184,10 +196,12 @@ export interface FileRoutesByFullPath {
   '/experience': typeof ExperienceRoute
   '/projects': typeof ProjectsRoute
   '/recommendations': typeof RecommendationsRoute
+  '/resume': typeof ResumeRoute
   '/root': typeof RootRoute
   '/skills': typeof SkillsRoute
   '/status': typeof StatusRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/resume': typeof ApiResumeRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
@@ -212,10 +226,12 @@ export interface FileRoutesByTo {
   '/experience': typeof ExperienceRoute
   '/projects': typeof ProjectsRoute
   '/recommendations': typeof RecommendationsRoute
+  '/resume': typeof ResumeRoute
   '/root': typeof RootRoute
   '/skills': typeof SkillsRoute
   '/status': typeof StatusRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/resume': typeof ApiResumeRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/case-studies/$slug': typeof CaseStudiesSlugRoute
@@ -242,10 +258,12 @@ export interface FileRoutesById {
   '/experience': typeof ExperienceRoute
   '/projects': typeof ProjectsRoute
   '/recommendations': typeof RecommendationsRoute
+  '/resume': typeof ResumeRoute
   '/root': typeof RootRoute
   '/skills': typeof SkillsRoute
   '/status': typeof StatusRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/resume': typeof ApiResumeRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog_/$slug': typeof BlogSlugRoute
   '/case-studies_/$slug': typeof CaseStudiesSlugRoute
@@ -273,10 +291,12 @@ export interface FileRouteTypes {
     | '/experience'
     | '/projects'
     | '/recommendations'
+    | '/resume'
     | '/root'
     | '/skills'
     | '/status'
     | '/api/chat'
+    | '/api/resume'
     | '/auth/callback'
     | '/blog/$slug'
     | '/case-studies/$slug'
@@ -301,10 +321,12 @@ export interface FileRouteTypes {
     | '/experience'
     | '/projects'
     | '/recommendations'
+    | '/resume'
     | '/root'
     | '/skills'
     | '/status'
     | '/api/chat'
+    | '/api/resume'
     | '/auth/callback'
     | '/blog/$slug'
     | '/case-studies/$slug'
@@ -330,10 +352,12 @@ export interface FileRouteTypes {
     | '/experience'
     | '/projects'
     | '/recommendations'
+    | '/resume'
     | '/root'
     | '/skills'
     | '/status'
     | '/api/chat'
+    | '/api/resume'
     | '/auth/callback'
     | '/blog_/$slug'
     | '/case-studies_/$slug'
@@ -360,10 +384,12 @@ export interface RootRouteChildren {
   ExperienceRoute: typeof ExperienceRoute
   ProjectsRoute: typeof ProjectsRoute
   RecommendationsRoute: typeof RecommendationsRoute
+  ResumeRoute: typeof ResumeRoute
   RootRoute: typeof RootRoute
   SkillsRoute: typeof SkillsRoute
   StatusRoute: typeof StatusRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiResumeRoute: typeof ApiResumeRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
@@ -444,6 +470,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecommendationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resume': {
+      id: '/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof ResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/root': {
       id: '/root'
       path: '/root'
@@ -470,6 +503,13 @@ declare module '@tanstack/react-router' {
       path: '/api/chat'
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/resume': {
+      id: '/api/resume'
+      path: '/api/resume'
+      fullPath: '/api/resume'
+      preLoaderRoute: typeof ApiResumeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/callback': {
@@ -601,10 +641,12 @@ const rootRouteChildren: RootRouteChildren = {
   ExperienceRoute: ExperienceRoute,
   ProjectsRoute: ProjectsRoute,
   RecommendationsRoute: RecommendationsRoute,
+  ResumeRoute: ResumeRoute,
   RootRoute: RootRoute,
   SkillsRoute: SkillsRoute,
   StatusRoute: StatusRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiResumeRoute: ApiResumeRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BlogSlugRoute: BlogSlugRoute,
   CaseStudiesSlugRoute: CaseStudiesSlugRoute,
