@@ -12,13 +12,13 @@ export function SiteFooter() {
     <SiteContainer asChild className="pt-4 pb-24 sm:pb-8">
       <footer>
         <Separator />
-        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pt-5">
+        <div className="flex flex-col items-center justify-center gap-x-6 gap-y-2 pt-5 text-center sm:flex-row sm:flex-wrap sm:justify-between sm:text-left">
           <p className="text-xs leading-5 text-muted-foreground">
             © {new Date().getFullYear()} {profile.name}
           </p>
           <nav
             aria-label="Footer navigation"
-            className="ml-auto flex shrink-0 items-center gap-4"
+            className="flex shrink-0 items-center gap-4 sm:ml-auto"
           >
             <Link
               to="/contact"
