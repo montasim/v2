@@ -105,7 +105,7 @@ describe("project case-study catalog", () => {
   })
 
   it("filters professional work without replacing its project type", () => {
-    const professionalWork = projectCaseStudyCatalog.filter("professional", "")
+    const professionalWork = projectCaseStudyCatalog.filter("employment", "")
 
     expect(professionalWork.map((record) => record.project.id)).toEqual([
       "project-mmh-re-annotation",

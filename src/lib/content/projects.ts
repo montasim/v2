@@ -58,7 +58,7 @@ export type ProjectFilter =
   | "all"
   | "client"
   | "collaborative"
-  | "professional"
+  | "employment"
   | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
@@ -149,8 +149,8 @@ const chronological = [...parsedRecords].sort((left, right) => {
 })
 const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "all", label: "All work" },
-  { value: "professional", label: "Professional work" },
-  { value: "client", label: "Client work" },
+  { value: "employment", label: "Employment" },
+  { value: "client", label: "Client work & Ventures" },
   { value: "collaborative", label: "Collaborative work" },
   { value: "website", label: "Web apps" },
   { value: "desktop", label: "Desktop apps" },
@@ -169,21 +169,24 @@ export const projectCatalog = {
   newestByGitHubHistory: chronological[0],
   featured: records.filter((project) => project.featured),
   filters,
-  filterSchema: z.enum([
-    "all",
-    "professional",
-    "client",
-    "collaborative",
-    "website",
-    "desktop",
-    "extension",
-    "package",
-    "skill",
-    "dataset",
-    "tool",
-    "api",
-    "template",
-  ]),
+  filterSchema: z.preprocess(
+    (value) => (value === "professional" ? "employment" : value),
+    z.enum([
+      "all",
+      "employment",
+      "client",
+      "collaborative",
+      "website",
+      "desktop",
+      "extension",
+      "package",
+      "skill",
+      "dataset",
+      "tool",
+      "api",
+      "template",
+    ])
+  ),
   findBySlug(slug: string) {
     return recordsBySlug.get(slug)
   },
@@ -203,7 +206,7 @@ export const projectCatalog = {
     if (filter === "all") return true
     if (filter === "client") return project.clientWork === true
     if (filter === "collaborative") return project.collaborativeWork === true
-    if (filter === "professional") return project.professionalWork === true
+    if (filter === "employment") return project.professionalWork === true
     if (filter === "package") return Boolean(project.npmUrl)
     return project.type === filter
   },

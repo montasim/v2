@@ -16,6 +16,20 @@ import { catalogFilterNavigation } from "./content/shared"
 import { createMeta, site } from "./site"
 
 describe("portfolio content", () => {
+  it("uses employment and client labels while preserving existing filter links", () => {
+    expect(projectCatalog.filterSchema.parse("employment")).toBe("employment")
+    expect(projectCatalog.filterSchema.parse("professional")).toBe("employment")
+    expect(projectCatalog.filterSchema.parse("client")).toBe("client")
+    expect(projectCatalog.filters).toContainEqual({
+      value: "employment",
+      label: "Employment",
+    })
+    expect(projectCatalog.filters).toContainEqual({
+      value: "client",
+      label: "Client work & Ventures",
+    })
+  })
+
   it("connects Air Traffic Control across project, case study, blog, and contact", () => {
     const project = projectCatalog.findBySlug("air-traffic-control")
     expect(project?.liveUrl).toBe("https://airtrafficcontrol.netlify.app")
