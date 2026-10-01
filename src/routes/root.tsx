@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/icons"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { OWNER_OAUTH_CALLBACK_PATH } from "@/features/owner-auth/infrastructure/oauth-callback"
+import { getOwnerSignInError } from "@/features/owner-auth/infrastructure/sign-in-error"
 
 export const Route = createFileRoute("/root")({
   loader: async () => {
@@ -61,9 +62,9 @@ function OwnerRootPage() {
       })
 
       if (!result.error) return
-      setError("Sign-in could not be started.")
-    } catch {
-      setError("Sign-in could not be started.")
+      setError(getOwnerSignInError(result.error))
+    } catch (signInError) {
+      setError(getOwnerSignInError(signInError))
     } finally {
       setIsPending(false)
     }
@@ -177,7 +178,6 @@ function OwnerRootPage() {
                 <AlertTitle>Sign-in did not start</AlertTitle>
                 <AlertDescription>
                   <p>{error}</p>
-                  <p>Check your connection, then try again.</p>
                 </AlertDescription>
               </Alert>
             ) : null}
