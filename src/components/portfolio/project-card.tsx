@@ -225,7 +225,6 @@ export function ProjectCard({ project }: { project: Project }) {
             label={`GitHub topics for ${project.title}`}
             limit={5}
             className="mt-4"
-            badgeClassName="bg-background dark:bg-transparent"
           />
           <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
             {caseStudy ? (
