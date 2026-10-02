@@ -24,6 +24,7 @@ The result is designed for two audiences:
 - Buffered, portfolio-grounded AI assistant with a pinned zero-cost OpenRouter primary, Gemini fallback, and Groq final fallback
 - Focused citation-ready TOON evidence, exact-question answers, deterministic claim validation, durable limits, and provider telemetry
 - A dedicated `/contact` page with contextual app support, feedback, collaboration, and direct messages; chat is disabled on this route. See the [contact release checklist](docs/plans/contact-page-release.md) for migration and Sheets column setup.
+- A private owner Work Journal for daily contributions, evidence, Gemini summaries, review snapshots, and selective exports. See the [Work Journal guide](docs/plans/work-journal-release.md).
 - Guided role and project inquiry workflows with Neon as the source of truth plus idempotent Google Sheets and Resend delivery
 - Shareable, validated URL filters for project, education, certification, and recommendation catalogs
 - Reusable catalog, detail-page, navigation-action, experience, project, skill, and section modules
