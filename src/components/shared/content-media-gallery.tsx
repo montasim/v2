@@ -26,6 +26,7 @@ export function ContentMediaGallery({
 }) {
   const [api, setApi] = useState<CarouselApi>()
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [imageRatios, setImageRatios] = useState<Record<string, number>>({})
 
   const updateSelection = useCallback(() => {
     setSelectedIndex(api?.selectedScrollSnap() ?? 0)
@@ -77,7 +78,14 @@ export function ContentMediaGallery({
         }
       }}
     >
-      <CarouselContent>
+      <CarouselContent
+        className="min-h-0 items-start"
+        style={{
+          aspectRatio: String(
+            imageRatios[media[selectedIndex]?.src] ?? 16 / 10
+          ),
+        }}
+      >
         {media.map((item, index) => (
           <CarouselItem
             key={item.src}
@@ -90,7 +98,17 @@ export function ContentMediaGallery({
               height="1000"
               fetchPriority={priority && index === 0 ? "high" : undefined}
               loading={priority && index === 0 ? "eager" : "lazy"}
-              className="aspect-[16/10] w-full rounded-lg border"
+              onLoad={(event) => {
+                const { naturalWidth, naturalHeight } = event.currentTarget
+                if (!naturalWidth || !naturalHeight) return
+                const ratio = naturalWidth / naturalHeight
+                setImageRatios((current) =>
+                  current[item.src] === ratio
+                    ? current
+                    : { ...current, [item.src]: ratio }
+                )
+              }}
+              className="h-auto w-full rounded-lg border"
             />
           </CarouselItem>
         ))}
@@ -103,7 +121,7 @@ export function ContentMediaGallery({
           size="icon"
           aria-label="Previous image"
           onClick={() => api?.scrollPrev()}
-          className="shadow-md motion-safe:hover:translate-y-0 active:translate-y-0"
+          className="shadow-md active:translate-y-0 motion-safe:hover:translate-y-0"
         >
           <ArrowLeftCompactIcon aria-hidden="true" />
         </Button>
@@ -115,7 +133,7 @@ export function ContentMediaGallery({
           size="icon"
           aria-label="Next image"
           onClick={() => api?.scrollNext()}
-          className="shadow-md motion-safe:hover:translate-y-0 active:translate-y-0"
+          className="shadow-md active:translate-y-0 motion-safe:hover:translate-y-0"
         >
           <ArrowRightCompactIcon aria-hidden="true" />
         </Button>

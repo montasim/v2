@@ -26,7 +26,9 @@ vi.mock("@/components/ui/carousel", () => ({
       </div>
     )
   },
-  CarouselContent: (props: React.ComponentProps<"div">) => <div {...props} />,
+  CarouselContent: (props: React.ComponentProps<"div">) => (
+    <div {...props} data-aspect-ratio={props.style?.aspectRatio} />
+  ),
   CarouselItem: (props: React.ComponentProps<"div">) => <div {...props} />,
 }))
 
@@ -68,4 +70,31 @@ it("provides pointer and keyboard navigation for multiple images", async () => {
     expect(button.className).toContain("motion-safe:hover:translate-y-0")
     expect(button.className).toContain("active:translate-y-0")
   }
+})
+
+it("fits the frame to each selected screenshot without side margins", () => {
+  render(<ContentMediaGallery media={media} />)
+  const first = screen.getByRole("img", { name: "First screenshot" })
+  const second = screen.getByRole("img", { name: "Second screenshot" })
+  Object.defineProperties(first, {
+    naturalWidth: { value: 1600 },
+    naturalHeight: { value: 1000 },
+  })
+  Object.defineProperties(second, {
+    naturalWidth: { value: 1280 },
+    naturalHeight: { value: 900 },
+  })
+  fireEvent.load(first)
+  fireEvent.load(second)
+  const frame = first.parentElement?.parentElement
+  expect(frame?.getAttribute("data-aspect-ratio")).toBe(String(1600 / 1000))
+
+  carouselApi.selectedScrollSnap.mockReturnValue(1)
+  const select = carouselApi.on.mock.calls.find(
+    ([event]) => event === "select"
+  )?.[1]
+  act(() => select())
+  expect(frame?.getAttribute("data-aspect-ratio")).toBe(String(1280 / 900))
+  expect(second.className).toContain("h-auto w-full")
+  carouselApi.selectedScrollSnap.mockReturnValue(0)
 })
