@@ -89,9 +89,11 @@ export function Reviews({
     }
   }
   return (
-    <div className="space-y-8">
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold">Prepare a review</h2>
+    <div className="space-y-5">
+      <section className="min-w-0 space-y-4 rounded-xl border bg-card p-5">
+        <h2 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
+          Prepare a review
+        </h2>
         <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
           Choose a period and contributions. The review keeps a snapshot of
           those sources, so later journal edits cannot silently change what you
@@ -342,7 +344,7 @@ export function Reviews({
           </div>
         )}
       </section>
-      <section className="space-y-4 border-t pt-6">
+      <section className="space-y-4">
         <h2 className="text-lg font-semibold">Saved reviews</h2>
         <LoadState {...remote} retry={remote.refresh} />
         {!remote.loading && !remote.error && remote.data && (
@@ -353,13 +355,13 @@ export function Reviews({
                 contributions above.
               </Message>
             ) : (
-              <ul className="divide-y">
+              <ul className="divide-y rounded-xl border bg-card px-4">
                 {remote.data.items.map((review) => (
                   <li
                     key={review.id}
-                    className="flex items-center justify-between gap-4 py-4"
+                    className="flex flex-wrap items-center justify-between gap-4 py-4"
                   >
-                    <div>
+                    <div className="min-w-0 break-words">
                       <p className="text-sm font-medium">{review.title}</p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         {review.from} – {review.to} · {review.audience}
@@ -464,7 +466,10 @@ function ReviewEditor({
       )}
       {action.feedback}
       {review.generationError && <Message>{review.generationError}</Message>}
-      <fieldset disabled={action.busy} className="space-y-4">
+      <fieldset
+        disabled={action.busy}
+        className="min-w-0 space-y-4 rounded-xl border bg-card p-5"
+      >
         <Field label="Report title">
           <Input
             required
@@ -609,7 +614,7 @@ function ReviewEditor({
           )}
         </section>
       </fieldset>
-      <details className="border-t pt-4">
+      <details className="rounded-xl border bg-card p-5">
         <summary className="cursor-pointer text-sm font-medium">
           Review source snapshot
         </summary>
@@ -635,7 +640,7 @@ function ReviewEditor({
           ))}
         </div>
       </details>
-      <section className="space-y-4 border-t pt-5">
+      <section className="min-w-0 space-y-4 rounded-xl border bg-card p-5">
         <h3 className="font-semibold">Prepare to share</h3>
         <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
           Edit out confidential names, links, and personal details before

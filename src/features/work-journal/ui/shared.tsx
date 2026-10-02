@@ -11,7 +11,7 @@ export function Field({
   children: ReactNode
 }) {
   return (
-    <label className="grid min-w-0 gap-2 text-sm font-medium text-strong-foreground">
+    <label className="grid min-w-0 gap-1.5 text-xs font-medium text-muted-foreground">
       <span>{label}</span>
       {children}
     </label>
@@ -21,7 +21,7 @@ export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       {...props}
-      className="h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm text-strong-foreground focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
+      className="h-10 w-full min-w-0 rounded-lg border border-input bg-card px-3 text-sm text-strong-foreground focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
     />
   )
 }

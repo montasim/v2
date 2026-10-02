@@ -42,44 +42,74 @@ export function JournalPage({ initial }: { initial: Setup }) {
   }
   return (
     <>
-      <header className="mb-6 border-b pb-5">
-        <h1 className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
-          Work Journal
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          A private record of your work, the difference it made, and what you
-          learned.
-        </p>
-      </header>
       <nav
         aria-label="Work journal views"
-        className="mb-7 flex flex-wrap gap-2"
+        className="mb-5 overflow-x-auto border-b"
       >
-        {(
-          [
-            ["today", "Today"],
-            ["history", "History"],
-            ["reviews", "Reviews"],
-            ["manage", "Companies & projects"],
-          ] as const
-        ).map(([key, label]) => (
-          <Button
-            key={key}
-            variant={
+        <div
+          role="tablist"
+          aria-label="Work journal views"
+          className="flex gap-6"
+          onKeyDown={(event) => {
+            if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key))
+              return
+            const tabs = Array.from(
+              event.currentTarget.querySelectorAll<HTMLButtonElement>(
+                '[role="tab"]'
+              )
+            )
+            const index = tabs.indexOf(
+              document.activeElement as HTMLButtonElement
+            )
+            const next =
+              event.key === "Home"
+                ? 0
+                : event.key === "End"
+                  ? tabs.length - 1
+                  : (index +
+                      (event.key === "ArrowRight" ? 1 : -1) +
+                      tabs.length) %
+                    tabs.length
+            event.preventDefault()
+            tabs[next]?.focus()
+          }}
+        >
+          {(
+            [
+              ["today", "Today"],
+              ["history", "History"],
+              ["reviews", "Reviews"],
+              ["manage", "Companies & projects"],
+            ] as const
+          ).map(([key, label]) => {
+            const selected =
               view === key ||
               (key === "history" && view === "entry") ||
               (key === "reviews" && view === "review")
-                ? "secondary"
-                : "ghost"
-            }
-            aria-current={view === key ? "page" : undefined}
-            onClick={() => navigate(key)}
-          >
-            {label}
-          </Button>
-        ))}
+            return (
+              <button
+                key={key}
+                id={`journal-tab-${key}`}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                aria-controls="journal-view"
+                tabIndex={selected ? 0 : -1}
+                className={`shrink-0 border-b-2 py-3 text-sm outline-offset-[-2px] focus-visible:outline-2 ${selected ? "border-foreground font-semibold text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                onClick={() => navigate(key)}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
       </nav>
-      <div className="max-w-5xl">
+      <div
+        id="journal-view"
+        role="tabpanel"
+        aria-labelledby={`journal-tab-${view === "entry" ? "history" : view === "review" ? "reviews" : view}`}
+        className="min-w-0 [&_input]:bg-card [&_textarea]:bg-card"
+      >
         {view === "today" && (
           <EntryEditor
             key={newKey}

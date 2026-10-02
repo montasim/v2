@@ -16,7 +16,7 @@ export const Route = createFileRoute("/dashboard/work-journal")({
   ),
   errorComponent: ({ reset }) => (
     <section className="space-y-4">
-      <h1 className="text-xl font-semibold">Work Journal is unavailable</h1>
+      <h2 className="text-lg font-semibold">Work Journal is unavailable</h2>
       <p className="text-sm text-muted-foreground">
         Try again. If the problem continues, check the journal database
         migration. Your other dashboard sections remain available.

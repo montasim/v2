@@ -78,10 +78,12 @@ export function Manage({
     setProjectBaseline(JSON.stringify(value))
   }
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
       {action.feedback}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold">Companies</h2>
+      <section className="space-y-4 rounded-xl border bg-card p-5">
+        <h2 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
+          Companies
+        </h2>
         <p className="text-sm text-muted-foreground">
           Archiving keeps every historical entry and review.
         </p>
@@ -89,6 +91,7 @@ export function Manage({
           {setup.companies.map((item) => (
             <Button
               key={item.id}
+              className="h-auto min-h-10 max-w-full break-words whitespace-normal"
               variant="outline"
               onClick={() =>
                 chooseCompany({
@@ -182,77 +185,20 @@ export function Manage({
           </fieldset>
         </form>
       </section>
-      <section className="space-y-4 border-t pt-6">
-        <h2 className="text-lg font-semibold">Projects</h2>
+      <section className="space-y-4 rounded-xl border bg-card p-5">
+        <h2 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
+          Projects
+        </h2>
         <p className="text-sm text-muted-foreground">
           Choose any existing portfolio project for a company, or create a new
           project below.
         </p>
-        <fieldset
-          disabled={action.busy}
-          className="grid gap-4 sm:grid-cols-[1fr_1fr_auto]"
-        >
-          <Field label="Company for existing project">
-            <Select
-              value={catalogCompanyId}
-              onChange={(event) => setCatalogCompanyId(event.target.value)}
-            >
-              <option value="">Choose company</option>
-              {setup.companies
-                .filter((record) => !record.archived)
-                .map((record) => (
-                  <option key={record.id} value={record.id}>
-                    {record.name}
-                  </option>
-                ))}
-            </Select>
-          </Field>
-          <Field label="Existing portfolio project">
-            <Select
-              value={catalogProjectId}
-              onChange={(event) => setCatalogProjectId(event.target.value)}
-            >
-              <option value="">Choose project</option>
-              {setup.portfolioProjects.map((record) => (
-                <option key={record.id} value={record.id}>
-                  {record.title}
-                </option>
-              ))}
-            </Select>
-          </Field>
-          <Button
-            className="self-end"
-            variant="outline"
-            disabled={!catalogCompanyId || !catalogProjectId}
-            onClick={() => {
-              if (
-                JSON.stringify(project) !== projectBaseline &&
-                !window.confirm(
-                  "Discard unsaved project edits and open the selected project?"
-                )
-              )
-                return
-              void action.run(async () => {
-                const saved = await addJournalPortfolioProject({
-                  data: {
-                    companyId: catalogCompanyId,
-                    portfolioProjectId: catalogProjectId,
-                  },
-                })
-                setProject(saved)
-                setProjectBaseline(JSON.stringify(saved))
-                await refresh()
-              }, "Project is ready to select for this company.")
-            }}
-          >
-            Add existing project
-          </Button>
-        </fieldset>
 
         <div className="flex flex-wrap gap-2">
           {setup.projects.map((item) => (
             <Button
               key={item.id}
+              className="h-auto min-h-10 max-w-full break-words whitespace-normal"
               variant="outline"
               onClick={() => chooseProject(item)}
             >
@@ -343,9 +289,78 @@ export function Manage({
             </Button>
           </fieldset>
         </form>
+        <details>
+          <summary className="cursor-pointer text-sm font-medium">
+            Add from portfolio catalog
+          </summary>
+          <div className="mt-4">
+            <fieldset
+              disabled={action.busy}
+              className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
+            >
+              <Field label="Company for existing project">
+                <Select
+                  value={catalogCompanyId}
+                  onChange={(event) => setCatalogCompanyId(event.target.value)}
+                >
+                  <option value="">Choose company</option>
+                  {setup.companies
+                    .filter((record) => !record.archived)
+                    .map((record) => (
+                      <option key={record.id} value={record.id}>
+                        {record.name}
+                      </option>
+                    ))}
+                </Select>
+              </Field>
+              <Field label="Existing portfolio project">
+                <Select
+                  value={catalogProjectId}
+                  onChange={(event) => setCatalogProjectId(event.target.value)}
+                >
+                  <option value="">Choose project</option>
+                  {setup.portfolioProjects.map((record) => (
+                    <option key={record.id} value={record.id}>
+                      {record.title}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Button
+                className="self-end"
+                variant="outline"
+                disabled={!catalogCompanyId || !catalogProjectId}
+                onClick={() => {
+                  if (
+                    JSON.stringify(project) !== projectBaseline &&
+                    !window.confirm(
+                      "Discard unsaved project edits and open the selected project?"
+                    )
+                  )
+                    return
+                  void action.run(async () => {
+                    const saved = await addJournalPortfolioProject({
+                      data: {
+                        companyId: catalogCompanyId,
+                        portfolioProjectId: catalogProjectId,
+                      },
+                    })
+                    setProject(saved)
+                    setProjectBaseline(JSON.stringify(saved))
+                    await refresh()
+                  }, "Project is ready to select for this company.")
+                }}
+              >
+                Add existing project
+              </Button>
+            </fieldset>
+          </div>
+        </details>
       </section>
-      <section className="space-y-4 border-t pt-6">
-        <h2 className="text-lg font-semibold">Journal preferences</h2>
+      <section className="space-y-4 rounded-xl border bg-card p-5">
+        <h2 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
+          Journal preferences
+        </h2>
         <form
           onSubmit={(event) => {
             event.preventDefault()
@@ -405,8 +420,10 @@ export function Manage({
           </fieldset>
         </form>
       </section>
-      <section className="space-y-3 border-t pt-6">
-        <h2 className="text-lg font-semibold">Your data</h2>
+      <section className="space-y-3 rounded-xl border bg-card p-5">
+        <h2 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
+          Your data
+        </h2>
         <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
           Download all companies, projects, original notes, private reflections,
           and review snapshots as JSON. This is a private backup; use Reviews to
