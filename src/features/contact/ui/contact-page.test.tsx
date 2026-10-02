@@ -85,6 +85,32 @@ function fillMessage() {
   })
 }
 describe("ContactPage", () => {
+  it("lets mobile visitors expand and collapse project details", () => {
+    render(
+      <ContactPage
+        initial={{ ...initial, topic: "support", projectId: "project-example" }}
+      />
+    )
+    const toggle = screen.getByRole("button", {
+      name: "About this project",
+    })
+    expect(toggle.getAttribute("aria-expanded")).toBe("false")
+    expect(
+      screen
+        .getByRole("link", {
+          name: "Get Example app from the Chrome Web Store",
+        })
+        .closest("#contact-project-details")
+    ).toBeNull()
+    fireEvent.click(toggle)
+    expect(toggle.getAttribute("aria-expanded")).toBe("true")
+    expect(
+      screen.getByRole("link", { name: "View product" }).getAttribute("href")
+    ).toBe("/projects/example")
+    fireEvent.click(toggle)
+    expect(toggle.getAttribute("aria-expanded")).toBe("false")
+  })
+
   it("shows the selected product's available links", () => {
     render(
       <ContactPage
@@ -218,6 +244,15 @@ describe("ContactPage", () => {
     expect(screen.getByLabelText(label).getAttribute("aria-invalid")).toBe(
       "true"
     )
+    const optionalDetails = screen
+      .getByLabelText(label)
+      .closest("#contact-optional-details")
+    if (optionalDetails)
+      expect(
+        screen
+          .getByRole("button", { name: "Additional details (optional)" })
+          .getAttribute("aria-expanded")
+      ).toBe("true")
     expect(document.activeElement).toBe(screen.getByLabelText(label))
     expect(submit).not.toHaveBeenCalled()
     expect(verifyEmail).not.toHaveBeenCalled()

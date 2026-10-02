@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea"
 import {
   ArrowUpRightIcon,
   CheckIcon,
+  CaretDownIcon,
   EnvelopeSimpleIcon,
 } from "@/components/ui/icons"
 import { submitInquiry } from "@/features/chat/application/submit-inquiry"
@@ -88,6 +89,11 @@ export function ContactPage({
   >("idle")
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submissionError, setSubmissionError] = useState("")
+  const [projectDetailsOpen, setProjectDetailsOpen] = useState(false)
+  const [optionalDetailsOpen, setOptionalDetailsOpen] = useState(false)
+  const showOptionalDetails =
+    optionalDetailsOpen ||
+    Boolean(errors.platform || errors.appVersion || errors.name)
   const busy = useRef(false)
   const attempt = useRef<{ payload: string; id: string } | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -149,9 +155,10 @@ export function ContactPage({
 
   useEffect(() => {
     if (Object.keys(errors).length) {
-      formRef.current
-        ?.querySelector<HTMLElement>("[aria-invalid='true']")
-        ?.focus()
+      const invalidField = formRef.current?.querySelector<HTMLElement>(
+        "[aria-invalid='true']"
+      )
+      invalidField?.focus()
     }
   }, [errors])
 
@@ -252,22 +259,139 @@ export function ContactPage({
   }
 
   return (
-    <PageShell padded>
+    <PageShell padded className="pt-3 pb-24 lg:py-16 max-lg:[&_input]:min-h-11">
       {breadcrumb}
-      <header className={breadcrumb ? "mt-8 max-w-2xl" : "max-w-2xl"}>
-        <h1 className="text-3xl font-bold tracking-tight text-strong-foreground sm:text-4xl">
-          {heading}
+      <header className={breadcrumb ? "mt-2 max-w-2xl lg:mt-8" : "max-w-2xl"}>
+        <h1
+          aria-label={heading}
+          className="text-2xl font-bold tracking-tight text-strong-foreground sm:text-4xl"
+        >
+          {appPresentation ? (
+            <>
+              <span className="lg:hidden">Contact support</span>
+              <span className="hidden lg:inline">{heading}</span>
+            </>
+          ) : (
+            heading
+          )}
         </h1>
-        <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
-          {appPresentation
-            ? `Report a problem, suggest an improvement, or ask a question about ${selectedProject.title}.`
-            : isSupport
-              ? "Choose the app or project you need help with and tell me what happened."
-              : "Have an opportunity to discuss, need help with one of my products, or want to share a question or idea? Send me a message."}
+        {appPresentation ? (
+          <p className="mt-2 text-base font-medium text-strong-foreground lg:hidden">
+            {selectedProject.title}
+          </p>
+        ) : null}
+        <p className="mt-3 max-w-xl text-base leading-6 text-muted-foreground sm:mt-4 sm:leading-7">
+          {appPresentation ? (
+            <>
+              <span className="lg:hidden">
+                Report a problem, suggest an improvement, or ask a question.
+              </span>
+              <span className="hidden lg:inline">{`Report a problem, suggest an improvement, or ask a question about ${selectedProject.title}.`}</span>
+            </>
+          ) : isSupport ? (
+            "Choose the app or project you need help with and tell me what happened."
+          ) : (
+            "Have an opportunity to discuss, need help with one of my products, or want to share a question or idea? Send me a message."
+          )}
         </p>
       </header>
-      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
-        <section aria-label="Send a message" className="min-w-0">
+      <div className="mt-6 grid gap-5 sm:mt-10 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-16">
+        <aside
+          aria-label="Other ways to connect"
+          className={`space-y-8 lg:col-start-2 lg:row-start-1 lg:border-l lg:pl-8 ${isSupport || appPresentation ? "border-b pb-4 lg:border-b-0 lg:pb-0" : "order-2 border-t pt-4 sm:pt-8 lg:order-none lg:border-t-0 lg:pt-0"}`}
+        >
+          {isSupport || appPresentation ? (
+            <div className="flex flex-col gap-3">
+              {selectedProject ? (
+                <StoreBadges
+                  project={selectedProject}
+                  className="order-1 lg:order-4"
+                />
+              ) : null}
+              <button
+                type="button"
+                aria-expanded={projectDetailsOpen}
+                aria-controls="contact-project-details"
+                onClick={() => setProjectDetailsOpen(!projectDetailsOpen)}
+                className="order-2 flex min-h-11 w-full items-center justify-between gap-3 rounded-sm text-left text-sm font-medium text-strong-foreground focus-visible:outline-2 focus-visible:outline-offset-4 lg:hidden"
+              >
+                About this project
+                <CaretDownIcon
+                  className={`size-4 shrink-0 ${projectDetailsOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              <div
+                id="contact-project-details"
+                className={`${projectDetailsOpen ? "block" : "hidden"} order-3 space-y-3 pt-4 lg:contents lg:space-y-0 lg:pt-0`}
+              >
+                <h2 className="text-base font-semibold text-strong-foreground lg:order-1">
+                  {selectedProject?.title ?? "Product support"}
+                </h2>
+                <p className="text-sm leading-6 text-muted-foreground lg:order-2">
+                  {selectedProject?.description ??
+                    "Choose a product in the form, or select Other / not listed and enter its name."}
+                </p>
+                <p className="text-sm text-strong-foreground lg:order-3">
+                  Built and supported by Montasim.
+                </p>
+                {selectedProject && (
+                  <nav
+                    aria-label={`${selectedProject.title} links`}
+                    className="flex flex-wrap items-start gap-x-6 gap-y-3 lg:order-5 lg:flex-col"
+                  >
+                    {[
+                      { label: "View product", href: selectedProject.href },
+                      ...selectedProject.links,
+                    ].map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                      >
+                        {link.label}
+                        <ArrowUpRightIcon
+                          aria-hidden="true"
+                          className="size-4 shrink-0"
+                        />
+                      </a>
+                    ))}
+                  </nav>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-base font-semibold text-strong-foreground">
+                A little about me
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                I’m Montasim, a software engineer based in{" "}
+                {profileCatalog.profile.location}. I build apps, websites, and
+                developer tools. You can reach out about engineering
+                opportunities, collaboration, or something I’ve built or
+                written.
+              </p>
+              <a
+                href="/experience"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
+              >
+                Explore my experience
+                <ArrowUpRightIcon aria-hidden="true" className="size-4" />
+              </a>
+              <a
+                href="/projects"
+                className="mt-3 flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
+              >
+                View my projects{" "}
+                <ArrowUpRightIcon aria-hidden="true" className="size-4" />
+              </a>
+            </div>
+          )}
+        </aside>
+        <section
+          aria-label="Send a message"
+          className="min-w-0 lg:col-start-1 lg:row-start-1"
+        >
           {status === "success" ? (
             <div className="border-y py-10">
               <CheckIcon
@@ -310,7 +434,7 @@ export function ContactPage({
             >
               <fieldset
                 disabled={status === "pending"}
-                className="min-w-0 space-y-6 disabled:opacity-70"
+                className="min-w-0 space-y-5 disabled:opacity-70 sm:space-y-6"
               >
                 <legend className="sr-only">Message details</legend>
                 {showContextControls ? (
@@ -501,67 +625,104 @@ export function ContactPage({
                     required
                     minLength={10}
                     maxLength={5000}
-                    rows={7}
-                    className="min-h-40 resize-y"
+                    rows={4}
+                    className="h-32 min-h-32 resize-y text-base lg:h-40 lg:min-h-40 lg:text-sm"
                     placeholder={
                       isSupport
-                        ? "What happened, and what did you expect? Include any steps that help me understand the issue."
+                        ? "What happened? What did you expect instead?"
                         : "Share your question, suggestion, or what you have in mind."
                     }
                   />
                   <p className="text-xs leading-5 text-muted-foreground">
-                    Up to 5,000 characters. Please leave out passwords and other
-                    sensitive information.
+                    <span className="lg:hidden">
+                      Leave out passwords and sensitive information. Max 5,000
+                      characters.
+                    </span>
+                    <span className="hidden lg:inline">
+                      Up to 5,000 characters. Please leave out passwords and
+                      other sensitive information.
+                    </span>
                   </p>
                 </Field>
-                {isSupport ? (
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <Field
-                      name="platform"
-                      label="Device or platform (optional)"
-                      error={errors.platform}
-                    >
+                <div className="grid gap-5 lg:grid-cols-2">
+                  <div
+                    className={isSupport ? "lg:col-start-1 lg:row-start-2" : ""}
+                  >
+                    <Field name="email" label="Your email" error={errors.email}>
                       <Input
-                        {...fieldProps("platform")}
-                        maxLength={100}
-                        placeholder="e.g. Android, iOS, Windows"
-                      />
-                    </Field>
-                    <Field
-                      name="appVersion"
-                      label="App version (optional)"
-                      error={errors.appVersion}
-                    >
-                      <Input
-                        {...fieldProps("appVersion")}
-                        maxLength={100}
-                        placeholder="e.g. 1.2.0"
+                        {...fieldProps("email")}
+                        type="email"
+                        autoComplete="email"
+                        maxLength={254}
+                        required
+                        placeholder="you@example.com"
                       />
                     </Field>
                   </div>
-                ) : null}
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field name="email" label="Your email" error={errors.email}>
-                    <Input
-                      {...fieldProps("email")}
-                      type="email"
-                      autoComplete="email"
-                      maxLength={254}
-                      required
-                      placeholder="you@example.com"
-                    />
-                  </Field>
-                  <Field
-                    name="name"
-                    label="Your name (optional)"
-                    error={errors.name}
+                  {isSupport ? (
+                    <button
+                      type="button"
+                      aria-expanded={showOptionalDetails}
+                      aria-controls="contact-optional-details"
+                      onClick={() =>
+                        setOptionalDetailsOpen(!showOptionalDetails)
+                      }
+                      className="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-input px-3 text-left text-sm font-medium text-strong-foreground focus-visible:outline-2 focus-visible:outline-offset-4 lg:hidden"
+                    >
+                      Additional details (optional)
+                      <CaretDownIcon
+                        className={`size-4 shrink-0 ${showOptionalDetails ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                  ) : null}
+                  <div
+                    id="contact-optional-details"
+                    className={`${!isSupport || showOptionalDetails ? "grid" : "hidden"} gap-5 lg:contents`}
                   >
-                    <Input
-                      {...fieldProps("name")}
-                      autoComplete="name"
-                      maxLength={80}
-                    />
-                  </Field>
+                    {isSupport ? (
+                      <div className="grid gap-5 sm:grid-cols-2 lg:col-span-2 lg:row-start-1">
+                        <Field
+                          name="platform"
+                          label="Device or platform (optional)"
+                          error={errors.platform}
+                        >
+                          <Input
+                            {...fieldProps("platform")}
+                            maxLength={100}
+                            placeholder="e.g. Android, iOS, Windows"
+                          />
+                        </Field>
+                        <Field
+                          name="appVersion"
+                          label="App version (optional)"
+                          error={errors.appVersion}
+                        >
+                          <Input
+                            {...fieldProps("appVersion")}
+                            maxLength={100}
+                            placeholder="e.g. 1.2.0"
+                          />
+                        </Field>
+                      </div>
+                    ) : null}
+                    <div
+                      className={
+                        isSupport ? "lg:col-start-2 lg:row-start-2" : ""
+                      }
+                    >
+                      <Field
+                        name="name"
+                        label="Your name (optional)"
+                        error={errors.name}
+                      >
+                        <Input
+                          {...fieldProps("name")}
+                          autoComplete="name"
+                          maxLength={80}
+                        />
+                      </Field>
+                    </div>
+                  </div>
                 </div>
                 <div aria-hidden="true" className="hidden">
                   <label htmlFor="contact-website">Website</label>
@@ -573,13 +734,18 @@ export function ContactPage({
                   />
                 </div>
                 <p className="text-xs leading-5 text-muted-foreground">
-                  Your email and message are used to respond to this inquiry.
-                  Submitting won’t subscribe you to a newsletter.
+                  <span className="lg:hidden">
+                    Your email is only used to reply. No newsletter signup.
+                  </span>
+                  <span className="hidden lg:inline">
+                    Your email and message are used to respond to this inquiry.
+                    Submitting won’t subscribe you to a newsletter.
+                  </span>
                 </p>
                 <Button
                   type="submit"
                   size="lg"
-                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                  className="w-full bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80 max-lg:min-h-11 lg:w-auto"
                 >
                   <EnvelopeSimpleIcon aria-hidden="true" />
                   {status === "pending"
@@ -611,76 +777,6 @@ export function ContactPage({
             </form>
           )}
         </section>
-        <aside
-          aria-label="Other ways to connect"
-          className="space-y-8 border-t pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8"
-        >
-          {isSupport || appPresentation ? (
-            <div className="space-y-3">
-              <h2 className="text-base font-semibold text-strong-foreground">
-                {selectedProject?.title ?? "Product support"}
-              </h2>
-              <p className="text-sm leading-6 text-muted-foreground">
-                {selectedProject?.description ??
-                  "Choose a product in the form, or select Other / not listed and enter its name."}
-              </p>
-              <p className="text-sm text-strong-foreground">
-                Built and supported by Montasim.
-              </p>
-              {selectedProject && (
-                <nav
-                  aria-label={`${selectedProject.title} links`}
-                  className="flex flex-col items-start gap-3"
-                >
-                  <StoreBadges project={selectedProject} />
-                  {[
-                    { label: "View product", href: selectedProject.href },
-                    ...selectedProject.links,
-                  ].map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-                    >
-                      {link.label}
-                      <ArrowUpRightIcon
-                        aria-hidden="true"
-                        className="size-4 shrink-0"
-                      />
-                    </a>
-                  ))}
-                </nav>
-              )}
-            </div>
-          ) : (
-            <div>
-              <h2 className="text-base font-semibold text-strong-foreground">
-                A little about me
-              </h2>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                I’m Montasim, a software engineer based in{" "}
-                {profileCatalog.profile.location}. I build apps, websites, and
-                developer tools. You can reach out about engineering
-                opportunities, collaboration, or something I’ve built or
-                written.
-              </p>
-              <a
-                href="/experience"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
-              >
-                Explore my experience
-                <ArrowUpRightIcon aria-hidden="true" className="size-4" />
-              </a>
-              <a
-                href="/projects"
-                className="mt-3 flex items-center gap-2 text-sm font-medium text-strong-foreground underline underline-offset-4"
-              >
-                View my projects{" "}
-                <ArrowUpRightIcon aria-hidden="true" className="size-4" />
-              </a>
-            </div>
-          )}
-        </aside>
       </div>
     </PageShell>
   )
