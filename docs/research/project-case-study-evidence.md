@@ -399,3 +399,8 @@ The ten entries in this group share a deliberate package shape: an npm CLI insta
 - Evidence: README and package.json describe the nine airfields, three aircraft types, three difficulties, local career, Phaser/TypeScript stack, browser offline caching, and Electron Linux build. `src/core/Simulation.ts` confirms fixed-step updates and seeded traffic; `src/core/aircraftCollision.ts` documents aircraft outlines and excluded visual effects. `src/storage/persistence.ts` implements IndexedDB storage. `electron/main.cjs` restricts navigation and serves bundled assets through a custom protocol.
 - Preview: existing `public/social-preview-v1.png` from the source repository, converted to WebP for portfolio delivery. Caption identifies it as a promotional preview, not a captured gameplay screenshot.
 - Limits retained in published content: separate browser/desktop saves, no cloud sync or export, initial browser caching requirement, pointer-based gameplay, resize/orientation handling, and further real-device testing. No measured frame rate, adoption, or benchmark claims added.
+
+### Distribution update — 2026-10-02
+
+- The user supplied the Windows Microsoft Store destination for Air Traffic Control: https://apps.microsoft.com/detail/9N5536ZQ2XZM. Added it to the shared project catalog, which supplies project, case study, blog, and chat links, and updated the related platform descriptions.
+- The Store page could not be inspected through the web tool. This update relies on the user-provided destination and does not establish Windows packaging details or runtime verification.

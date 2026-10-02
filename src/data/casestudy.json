@@ -2702,16 +2702,16 @@
   {
     "slug": "air-traffic-control",
     "projectId": "project-air-traffic-control",
-    "summary": "A browser and Linux arcade game that separates flight simulation, rendering, and local progression so routing rules remain testable across delivery targets.",
+    "summary": "A browser, Windows, and Linux arcade game that separates flight simulation, rendering, and local progression so routing rules remain testable across delivery targets.",
     "role": "Game design and TypeScript engineering",
-    "scope": "Traffic simulation, pointer routing, local progression, browser delivery, and Linux desktop packaging",
-    "status": "Browser deployment and Snap Store distribution",
+    "scope": "Traffic simulation, pointer routing, local progression, browser delivery, and Windows and Linux desktop distribution",
+    "status": "Browser deployment, Microsoft Store distribution for Windows, and Snap Store distribution for Linux",
     "verifiedBranch": "main",
     "verifiedCommit": "897159962c163a7c40c618701e6cb41d7b64c213",
     "problem": "A flight-path drawing game needs collision and landing rules that agree with what players see, while keeping progress meaningful across short sessions and different screen layouts.",
     "constraints": [
       "Flight paths require mouse, touch, or pen input; keyboard navigation alone does not cover gameplay.",
-      "Browser and Linux desktop saves are separate and local, with no cloud sync or save export.",
+      "Browser and desktop saves are separate and local, with no cloud sync or save export.",
       "Browser offline play requires an initial online visit and successful asset caching.",
       "Resizing or changing orientation can invalidate an active airfield layout; broader real-device testing and difficulty tuning remain ongoing."
     ],
@@ -2732,7 +2732,7 @@
         },
         {
           "title": "Delivery",
-          "detail": "Vite and a service worker support cached browser play. Electron loads bundled assets through a restricted custom protocol, with AppImage and Snap packaging for Linux."
+          "detail": "Vite and a service worker support cached browser play. Electron loads bundled assets through a restricted custom protocol, with AppImage and Snap packaging for Linux. Windows players can install the game from the Microsoft Store."
         }
       ]
     },
@@ -2751,20 +2751,20 @@
       },
       {
         "title": "Ship the same game with explicit storage boundaries",
-        "detail": "The browser uses cached assets and site-local saves; the Linux app bundles assets and maintains separate local saves rather than implying cross-device synchronization."
+        "detail": "The browser uses cached assets and site-local saves; the desktop app bundles assets and maintains separate local saves rather than implying cross-device synchronization."
       }
     ],
     "contribution": [
       "Implemented aircraft routing, traffic pacing, landing checks, and collision geometry.",
       "Built nine airfields, three difficulty levels, seven career ranks, and nine achievements.",
-      "Integrated IndexedDB persistence, offline browser assets, and Electron Linux distribution.",
+      "Integrated IndexedDB persistence, offline browser assets, and desktop distribution for Windows and Linux.",
       "Added automated coverage for simulation, progression, storage, audio, and UI behavior."
     ],
     "outcomes": [
-      "Players can draw routes for three aircraft types across nine airfields in the browser or Linux desktop app.",
+      "Players can draw routes for three aircraft types across nine airfields in the browser or Windows and Linux desktop apps.",
       "Local career progression and achievements persist between completed sessions without requiring an account.",
       "The simulation can be tested independently of Phaser rendering.",
-      "The product provides a browser entry point and a Snap Store installation path."
+      "The product provides a browser entry point, a Microsoft Store installation path for Windows, and a Snap Store installation path for Linux."
     ],
     "screenshot": {
       "alt": "Air Traffic Control promotional preview showing the game and flight-routing theme",
