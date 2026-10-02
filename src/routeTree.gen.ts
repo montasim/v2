@@ -35,6 +35,7 @@ import { Route as DashboardConversationsRouteImport } from './routes/dashboard.c
 import { Route as DashboardInquiriesRouteImport } from './routes/dashboard.inquiries'
 import { Route as DashboardStaticAnswersRouteImport } from './routes/dashboard.static-answers'
 import { Route as DashboardSubscribersRouteImport } from './routes/dashboard.subscribers'
+import { Route as DashboardWorkJournalRouteImport } from './routes/dashboard.work-journal'
 import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as ProjectsSlugContactRouteImport } from './routes/projects_.$slug_.contact'
@@ -169,6 +170,11 @@ const DashboardSubscribersRoute = DashboardSubscribersRouteImport.update({
   path: '/subscribers',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardWorkJournalRoute = DashboardWorkJournalRouteImport.update({
+  id: '/work-journal',
+  path: '/work-journal',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   id: '/projects_/$slug',
   path: '/projects/$slug',
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/dashboard/static-answers': typeof DashboardStaticAnswersRoute
   '/dashboard/subscribers': typeof DashboardSubscribersRoute
+  '/dashboard/work-journal': typeof DashboardWorkJournalRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/dashboard/static-answers': typeof DashboardStaticAnswersRoute
   '/dashboard/subscribers': typeof DashboardSubscribersRoute
+  '/dashboard/work-journal': typeof DashboardWorkJournalRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -273,6 +281,7 @@ export interface FileRoutesById {
   '/dashboard/inquiries': typeof DashboardInquiriesRoute
   '/dashboard/static-answers': typeof DashboardStaticAnswersRoute
   '/dashboard/subscribers': typeof DashboardSubscribersRoute
+  '/dashboard/work-journal': typeof DashboardWorkJournalRoute
   '/projects_/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/dashboard/inquiries'
     | '/dashboard/static-answers'
     | '/dashboard/subscribers'
+    | '/dashboard/work-journal'
     | '/projects/$slug'
     | '/dashboard/'
     | '/api/auth/$'
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/dashboard/inquiries'
     | '/dashboard/static-answers'
     | '/dashboard/subscribers'
+    | '/dashboard/work-journal'
     | '/projects/$slug'
     | '/dashboard'
     | '/api/auth/$'
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/dashboard/inquiries'
     | '/dashboard/static-answers'
     | '/dashboard/subscribers'
+    | '/dashboard/work-journal'
     | '/projects_/$slug'
     | '/dashboard/'
     | '/api/auth/$'
@@ -582,6 +594,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardSubscribersRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/work-journal': {
+      id: '/dashboard/work-journal'
+      path: '/work-journal'
+      fullPath: '/dashboard/work-journal'
+      preLoaderRoute: typeof DashboardWorkJournalRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/projects_/$slug': {
       id: '/projects_/$slug'
       path: '/projects/$slug'
@@ -613,6 +632,7 @@ interface DashboardRouteChildren {
   DashboardInquiriesRoute: typeof DashboardInquiriesRoute
   DashboardStaticAnswersRoute: typeof DashboardStaticAnswersRoute
   DashboardSubscribersRoute: typeof DashboardSubscribersRoute
+  DashboardWorkJournalRoute: typeof DashboardWorkJournalRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -623,6 +643,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardInquiriesRoute: DashboardInquiriesRoute,
   DashboardStaticAnswersRoute: DashboardStaticAnswersRoute,
   DashboardSubscribersRoute: DashboardSubscribersRoute,
+  DashboardWorkJournalRoute: DashboardWorkJournalRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

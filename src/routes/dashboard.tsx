@@ -85,6 +85,11 @@ export const Route = createFileRoute("/dashboard")({
 
 const navigation = [
   { to: "/dashboard", label: "Overview", icon: SquaresFourIcon },
+  {
+    to: "/dashboard/work-journal",
+    label: "Work Journal",
+    icon: BookOpenTextIcon,
+  },
   { to: "/dashboard/inquiries", label: "Inquiries", icon: BriefcaseIcon },
   {
     to: "/dashboard/conversations",
