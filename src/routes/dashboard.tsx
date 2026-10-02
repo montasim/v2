@@ -239,12 +239,6 @@ function OwnerDashboardPage() {
             <span className="shrink-0">Private workspace</span>
           </div>
           <Outlet />
-          <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t py-4 text-xs text-muted-foreground">
-            <span>Portfolio control room</span>
-            <Link to="/" className="hover:underline">
-              View portfolio
-            </Link>
-          </footer>
         </main>
       </div>
     </div>
