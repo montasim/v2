@@ -641,8 +641,8 @@
       "readingMinutes": 3,
       "featured": false,
       "image": {
-        "src": "/images/projects/air-traffic-control.webp",
-        "alt": "Air Traffic Control game promotional preview"
+        "src": "/images/projects/air-traffic-control-home.webp",
+        "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and desktop store links"
       },
       "sections": [
         {

@@ -1711,11 +1711,11 @@
     "githubRepositoryCreatedAt": "2026-09-29T10:11:38Z",
     "githubInitialCommitAt": "2026-09-01T12:31:21Z",
     "githubInitialCommitSha": "25a7fceed2b68c3f93e9727261980baf82486bef",
-    "imageUrl": "assets/projects/air-traffic-control.webp",
+    "imageUrl": "assets/projects/air-traffic-control-home.webp",
     "gallery": [
       {
         "src": "/images/projects/air-traffic-control-home.webp",
-        "alt": "Air Traffic Control home screen with play, career, achievements, and settings actions"
+        "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and desktop store links"
       },
       {
         "src": "/images/projects/air-traffic-control-airfields.webp",
