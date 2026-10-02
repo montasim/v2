@@ -90,10 +90,10 @@ export function ProjectDetailPage({
             </p>
             <ProjectEngagement project={project} />
           </div>
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+          <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4 sm:justify-between">
             <StoreBadges project={project} />
             <div
-              className="ml-auto flex flex-wrap items-center gap-2"
+              className="flex flex-wrap items-center gap-2 sm:ml-auto"
               role="group"
               aria-label={`${project.title} actions`}
             >

@@ -829,10 +829,10 @@ export function BlogDetailPage({
         <p className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground">
           {post.excerpt}
         </p>
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4 sm:justify-between">
           {relatedProject ? <StoreBadges project={relatedProject} /> : null}
           <div
-            className="ml-auto flex flex-wrap items-center gap-2"
+            className="flex flex-wrap items-center gap-2 sm:ml-auto"
             role="group"
             aria-label="Article actions"
           >
