@@ -1,3 +1,4 @@
+import { StoreBadges } from "@/components/shared/store-badges"
 import { useEffect, useId, useMemo, useState } from "react"
 import { Link } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
@@ -27,8 +28,6 @@ import {
   CircleDashedIcon,
   ClockIcon,
   EnvelopeSimpleIcon,
-  MicrosoftStoreIcon,
-  PackageIcon,
   ShareIcon,
   TrashIcon,
 } from "@/components/ui/icons"
@@ -823,52 +822,6 @@ export function BlogDetailPage({
                 {post.category}
               </Badge>
             </div>
-            <div
-              className="order-2 flex shrink-0 flex-wrap items-center gap-2 sm:order-none sm:justify-end lg:flex-nowrap"
-              role="group"
-              aria-label="Article actions"
-            >
-              {relatedProject?.chromeWebStoreUrl ? (
-                <ExternalAction
-                  href={relatedProject.chromeWebStoreUrl}
-                  variant="outline"
-                >
-                  <ChromeIcon />
-                  Chrome Web Store
-                </ExternalAction>
-              ) : null}
-              {relatedProject?.snapcraftUrl ? (
-                <ExternalAction
-                  href={relatedProject.snapcraftUrl}
-                  variant="outline"
-                >
-                  <PackageIcon />
-                  Snap Store
-                </ExternalAction>
-              ) : null}
-              {relatedProject?.microsoftStoreUrl ? (
-                <ExternalAction
-                  href={relatedProject.microsoftStoreUrl}
-                  variant="outline"
-                >
-                  <MicrosoftStoreIcon />
-                  Microsoft Store
-                </ExternalAction>
-              ) : null}
-              <Button type="button" onClick={shareArticle} variant="outline">
-                {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
-                {shareStatus === "Link copied" ? "Copied" : "Share"}
-              </Button>
-              {relatedProject?.liveUrl ? (
-                <ExternalAction
-                  href={relatedProject.liveUrl}
-                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-                >
-                  Website
-                  <ArrowUpRightIcon />
-                </ExternalAction>
-              ) : null}
-            </div>
           </div>
           <h1 className="order-1 w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:order-none sm:text-3xl">
             {post.title}
@@ -877,6 +830,37 @@ export function BlogDetailPage({
         <p className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground">
           {post.excerpt}
         </p>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+          {relatedProject ? <StoreBadges project={relatedProject} /> : null}
+          <div
+            className="ml-auto flex flex-wrap items-center gap-2"
+            role="group"
+            aria-label="Article actions"
+          >
+            {relatedProject?.chromeWebStoreUrl ? (
+              <ExternalAction
+                href={relatedProject.chromeWebStoreUrl}
+                variant="outline"
+              >
+                <ChromeIcon />
+                Chrome Web Store
+              </ExternalAction>
+            ) : null}
+            <Button type="button" onClick={shareArticle} variant="outline">
+              {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
+              {shareStatus === "Link copied" ? "Copied" : "Share"}
+            </Button>
+            {relatedProject?.liveUrl ? (
+              <ExternalAction
+                href={relatedProject.liveUrl}
+                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+              >
+                Website
+                <ArrowUpRightIcon />
+              </ExternalAction>
+            ) : null}
+          </div>
+        </div>
         <div
           className={cn(
             "mt-5 flex flex-col gap-3 pb-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between",

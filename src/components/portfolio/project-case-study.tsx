@@ -1,3 +1,4 @@
+import { StoreBadges } from "@/components/shared/store-badges"
 import { useEffect, useState } from "react"
 import { Link } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
@@ -11,8 +12,6 @@ import {
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
-  MicrosoftStoreIcon,
-  PackageIcon,
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
@@ -216,7 +215,13 @@ export function ProjectCaseStudyPage({
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:gap-14">
+        <div
+          className={
+            project.microsoftStoreUrl || project.snapcraftUrl
+              ? "mt-8"
+              : "mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:gap-14"
+          }
+        >
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-strong-foreground sm:text-3xl">
@@ -249,60 +254,49 @@ export function ProjectCaseStudyPage({
             </p>
           </div>
           <div
-            className="flex flex-wrap items-center gap-2 lg:flex-nowrap lg:justify-end"
-            role="group"
-            aria-label={`${project.title} actions`}
+            className={
+              project.microsoftStoreUrl || project.snapcraftUrl
+                ? "mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4"
+                : "flex justify-start lg:justify-end"
+            }
           >
-            {project.chromeWebStoreUrl ? (
-              <ExternalAction
-                href={project.chromeWebStoreUrl}
-                size="lg"
-                variant="outline"
-              >
-                <ChromeIcon />
-                Install extension
-              </ExternalAction>
-            ) : null}
-            {project.snapcraftUrl ? (
-              <ExternalAction
-                href={project.snapcraftUrl}
-                size="lg"
-                variant="outline"
-              >
-                <PackageIcon />
-                Snap Store
-              </ExternalAction>
-            ) : null}
-            {project.microsoftStoreUrl ? (
-              <ExternalAction
-                href={project.microsoftStoreUrl}
-                size="lg"
-                variant="outline"
-              >
-                <MicrosoftStoreIcon />
-                Microsoft Store
-              </ExternalAction>
-            ) : null}
-            {publicGithubUrl ? (
-              <ExternalAction
-                href={publicGithubUrl}
-                variant="outline"
-                size="lg"
-              >
-                <GithubLogoIcon />
-                Source
-              </ExternalAction>
-            ) : null}
-            {project.liveUrl ? (
-              <ExternalAction
-                href={project.liveUrl}
-                size="lg"
-                className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
-              >
-                Website
-                <ArrowUpRightIcon />
-              </ExternalAction>
-            ) : null}
+            <StoreBadges project={project} />
+            <div
+              className="flex flex-wrap items-center gap-2"
+              role="group"
+              aria-label={`${project.title} actions`}
+            >
+              {project.chromeWebStoreUrl ? (
+                <ExternalAction
+                  href={project.chromeWebStoreUrl}
+                  size="lg"
+                  variant="outline"
+                >
+                  <ChromeIcon />
+                  Install extension
+                </ExternalAction>
+              ) : null}
+              {publicGithubUrl ? (
+                <ExternalAction
+                  href={publicGithubUrl}
+                  variant="outline"
+                  size="lg"
+                >
+                  <GithubLogoIcon />
+                  Source
+                </ExternalAction>
+              ) : null}
+              {project.liveUrl ? (
+                <ExternalAction
+                  href={project.liveUrl}
+                  size="lg"
+                  className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+                >
+                  Website
+                  <ArrowUpRightIcon />
+                </ExternalAction>
+              ) : null}
+            </div>
           </div>
         </div>
 
