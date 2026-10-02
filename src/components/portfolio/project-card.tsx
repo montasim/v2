@@ -16,6 +16,7 @@ import {
 } from "@/components/shared/navigation-action"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { extensionReleaseUrl } from "@/lib/content/projects"
 import type { Project } from "@/lib/content/projects"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
@@ -94,6 +95,7 @@ export function ProjectPreviewUnavailable({
 }
 
 export function ProjectCard({ project }: { project: Project }) {
+  const releaseUrl = extensionReleaseUrl(project)
   const image = projectImage(project)
   const publicGithubUrl =
     project.clientWork || project.githubRepositoryPrivate
@@ -266,6 +268,16 @@ export function ProjectCard({ project }: { project: Project }) {
               >
                 <ChromeIcon />
                 Chrome Web Store
+              </ExternalAction>
+            ) : null}
+            {releaseUrl ? (
+              <ExternalAction
+                href={releaseUrl}
+                variant="link"
+                className="group/action h-auto p-0 font-bold text-strong-foreground"
+              >
+                <GithubLogoIcon />
+                Download from GitHub
               </ExternalAction>
             ) : null}
             {project.snapcraftUrl ? (

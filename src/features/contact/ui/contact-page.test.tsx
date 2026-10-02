@@ -41,13 +41,14 @@ const initial = {
       title: "Example app",
       description: "A useful example app.",
       iconUrl: undefined,
+      type: "extension" as const,
+      releaseUrl: undefined,
       href: "/projects/example",
-      links: [
-        {
-          label: "Chrome Web Store",
-          href: "https://chromewebstore.google.com/example",
-        },
-      ],
+      microsoftStoreUrl: undefined,
+      snapcraftUrl: undefined,
+      chromeWebStoreUrl: "https://chromewebstore.google.com/example",
+      npmUrl: undefined,
+      links: [],
     },
   ],
 }
@@ -92,12 +93,19 @@ describe("ContactPage", () => {
     )
     expect(
       screen
-        .getByRole("link", { name: "Chrome Web Store" })
+        .getByRole("link", {
+          name: "Get Example app from the Chrome Web Store",
+        })
         .getAttribute("href")
     ).toBe("https://chromewebstore.google.com/example")
     expect(
       screen.getByRole("link", { name: "View product" }).getAttribute("href")
     ).toBe("/projects/example")
+    expect(
+      screen
+        .getByRole("img", { name: "Get Example app from the Chrome Web Store" })
+        .getAttribute("src")
+    ).toBe("/images/store-badges/chrome-web-store.png")
     expect(screen.queryByRole("link", { name: "App Store" })).toBeNull()
   })
 

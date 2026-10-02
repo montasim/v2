@@ -60,16 +60,21 @@ export function loadContactContext(search: ContactSearch) {
       title: project.title,
       description: project.description,
       iconUrl: project.logoUrl,
+      type: project.type,
+      releaseUrl: project.releaseUrl,
+      microsoftStoreUrl: project.microsoftStoreUrl,
+      snapcraftUrl: project.snapcraftUrl,
+      chromeWebStoreUrl: project.chromeWebStoreUrl,
+      npmUrl: project.npmUrl,
       href:
         project.liveUrl || `/projects/${project.id.replace(/^project-/, "")}`,
       links: [
-        { label: "Chrome Web Store", href: project.chromeWebStoreUrl },
         { label: "App Store", href: project.appStoreUrl },
         { label: "Google Play", href: project.googlePlayUrl },
-        { label: "Microsoft Store", href: project.microsoftStoreUrl },
-        { label: "Snap Store", href: project.snapcraftUrl },
-        { label: "npm", href: project.npmUrl },
-        { label: "Releases", href: project.releaseUrl },
+        {
+          label: "Releases",
+          href: project.type === "extension" ? undefined : project.releaseUrl,
+        },
         {
           label: "Source on GitHub",
           href: project.githubRepositoryPrivate ? undefined : project.githubUrl,

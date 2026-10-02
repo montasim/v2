@@ -1,3 +1,4 @@
+import { StoreBadges } from "@/components/shared/store-badges"
 import { ProjectPicker } from "./project-picker"
 import { useEffect, useRef, useState } from "react"
 import type { FormEvent, ReactNode } from "react"
@@ -631,6 +632,7 @@ export function ContactPage({
                   aria-label={`${selectedProject.title} links`}
                   className="flex flex-col items-start gap-3"
                 >
+                  <StoreBadges project={selectedProject} />
                   {[
                     { label: "View product", href: selectedProject.href },
                     ...selectedProject.links,

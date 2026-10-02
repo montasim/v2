@@ -237,3 +237,11 @@ export const projectCatalog = {
     return project.type === filter
   },
 } as const
+
+export function extensionReleaseUrl(
+  project: Pick<Project, "type" | "chromeWebStoreUrl" | "releaseUrl">
+) {
+  return project.type === "extension" && !project.chromeWebStoreUrl
+    ? project.releaseUrl
+    : undefined
+}

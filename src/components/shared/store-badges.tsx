@@ -1,4 +1,9 @@
-import { ExternalLink } from "@/components/shared/navigation-action"
+import { GithubLogoIcon } from "@/components/ui/icons"
+import {
+  ExternalAction,
+  ExternalLink,
+} from "@/components/shared/navigation-action"
+import { extensionReleaseUrl } from "@/lib/content/projects"
 import type { Project } from "@/lib/content/projects"
 import { cn } from "@/lib/utils"
 
@@ -8,6 +13,8 @@ export function StoreBadges({
 }: {
   project: Pick<
     Project,
+    | "type"
+    | "releaseUrl"
     | "title"
     | "microsoftStoreUrl"
     | "snapcraftUrl"
@@ -47,7 +54,8 @@ export function StoreBadges({
     },
   ].filter((store) => store.href)
 
-  if (!stores.length) return null
+  const releaseUrl = extensionReleaseUrl(project)
+  if (!stores.length && !releaseUrl) return null
 
   return (
     <div
@@ -70,6 +78,12 @@ export function StoreBadges({
           />
         </ExternalLink>
       ))}
+      {releaseUrl ? (
+        <ExternalAction href={releaseUrl} variant="outline" size="lg">
+          <GithubLogoIcon />
+          Download from GitHub
+        </ExternalAction>
+      ) : null}
     </div>
   )
 }

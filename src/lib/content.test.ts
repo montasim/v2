@@ -45,8 +45,8 @@ describe("portfolio content", () => {
     const contact = loadContactContext({ app: "air-traffic-control" })
     expect(contact.projectId).toBe(project?.id)
     expect(
-      contact.projects.find((item) => item.id === project?.id)?.links
-    ).toContainEqual({ label: "Snap Store", href: project?.snapcraftUrl })
+      contact.projects.find((item) => item.id === project?.id)?.snapcraftUrl
+    ).toBe(project?.snapcraftUrl)
   })
 
   it("validates every required JSON catalog", () => {
