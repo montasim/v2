@@ -9,31 +9,42 @@ import { Separator } from "@/components/ui/separator"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { profileCatalog } from "@/lib/content/profile"
 
+// Fit the artwork to 24px, balancing the wider YouTube mark by width.
 const iconLinks = [
   {
     href: profileCatalog.socialUrl("linkedin"),
     label: "LinkedIn profile",
     icon: LinkedinLogoIcon,
+    viewBox: "2.25 2.25 19.5 19.5",
+    width: 24,
   },
   {
     href: profileCatalog.socialUrl("github"),
     label: "GitHub profile",
     icon: GithubLogoIcon,
+    viewBox: "1.25 1.25 21.5 21.5",
+    width: 24,
   },
   {
     href: profileCatalog.socialUrl("whatsapp"),
     label: "Chat on WhatsApp",
     icon: WhatsappLogoIcon,
+    viewBox: "1.25 1.25 21.5 21.5",
+    width: 24,
   },
   {
     href: "https://www.youtube.com/@montasim",
     label: "YouTube channel",
     icon: YoutubeLogoIcon,
+    viewBox: "1.25 2.75 21.5 18.5",
+    width: 24,
   },
   {
     href: "https://www.supportkori.com/montasim",
     label: "Support Montasim on SupportKori",
     icon: CoffeeIcon,
+    viewBox: "3.25 1.25 17.5 21.5",
+    width: (24 * 17.5) / 21.5,
   },
 ]
 
@@ -45,7 +56,7 @@ export function SideRails() {
         className="side-rail side-rail-left fixed bottom-0 left-[max(1.5rem,calc(50%-47.58rem))] z-30 hidden flex-col items-center gap-2 xl:flex"
         aria-label="Social links"
       >
-        {iconLinks.map(({ href, label, icon: Icon }) => (
+        {iconLinks.map(({ href, label, icon: Icon, viewBox, width }) => (
           <ExternalAction
             key={label}
             href={href}
@@ -54,7 +65,7 @@ export function SideRails() {
             className="size-10 text-2xl text-muted-foreground"
           >
             <span className="sr-only">{label}</span>
-            <Icon className="size-[25.5px]" />
+            <Icon className="size-6" viewBox={viewBox} style={{ width }} />
           </ExternalAction>
         ))}
         <Separator orientation="vertical" className="mt-2 h-20" />
