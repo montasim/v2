@@ -6,7 +6,6 @@ import {
   ArrowRightCompactIcon,
   ArrowUpRightIcon,
   BookOpenTextIcon,
-  ChromeIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   PencilSimpleIcon,
@@ -75,13 +74,7 @@ export function ProjectDetailPage({
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div
-          className={
-            project.microsoftStoreUrl || project.snapcraftUrl
-              ? "mt-8"
-              : "mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14"
-          }
-        >
+        <div className="mt-8">
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight text-strong-foreground sm:text-4xl">
@@ -97,29 +90,13 @@ export function ProjectDetailPage({
             </p>
             <ProjectEngagement project={project} />
           </div>
-          <div
-            className={
-              project.microsoftStoreUrl || project.snapcraftUrl
-                ? "mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4"
-                : "flex justify-start lg:justify-end"
-            }
-          >
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
             <StoreBadges project={project} />
             <div
-              className="flex flex-wrap items-center gap-2"
+              className="ml-auto flex flex-wrap items-center gap-2"
               role="group"
               aria-label={`${project.title} actions`}
             >
-              {project.chromeWebStoreUrl ? (
-                <ExternalAction
-                  href={project.chromeWebStoreUrl}
-                  size="lg"
-                  variant="outline"
-                >
-                  <ChromeIcon />
-                  Chrome Web Store
-                </ExternalAction>
-              ) : null}
               {!project.clientWork &&
               !project.githubRepositoryPrivate &&
               project.githubUrl ? (

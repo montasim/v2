@@ -9,7 +9,6 @@ import {
   ArrowRightIcon,
   ArrowUpRightIcon,
   CheckCircleIcon,
-  ChromeIcon,
   EnvelopeSimpleIcon,
   GithubLogoIcon,
   GitCommitIcon,
@@ -216,13 +215,7 @@ export function ProjectCaseStudyPage({
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div
-          className={
-            project.microsoftStoreUrl || project.snapcraftUrl
-              ? "mt-8"
-              : "mt-8 grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_25rem] lg:gap-14"
-          }
-        >
+        <div className="mt-8">
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-strong-foreground sm:text-3xl">
@@ -250,34 +243,18 @@ export function ProjectCaseStudyPage({
                 </ExternalLink>
               ) : null}
             </div>
-            <p className="mt-5 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg">
+            <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg">
               {caseStudy.summary}
             </p>
             <ProjectEngagement project={project} />
           </div>
-          <div
-            className={
-              project.microsoftStoreUrl || project.snapcraftUrl
-                ? "mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4"
-                : "flex justify-start lg:justify-end"
-            }
-          >
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
             <StoreBadges project={project} />
             <div
-              className="flex flex-wrap items-center gap-2"
+              className="ml-auto flex flex-wrap items-center gap-2"
               role="group"
               aria-label={`${project.title} actions`}
             >
-              {project.chromeWebStoreUrl ? (
-                <ExternalAction
-                  href={project.chromeWebStoreUrl}
-                  size="lg"
-                  variant="outline"
-                >
-                  <ChromeIcon />
-                  Install extension
-                </ExternalAction>
-              ) : null}
               {publicGithubUrl ? (
                 <ExternalAction
                   href={publicGithubUrl}

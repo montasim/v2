@@ -24,7 +24,6 @@ import {
   ArrowUpRightIcon,
   ChatCenteredDotsIcon,
   CheckIcon,
-  ChromeIcon,
   CircleDashedIcon,
   ClockIcon,
   EnvelopeSimpleIcon,
@@ -837,15 +836,6 @@ export function BlogDetailPage({
             role="group"
             aria-label="Article actions"
           >
-            {relatedProject?.chromeWebStoreUrl ? (
-              <ExternalAction
-                href={relatedProject.chromeWebStoreUrl}
-                variant="outline"
-              >
-                <ChromeIcon />
-                Chrome Web Store
-              </ExternalAction>
-            ) : null}
             <Button type="button" onClick={shareArticle} variant="outline">
               {shareStatus === "Link copied" ? <CheckIcon /> : <ShareIcon />}
               {shareStatus === "Link copied" ? "Copied" : "Share"}

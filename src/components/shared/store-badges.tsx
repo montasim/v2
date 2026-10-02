@@ -6,7 +6,14 @@ export function StoreBadges({
   project,
   className,
 }: {
-  project: Pick<Project, "title" | "microsoftStoreUrl" | "snapcraftUrl">
+  project: Pick<
+    Project,
+    | "title"
+    | "microsoftStoreUrl"
+    | "snapcraftUrl"
+    | "chromeWebStoreUrl"
+    | "npmUrl"
+  >
   className?: string
 }) {
   const stores = [
@@ -23,6 +30,20 @@ export function StoreBadges({
       label: `Get ${project.title} for Linux from the Snap Store`,
       width: 182,
       height: 56,
+    },
+    {
+      href: project.chromeWebStoreUrl,
+      image: "chrome-web-store.png",
+      label: `Get ${project.title} from the Chrome Web Store`,
+      width: 206,
+      height: 58,
+    },
+    {
+      href: project.npmUrl,
+      image: "npm.svg",
+      label: `Get ${project.title} on npm`,
+      width: 150,
+      height: 44,
     },
   ].filter((store) => store.href)
 
