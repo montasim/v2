@@ -1,3 +1,4 @@
+import { ProjectEngagement } from "@/components/portfolio/project-engagement"
 import { StoreBadges } from "@/components/shared/store-badges"
 import { Link } from "@tanstack/react-router"
 import {
@@ -94,6 +95,7 @@ export function ProjectDetailPage({
             <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg">
               {project.description}
             </p>
+            <ProjectEngagement project={project} />
           </div>
           <div
             className={

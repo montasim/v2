@@ -128,6 +128,7 @@
   },
   {
     "id": "experience-infomax-freelance-developer",
+    "summary": "Built the shared API foundation for an MCQ learning platform, including module structure, middleware, and deployment configuration. Exam execution and result persistence remained outside the completed scope.",
     "company": "Infomax",
     "category": "independent",
     "role": "Freelance Developer",
@@ -146,6 +147,7 @@
   },
   {
     "id": "experience-talendit-freelance-developer",
+    "summary": "Developed school administration, admission-document, and survey workflows across web interfaces and backend services. Co-developed a PHP catalog and administration project; the linked case studies distinguish prototypes from completed features.",
     "company": "TalendIT",
     "category": "independent",
     "role": "Freelance Developer",
@@ -168,6 +170,7 @@
   },
   {
     "id": "experience-ndevers-freelance-developer",
+    "summary": "Built React inventory interfaces and Express/MongoDB resource APIs covering stock, deliveries, and supporting business records. The interfaces depend on a separate backend; the case studies document the verified implementation scope.",
     "company": "nDevers",
     "category": "independent",
     "role": "Freelance Developer",

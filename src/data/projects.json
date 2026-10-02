@@ -1748,6 +1748,7 @@
   },
   {
     "id": "project-mcq-topper-backend",
+    "engagementId": "experience-infomax-freelance-developer",
     "title": "MCQ Topper Backend",
     "type": "api",
     "featured": false,
@@ -1770,6 +1771,7 @@
   },
   {
     "id": "project-school-management-backend",
+    "engagementId": "experience-talendit-freelance-developer",
     "title": "School Management Backend",
     "type": "api",
     "featured": false,
@@ -1792,6 +1794,7 @@
   },
   {
     "id": "project-school-management",
+    "engagementId": "experience-talendit-freelance-developer",
     "title": "School Management",
     "type": "website",
     "featured": false,
@@ -1813,6 +1816,7 @@
   },
   {
     "id": "project-survey-module-backend",
+    "engagementId": "experience-talendit-freelance-developer",
     "title": "Survey Module Backend",
     "type": "api",
     "featured": false,
@@ -1836,6 +1840,7 @@
   },
   {
     "id": "project-warehouse-management-client",
+    "engagementId": "experience-ndevers-freelance-developer",
     "title": "POSDash Client",
     "type": "website",
     "featured": false,
@@ -1858,6 +1863,7 @@
   },
   {
     "id": "project-inventory-management-system-server",
+    "engagementId": "experience-ndevers-freelance-developer",
     "title": "Inventory Management System Server",
     "type": "api",
     "featured": false,
@@ -1873,6 +1879,7 @@
   },
   {
     "id": "project-technofire",
+    "engagementId": "experience-talendit-freelance-developer",
     "title": "TechnoFire",
     "type": "website",
     "featured": false,

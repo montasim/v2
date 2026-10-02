@@ -15,6 +15,7 @@ const experienceSchema = z.object({
   endDate: z.iso.date().optional(),
   location: z.string().min(1).optional(),
   description: z.string().min(1),
+  summary: z.string().min(1).optional(),
   technologies: z.array(z.string().min(1)),
 })
 
@@ -30,7 +31,11 @@ if (!currentRecord?.period)
 
 const current = { ...currentRecord, period: currentRecord.period }
 
-const filterSchema = z.enum(["employment", "independent"])
+const filterSchema = z
+  .enum(["employment", "client", "independent"])
+  .transform((filter) =>
+    filter === "independent" ? ("client" as const) : filter
+  )
 export type ExperienceFilter = z.infer<typeof filterSchema>
 
 export const experienceCatalog = {
@@ -39,9 +44,9 @@ export const experienceCatalog = {
   filterSchema,
   filters: [
     { value: "employment", label: "Employment" },
-    { value: "independent", label: "Independent Work & Ventures" },
+    { value: "client", label: "Client work & Ventures" },
   ],
   matches(record: Experience, filter: ExperienceFilter) {
-    return record.category === filter
+    return record.category === (filter === "client" ? "independent" : filter)
   },
 } as const

@@ -1,3 +1,4 @@
+import { experienceCatalog } from "@/lib/content/experience"
 import { z } from "zod"
 import projectsJson from "@/data/projects.json"
 import type { CatalogFilter } from "@/lib/content/shared"
@@ -20,6 +21,7 @@ const projectSchema = z.object({
   title: z.string().min(1),
   type: projectTypeSchema,
   clientWork: z.boolean().optional(),
+  engagementId: z.string().min(1).optional(),
   collaborativeWork: z.boolean().optional(),
   professionalWork: z.boolean().optional(),
   featured: z.boolean(),
@@ -62,6 +64,22 @@ export type ProjectFilter =
   | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
+
+for (const project of parsedRecords) {
+  if (!project.engagementId) continue
+  const engagement = experienceCatalog.records.find(
+    (entry) => entry.id === project.engagementId
+  )
+  if (
+    !engagement ||
+    engagement.category !== "independent" ||
+    !project.clientWork
+  ) {
+    throw new Error(
+      `Invalid client engagement for ${project.id}: ${project.engagementId}`
+    )
+  }
+}
 
 // Preserve the established recruiter-facing sequence for the original catalog.
 // Newly documented professional and client work is appended afterward so those
@@ -164,6 +182,14 @@ const filters: readonly CatalogFilter<ProjectFilter>[] = [
 ]
 
 export const projectCatalog = {
+  engagementFor(project: Project) {
+    return experienceCatalog.records.find(
+      (entry) => entry.id === project.engagementId
+    )
+  },
+  forEngagement(engagementId: string) {
+    return records.filter((project) => project.engagementId === engagementId)
+  },
   records,
   chronological,
   newestByGitHubHistory: chronological[0],

@@ -59,6 +59,7 @@ export interface PortfolioKnowledgeRelationship {
     | "derived-from"
     | "progressed-from"
     | "evidenced-by"
+    | "delivered-for"
   readonly toRecordId: string
 }
 

@@ -1,3 +1,5 @@
+import { projectCatalog } from "@/lib/content/projects"
+import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { Card, cardInsetClassName } from "@/components/ui/card"
 import { BadgeList } from "@/components/shared/badge-list"
 import { EntityAvatar } from "@/components/shared/entity-avatar"
@@ -14,13 +16,59 @@ function RoleDetails({
   descriptionClassName?: string
   technologiesClassName?: string
 }) {
+  const projects = projectCatalog.forEngagement(role.id)
   return (
     <>
       <p
         className={`${descriptionClassName} text-sm leading-relaxed text-muted-foreground`}
       >
-        <RichText text={role.description} />
+        <RichText text={role.summary ?? role.description} />
       </p>
+      {role.summary ? (
+        <details className="mt-3 text-sm text-muted-foreground">
+          <summary className="w-fit cursor-pointer rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4">
+            More about this engagement
+          </summary>
+          <p className="mt-3 leading-relaxed">
+            <RichText text={role.description} />
+          </p>
+        </details>
+      ) : null}
+      {projects.length ? (
+        <div className="mt-5">
+          <h3 className="text-sm font-semibold">Related work</h3>
+          <ul
+            className="mt-2 list-disc space-y-3 pl-5"
+            aria-label={`Related work for ${role.company}`}
+          >
+            {projects.map((project) => {
+              const slug = project.id.replace(/^project-/, "")
+              const caseStudy = projectCaseStudyCatalog.findBySlug(slug)
+              return (
+                <li key={project.id} className="text-sm">
+                  <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <a
+                      href={`/projects/${slug}`}
+                      className="rounded-sm font-medium underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                    >
+                      {project.title}
+                    </a>
+                    {caseStudy ? (
+                      <a
+                        href={`/case-studies/${caseStudy.slug}`}
+                        aria-label={`Read ${project.title} case study`}
+                        className="rounded-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                      >
+                        Read case study
+                      </a>
+                    ) : null}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ) : null}
       <BadgeList
         items={role.technologies}
         label={`Technologies used as ${role.role}`}

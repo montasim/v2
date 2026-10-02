@@ -209,7 +209,7 @@ function assembleExperience(
         snapshot.id,
         record.id,
         record.title,
-        `/experience#${record.id}`
+        `/experience${requiredObject(record.value, record.id).category === "independent" ? "?filter=client" : ""}#${record.id}`
       )
   )
 }
@@ -877,6 +877,18 @@ function relation(
 function assembleRelationships(sources: readonly PortfolioSourceSnapshot[]) {
   const relationships: PortfolioKnowledgeRelationship[] = []
   const caseStudyByProject = new Map<string, string>()
+
+  for (const project of projectCatalog.records) {
+    if (!project.engagementId) continue
+    relationships.push(
+      relation(
+        `relationship:project:${project.id}:delivered-for:${project.engagementId}`,
+        recordNode("projects", project.id),
+        "delivered-for",
+        recordNode("experience", project.engagementId)
+      )
+    )
+  }
 
   for (const record of source(sources, "casestudy").records) {
     const data = requiredObject(record.value, `casestudy.${record.id}`)

@@ -35,7 +35,7 @@ function Page() {
       renderRecords={(records) => <ExperienceList card records={records} />}
       emptyState={
         <p className="py-8 text-sm text-muted-foreground">
-          Independent work and venture details haven’t been added yet.
+          Client work and venture details haven’t been added yet.
         </p>
       }
     />

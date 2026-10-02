@@ -305,3 +305,23 @@ describe("PortfolioKnowledge", () => {
     expect(Object.isFrozen(first.derived.projectChronology)).toBe(true)
   })
 })
+
+it("connects client projects to engagement evidence and filtered experience links", () => {
+  const knowledge = getCompiledPortfolioKnowledge()
+  expect(
+    knowledge.relationships.filter((item) => item.kind === "delivered-for")
+  ).toHaveLength(7)
+  expect(knowledge.relationships).toContainEqual({
+    id: "relationship:project:project-mcq-topper-backend:delivered-for:experience-infomax-freelance-developer",
+    fromRecordId: "projects:project-mcq-topper-backend",
+    kind: "delivered-for",
+    toRecordId: "experience:experience-infomax-freelance-developer",
+  })
+  expect(
+    knowledge.citations.some(
+      (citation) =>
+        citation.href ===
+        "/experience?filter=client#experience-infomax-freelance-developer"
+    )
+  ).toBe(true)
+})

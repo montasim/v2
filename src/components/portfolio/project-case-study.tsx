@@ -1,3 +1,4 @@
+import { ProjectEngagement } from "@/components/portfolio/project-engagement"
 import { StoreBadges } from "@/components/shared/store-badges"
 import { useEffect, useState } from "react"
 import { Link } from "@tanstack/react-router"
@@ -252,6 +253,7 @@ export function ProjectCaseStudyPage({
             <p className="mt-5 max-w-[62ch] text-base leading-7 text-muted-foreground sm:text-lg">
               {caseStudy.summary}
             </p>
+            <ProjectEngagement project={project} />
           </div>
           <div
             className={

@@ -349,3 +349,40 @@ describe("portfolio content", () => {
     expect(`${robots}\n${sitemap}`).not.toContain("montasim.vercel.app")
   })
 })
+
+it("preserves filter values and maps client projects to the documented engagements", () => {
+  expect(experienceCatalog.filterSchema.parse("independent")).toBe("client")
+  expect(experienceCatalog.filterSchema.parse("client")).toBe("client")
+  expect(experienceCatalog.filters).toContainEqual({
+    value: "client",
+    label: "Client work & Ventures",
+  })
+  expect(projectCatalog.filterSchema.parse("client")).toBe("client")
+  const expected = {
+    infomax: ["project-mcq-topper-backend"],
+    talendit: [
+      "project-school-management-backend",
+      "project-school-management",
+      "project-survey-module-backend",
+      "project-technofire",
+    ],
+    ndevers: [
+      "project-warehouse-management-client",
+      "project-inventory-management-system-server",
+    ],
+  }
+  for (const [company, ids] of Object.entries(expected)) {
+    const engagementId = `experience-${company}-freelance-developer`
+    const projects = projectCatalog.forEngagement(engagementId)
+    expect(projects.map((project) => project.id).sort()).toEqual(
+      [...ids].sort()
+    )
+    for (const project of projects) {
+      expect(project.clientWork).toBe(true)
+      expect(projectCatalog.engagementFor(project)?.id).toBe(engagementId)
+    }
+  }
+  expect(
+    projectCatalog.records.filter((project) => project.engagementId)
+  ).toHaveLength(7)
+})

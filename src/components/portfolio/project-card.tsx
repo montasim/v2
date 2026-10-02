@@ -1,3 +1,4 @@
+import { ProjectEngagement } from "@/components/portfolio/project-engagement"
 import {
   ArrowUpRightIcon,
   BookOpenTextIcon,
@@ -220,6 +221,7 @@ export function ProjectCard({ project }: { project: Project }) {
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             {project.description}
           </p>
+          <ProjectEngagement project={project} />
           <BadgeList
             items={project.topics}
             label={`GitHub topics for ${project.title}`}

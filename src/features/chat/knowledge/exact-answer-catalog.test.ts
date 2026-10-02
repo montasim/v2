@@ -421,3 +421,25 @@ it("includes independent engagements and their corrected dates in chat answers",
     "7 employment roles and 3 freelance engagements"
   )
 })
+
+it("recognizes both section names and grounds project attribution in engagements", () => {
+  const oldQuestion =
+    "Does Independent Work & Ventures mean Montasim works in venture capital or owns these companies?"
+  const newQuestion = oldQuestion.replace(
+    "Independent Work & Ventures",
+    "Client work & Ventures"
+  )
+  expect(findExactAnswer(newQuestion)?.id).toBe(
+    "experience:independent-work-ventures-meaning"
+  )
+  expect(findExactAnswer(oldQuestion)?.id).toBe(
+    findExactAnswer(newQuestion)?.id
+  )
+  expect(
+    findExactAnswer("What is Montasim's MCQ Topper Backend project?")?.text
+  ).toContain("Infomax")
+  expect(
+    findExactAnswer("What did Montasim do as Freelance Developer at Infomax?")
+      ?.text
+  ).toContain("MCQ Topper Backend")
+})

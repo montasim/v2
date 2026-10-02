@@ -107,6 +107,7 @@ export function normalizeExactQuestion(question: string): string {
     .replace(apostrophes, "'")
     .trim()
     .replace(/\s+/g, " ")
+    .replace(/independent work & ventures/g, "client work & ventures")
     .replace(/[?.]$/, "")
     .trimEnd()
 }

@@ -269,6 +269,7 @@ function slug(value: string): string {
 
 function buildProjectAnswers(): readonly ExactAnswer[] {
   return projectCatalog.records.flatMap((project) => {
+    const engagement = projectCatalog.engagementFor(project)
     const type = projectTypeLabel(project.type)
     const caseStudy = requiredCaseStudy(project.id)
     const projectAttribution = project.professionalWork
@@ -281,9 +282,10 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
       answer("project", {
         id: `${project.id}:overview`,
         question: `What is Montasim's ${project.title} project?`,
-        text: `${projectAttribution} ${sentence(project.description)} His role covered ${lowercaseFirst(caseStudy.role)}, with scope spanning ${lowercaseFirst(caseStudy.scope)}. ${sentence(caseStudy.outcomes[0])} A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary.`,
+        text: `${projectAttribution} ${engagement ? `This client work was part of his ${engagement.role} engagement with ${engagement.company}. ` : ""}${sentence(project.description)} His role covered ${lowercaseFirst(caseStudy.role)}, with scope spanning ${lowercaseFirst(caseStudy.scope)}. ${sentence(caseStudy.outcomes[0])} A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary.`,
         evidence: [
           projectReference(project),
+          ...(engagement ? [experienceReference(engagement)] : []),
           caseStudyReference(caseStudy, "problem"),
           caseStudyReference(caseStudy, "outcomes"),
         ],
@@ -412,6 +414,7 @@ function buildCertificationAnswers(): readonly ExactAnswer[] {
 
 function buildExperienceAnswers(): readonly ExactAnswer[] {
   return experienceCatalog.records.flatMap((experience) => {
+    const projects = projectCatalog.forEngagement(experience.id)
     const work = attributedContributionSentences(
       splitSentences(experience.description)
     )
@@ -419,8 +422,11 @@ function buildExperienceAnswers(): readonly ExactAnswer[] {
       answer("experience", {
         id: `${experience.id}:responsibility`,
         question: `What did Montasim do as ${experience.role} at ${experience.company}?`,
-        text: `As ${experience.role} at ${experience.company}${experience.period ? ` (${experience.period})` : ""}, Montasim ${work.replace(/^Montasim /, "")} For a hiring manager, this is role-specific evidence of what he owned, delivered, or improved at that stage of his career—not a title-only claim.`,
-        evidence: [experienceReference(experience)],
+        text: `As ${experience.role} at ${experience.company}${experience.period ? ` (${experience.period})` : ""}, Montasim ${work.replace(/^Montasim /, "")} ${projects.length ? `Related projects include ${projects.map((project) => project.title).join(", ")}. ` : ""}For a hiring manager, this is role-specific evidence of what he owned, delivered, or improved at that stage of his career—not a title-only claim.`,
+        evidence: [
+          experienceReference(experience),
+          ...projects.map(projectReference),
+        ],
       }),
       answer("experience", {
         id: `${experience.id}:stack`,
@@ -448,13 +454,13 @@ function buildIndependentWorkAnswers(): readonly ExactAnswer[] {
     answer("experience", {
       id: "independent-work-overview",
       question: "What freelance or independent work has Montasim done?",
-      text: `Montasim documents freelance developer engagements with ${roles.map((role) => role.company).join(", ")}. Infomax covers the API foundation for an MCQ learning platform; TalendIT covers school administration, admission-document handling, survey modeling, and web interfaces; nDevers covers inventory interfaces and backend resource operations. These engagements are listed separately from employment under Independent Work & Ventures.`,
+      text: `Montasim documents freelance developer engagements with ${roles.map((role) => role.company).join(", ")}. Infomax covers the API foundation for an MCQ learning platform; TalendIT covers school administration, admission-document handling, survey modeling, and web interfaces; nDevers covers inventory interfaces and backend resource operations. These engagements are listed separately from employment under Client work & Ventures.`,
       evidence,
     }),
     answer("experience", {
       id: "independent-work-ventures-meaning",
       question:
-        "Does Independent Work & Ventures mean Montasim works in venture capital or owns these companies?",
+        "Does Client work & Ventures mean Montasim works in venture capital or owns these companies?",
       text: "The published entries describe freelance developer roles for Infomax, TalendIT, and nDevers. The section name does not establish venture-capital investing, company ownership, founder status, or a partnership in those companies. No such role is documented in the current independent experience records.",
       evidence,
     }),

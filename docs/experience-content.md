@@ -1,7 +1,7 @@
 # Experience content
 
 The `/experience` page uses the shared catalog filter with two options:
-Employment and Independent Work & Ventures. Employment is the default;
+Employment and Client work & Ventures. Employment is the default;
 legacy `filter=all` URLs also resolve to Employment.
 
 Add roles to `src/data/experience.json`. Every role requires a `category`:
@@ -21,8 +21,7 @@ in a timeline; filtering happens before grouping, so a company can include
 both employment and independent roles.
 
 Independent entries cover freelance work for Infomax, TalendIT, and nDevers.
-Their summaries draw on the supplied project mappings; project details and
-links are not displayed in these cards. Company names appear before roles;
+Their concise summaries draw on the supplied project mappings; cards include related project and case study links, with the full description available in a disclosure. Company names appear before roles;
 single-role cards do not use a timeline or repeat dates.
 
 The user corrected the engagement dates after the initial repository activity
@@ -44,3 +43,21 @@ production operation, or exclusive ownership of collaborative PHP work.
 The complete knowledge catalog size guard is 525,000 characters (131,250
 estimated tokens) to accommodate the expanded freelance evidence; this is
 a regression guard, not a change to runtime prompt or provider limits.
+
+## Engagement relationships
+
+The canonical client URLs are `/experience?filter=client` and
+`/projects?filter=client`. The former `filter=independent` experience URL remains
+a supported alias for `client`. Unfiltered Experience still defaults to Employment.
+Project `engagementId` references an independent experience record; the company
+name is derived from that record. Linked projects must have `clientWork: true`.
+
+Mappings follow the supplied grouping reflected in the engagement descriptions:
+
+- Infomax: MCQ Topper Backend.
+- TalendIT: School Management Backend, School Management, Survey Module Backend,
+  and TechnoFire (the co-developed PHP catalog and administration work).
+- nDevers: POSDash Client and Inventory Management System Server.
+
+The label includes ventures, but the current entries retain their documented
+Freelance Developer roles. It does not imply ownership or founder status.
