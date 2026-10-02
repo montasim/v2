@@ -1,5 +1,10 @@
+import type {
+  Contribution,
+  ReviewSource,
+} from "@/features/work-journal/domain/journal"
 import {
   boolean,
+  date,
   index,
   integer,
   jsonb,
@@ -290,6 +295,111 @@ export const availabilitySettings = pgTable("availability_settings", {
   timeZoneDetail: varchar("time_zone_detail", { length: 200 }).notNull(),
   relocationVisa: varchar("relocation_visa", { length: 160 }).notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+})
+
+// Private owner records. Never include these tables in public portfolio queries.
+export const journalCompanies = pgTable("journal_companies", {
+  id: uuid("id").primaryKey(),
+  revision: integer("revision").default(1).notNull(),
+  name: varchar("name", { length: 200 }).notNull(),
+  role: varchar("role", { length: 200 }).notNull(),
+  startDate: date("start_date"),
+  endDate: date("end_date"),
+  archived: boolean("archived").default(false).notNull(),
+})
+export const journalProjects = pgTable(
+  "journal_projects",
+  {
+    id: uuid("id").primaryKey(),
+    revision: integer("revision").default(1).notNull(),
+    companyId: uuid("company_id")
+      .notNull()
+      .references(() => journalCompanies.id),
+    name: varchar("name", { length: 200 }).notNull(),
+    description: text("description").notNull(),
+    archived: boolean("archived").default(false).notNull(),
+  },
+  (table) => [index("journal_projects_company_idx").on(table.companyId)]
+)
+export const journalEntries = pgTable(
+  "journal_entries",
+  {
+    id: uuid("id").primaryKey(),
+    revision: integer("revision").default(1).notNull(),
+    workDate: date("work_date").notNull(),
+    companyId: uuid("company_id")
+      .notNull()
+      .references(() => journalCompanies.id),
+    projectId: uuid("project_id").references(() => journalProjects.id),
+    notes: text("notes").notNull(),
+    reflection: text("reflection").notNull(),
+    contributions: jsonb("contributions").$type<Contribution[]>().notNull(),
+    sourceHash: varchar("source_hash", { length: 64 }).notNull(),
+    summary: text("summary").default("").notNull(),
+    summarySourceHash: varchar("summary_source_hash", { length: 64 }),
+    draft: text("draft"),
+    draftSourceHash: varchar("draft_source_hash", { length: 64 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("journal_entries_company_date_idx").on(
+      table.companyId,
+      table.workDate
+    ),
+    index("journal_entries_date_idx").on(table.workDate),
+  ]
+)
+export const journalReviews = pgTable(
+  "journal_reviews",
+  {
+    id: uuid("id").primaryKey(),
+    revision: integer("revision").default(1).notNull(),
+    title: varchar("title", { length: 200 }).notNull(),
+    from: date("from_date").notNull(),
+    to: date("to_date").notNull(),
+    companyId: uuid("company_id")
+      .notNull()
+      .references(() => journalCompanies.id),
+    audience: varchar("audience", { length: 20 }).notNull(),
+    sources: jsonb("sources").$type<ReviewSource[]>().notNull(),
+    body: text("body").default("").notNull(),
+    draft: text("draft"),
+    generatedCount: integer("generated_count").default(0).notNull(),
+    partials: jsonb("partials").$type<string[]>().default([]).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index("journal_reviews_created_idx").on(table.createdAt)]
+)
+export const journalSettings = pgTable("journal_settings", {
+  id: varchar("id", { length: 20 }).primaryKey(),
+  timezone: varchar("timezone", { length: 100 })
+    .default("Asia/Dhaka")
+    .notNull(),
+  weekStartsOn: integer("week_starts_on").default(1).notNull(),
+  aiDay: date("ai_day"),
+  aiRequests: integer("ai_requests").default(0).notNull(),
+  nextAiAt: timestamp("next_ai_at", { withTimezone: true }),
+})
+export const journalGenerationUsage = pgTable("journal_generation_usage", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  targetId: uuid("target_id").notNull(),
+  state: varchar("state", { length: 20 }).default("started").notNull(),
+  model: varchar("model", { length: 160 }).notNull(),
+  inputTokens: integer("input_tokens"),
+  outputTokens: integer("output_tokens"),
+  createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 })
