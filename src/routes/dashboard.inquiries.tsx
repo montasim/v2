@@ -1,11 +1,7 @@
-import { contactTopicLabels } from "@/features/contact/domain/contact"
-import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 
-import {
-  DashboardEmptyState,
-  DashboardPageHeader,
-} from "@/components/dashboard/dashboard-page-state"
+import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
 import { DashboardInquiriesSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import {
   InquiryFilterEmptyState,
@@ -43,7 +39,6 @@ function DashboardInquiriesPage() {
   const data = Route.useLoaderData()
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
-  const router = useRouter()
 
   function updateFilters({
     query,
@@ -72,53 +67,23 @@ function DashboardInquiriesPage() {
 
   return (
     <>
-      <DashboardPageHeader
-        title="Inquiries"
-        onRefresh={() => router.invalidate()}
-      />
       {data.allTotal ? (
-        <div className="space-y-7">
-          <InquiryStats {...data.stats} />
+        <div className="space-y-4">
+          <InquiryStats {...data.stats} typeCounts={data.facets.types} />
           <InquiryFilters
+            topic={search.topic}
+            onTopicChange={(topic) => {
+              void navigate({
+                replace: true,
+                search: { ...search, page: 1, topic },
+              })
+            }}
             query={search.q}
             type={search.type}
             typeCounts={data.facets.types}
             resultTotal={data.total}
             onChange={updateFilters}
           />
-          {(search.type === "all" || search.type === "contact") && (
-            <div className="max-w-xs">
-              <label
-                htmlFor="inquiry-topic"
-                className="mb-2 block text-sm font-medium"
-              >
-                Contact topic
-              </label>
-              <select
-                id="inquiry-topic"
-                className="h-10 w-full rounded-lg border bg-background px-3 text-sm"
-                value={search.topic}
-                onChange={(event) => {
-                  const topic =
-                    inquiryTopicFilters.find(
-                      (value) => value === event.target.value
-                    ) ?? "all"
-                  void navigate({
-                    replace: true,
-                    search: { ...search, page: 1, topic },
-                  })
-                }}
-              >
-                {inquiryTopicFilters.map((topic) => (
-                  <option key={topic} value={topic}>
-                    {topic === "all"
-                      ? "All contact topics"
-                      : contactTopicLabels[topic]}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
           {data.items.length ? (
             <Inquiries data={data.items} />
           ) : (

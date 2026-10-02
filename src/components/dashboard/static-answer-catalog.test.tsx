@@ -64,11 +64,12 @@ describe("StaticAnswerCatalog", () => {
     const answerList = screen.getByRole("list", {
       name: "Questions and answers",
     })
-    expect(answerList.className).toContain("space-y-4")
-    for (const item of answerList.children) {
-      expect(item.className).toContain("rounded-xl")
-      expect(item.className).toContain("border")
-    }
+    expect(answerList.className).toContain("divide-y")
+    const firstDisclosure = answerList.querySelector("details")!
+    expect(firstDisclosure.open).toBe(false)
+    fireEvent.click(firstDisclosure.querySelector("summary")!)
+    expect(firstDisclosure.open).toBe(true)
+    expect(firstDisclosure.textContent).toContain(catalog.records[0].text)
   })
 
   it("searches questions, answers, and record IDs", () => {
@@ -133,15 +134,17 @@ describe("StaticAnswerCatalog", () => {
     ).not.toBeNull()
   })
 
-  it("uses the full record width for answer text", () => {
+  it("preserves complete readable answer text when expanded", () => {
     render(<StaticAnswerCatalog catalog={catalog} />)
 
     const answer = screen.getByText(
       "PostCraft is an AI-assisted social publishing product."
     )
-    expect(answer.className).toContain("w-full")
-    expect(answer.className).toContain("max-w-none")
-    expect(answer.className).not.toContain("max-w-[75ch]")
+    const disclosure = answer.closest("details")!
+    fireEvent.click(disclosure.querySelector("summary")!)
+    expect(disclosure.open).toBe(true)
+    expect(answer.textContent).toBe(catalog.records[0].text)
+    expect(answer.className).toContain("whitespace-pre-wrap")
   })
 
   it("paginates the catalog without hiding answer content", () => {

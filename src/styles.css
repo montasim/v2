@@ -599,3 +599,39 @@ body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
   overflow: visible !important;
   margin-right: 0 !important;
 }
+
+/* The approved control-room palette is scoped to the dashboard only. */
+.dashboard-shell {
+  --strong-foreground: var(--foreground);
+  --emphasis-foreground: var(--foreground);
+}
+.dark .dashboard-shell {
+  --foreground: #e7e9ed;
+  --card-foreground: #e7e9ed;
+  --muted-foreground: #a0a6af;
+  --muted: #232933;
+  --border: #30363e;
+  --input: #30363e;
+}
+.dashboard-shell :is(a, button, summary):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+.dashboard-shell [data-slot="input"],
+.dashboard-shell [data-slot="textarea"] {
+  background: var(--card);
+  box-shadow: none;
+}
+.dashboard-shell [data-slot="button"] {
+  transform: none;
+}
+
+.dashboard-shell [data-slot="button"][data-size="default"] {
+  min-height: 2.5rem;
+  border-radius: 0.5rem;
+  padding-inline: 0.75rem;
+}
+.dashboard-shell ::selection {
+  background: var(--foreground);
+  color: var(--card);
+}

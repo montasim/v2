@@ -1,3 +1,4 @@
+import { DashboardInsights } from "@/components/dashboard/dashboard-insights"
 import { Label, Pie, PieChart } from "recharts"
 
 import {
@@ -6,7 +7,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import type { ChartConfig } from "@/components/ui/chart"
-import { Card } from "@/components/ui/card"
 import type { InquiryStat } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 import { cn } from "@/lib/utils"
 
@@ -239,33 +239,45 @@ function HiringSignalChart({
 export function InquiryStats({
   roles,
   arrangements,
+  typeCounts = [],
 }: {
   roles: InquiryStat[]
   arrangements: InquiryStat[]
+  typeCounts?: InquiryStat[]
 }) {
   const total = totalOf(roles)
 
   return (
-    <section aria-labelledby="inquiry-stats-heading">
-      <div className="mb-3">
-        <h2
-          id="inquiry-stats-heading"
-          className="text-sm font-semibold text-strong-foreground"
-        >
-          Hiring signals
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Role demand and preferred work setup across all inquiries.
-        </p>
-      </div>
-
-      <Card className="bg-background p-5 sm:p-6">
-        {total ? (
-          <HiringSignalChart roles={roles} arrangements={arrangements} />
-        ) : (
-          <EmptyState />
-        )}
-      </Card>
-    </section>
+    <DashboardInsights
+      title="Hiring insights"
+      metrics={[
+        {
+          label: "All inquiries",
+          value: typeCounts.length ? totalOf(typeCounts) : total,
+        },
+        {
+          label: "Role",
+          value:
+            typeCounts.find((item) => item.label === "hire")?.count ?? total,
+        },
+        {
+          label: "Project",
+          value:
+            typeCounts.find((item) => item.label === "project")?.count ?? 0,
+        },
+        {
+          label: "Other",
+          value: typeCounts
+            .filter((item) => !["hire", "project"].includes(item.label))
+            .reduce((sum, item) => sum + item.count, 0),
+        },
+      ]}
+    >
+      {total ? (
+        <HiringSignalChart roles={roles} arrangements={arrangements} />
+      ) : (
+        <EmptyState />
+      )}
+    </DashboardInsights>
   )
 }

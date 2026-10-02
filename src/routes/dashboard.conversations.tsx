@@ -1,10 +1,7 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 
-import {
-  DashboardEmptyState,
-  DashboardPageHeader,
-} from "@/components/dashboard/dashboard-page-state"
+import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
 import { DashboardConversationsSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import {
   ConversationFilterEmptyState,
@@ -42,7 +39,6 @@ function DashboardConversationsPage() {
   const data = Route.useLoaderData()
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
-  const router = useRouter()
 
   function updateFilters({ model, query }: { model: string; query: string }) {
     void navigate({
@@ -57,12 +53,8 @@ function DashboardConversationsPage() {
 
   return (
     <>
-      <DashboardPageHeader
-        title="Chat history"
-        onRefresh={() => router.invalidate()}
-      />
       {data.allTotal ? (
-        <div className="space-y-7">
+        <div className="space-y-4">
           <ConversationModelUsage
             models={data.facets.models}
             total={data.allTotal}

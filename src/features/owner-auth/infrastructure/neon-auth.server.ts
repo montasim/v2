@@ -13,7 +13,10 @@ import {
 import { isPortfolioOwnerEmail } from "@/features/owner-auth/domain/owner"
 
 type OwnerAuthState =
-  | { status: "owner"; user: { email: string; name: string } }
+  | {
+      status: "owner"
+      user: { email: string; name: string; image?: string | null }
+    }
   | { status: "signed-out" }
   | { status: "forbidden"; email: string }
   | { status: "unconfigured" }
@@ -87,6 +90,7 @@ export async function getOwnerAuthState(): Promise<OwnerAuthState> {
     user: {
       email: data.user.email,
       name: data.user.name,
+      image: data.user.image ?? null,
     },
   }
 }

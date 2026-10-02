@@ -31,7 +31,9 @@ describe("Subscribers", () => {
         .getAttribute("href")
     ).toBe("mailto:reader@example.com")
     expect(screen.getByText("Email sent")).not.toBeNull()
-    expect(screen.getByText(/Subscribed Aug 26, 2026/)).not.toBeNull()
+    expect(screen.getByRole("table").querySelector("time")?.dateTime).toBe(
+      "2026-08-26T05:59:00.000Z"
+    )
   })
 
   it("makes failed confirmation delivery visible", () => {

@@ -1,8 +1,5 @@
 import type { ReactNode } from "react"
-
-import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { cn } from "@/lib/utils"
 
 function LoadingRegion({
   label,
@@ -19,519 +16,94 @@ function LoadingRegion({
   )
 }
 
-function HeaderSkeleton({
-  width = "w-40",
-  description = false,
-}: {
-  width?: string
-  description?: boolean
-}) {
+function RecordSkeletons() {
   return (
-    <header className="mb-7 border-b pb-5">
-      <Skeleton className={cn("h-7", width)} />
-      {description ? <Skeleton className="mt-3 h-4 w-96 max-w-full" /> : null}
-    </header>
-  )
-}
-
-function PaginationSkeleton() {
-  return (
-    <div className="mt-6 flex items-center border-t pt-5">
-      <Skeleton className="h-3 w-32" />
-      <div className="ml-auto flex gap-1">
-        <Skeleton className="size-8 rounded-lg" />
-        <Skeleton className="size-8 rounded-lg" />
-        <Skeleton className="size-8 rounded-lg" />
-      </div>
+    <div className="divide-y overflow-hidden rounded-xl border bg-card">
+      {[0, 1, 2, 3, 4, 5].map((item) => (
+        <div key={item} className="flex gap-3 px-4 py-4">
+          <Skeleton className="size-8 shrink-0 rounded-lg" />
+          <div className="min-w-0 flex-1">
+            <Skeleton className="h-4 w-40 max-w-full" />
+            <Skeleton className="mt-2 h-4 w-3/4" />
+          </div>
+          <Skeleton className="hidden h-3 w-20 sm:block" />
+        </div>
+      ))}
     </div>
   )
 }
-
+function CollectionSkeleton({ label }: { label: string }) {
+  return (
+    <LoadingRegion label={label}>
+      <div className="space-y-4">
+        <Skeleton className="h-[50px] w-full rounded-xl border" />
+        <div className="grid gap-3 sm:grid-cols-[1fr_200px]">
+          <div>
+            <Skeleton className="mb-2 h-3 w-24" />
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+          <div>
+            <Skeleton className="mb-2 h-3 w-20" />
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+        </div>
+        <RecordSkeletons />
+        <div className="flex justify-between">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-8 w-40" />
+        </div>
+      </div>
+    </LoadingRegion>
+  )
+}
+export function DashboardInquiriesSkeleton() {
+  return <CollectionSkeleton label="Loading inquiries" />
+}
+export function DashboardConversationsSkeleton() {
+  return <CollectionSkeleton label="Loading chat history" />
+}
+export function DashboardCommentsSkeleton() {
+  return <CollectionSkeleton label="Loading blog comments" />
+}
+export function DashboardSubscribersSkeleton() {
+  return <CollectionSkeleton label="Loading newsletter subscribers" />
+}
+export function DashboardStaticAnswersSkeleton() {
+  return <CollectionSkeleton label="Loading static questions and answers" />
+}
 export function DashboardOverviewSkeleton() {
   return (
     <LoadingRegion label="Loading dashboard overview">
-      <HeaderSkeleton width="w-28" description />
-      <div className="space-y-7">
-        <section>
-          <Skeleton className="h-4 w-28" />
-          <Skeleton className="mt-2 h-3 w-72 max-w-full" />
-          <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {[0, 1, 2, 3].map((item) => (
-              <Card
-                key={item}
-                className="flex min-h-40 flex-col bg-background p-5"
-              >
-                <div className="flex items-start justify-between">
-                  <Skeleton className="size-9 rounded-lg" />
-                  <Skeleton className="size-4" />
-                </div>
-                <Skeleton className="mt-5 h-7 w-12" />
-                <Skeleton className="mt-2 h-3 w-3/4" />
-                <Skeleton className="mt-auto h-2.5 w-2/3" />
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(17rem,1fr)]">
-          <Card asChild className="overflow-hidden bg-background">
-            <section>
-              <div className="flex items-center border-b px-5 py-4">
-                <div>
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="mt-2 h-3 w-40" />
-                </div>
-                <Skeleton className="ml-auto h-8 w-20 rounded-lg" />
-              </div>
-              <div className="divide-y">
-                {[0, 1, 2].map((item) => (
-                  <div
-                    key={item}
-                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4"
-                  >
-                    <Skeleton className="size-9 rounded-full" />
-                    <div>
-                      <Skeleton className="h-4 w-28" />
-                      <Skeleton className="mt-2 h-3 w-40 max-w-full" />
-                    </div>
-                    <div className="grid justify-items-end">
-                      <Skeleton className="h-6 w-14 rounded-full" />
-                      <Skeleton className="mt-2 h-2.5 w-20" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </Card>
-
-          <Card asChild className="overflow-hidden bg-background">
-            <section>
-              <div className="border-b px-5 py-4">
-                <Skeleton className="h-5 w-36" />
-                <Skeleton className="mt-2 h-3 w-32" />
-              </div>
-              <div className="p-5">
-                <div className="flex items-center gap-3">
-                  <Skeleton className="size-2.5 rounded-full" />
-                  <Skeleton className="h-5 w-36" />
-                </div>
-                <div className="mt-5 divide-y overflow-hidden rounded-lg border">
-                  {[0, 1, 2].map((item) => (
-                    <div key={item} className="p-4">
-                      <Skeleton className="h-3 w-20" />
-                      <Skeleton className="mt-2 h-4 w-32" />
-                    </div>
-                  ))}
-                </div>
-                <Skeleton className="mt-4 h-9 w-full rounded-lg" />
-              </div>
-            </section>
-          </Card>
-        </div>
+      <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {[0, 1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-[66px] rounded-xl border" />
+        ))}
       </div>
-    </LoadingRegion>
-  )
-}
-
-function InquiryStatsSkeleton() {
-  return (
-    <section>
-      <div className="mb-3">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="mt-2 h-3 w-64 max-w-[65vw]" />
-      </div>
-
-      <Card className="bg-background p-5 sm:p-6">
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
-          <div className="mx-auto grid size-60 place-items-center rounded-full bg-muted/45">
-            <div className="size-36 rounded-full bg-background" />
-          </div>
-
-          <div className="grid gap-6">
-            {[0, 1].map((group) => (
-              <div
-                key={group}
-                className={cn(group ? "border-t pt-6" : undefined)}
-              >
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="mt-2 h-2.5 w-40" />
-                <div className="mt-2 grid gap-x-6 sm:grid-cols-2">
-                  {[0, 1, 2, 3].map((item) => (
-                    <div
-                      key={item}
-                      className="flex min-h-11 items-center gap-3 border-b py-2"
-                    >
-                      <Skeleton className="size-2.5 rounded-sm" />
-                      <Skeleton className="h-3 flex-1" />
-                      <Skeleton className="h-7 w-7" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Card>
-    </section>
-  )
-}
-
-function PersonHeaderSkeleton({ action = false }: { action?: boolean }) {
-  return (
-    <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
-      <Skeleton className="size-10 shrink-0 rounded-full" />
-      <div className="min-w-0 flex-1">
-        <Skeleton className="h-4 w-28" />
-        <Skeleton className="mt-2 h-3 w-44 max-w-full" />
-      </div>
-      <Skeleton className={action ? "size-8 rounded-lg" : "h-6 w-16"} />
-    </header>
-  )
-}
-
-function InquiryCardSkeleton() {
-  return (
-    <Card asChild className="overflow-hidden bg-background">
-      <article>
-        <PersonHeaderSkeleton />
-        <div className="p-5 sm:p-6">
-          <div className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            {[0, 1].map((item) => (
-              <div key={item} className="p-4">
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="mt-2 h-4 w-40 max-w-full" />
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 rounded-lg bg-muted/45 p-4">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="mt-3 h-3 w-full" />
-            <Skeleton className="mt-2 h-3 w-3/4" />
-          </div>
-          <footer className="mt-5 flex items-center border-t pt-4">
-            <Skeleton className="h-3 w-36" />
-            <Skeleton className="ml-auto h-8 w-20 rounded-lg" />
-          </footer>
-        </div>
-      </article>
-    </Card>
-  )
-}
-
-export function DashboardInquiriesSkeleton() {
-  return (
-    <LoadingRegion label="Loading inquiries">
-      <HeaderSkeleton width="w-44" />
-      <div className="space-y-7">
-        <InquiryStatsSkeleton />
-        <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
-          <div>
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-          </div>
-          <div>
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-          </div>
-        </Card>
-        <div className="grid gap-4">
-          <InquiryCardSkeleton />
-          <InquiryCardSkeleton />
-        </div>
-      </div>
-      <PaginationSkeleton />
-    </LoadingRegion>
-  )
-}
-
-function ConversationCardSkeleton({ short = false }: { short?: boolean }) {
-  return (
-    <Card asChild className="overflow-hidden bg-background">
-      <article>
-        <div className="border-b bg-muted/35 px-5 py-4">
-          <Skeleton className="h-3 w-40" />
-          <Skeleton className="mt-3 h-4 w-4/5" />
-        </div>
-        <div className="px-5 py-4">
-          <Skeleton className="h-3 w-full" />
-          <Skeleton className="mt-2 h-3 w-11/12" />
-          {!short ? <Skeleton className="mt-2 h-3 w-2/3" /> : null}
-          <div className="mt-4 border-t pt-3">
-            <Skeleton className="h-2.5 w-48" />
-          </div>
-        </div>
-      </article>
-    </Card>
-  )
-}
-
-function ConversationModelUsageSkeleton() {
-  return (
-    <section>
-      <div className="mb-3">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="mt-2 h-3 w-80 max-w-full" />
-      </div>
-      <Card className="bg-background p-5 sm:p-6">
-        <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
-          <div className="mx-auto grid size-60 place-items-center rounded-full bg-muted/45">
-            <div className="size-36 rounded-full bg-background" />
-          </div>
-          <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {[0, 1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="flex min-h-11 items-center gap-3 border-b py-2"
-              >
-                <Skeleton className="size-2.5 rounded-sm" />
-                <Skeleton className="h-3 flex-1" />
-                <Skeleton className="h-7 w-7" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </Card>
-    </section>
-  )
-}
-
-export function DashboardConversationsSkeleton() {
-  return (
-    <LoadingRegion label="Loading chat history">
-      <HeaderSkeleton width="w-32" />
-      <div className="space-y-7">
-        <ConversationModelUsageSkeleton />
-        <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
-          <div>
-            <Skeleton className="h-3 w-32" />
-            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-          </div>
-          <div>
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-          </div>
-        </Card>
-        <div className="grid gap-4">
-          <ConversationCardSkeleton />
-          <ConversationCardSkeleton short />
-          <ConversationCardSkeleton />
-        </div>
-      </div>
-      <PaginationSkeleton />
-    </LoadingRegion>
-  )
-}
-
-export function DashboardStaticAnswersSkeleton() {
-  return (
-    <LoadingRegion label="Loading static questions and answers">
-      <HeaderSkeleton width="w-64" description />
-      <div className="space-y-6">
+      <div className="grid gap-6 xl:grid-cols-[1.7fr_1fr]">
         <div>
-          <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end">
-            <div className="min-w-0 flex-1">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="mt-2 h-3 w-64 max-w-full" />
-            </div>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-20 rounded-md" />
-              <Skeleton className="h-3 w-36" />
-            </div>
-          </div>
-          <Card className="grid items-center gap-6 bg-background p-5 sm:p-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
-            <div className="grid place-items-center">
-              <Skeleton className="grid size-52 place-items-center rounded-full">
-                <span className="size-28 rounded-full bg-background" />
-              </Skeleton>
-            </div>
-            <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-              {[0, 1, 2, 3, 4, 5].map((item) => (
-                <div
-                  key={item}
-                  className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2"
-                >
-                  <Skeleton className="size-2.5 shrink-0 rounded-sm" />
-                  <Skeleton
-                    className={cn("h-3", item % 2 === 0 ? "w-24" : "w-32")}
-                  />
-                  <div className="ml-auto">
-                    <Skeleton className="h-3 w-7" />
-                    <Skeleton className="mt-1.5 h-2 w-6" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          <Skeleton className="mb-3 h-4 w-28" />
+          <RecordSkeletons />
         </div>
-
-        <Card className="grid gap-3 bg-background p-5 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)]">
-          <div>
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-          </div>
-          <div>
-            <Skeleton className="h-3 w-16" />
-            <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-          </div>
-        </Card>
-
-        <div className="space-y-4">
-          {[0, 1, 2].map((item) => (
-            <Card key={item} className="bg-background px-5 py-6">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-6 w-24 rounded-md" />
-                <Skeleton className="h-3 w-10" />
-              </div>
-              <Skeleton className="mt-4 h-4 w-4/5" />
-              <Skeleton className="mt-4 h-3 w-full" />
-              <Skeleton className="mt-2 h-3 w-11/12" />
-              <Skeleton className="mt-2 h-3 w-2/3" />
-            </Card>
-          ))}
-        </div>
+        <Skeleton className="h-64 rounded-xl border" />
       </div>
     </LoadingRegion>
   )
 }
-
-function CommentCardSkeleton() {
-  return (
-    <Card asChild className="overflow-hidden bg-background">
-      <article>
-        <PersonHeaderSkeleton action />
-        <div className="p-5 sm:p-6">
-          <div className="rounded-lg bg-muted/45 p-4">
-            <Skeleton className="h-3 w-20" />
-            <Skeleton className="mt-3 h-3 w-full" />
-            <Skeleton className="mt-2 h-3 w-4/5" />
-          </div>
-          <footer className="mt-5 flex items-end border-t pt-4">
-            <div>
-              <Skeleton className="h-3 w-12" />
-              <Skeleton className="mt-2 h-4 w-64 max-w-[65vw]" />
-            </div>
-            <Skeleton className="ml-auto h-3 w-24" />
-          </footer>
-        </div>
-      </article>
-    </Card>
-  )
-}
-
-function EmailDomainDistributionSkeleton() {
-  return (
-    <section>
-      <div className="mb-3">
-        <Skeleton className="h-4 w-28" />
-        <Skeleton className="mt-2 h-3 w-64 max-w-full" />
-      </div>
-      <Card className="bg-background p-5 sm:p-6">
-        <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
-          <div className="mx-auto grid size-60 place-items-center rounded-full bg-muted/45">
-            <div className="size-36 rounded-full bg-background" />
-          </div>
-          <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {[0, 1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="flex min-h-11 items-center gap-3 border-b py-2"
-              >
-                <Skeleton className="size-2.5 rounded-sm" />
-                <Skeleton className="h-3 flex-1" />
-                <Skeleton className="h-7 w-7" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </Card>
-    </section>
-  )
-}
-
-function EmailDomainFilterSkeleton() {
-  return (
-    <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
-      <div>
-        <Skeleton className="h-3 w-28" />
-        <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-      </div>
-      <div>
-        <Skeleton className="h-3 w-20" />
-        <Skeleton className="mt-2 h-10 w-full rounded-lg" />
-      </div>
-    </Card>
-  )
-}
-
-export function DashboardCommentsSkeleton() {
-  return (
-    <LoadingRegion label="Loading blog comments">
-      <HeaderSkeleton width="w-36" />
-      <div className="space-y-7">
-        <EmailDomainDistributionSkeleton />
-        <EmailDomainFilterSkeleton />
-        <div className="grid gap-4">
-          <CommentCardSkeleton />
-          <CommentCardSkeleton />
-        </div>
-      </div>
-      <PaginationSkeleton />
-    </LoadingRegion>
-  )
-}
-
-export function DashboardSubscribersSkeleton() {
-  return (
-    <LoadingRegion label="Loading newsletter subscribers">
-      <HeaderSkeleton width="w-48" description />
-      <div className="space-y-7">
-        <EmailDomainDistributionSkeleton />
-        <EmailDomainFilterSkeleton />
-        <Card className="overflow-hidden bg-background">
-          {[0, 1, 2, 3].map((item) => (
-            <div
-              key={item}
-              className="flex items-center gap-4 border-b px-5 py-4 last:border-b-0"
-            >
-              <Skeleton className="size-9 shrink-0 rounded-lg" />
-              <div className="min-w-0 flex-1">
-                <Skeleton className="h-4 w-52 max-w-full" />
-                <Skeleton className="mt-2 h-3 w-32" />
-              </div>
-              <Skeleton className="h-6 w-20 rounded-md" />
-            </div>
-          ))}
-        </Card>
-      </div>
-      <PaginationSkeleton />
-    </LoadingRegion>
-  )
-}
-
 export function DashboardAvailabilitySkeleton() {
   return (
     <LoadingRegion label="Loading availability settings">
-      <HeaderSkeleton width="w-32" />
-      <Card className="bg-background">
-        <div className="flex items-center gap-4 border-b p-5">
-          <div className="flex-1">
-            <Skeleton className="h-5 w-48" />
-            <Skeleton className="mt-2 h-3 w-80 max-w-[65vw]" />
-          </div>
-          <Skeleton className="h-6 w-24 rounded-full" />
-        </div>
-        <div className="grid gap-5 p-5 sm:grid-cols-2">
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item) => (
-            <div key={item} className={cn(item === 2 && "sm:col-span-2")}>
-              <Skeleton className="h-3 w-24" />
-              <Skeleton className="mt-2 h-10 w-full rounded-lg" />
+      <div className="max-w-4xl rounded-xl border bg-card p-5">
+        <Skeleton className="mb-6 h-10 w-64 max-w-full" />
+        <div className="grid gap-4 sm:grid-cols-2">
+          {Array.from({ length: 10 }, (_, i) => (
+            <div key={i}>
+              <Skeleton className="mb-2 h-3 w-24" />
+              <Skeleton className="h-10 w-full rounded-lg" />
             </div>
           ))}
         </div>
-        <div className="border-t px-5 py-4">
-          <Skeleton className="h-9 w-32 rounded-lg" />
-        </div>
-      </Card>
+        <Skeleton className="mt-6 h-10 w-32" />
+      </div>
     </LoadingRegion>
   )
 }

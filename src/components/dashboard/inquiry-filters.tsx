@@ -1,3 +1,4 @@
+import { contactTopicLabels } from "@/features/contact/domain/contact"
 import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -12,7 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { inquiryTypeFilters } from "@/features/owner-dashboard/domain/inquiry-filters"
+import {
+  inquiryTypeFilters,
+  inquiryTopicFilters,
+} from "@/features/owner-dashboard/domain/inquiry-filters"
 import type { InquiryTypeFilter } from "@/features/owner-dashboard/domain/inquiry-filters"
 import type { InquiryStat } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 
@@ -52,12 +56,16 @@ export function InquiryFilters({
   resultTotal,
   type,
   typeCounts,
+  topic = "all",
+  onTopicChange,
 }: {
   onChange: (value: InquiryFilterValue) => void
   query: string
   resultTotal: number
   type: InquiryTypeFilter
   typeCounts: InquiryStat[]
+  topic?: (typeof inquiryTopicFilters)[number]
+  onTopicChange?: (topic: (typeof inquiryTopicFilters)[number]) => void
 }) {
   const [draftQuery, setDraftQuery] = useState(query)
   const [draftType, setDraftType] = useState(type)
@@ -108,11 +116,11 @@ export function InquiryFilters({
       <p className="sr-only" aria-live="polite">
         {resultTotal} matching {resultTotal === 1 ? "inquiry" : "inquiries"}
       </p>
-      <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
-        <div className="min-w-0">
+      <div className="flex flex-wrap items-end gap-2">
+        <div className="min-w-0 flex-1 basis-64">
           <Label
             htmlFor="inquiry-search"
-            className="mb-2 block text-xs font-medium text-strong-foreground"
+            className="mb-1.5 block text-xs text-muted-foreground"
           >
             Search inquiries
           </Label>
@@ -124,7 +132,7 @@ export function InquiryFilters({
               value={draftQuery}
               onChange={(event) => setDraftQuery(event.currentTarget.value)}
               placeholder="Search names, emails, roles, or messages"
-              className="pr-10 pl-9"
+              className="h-10 bg-card pr-10 pl-9"
             />
             {draftQuery ? (
               <Button
@@ -144,13 +152,16 @@ export function InquiryFilters({
         <div>
           <span
             id="inquiry-type-filter-label"
-            className="mb-2 flex items-center gap-1.5 text-xs font-medium text-strong-foreground"
+            className="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground"
           >
             <FunnelSimpleIcon className="size-3.5" />
             Inquiry type
           </span>
           <Select value={draftType} onValueChange={updateType}>
-            <SelectTrigger aria-labelledby="inquiry-type-filter-label">
+            <SelectTrigger
+              className="h-10 bg-card"
+              aria-labelledby="inquiry-type-filter-label"
+            >
               <SelectValue>{typeLabel(draftType, typeCounts)}</SelectValue>
             </SelectTrigger>
             <SelectContent align="start">
@@ -165,7 +176,40 @@ export function InquiryFilters({
             </SelectContent>
           </Select>
         </div>
-      </Card>
+        {onTopicChange && (type === "all" || type === "contact") ? (
+          <div className="min-w-40">
+            <label
+              htmlFor="inquiry-topic"
+              className="mb-1.5 block text-xs text-muted-foreground"
+            >
+              Contact topic
+            </label>
+            <select
+              id="inquiry-topic"
+              className="h-10 w-full rounded-lg border bg-card px-3 text-sm"
+              value={topic}
+              onChange={(event) =>
+                onTopicChange(
+                  inquiryTopicFilters.find(
+                    (value) => value === event.target.value
+                  ) ?? "all"
+                )
+              }
+            >
+              {inquiryTopicFilters.map((value) => (
+                <option key={value} value={value}>
+                  {value === "all"
+                    ? "All contact topics"
+                    : contactTopicLabels[value]}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
+        <span className="pb-3 text-xs text-muted-foreground">
+          {resultTotal} results
+        </span>
+      </div>
     </section>
   )
 }

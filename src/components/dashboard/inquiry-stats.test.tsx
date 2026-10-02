@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 
 import { InquiryStats } from "./inquiry-stats"
@@ -22,6 +22,10 @@ describe("InquiryStats", () => {
       />
     )
 
+    const disclosure = screen.getByText("Hiring insights").closest("details")!
+    expect(disclosure.open).toBe(false)
+    fireEvent.click(disclosure.querySelector("summary")!)
+    expect(disclosure.open).toBe(true)
     expect(
       screen.getByRole("img", {
         name: /Donut chart of 4 role inquiries: Senior Frontend Engineer, 3; Technical Lead, 1/,

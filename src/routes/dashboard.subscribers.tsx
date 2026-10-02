@@ -1,10 +1,7 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 
-import {
-  DashboardEmptyState,
-  DashboardPageHeader,
-} from "@/components/dashboard/dashboard-page-state"
+import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
 import { DashboardSubscribersSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import {
   EmailDomainDistribution,
@@ -43,7 +40,6 @@ function DashboardSubscribersPage() {
   const data = Route.useLoaderData()
   const navigate = Route.useNavigate()
   const search = Route.useSearch()
-  const router = useRouter()
 
   function updateFilters({ domain, query }: { domain: string; query: string }) {
     void navigate({
@@ -58,13 +54,8 @@ function DashboardSubscribersPage() {
 
   return (
     <>
-      <DashboardPageHeader
-        title="Newsletter subscribers"
-        description="People who asked to receive new article notifications."
-        onRefresh={() => router.invalidate()}
-      />
       {data.allTotal ? (
-        <div className="space-y-7">
+        <div className="space-y-4">
           <EmailDomainDistribution
             domains={data.facets.domains}
             kind="subscribers"

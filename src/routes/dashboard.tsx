@@ -1,8 +1,4 @@
-import {
-  contactTopicLabels,
-  contactTopicSchema,
-} from "@/features/contact/domain/contact"
-import { lazy, Suspense, useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { createAuthClient } from "@neondatabase/auth"
 import {
   createFileRoute,
@@ -10,15 +6,19 @@ import {
   Outlet,
   redirect,
   useRouterState,
+  useRouter,
 } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
+import { DashboardPageHeader } from "@/components/dashboard/dashboard-page-state"
+import {
+  dashboardNavigation,
+  dashboardPageFor,
+} from "@/components/dashboard/dashboard-navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import {
   Pagination as PaginationRoot,
@@ -33,38 +33,17 @@ import {
   ArrowLeftDoubleIcon,
   ArrowRightCompactIcon,
   ArrowRightDoubleIcon,
-  ArrowRightIcon,
   ArrowUpRightIcon,
-  BookOpenTextIcon,
-  BriefcaseIcon,
-  CalendarCheckIcon,
-  ChatCenteredDotsIcon,
-  ChatCircleDotsIcon,
   CircleDashedIcon,
-  DatabaseIcon,
-  EnvelopeSimpleIcon,
   MoonIcon,
-  SquaresFourIcon,
   SunIcon,
-  TrashIcon,
-  UsersThreeIcon,
 } from "@/components/ui/icons"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useTheme } from "@/components/theme-provider"
 import { updateOwnerAvailabilitySettings } from "@/features/availability/application/settings"
-import { deleteBlogComment } from "@/features/blog-comments/application/comments"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
-import {
-  formatConversationProviderRoute,
-  formatConversationResponseMetadata,
-} from "@/features/owner-dashboard/domain/conversation-metadata"
 import type { OwnerDashboardData } from "@/features/owner-dashboard/infrastructure/dashboard.server"
-import { blogCatalog } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
-
-const LazyChatMarkdown = lazy(async () => {
-  const module = await import("@/features/chat/ui/chat-markdown")
-  return { default: module.ChatMarkdown }
-})
 
 export const Route = createFileRoute("/dashboard")({
   loader: async () => {
@@ -83,65 +62,15 @@ export const Route = createFileRoute("/dashboard")({
   component: OwnerDashboardPage,
 })
 
-const navigation = [
-  { to: "/dashboard", label: "Overview", icon: SquaresFourIcon },
-  {
-    to: "/dashboard/work-journal",
-    label: "Work Journal",
-    icon: BookOpenTextIcon,
-  },
-  { to: "/dashboard/inquiries", label: "Inquiries", icon: BriefcaseIcon },
-  {
-    to: "/dashboard/conversations",
-    label: "Chat history",
-    icon: ChatCenteredDotsIcon,
-  },
-  {
-    to: "/dashboard/static-answers",
-    label: "Static answers",
-    icon: BookOpenTextIcon,
-  },
-  {
-    to: "/dashboard/comments",
-    label: "Blog comments",
-    icon: ChatCircleDotsIcon,
-  },
-  {
-    to: "/dashboard/subscribers",
-    label: "Subscribers",
-    icon: UsersThreeIcon,
-  },
-  {
-    to: "/dashboard/availability",
-    label: "Availability",
-    icon: CalendarCheckIcon,
-  },
-] as const
-
 function OwnerDashboardPage() {
   const auth = Route.useLoaderData()
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
+  const router = useRouter()
   const { theme, toggleTheme } = useTheme()
   const [signingOut, setSigningOut] = useState(false)
-  const navigationRef = useRef<HTMLDivElement>(null)
-  const activeNavigation =
-    navigation.find(({ to }) => pathname === to)?.label ?? "Dashboard"
-
-  useEffect(() => {
-    function revealActiveNavigation() {
-      const activeLink = navigationRef.current?.querySelector<HTMLElement>(
-        '[data-active-navigation="true"]'
-      )
-      if (activeLink && typeof activeLink.scrollIntoView === "function") {
-        activeLink.scrollIntoView({ block: "nearest", inline: "center" })
-      }
-    }
-
-    const frame = window.requestAnimationFrame(revealActiveNavigation)
-    return () => window.cancelAnimationFrame(frame)
-  }, [pathname])
+  const page = dashboardPageFor(pathname)
 
   async function signOut() {
     setSigningOut(true)
@@ -152,28 +81,113 @@ function OwnerDashboardPage() {
     window.location.assign("/root")
   }
 
+  const navigationLinks = dashboardNavigation.map(
+    ({ to, label, icon: Icon }) => (
+      <Link
+        key={to}
+        to={to}
+        aria-current={page.to === to ? "page" : undefined}
+        onClick={(event) =>
+          event.currentTarget.closest("details")?.removeAttribute("open")
+        }
+        className={cn(
+          "flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2",
+          page.to === to && "bg-muted font-semibold text-foreground"
+        )}
+      >
+        <Icon className="size-4 shrink-0" />
+        {label}
+      </Link>
+    )
+  )
+  const signOutButton = (
+    <Button
+      variant="outline"
+      className="h-10 rounded-lg px-3 text-foreground"
+      onClick={signOut}
+      disabled={signingOut}
+    >
+      {signingOut ? (
+        <CircleDashedIcon className="size-4 animate-spin motion-reduce:animate-none" />
+      ) : null}
+      Sign out
+    </Button>
+  )
+
   return (
-    <div className="min-h-dvh bg-muted/25 lg:grid lg:grid-cols-[15.5rem_minmax(0,1fr)]">
-      <aside className="border-b bg-background lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-b-0">
-        <div className="flex h-16 items-center border-b px-4 lg:px-5">
+    <div className="dashboard-shell min-h-dvh bg-background text-foreground">
+      <a
+        href="#dashboard-main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-card focus:p-3"
+      >
+        Skip to content
+      </a>
+      <aside className="fixed inset-y-0 left-0 z-40 hidden w-56 flex-col border-r bg-card lg:flex">
+        <Link
+          to="/"
+          className="flex h-20 shrink-0 items-center gap-3 px-5 focus-visible:outline-2 focus-visible:outline-offset-[-4px]"
+          aria-label="Montasim — visit portfolio"
+        >
+          <img
+            src="/images/logo.webp"
+            alt=""
+            className="size-9 rounded-sm object-contain"
+          />
+          <span className="font-semibold">
+            Montasim
+            <span className="block text-xs font-normal text-muted-foreground">
+              Portfolio control room
+            </span>
+          </span>
+        </Link>
+        <nav
+          aria-label="Dashboard"
+          className="min-h-0 flex-1 space-y-1 overflow-y-auto px-3 pb-4"
+        >
+          {navigationLinks}
+        </nav>
+        <div className="space-y-4 border-t p-5">
           <Link
             to="/"
-            className="flex items-center gap-2 font-semibold tracking-tight text-strong-foreground"
+            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline"
           >
-            <span className="relative">
-              <img
-                src="/images/logo.webp"
-                alt=""
-                className="size-7 rounded-sm"
-              />
-              <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
-            </span>
-            Montasim
+            View portfolio
+            <ArrowUpRightIcon className="size-3.5" />
           </Link>
-          <div className="ml-auto flex items-center lg:hidden">
+          <div className="flex items-center gap-3">
+            <Avatar className="size-8 shrink-0">
+              <AvatarImage
+                src={auth.user.image ?? undefined}
+                alt={auth.user.name + " profile photo"}
+                referrerPolicy="no-referrer"
+              />
+              <AvatarFallback className="text-xs font-semibold">
+                {initials(auth.user.name || "Owner")}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold">{auth.user.name}</p>
+              <p
+                className="mt-0.5 truncate text-xs text-muted-foreground"
+                title={auth.user.email}
+              >
+                {auth.user.email}
+              </p>
+            </div>
+          </div>
+          {signOutButton}
+        </div>
+      </aside>
+      <div className="min-w-0 lg:ml-56">
+        <DashboardPageHeader
+          key={page.to}
+          title={page.label}
+          description={page.description}
+          onRefresh={page.refresh ? () => router.invalidate() : undefined}
+          actions={
             <Button
-              variant="ghost"
-              size="icon-lg"
+              variant="outline"
+              className="h-10 rounded-lg px-3 text-foreground"
               onClick={toggleTheme}
               aria-label={`Use ${theme === "dark" ? "light" : "dark"} theme`}
             >
@@ -182,624 +196,70 @@ function OwnerDashboardPage() {
               ) : (
                 <MoonIcon className="size-4" />
               )}
-            </Button>
-            <Button
-              variant="outline"
-              className="ml-1 h-9 font-medium text-strong-foreground"
-              onClick={signOut}
-              disabled={signingOut}
-              aria-label="Sign out"
-            >
-              <span>Sign out</span>
-              {signingOut ? (
-                <CircleDashedIcon className="size-3.5 animate-spin" />
-              ) : null}
-            </Button>
-          </div>
-        </div>
-        <div
-          ref={navigationRef}
-          className="flex items-center gap-2 overflow-x-auto p-3 lg:block lg:space-y-1 lg:p-4"
-        >
-          {navigation.map(({ to, label, icon: Icon }) => (
-            <Link
-              key={to}
-              to={to}
-              data-active-navigation={pathname === to ? "true" : undefined}
-              className={cn(
-                "flex shrink-0 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:w-full",
-                pathname === to &&
-                  "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/85 hover:text-background"
-              )}
-            >
-              <Icon className="size-4" />
-              {label}
-            </Link>
-          ))}
-        </div>
-        <div className="hidden border-t p-4 lg:absolute lg:inset-x-0 lg:bottom-0 lg:block">
-          <p className="truncate text-xs font-medium">{auth.user.name}</p>
-          <p className="mt-0.5 truncate text-[0.6875rem] text-muted-foreground">
-            {auth.user.email}
-          </p>
-        </div>
-      </aside>
-
-      <div className="min-w-0">
-        <header className="sticky top-0 z-30 hidden h-16 items-center border-b bg-background/95 px-10 backdrop-blur-sm lg:flex">
-          <div className="mx-auto flex w-full max-w-6xl items-center gap-4">
-            <div
-              className="flex min-w-0 items-center gap-2 text-xs text-strong-foreground"
-              aria-label="Dashboard location"
-            >
-              <DatabaseIcon className="size-3.5 shrink-0" />
-              <span className="hidden sm:inline">Portfolio control room</span>
-              <span className="hidden text-border sm:inline" aria-hidden="true">
-                /
+              <span className="hidden sm:inline">
+                {theme === "dark" ? "Light" : "Dark"}
               </span>
-              <span className="truncate font-medium">{activeNavigation}</span>
-            </div>
-
-            <div className="ml-auto flex items-center">
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={toggleTheme}
-                aria-label={`Use ${theme === "dark" ? "light" : "dark"} theme`}
-              >
-                {theme === "dark" ? (
-                  <SunIcon className="size-3.5" />
-                ) : (
-                  <MoonIcon className="size-3.5" />
-                )}
-              </Button>
-              <span
-                className="mr-[0.9375rem] ml-2 h-4 border-l border-border"
-                aria-hidden="true"
-              />
-              <Button
-                variant="outline"
-                className="font-medium text-strong-foreground"
-                onClick={signOut}
-                disabled={signingOut}
-                aria-label="Sign out"
-              >
-                <span>Sign out</span>
-                {signingOut ? (
-                  <CircleDashedIcon className="size-3.5 animate-spin" />
-                ) : null}
-              </Button>
-            </div>
+            </Button>
+          }
+        />
+        <details className="border-b bg-card px-4 lg:hidden">
+          <summary className="cursor-pointer py-3 text-sm font-medium focus-visible:outline-2">
+            Dashboard navigation
+          </summary>
+          <nav
+            aria-label="Mobile dashboard"
+            className="grid gap-1 pb-3 sm:grid-cols-2"
+          >
+            {navigationLinks}
+          </nav>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-t pt-3">
+            <Link to="/" className="text-sm underline underline-offset-4">
+              View portfolio
+            </Link>
+            {signOutButton}
           </div>
-        </header>
-
-        <main className="min-w-0 px-4 py-7 sm:px-6 lg:px-10 lg:py-8">
-          <div className="mx-auto max-w-6xl">
-            <Outlet />
+        </details>
+        <main
+          id="dashboard-main"
+          className="mx-auto max-w-[1440px] min-w-0 p-4 sm:p-6"
+        >
+          <div className="mb-5 flex items-center justify-between gap-2 text-xs text-muted-foreground">
+            <nav
+              aria-label="Breadcrumb"
+              className="flex min-w-0 items-center gap-2"
+            >
+              <Link to="/dashboard" className="hover:underline">
+                Dashboard
+              </Link>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page" className="truncate">
+                {page.label}
+              </span>
+            </nav>
+            <span className="shrink-0">Private workspace</span>
           </div>
+          <Outlet />
+          <footer className="mt-8 flex flex-wrap items-center justify-between gap-2 border-t py-4 text-xs text-muted-foreground">
+            <span>Portfolio control room</span>
+            <Link to="/" className="hover:underline">
+              View portfolio
+            </Link>
+          </footer>
         </main>
       </div>
     </div>
   )
 }
 
-export function DashboardHeader({
-  title,
-  description,
-}: {
-  title: string
-  description?: string
-}) {
-  return (
-    <header className="mb-7 border-b pb-5">
-      <h1 className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
-        {title}
-      </h1>
-      {description ? (
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          {description}
-        </p>
-      ) : null}
-    </header>
-  )
-}
+export { Overview } from "@/components/dashboard/dashboard-overview"
 
 type DashboardData = OwnerDashboardData
 
-export function Overview({ data }: { data: DashboardData }) {
-  const stats = [
-    {
-      label: "Role & project inquiries",
-      value: data.inquiries.length,
-      detail: "Review opportunities",
-      to: "/dashboard/inquiries" as const,
-      icon: BriefcaseIcon,
-    },
-    {
-      label: "Saved AI exchanges",
-      value: data.conversations.length,
-      detail: "Review visitor questions",
-      to: "/dashboard/conversations" as const,
-      icon: ChatCenteredDotsIcon,
-    },
-    {
-      label: "Blog comments",
-      value: data.comments.length,
-      detail: "Moderate discussion",
-      to: "/dashboard/comments" as const,
-      icon: ChatCircleDotsIcon,
-    },
-    {
-      label: "Availability",
-      value: data.availability.enabled ? "Live" : "Hidden",
-      detail: "Manage public status",
-      to: "/dashboard/availability" as const,
-      icon: CalendarCheckIcon,
-    },
-  ]
-
-  return (
-    <div className="space-y-7">
-      <section aria-labelledby="activity-heading">
-        <div className="mb-3">
-          <h2
-            id="activity-heading"
-            className="text-sm font-semibold text-strong-foreground"
-          >
-            Portfolio activity
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            A direct path to each area that may need your attention.
-          </p>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {stats.map(({ label, value, detail, to, icon: Icon }) => (
-            <Card key={label} asChild className="bg-background">
-              <Link
-                to={to}
-                className="group flex min-h-40 flex-col p-5 transition-colors hover:border-emphasis-foreground/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <span className="grid size-9 place-items-center rounded-lg border bg-muted/35 text-strong-foreground">
-                    <Icon className="size-4" />
-                  </span>
-                  <ArrowUpRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
-                </div>
-                <p className="mt-5 text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
-                  {value}
-                </p>
-                <p className="mt-1 text-xs font-medium text-strong-foreground">
-                  {label}
-                </p>
-                <p className="mt-auto pt-3 text-[0.6875rem] text-muted-foreground">
-                  {detail}
-                </p>
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(17rem,1fr)]">
-        <Card asChild className="overflow-hidden bg-background">
-          <section>
-            <div className="flex items-center gap-4 border-b px-5 py-4">
-              <div>
-                <h2 className="font-semibold text-strong-foreground">
-                  Recent inquiries
-                </h2>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Latest messages, role inquiries, and project requests.
-                </p>
-              </div>
-              <Button variant="ghost" size="sm" className="ml-auto" asChild>
-                <Link to="/dashboard/inquiries">
-                  View all
-                  <ArrowRightIcon />
-                </Link>
-              </Button>
-            </div>
-
-            <div className="divide-y">
-              {data.inquiries.slice(0, 5).map((item) => (
-                <div
-                  key={item.id}
-                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4"
-                >
-                  <Avatar className="size-9 ring-1 ring-border">
-                    <AvatarFallback>
-                      {initials(item.name || "Visitor")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-strong-foreground">
-                      {item.name || "Unnamed visitor"}
-                    </p>
-                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                      {item.type === "hire"
-                        ? item.role
-                        : item.type === "project"
-                          ? item.projectType
-                          : item.context}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant="secondary" className="capitalize">
-                      {inquiryTypeLabel(item.type)}
-                    </Badge>
-                    <time className="mt-1.5 block text-[0.6875rem] text-muted-foreground">
-                      {formatDate(item.createdAt)}
-                    </time>
-                  </div>
-                </div>
-              ))}
-              {!data.inquiries.length ? (
-                <Empty label="No inquiries yet. New requests will appear here." />
-              ) : null}
-            </div>
-          </section>
-        </Card>
-
-        <Card asChild className="overflow-hidden bg-background">
-          <section>
-            <div className="border-b px-5 py-4">
-              <h2 className="font-semibold text-strong-foreground">
-                Public availability
-              </h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                What visitors currently see.
-              </p>
-            </div>
-            <div className="p-5">
-              <div className="flex items-center gap-3">
-                <span
-                  className={cn(
-                    "size-2.5 rounded-full",
-                    data.availability.enabled
-                      ? "bg-emerald-500"
-                      : "bg-muted-foreground/45"
-                  )}
-                  aria-hidden="true"
-                />
-                <p className="text-lg font-semibold text-strong-foreground">
-                  {data.availability.enabled ? "Visible to visitors" : "Hidden"}
-                </p>
-              </div>
-              <dl className="mt-5 divide-y overflow-hidden rounded-lg border">
-                <Detail
-                  label="Availability"
-                  value={data.availability.availability}
-                />
-                <Detail
-                  label="Work setup"
-                  value={data.availability.workSetup}
-                />
-                <Detail label="Location" value={data.availability.location} />
-              </dl>
-              <Button variant="outline" className="mt-4 w-full" asChild>
-                <Link to="/dashboard/availability">
-                  Edit availability
-                  <ArrowRightIcon />
-                </Link>
-              </Button>
-            </div>
-          </section>
-        </Card>
-      </div>
-    </div>
-  )
-}
-
-export function Inquiries({ data }: { data: DashboardData["inquiries"] }) {
-  return (
-    <div className="grid gap-4">
-      {data.map((item) => (
-        <Card key={item.id} asChild className="overflow-hidden bg-background">
-          <article aria-labelledby={`inquiry-${item.id}`}>
-            <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
-              <Avatar className="size-10 ring-1 ring-border">
-                <AvatarFallback>
-                  {initials(item.name || "Visitor")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <h2
-                  id={`inquiry-${item.id}`}
-                  className="truncate text-sm font-semibold text-strong-foreground"
-                >
-                  {item.name || "Unnamed visitor"}
-                </h2>
-                <a
-                  href={`mailto:${item.email}`}
-                  className="mt-0.5 block w-fit truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-                >
-                  {item.email}
-                </a>
-              </div>
-              <Badge variant="secondary" className="shrink-0 capitalize">
-                {inquiryTypeLabel(item.type)}
-              </Badge>
-            </header>
-
-            <div className="p-5 sm:p-6">
-              {item.type === "hire" || item.type === "project" ? (
-                <dl className="grid divide-y overflow-hidden rounded-lg border sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-                  <Detail
-                    label={item.type === "hire" ? "Role" : "Project type"}
-                    value={item.role ?? item.projectType ?? "—"}
-                  />
-                  <Detail
-                    label={item.type === "hire" ? "Arrangement" : "Timeline"}
-                    value={item.arrangement ?? item.timeline ?? "—"}
-                  />
-                </dl>
-              ) : null}
-
-              {item.type === "contact" ? (
-                <dl className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    [
-                      "Topic",
-                      contactTopicSchema.safeParse(item.topic).success
-                        ? contactTopicLabels[
-                            contactTopicSchema.parse(item.topic)
-                          ]
-                        : item.topic,
-                    ],
-                    ["App/project", item.projectTitle || item.unlistedProject],
-                    [
-                      "Related page",
-                      item.relatedTitle
-                        ? `${item.relatedTitle} (${item.relatedPath})`
-                        : item.relatedPath,
-                    ],
-                    ["Platform", item.platform],
-                    ["App version", item.appVersion],
-                  ]
-                    .filter(([, value]) => value)
-                    .map(([label, value]) => (
-                      <div key={label}>
-                        <dt className="text-xs text-muted-foreground">
-                          {label}
-                        </dt>
-                        <dd className="mt-1 text-sm break-words">{value}</dd>
-                      </div>
-                    ))}
-                </dl>
-              ) : null}
-              {item.context ? (
-                <section className="mt-4 rounded-lg bg-muted/45 p-4">
-                  <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                    <ChatCenteredDotsIcon className="size-3.5" />
-                    Message
-                  </p>
-                  <p className="mt-2 text-sm leading-6 break-words whitespace-pre-wrap text-strong-foreground">
-                    {item.context}
-                  </p>
-                </section>
-              ) : null}
-
-              <footer className="mt-5 flex flex-wrap items-center gap-3 border-t pt-4">
-                <time
-                  dateTime={item.createdAt}
-                  className="text-xs text-muted-foreground"
-                >
-                  Received {formatDate(item.createdAt)}
-                </time>
-                <Button variant="outline" size="sm" className="ml-auto" asChild>
-                  <a href={`mailto:${item.email}`}>
-                    <EnvelopeSimpleIcon />
-                    Reply
-                  </a>
-                </Button>
-              </footer>
-            </div>
-          </article>
-        </Card>
-      ))}
-      {!data.length ? <Empty label="No inquiries yet." /> : null}
-    </div>
-  )
-}
-
-function inquiryTypeLabel(type: string) {
-  if (type === "contact") return "Contact"
-  if (type === "hire") return "Role"
-  if (type === "project") return "Project"
-  return "General"
-}
-
-export function Conversations({
-  data,
-}: {
-  data: DashboardData["conversations"]
-}) {
-  return (
-    <div className="grid gap-4">
-      {data.map((item) => (
-        <Card key={item.id} asChild className="overflow-hidden bg-background">
-          <article>
-            <div className="border-b bg-muted/35 px-5 py-4">
-              <p className="text-xs text-muted-foreground">
-                Visitor question · {formatDate(item.createdAt)}
-              </p>
-              <h2 className="mt-2 text-sm leading-6 font-semibold">
-                {item.question}
-              </h2>
-            </div>
-            <div className="px-5 py-4">
-              <div className="text-sm leading-6 text-muted-foreground">
-                <Suspense
-                  fallback={
-                    <p className="whitespace-pre-wrap">{item.answer}</p>
-                  }
-                >
-                  <LazyChatMarkdown source={item.answer} />
-                </Suspense>
-              </div>
-              <ConversationResponseProvenance item={item} />
-            </div>
-          </article>
-        </Card>
-      ))}
-      {!data.length ? <Empty label="No generated chat exchanges yet." /> : null}
-    </div>
-  )
-}
-
-function ConversationResponseProvenance({
-  item,
-}: {
-  item: DashboardData["conversations"][number]
-}) {
-  const providerRoute = formatConversationProviderRoute(item.providerAttempts)
-
-  return (
-    <div className="mt-4 border-t pt-3 text-[0.6875rem] text-muted-foreground">
-      <p>{formatConversationResponseMetadata(item)}</p>
-      {providerRoute ? (
-        <p className="mt-1 break-words">{providerRoute}</p>
-      ) : null}
-    </div>
-  )
-}
-
-export function Comments({
-  data,
-  refresh,
-}: {
-  data: DashboardData["comments"]
-  refresh: () => Promise<unknown>
-}) {
-  const remove = useServerFn(deleteBlogComment)
-  const [pending, setPending] = useState<string | null>(null)
-  const [confirming, setConfirming] = useState<string | null>(null)
-  const [error, setError] = useState("")
-  async function deleteComment(id: string, postSlug: string) {
-    setPending(id)
-    setError("")
-    try {
-      await remove({ data: { id, postSlug } })
-      await refresh()
-    } catch {
-      setError("The comment could not be deleted. Try again.")
-    } finally {
-      setPending(null)
-      setConfirming(null)
-    }
-  }
-  return (
-    <div className="grid gap-4">
-      {data.map((item) => {
-        const postTitle =
-          blogCatalog.find(item.postSlug)?.title ?? item.postSlug
-
-        return (
-          <Card key={item.id} asChild className="overflow-hidden bg-background">
-            <article aria-labelledby={`comment-${item.id}`}>
-              <header className="flex items-center gap-3 border-b bg-muted/20 px-5 py-4 sm:px-6">
-                <Avatar className="size-10 ring-1 ring-border">
-                  <AvatarFallback>
-                    {initials(item.name || "Visitor")}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <h2
-                    id={`comment-${item.id}`}
-                    className="truncate text-sm font-semibold text-strong-foreground"
-                  >
-                    {item.name || "Unnamed visitor"}
-                  </h2>
-                  <a
-                    href={`mailto:${item.email}`}
-                    className="mt-0.5 block w-fit truncate text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-                  >
-                    {item.email}
-                  </a>
-                </div>
-
-                {confirming === item.id ? (
-                  <div className="flex shrink-0 items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={pending === item.id}
-                      onClick={() => setConfirming(null)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      disabled={pending === item.id}
-                      onClick={() => deleteComment(item.id, item.postSlug)}
-                    >
-                      {pending === item.id ? (
-                        <CircleDashedIcon className="animate-spin" />
-                      ) : (
-                        <TrashIcon />
-                      )}
-                      Delete
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    className="shrink-0 text-muted-foreground hover:text-destructive"
-                    onClick={() => setConfirming(item.id)}
-                    aria-label={`Delete comment by ${item.name || "Unnamed visitor"}`}
-                  >
-                    <TrashIcon />
-                  </Button>
-                )}
-              </header>
-
-              <div className="p-5 sm:p-6">
-                <section className="rounded-lg bg-muted/45 p-4">
-                  <p className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-                    <ChatCircleDotsIcon className="size-3.5" />
-                    Comment
-                  </p>
-                  <p className="mt-2 text-sm leading-6 whitespace-pre-wrap text-strong-foreground">
-                    {item.message}
-                  </p>
-                </section>
-
-                <footer className="mt-5 grid gap-3 border-t pt-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-                  <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground">Article</p>
-                    <Link
-                      to="/blog/$slug"
-                      params={{ slug: item.postSlug }}
-                      className="mt-1 flex w-fit max-w-full items-center gap-2 text-sm font-medium text-strong-foreground underline-offset-4 hover:underline"
-                    >
-                      <BookOpenTextIcon className="size-4 shrink-0" />
-                      <span className="truncate">{postTitle}</span>
-                    </Link>
-                  </div>
-                  <time
-                    dateTime={item.createdAt}
-                    className="text-xs text-muted-foreground"
-                  >
-                    {formatDate(item.createdAt)}
-                  </time>
-                </footer>
-              </div>
-            </article>
-          </Card>
-        )
-      })}
-      {!data.length ? <Empty label="No blog comments yet." /> : null}
-      {error ? (
-        <Alert variant="destructive">
-          <AlertDescription className="text-xs">{error}</AlertDescription>
-        </Alert>
-      ) : null}
-    </div>
-  )
-}
+export {
+  Inquiries,
+  Conversations,
+  Comments,
+} from "@/components/dashboard/dashboard-records"
 
 type PaginationProps = {
   label: string
@@ -959,7 +419,6 @@ export function AvailabilityForm({
   const fields = [
     ["sectionTitle", "Section heading"],
     ["cardTitle", "Card title"],
-    ["description", "Description"],
     ["ctaLabel", "Button label"],
     ["availability", "Availability"],
     ["workSetup", "Work setup"],
@@ -967,9 +426,10 @@ export function AvailabilityForm({
     ["timeZone", "Timezone"],
     ["timeZoneDetail", "Timezone detail"],
     ["relocationVisa", "Relocation and visa"],
+    ["description", "Description"],
   ] as const
   return (
-    <Card asChild className="bg-background">
+    <Card asChild className="max-w-4xl bg-card">
       <form onSubmit={submit}>
         <div className="flex items-center gap-4 border-b p-5">
           <div className="min-w-0 flex-1">
@@ -991,7 +451,7 @@ export function AvailabilityForm({
             Enabled
           </Label>
         </div>
-        <div className="grid gap-5 p-5 sm:grid-cols-2">
+        <div className="grid gap-4 p-5 sm:grid-cols-2">
           {fields.map(([name, label]) => (
             <Label
               key={name}
@@ -1001,20 +461,31 @@ export function AvailabilityForm({
               )}
             >
               {label}
-              <Input
-                name={name}
-                defaultValue={settings[name]}
-                maxLength={name === "description" ? 240 : 160}
-                required
-                className="bg-background font-normal"
-              />
+              {name === "description" ? (
+                <Textarea
+                  name={name}
+                  defaultValue={settings[name]}
+                  maxLength={240}
+                  required
+                  rows={3}
+                  className="bg-card font-normal"
+                />
+              ) : (
+                <Input
+                  name={name}
+                  defaultValue={settings[name]}
+                  maxLength={160}
+                  required
+                  className="bg-card font-normal"
+                />
+              )}
             </Label>
           ))}
         </div>
         <div className="flex items-center gap-3 border-t px-5 py-4">
           <Button
             disabled={saving}
-            className="bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80"
+            className="h-10 bg-primary px-4 text-primary-foreground hover:bg-primary/80"
           >
             {saving ? <CircleDashedIcon className="animate-spin" /> : null}
             {saving ? "Saving" : "Save changes"}
@@ -1035,16 +506,6 @@ export function AvailabilityForm({
   )
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-background p-4">
-      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-      <dd className="mt-1.5 text-sm font-semibold text-strong-foreground">
-        {value}
-      </dd>
-    </div>
-  )
-}
 function initials(name: string) {
   return name
     .trim()
@@ -1066,15 +527,4 @@ function paginationItems(page: number, pageCount: number) {
   if (end < pageCount - 1) items.push("ellipsis")
   items.push(pageCount)
   return items
-}
-function Empty({ label }: { label: string }) {
-  return (
-    <p className="p-6 text-center text-sm text-muted-foreground">{label}</p>
-  )
-}
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("en", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value))
 }

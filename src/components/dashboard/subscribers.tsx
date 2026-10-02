@@ -1,6 +1,4 @@
 import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { EnvelopeSimpleIcon } from "@/components/ui/icons"
 import type { OwnerSubscriberPage } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 import { cn } from "@/lib/utils"
 
@@ -20,46 +18,69 @@ function confirmationLabel(state: string) {
 
 export function Subscribers({ data }: { data: OwnerSubscriberPage["items"] }) {
   return (
-    <Card asChild className="overflow-hidden bg-background">
-      <section aria-label="Newsletter subscribers">
-        <div className="divide-y">
-          {data.map((subscriber) => (
-            <article
-              key={subscriber.id}
-              className="grid gap-3 px-5 py-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-4 sm:px-6"
+    <section
+      aria-label="Newsletter subscribers"
+      className="overflow-hidden rounded-xl border bg-card"
+    >
+      <table className="w-full table-fixed text-left text-sm">
+        <caption className="sr-only">
+          Newsletter subscribers and confirmation email delivery
+        </caption>
+        <thead className="border-b bg-muted/25 text-xs text-muted-foreground">
+          <tr>
+            <th scope="col" className="px-4 py-3 font-medium">
+              Email
+            </th>
+            <th
+              scope="col"
+              className="hidden w-52 px-4 py-3 font-medium sm:table-cell"
             >
-              <span className="hidden size-9 place-items-center rounded-lg border bg-muted/35 text-muted-foreground sm:grid">
-                <EnvelopeSimpleIcon className="size-4" />
-              </span>
-              <div className="min-w-0">
+              Subscribed
+            </th>
+            <th scope="col" className="w-32 px-4 py-3 font-medium">
+              Confirmation
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y">
+          {data.map((subscriber) => (
+            <tr key={subscriber.id} className="hover:bg-muted/25">
+              <td className="px-4 py-3">
                 <a
                   href={`mailto:${subscriber.email}`}
-                  className="block w-fit max-w-full truncate text-sm font-semibold text-strong-foreground underline-offset-4 hover:underline"
+                  className="block w-fit max-w-full font-medium break-all text-strong-foreground underline-offset-4 hover:underline"
                 >
                   {subscriber.email}
                 </a>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Subscribed {formatSubscriptionDate(subscriber.createdAt)}
-                </p>
-              </div>
-              <Badge
-                variant={
-                  subscriber.confirmationState === "sent"
-                    ? "secondary"
-                    : "outline"
-                }
-                className={cn(
-                  "w-fit shrink-0",
-                  subscriber.confirmationState === "failed" &&
-                    "border-destructive/30 text-destructive"
-                )}
-              >
-                {confirmationLabel(subscriber.confirmationState)}
-              </Badge>
-            </article>
+                <span className="mt-1 block text-xs text-muted-foreground sm:hidden">
+                  {formatSubscriptionDate(subscriber.createdAt)}
+                </span>
+              </td>
+              <td className="hidden px-4 py-3 text-xs text-muted-foreground sm:table-cell">
+                <time dateTime={subscriber.createdAt}>
+                  {formatSubscriptionDate(subscriber.createdAt)}
+                </time>
+              </td>
+              <td className="px-4 py-3">
+                <Badge
+                  variant={
+                    subscriber.confirmationState === "sent"
+                      ? "secondary"
+                      : "outline"
+                  }
+                  className={cn(
+                    "w-fit",
+                    subscriber.confirmationState === "failed" &&
+                      "border-destructive/30 text-destructive"
+                  )}
+                >
+                  {confirmationLabel(subscriber.confirmationState)}
+                </Badge>
+              </td>
+            </tr>
           ))}
-        </div>
-      </section>
-    </Card>
+        </tbody>
+      </table>
+    </section>
   )
 }

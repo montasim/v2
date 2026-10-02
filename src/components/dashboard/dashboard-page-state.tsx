@@ -1,4 +1,5 @@
 import { useState } from "react"
+import type { ReactNode } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -14,16 +15,18 @@ export function DashboardPageHeader({
   title,
   description,
   onRefresh,
+  actions,
 }: {
   title: string
   description?: string
-  onRefresh: () => Promise<unknown>
+  onRefresh?: () => Promise<unknown>
+  actions?: ReactNode
 }) {
   const [refreshing, setRefreshing] = useState(false)
   const [refreshFailed, setRefreshFailed] = useState(false)
 
   async function refresh() {
-    if (refreshing) return
+    if (refreshing || !onRefresh) return
     setRefreshing(true)
     setRefreshFailed(false)
     try {
@@ -36,37 +39,46 @@ export function DashboardPageHeader({
   }
 
   return (
-    <header className="mb-7 flex items-start gap-4 border-b pb-5">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-card px-4 sm:px-6">
       <div className="min-w-0 flex-1">
-        <h1 className="text-xl font-semibold tracking-tight text-strong-foreground sm:text-2xl">
+        <h1 className="truncate text-lg font-semibold tracking-tight">
           {title}
         </h1>
         {description ? (
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          <p
+            className="mt-0.5 truncate text-xs text-muted-foreground"
+            title={description}
+          >
             {description}
           </p>
         ) : null}
       </div>
-      <div className="grid shrink-0 justify-items-end gap-1.5">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={refreshing}
-          onClick={refresh}
-          aria-label={refreshing ? "Refreshing data" : "Refresh data"}
-        >
-          <ArrowClockwiseIcon
-            className={
-              refreshing ? "animate-spin motion-reduce:animate-none" : ""
-            }
-          />
-          <span className="hidden sm:inline">
-            {refreshing ? "Refreshing" : "Refresh"}
-          </span>
-        </Button>
+      <div className="relative flex shrink-0 items-center gap-2">
+        {onRefresh ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 rounded-lg px-3 text-foreground"
+            disabled={refreshing}
+            onClick={refresh}
+            aria-label={refreshing ? "Refreshing data" : "Refresh data"}
+          >
+            <ArrowClockwiseIcon
+              className={
+                refreshing ? "animate-spin motion-reduce:animate-none" : ""
+              }
+            />
+            <span className="hidden sm:inline">
+              {refreshing ? "Refreshing" : "Refresh"}
+            </span>
+          </Button>
+        ) : null}
+        {actions}
         {refreshFailed ? (
-          <p className="text-xs text-destructive" role="alert">
+          <p
+            className="absolute top-full right-0 mt-1 rounded-md border border-destructive/30 bg-card px-3 py-2 text-xs text-destructive"
+            role="alert"
+          >
             Refresh failed
           </p>
         ) : null}
@@ -113,7 +125,7 @@ export function DashboardEmptyState({
   return (
     <Card
       asChild
-      className="grid min-h-64 place-items-center border-dashed bg-background px-6 py-12 text-center"
+      className="grid min-h-44 place-items-center border-dashed bg-card px-6 py-8 text-center"
     >
       <section>
         <div className="max-w-sm">

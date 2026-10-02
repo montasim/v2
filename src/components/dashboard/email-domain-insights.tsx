@@ -1,3 +1,4 @@
+import { DashboardInsights } from "@/components/dashboard/dashboard-insights"
 import { useEffect, useRef, useState } from "react"
 import { Label as RechartsLabel, Pie, PieChart } from "recharts"
 
@@ -150,129 +151,128 @@ export function EmailDomainDistribution({
   ) as ChartConfig
 
   return (
-    <section aria-labelledby={`${kind}-domain-distribution-heading`}>
-      <div className="mb-3">
-        <h2
-          id={`${kind}-domain-distribution-heading`}
-          className="text-sm font-semibold text-strong-foreground"
+    <DashboardInsights
+      title="Email domain insights"
+      metrics={[
+        {
+          label: kind === "comments" ? "Comments" : "Subscribers",
+          value: total,
+        },
+        { label: "Email domains", value: domains.length },
+      ]}
+    >
+      <h2 className="text-sm font-medium">{labels.chartTitle}</h2>
+      <p className="mt-1 mb-4 text-xs text-muted-foreground">
+        {labels.chartDescription}
+      </p>
+      <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square h-60 w-full max-w-72"
+          initialDimension={{ width: 288, height: 240 }}
+          role="img"
+          aria-label={`Donut chart of ${total} ${labels.plural}: ${slices
+            .map((slice) => `${slice.label}, ${slice.count}`)
+            .join("; ")}`}
         >
-          {labels.chartTitle}
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {labels.chartDescription}
-        </p>
-      </div>
+          <PieChart accessibilityLayer>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel nameKey="chartKey" />}
+            />
+            <Pie
+              data={chartData}
+              dataKey="count"
+              nameKey="chartKey"
+              innerRadius={72}
+              outerRadius={108}
+              paddingAngle={1.5}
+              cornerRadius={2}
+              stroke="var(--background)"
+              strokeWidth={2}
+              isAnimationActive={false}
+            >
+              <RechartsLabel
+                content={({ viewBox }) => {
+                  if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                    return null
+                  }
 
-      <Card className="bg-background p-5 sm:p-6">
-        <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
-          <ChartContainer
-            config={chartConfig}
-            className="mx-auto aspect-square h-60 w-full max-w-72"
-            initialDimension={{ width: 288, height: 240 }}
-            role="img"
-            aria-label={`Donut chart of ${total} ${labels.plural}: ${slices
-              .map((slice) => `${slice.label}, ${slice.count}`)
-              .join("; ")}`}
-          >
-            <PieChart accessibilityLayer>
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel nameKey="chartKey" />}
-              />
-              <Pie
-                data={chartData}
-                dataKey="count"
-                nameKey="chartKey"
-                innerRadius={72}
-                outerRadius={108}
-                paddingAngle={1.5}
-                cornerRadius={2}
-                stroke="var(--background)"
-                strokeWidth={2}
-                isAnimationActive={false}
-              >
-                <RechartsLabel
-                  content={({ viewBox }) => {
-                    if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
-                      return null
-                    }
-
-                    return (
-                      <text
+                  return (
+                    <text
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                        className="fill-strong-foreground text-3xl font-semibold tabular-nums"
                       >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-strong-foreground text-3xl font-semibold tabular-nums"
-                        >
-                          {total}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy + 22}
-                          className="fill-muted-foreground text-[0.6875rem]"
-                        >
-                          {total === 1 ? labels.singular : labels.plural}
-                        </tspan>
-                      </text>
-                    )
-                  }}
+                        {total}
+                      </tspan>
+                      <tspan
+                        x={viewBox.cx}
+                        y={viewBox.cy + 22}
+                        className="fill-muted-foreground text-[0.6875rem]"
+                      >
+                        {total === 1 ? labels.singular : labels.plural}
+                      </tspan>
+                    </text>
+                  )
+                }}
+              />
+            </Pie>
+          </PieChart>
+        </ChartContainer>
+
+        <ul
+          className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
+          aria-label={`${labels.chartTitle} legend`}
+        >
+          {slices.map((slice) => {
+            const share = total ? Math.round((slice.count / total) * 100) : 0
+
+            return (
+              <li
+                key={slice.chartKey}
+                className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2 last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:nth-last-child(-n+2)]:border-b xl:[&:nth-last-child(-n+2)]:border-b-0"
+              >
+                <span
+                  className={cn(
+                    "size-2.5 shrink-0 rounded-sm",
+                    paletteAt(slice.themeIndex).swatch
+                  )}
+                  aria-hidden="true"
                 />
-              </Pie>
-            </PieChart>
-          </ChartContainer>
-
-          <ul
-            className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
-            aria-label={`${labels.chartTitle} legend`}
-          >
-            {slices.map((slice) => {
-              const share = total ? Math.round((slice.count / total) * 100) : 0
-
-              return (
-                <li
-                  key={slice.chartKey}
-                  className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2 last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:nth-last-child(-n+2)]:border-b xl:[&:nth-last-child(-n+2)]:border-b-0"
-                >
+                <span className="min-w-0 flex-1">
                   <span
-                    className={cn(
-                      "size-2.5 shrink-0 rounded-sm",
-                      paletteAt(slice.themeIndex).swatch
-                    )}
-                    aria-hidden="true"
-                  />
-                  <span className="min-w-0 flex-1">
-                    <span
-                      className="block truncate text-xs font-medium text-strong-foreground"
-                      title={slice.label}
-                    >
-                      {slice.label}
-                    </span>
-                    {"detail" in slice && slice.detail ? (
-                      <span className="mt-0.5 block text-[0.625rem] text-muted-foreground">
-                        {slice.detail}
-                      </span>
-                    ) : null}
+                    className="block truncate text-xs font-medium text-strong-foreground"
+                    title={slice.label}
+                  >
+                    {slice.label}
                   </span>
-                  <span className="shrink-0 text-right">
-                    <strong className="block font-mono text-xs tabular-nums">
-                      {slice.count}
-                    </strong>
-                    <span className="mt-0.5 block text-[0.625rem] text-muted-foreground tabular-nums">
-                      {share}%
+                  {"detail" in slice && slice.detail ? (
+                    <span className="mt-0.5 block text-[0.625rem] text-muted-foreground">
+                      {slice.detail}
                     </span>
+                  ) : null}
+                </span>
+                <span className="shrink-0 text-right">
+                  <strong className="block font-mono text-xs tabular-nums">
+                    {slice.count}
+                  </strong>
+                  <span className="mt-0.5 block text-[0.625rem] text-muted-foreground tabular-nums">
+                    {share}%
                   </span>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
-      </Card>
-    </section>
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </DashboardInsights>
   )
 }
 
@@ -348,11 +348,11 @@ export function EmailDomainFilters({
         {resultTotal} matching{" "}
         {resultTotal === 1 ? labels.singular : labels.plural}
       </p>
-      <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
+      <div className="grid items-end gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)_auto]">
         <div className="min-w-0">
           <Label
             htmlFor={`${kind}-search`}
-            className="mb-2 block text-xs font-medium text-strong-foreground"
+            className="mb-1.5 block text-xs text-muted-foreground"
           >
             {labels.searchLabel}
           </Label>
@@ -364,7 +364,7 @@ export function EmailDomainFilters({
               value={draftQuery}
               onChange={(event) => setDraftQuery(event.currentTarget.value)}
               placeholder={labels.searchPlaceholder}
-              className="pr-10 pl-9"
+              className="h-10 bg-card pr-10 pl-9"
             />
             {draftQuery ? (
               <Button
@@ -384,13 +384,16 @@ export function EmailDomainFilters({
         <div>
           <span
             id={`${kind}-domain-filter-label`}
-            className="mb-2 flex items-center gap-1.5 text-xs font-medium text-strong-foreground"
+            className="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground"
           >
             <FunnelSimpleIcon className="size-3.5" />
             Email domain
           </span>
           <Select value={draftDomain} onValueChange={updateDomain}>
-            <SelectTrigger aria-labelledby={`${kind}-domain-filter-label`}>
+            <SelectTrigger
+              className="h-10 bg-card"
+              aria-labelledby={`${kind}-domain-filter-label`}
+            >
               <SelectValue>
                 {domainSelectLabel(draftDomain, domains)}
               </SelectValue>
@@ -407,7 +410,10 @@ export function EmailDomainFilters({
             </SelectContent>
           </Select>
         </div>
-      </Card>
+        <span className="pb-3 text-xs text-muted-foreground">
+          {resultTotal} results
+        </span>
+      </div>
     </section>
   )
 }
@@ -424,7 +430,7 @@ export function EmailDomainFilterEmptyState({
   return (
     <Card
       asChild
-      className="grid min-h-64 place-items-center bg-background px-6 py-12 text-center"
+      className="grid min-h-64 place-items-center bg-card px-6 py-12 text-center"
     >
       <section>
         <div className="max-w-sm">

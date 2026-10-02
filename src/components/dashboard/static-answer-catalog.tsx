@@ -1,7 +1,7 @@
+import { DashboardInsights } from "@/components/dashboard/dashboard-insights"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Label as RechartsLabel, Pie, PieChart } from "recharts"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -142,7 +142,7 @@ export function StaticAnswerCatalog({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <AnswerDistribution
         categories={rankedCategories}
         knowledgeHash={catalog.knowledgeHash}
@@ -150,9 +150,9 @@ export function StaticAnswerCatalog({
       />
 
       <section aria-label="Filter static answers">
-        <Card className="grid gap-3 bg-background p-4 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)] sm:p-5">
+        <div className="grid items-end gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(13rem,0.38fr)_auto]">
           <Label className="block min-w-0">
-            <span className="mb-2 block text-xs font-medium text-strong-foreground">
+            <span className="mb-1.5 block text-xs text-muted-foreground">
               Search catalog
             </span>
             <span className="relative block">
@@ -162,7 +162,7 @@ export function StaticAnswerCatalog({
                 value={query}
                 onChange={(event) => updateQuery(event.currentTarget.value)}
                 placeholder="Search questions, answers, or record IDs"
-                className="pr-10 pl-9"
+                className="h-10 bg-card pr-10 pl-9"
               />
               {query ? (
                 <Button
@@ -182,13 +182,16 @@ export function StaticAnswerCatalog({
           <div>
             <span
               id="static-answer-category-label"
-              className="mb-2 flex items-center gap-1.5 text-xs font-medium text-strong-foreground"
+              className="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground"
             >
               <FunnelSimpleIcon className="size-3.5" />
               Category
             </span>
             <Select value={category} onValueChange={updateCategory}>
-              <SelectTrigger aria-labelledby="static-answer-category-label">
+              <SelectTrigger
+                className="h-10 bg-card"
+                aria-labelledby="static-answer-category-label"
+              >
                 <SelectValue>{selectedCategoryLabel}</SelectValue>
               </SelectTrigger>
               <SelectContent align="start">
@@ -203,7 +206,10 @@ export function StaticAnswerCatalog({
               </SelectContent>
             </Select>
           </div>
-        </Card>
+          <span className="pb-3 text-xs text-muted-foreground">
+            {filtered.length} results
+          </span>
+        </div>
       </section>
 
       <section id="static-answer-results" className="space-y-4">
@@ -215,7 +221,7 @@ export function StaticAnswerCatalog({
           <ol
             ref={resultsListRef}
             aria-label="Questions and answers"
-            className="scroll-mt-24 space-y-4 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            className="scroll-mt-24 divide-y overflow-hidden rounded-xl border bg-card outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             start={(page - 1) * PAGE_SIZE + 1}
             tabIndex={-1}
           >
@@ -228,7 +234,7 @@ export function StaticAnswerCatalog({
             ))}
           </ol>
         ) : (
-          <Card className="grid min-h-64 place-items-center bg-background px-6 py-12 text-center">
+          <Card className="grid min-h-64 place-items-center bg-card px-6 py-12 text-center">
             <div className="max-w-sm">
               <SearchIcon className="mx-auto size-6 text-muted-foreground" />
               <h2 className="mt-4 text-sm font-semibold text-strong-foreground">
@@ -313,152 +319,137 @@ function AnswerDistribution({
   ) as ChartConfig
 
   return (
-    <section aria-labelledby="catalog-coverage-heading">
-      <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end">
-        <div className="min-w-0 flex-1">
-          <h2
-            id="catalog-coverage-heading"
-            className="text-sm font-semibold text-strong-foreground"
+    <DashboardInsights
+      title="Catalog coverage"
+      metrics={[
+        { label: "Answers", value: total },
+        { label: "Categories", value: categories.length },
+        { label: "Catalog", value: "Read only" },
+      ]}
+    >
+      <p className="mb-4 text-xs text-muted-foreground">
+        Read-only catalog. Update the source files and regenerate the catalog to
+        change an answer.{" "}
+        <code title={knowledgeHash}>
+          Knowledge {knowledgeHash.slice(0, 12)}
+        </code>
+      </p>
+      {categories.length ? (
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square h-60 w-full max-w-72"
+            initialDimension={{ width: 288, height: 240 }}
+            role="img"
+            aria-label={`Donut chart of ${total} static answers: ${slices
+              .map((item) => `${item.label}, ${item.count}`)
+              .join("; ")}`}
           >
-            Catalog coverage
-          </h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Top answer categories and the remaining catalog.
-          </p>
-        </div>
-        <div className="flex max-w-full flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end">
-          <Badge variant="secondary">Read only</Badge>
-          <code
-            className="max-w-full truncate text-[0.6875rem] text-muted-foreground"
-            title={knowledgeHash}
-          >
-            Knowledge {knowledgeHash.slice(0, 12)}
-          </code>
-        </div>
-      </div>
+            <PieChart accessibilityLayer>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel nameKey="key" />}
+              />
+              <Pie
+                data={chartData}
+                dataKey="count"
+                nameKey="key"
+                innerRadius={72}
+                outerRadius={108}
+                paddingAngle={1.5}
+                cornerRadius={2}
+                stroke="var(--background)"
+                strokeWidth={2}
+                isAnimationActive={false}
+              >
+                <RechartsLabel
+                  content={({ viewBox }) => {
+                    if (!viewBox || !("cx" in viewBox) || !("cy" in viewBox)) {
+                      return null
+                    }
 
-      <Card className="bg-background p-5 sm:p-6">
-        {categories.length ? (
-          <div className="grid items-center gap-6 lg:grid-cols-[minmax(15rem,0.8fr)_minmax(0,1.2fr)] lg:gap-10">
-            <ChartContainer
-              config={chartConfig}
-              className="mx-auto aspect-square h-60 w-full max-w-72"
-              initialDimension={{ width: 288, height: 240 }}
-              role="img"
-              aria-label={`Donut chart of ${total} static answers: ${slices
-                .map((item) => `${item.label}, ${item.count}`)
-                .join("; ")}`}
-            >
-              <PieChart accessibilityLayer>
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel nameKey="key" />}
-                />
-                <Pie
-                  data={chartData}
-                  dataKey="count"
-                  nameKey="key"
-                  innerRadius={72}
-                  outerRadius={108}
-                  paddingAngle={1.5}
-                  cornerRadius={2}
-                  stroke="var(--background)"
-                  strokeWidth={2}
-                  isAnimationActive={false}
-                >
-                  <RechartsLabel
-                    content={({ viewBox }) => {
-                      if (
-                        !viewBox ||
-                        !("cx" in viewBox) ||
-                        !("cy" in viewBox)
-                      ) {
-                        return null
-                      }
-
-                      return (
-                        <text
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
+                          className="fill-strong-foreground text-3xl font-semibold tabular-nums"
                         >
-                          <tspan
-                            x={viewBox.cx}
-                            y={viewBox.cy}
-                            className="fill-strong-foreground text-3xl font-semibold tabular-nums"
-                          >
-                            {total}
-                          </tspan>
-                          <tspan
-                            x={viewBox.cx}
-                            y={viewBox.cy + 22}
-                            className="fill-muted-foreground text-[0.6875rem]"
-                          >
-                            {total === 1 ? "answer" : "answers"}
-                          </tspan>
-                        </text>
-                      )
-                    }}
+                          {total}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy + 22}
+                          className="fill-muted-foreground text-[0.6875rem]"
+                        >
+                          {total === 1 ? "answer" : "answers"}
+                        </tspan>
+                      </text>
+                    )
+                  }}
+                />
+              </Pie>
+            </PieChart>
+          </ChartContainer>
+
+          <ul
+            className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
+            aria-label="Catalog coverage legend"
+          >
+            {chartData.map((item) => {
+              const share = total ? Math.round((item.count / total) * 100) : 0
+
+              return (
+                <li
+                  key={item.key}
+                  className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2 last:border-b-0 lg:last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:nth-last-child(-n+2)]:border-b xl:[&:nth-last-child(-n+2)]:border-b-0"
+                >
+                  <span
+                    className="size-2.5 shrink-0 rounded-sm"
+                    style={{ backgroundColor: item.fill }}
+                    aria-hidden="true"
                   />
-                </Pie>
-              </PieChart>
-            </ChartContainer>
-
-            <ul
-              className="grid gap-x-6 gap-y-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2"
-              aria-label="Catalog coverage legend"
-            >
-              {chartData.map((item) => {
-                const share = total ? Math.round((item.count / total) * 100) : 0
-
-                return (
-                  <li
-                    key={item.key}
-                    className="flex min-h-11 items-center gap-3 border-b border-border/70 py-2 last:border-b-0 lg:last:border-b-0 sm:[&:nth-last-child(-n+2)]:border-b-0 lg:[&:nth-last-child(-n+2)]:border-b xl:[&:nth-last-child(-n+2)]:border-b-0"
-                  >
-                    <span
-                      className="size-2.5 shrink-0 rounded-sm"
-                      style={{ backgroundColor: item.fill }}
-                      aria-hidden="true"
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-xs font-medium text-strong-foreground">
-                        {item.label}
-                      </span>
-                      {item.detail ? (
-                        <span className="mt-0.5 block text-[0.625rem] text-muted-foreground">
-                          {item.detail}
-                        </span>
-                      ) : null}
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-xs font-medium text-strong-foreground">
+                      {item.label}
                     </span>
-                    <span className="shrink-0 text-right">
-                      <strong className="block font-mono text-xs tabular-nums">
-                        {item.count}
-                      </strong>
-                      <span className="mt-0.5 block text-[0.625rem] text-muted-foreground tabular-nums">
-                        {share}%
+                    {item.detail ? (
+                      <span className="mt-0.5 block text-[0.625rem] text-muted-foreground">
+                        {item.detail}
                       </span>
+                    ) : null}
+                  </span>
+                  <span className="shrink-0 text-right">
+                    <strong className="block font-mono text-xs tabular-nums">
+                      {item.count}
+                    </strong>
+                    <span className="mt-0.5 block text-[0.625rem] text-muted-foreground tabular-nums">
+                      {share}%
                     </span>
-                  </li>
-                )
-              })}
-            </ul>
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ) : (
+        <div className="grid min-h-40 place-items-center rounded-lg border border-dashed bg-muted/15 px-6 text-center">
+          <div>
+            <p className="text-sm font-medium text-strong-foreground">
+              No catalog coverage yet
+            </p>
+            <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              Category distribution will appear when answers are compiled.
+            </p>
           </div>
-        ) : (
-          <div className="grid min-h-40 place-items-center rounded-lg border border-dashed bg-muted/15 px-6 text-center">
-            <div>
-              <p className="text-sm font-medium text-strong-foreground">
-                No catalog coverage yet
-              </p>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                Category distribution will appear when answers are compiled.
-              </p>
-            </div>
-          </div>
-        )}
-      </Card>
-    </section>
+        </div>
+      )}
+    </DashboardInsights>
   )
 }
 
@@ -470,36 +461,45 @@ function StaticAnswer({
   record: StaticAnswerRecord
 }) {
   return (
-    <Card asChild className="bg-background px-5 py-5 sm:px-6 sm:py-6">
-      <li>
-        <article aria-labelledby={`static-answer-${number}`}>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">{categoryLabel(record.category)}</Badge>
-            <span className="text-[0.6875rem] text-muted-foreground tabular-nums">
-              #{String(number).padStart(3, "0")}
-            </span>
-            <code
-              className="w-full min-w-0 pt-1 text-[0.6875rem] break-all text-muted-foreground sm:ml-auto sm:w-auto sm:max-w-80 sm:truncate sm:pt-0"
-              title={record.id}
+    <li>
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-4 hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-inset [&::-webkit-details-marker]:hidden">
+          <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-xs font-semibold tabular-nums">
+            {number}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span
+              id={`static-answer-${number}`}
+              className="block text-sm font-medium text-strong-foreground"
             >
-              {record.id}
-            </code>
-          </div>
-
-          <h3
-            id={`static-answer-${number}`}
-            className="mt-4 max-w-3xl text-[0.9375rem] leading-6 font-semibold text-strong-foreground"
+              {record.question}
+            </span>
+            <span className="mt-1 block text-xs text-muted-foreground">
+              {categoryLabel(record.category)} · Exact-match answer
+            </span>
+          </span>
+          <span
+            className="hidden max-w-48 truncate text-xs text-muted-foreground sm:block"
+            title={record.id}
           >
-            {record.question}
-          </h3>
-          <p className="mt-3 w-full max-w-none text-sm leading-6 whitespace-pre-wrap text-muted-foreground">
+            {record.id}
+          </span>
+          <ArrowRightCompactIcon
+            className="mt-1 size-4 shrink-0 text-muted-foreground group-open:rotate-90"
+            aria-hidden="true"
+          />
+        </summary>
+        <article
+          aria-labelledby={`static-answer-${number}`}
+          className="border-t bg-muted/15 px-5 py-5 sm:pl-15"
+        >
+          <p className="max-w-3xl text-sm leading-7 whitespace-pre-wrap text-strong-foreground">
             {record.text}
           </p>
-
-          <footer className="mt-4 flex items-center gap-2 border-t pt-3 text-[0.6875rem] text-muted-foreground">
-            <span className="font-medium text-strong-foreground">Answer</span>
-            <span aria-hidden="true">·</span>
-            <span className="tabular-nums">
+          <footer className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <code className="break-all">{record.id}</code>
+            <span>· Read only ·</span>
+            <span>
               {record.evidenceCount}{" "}
               {record.evidenceCount === 1
                 ? "evidence reference"
@@ -507,8 +507,8 @@ function StaticAnswer({
             </span>
           </footer>
         </article>
-      </li>
-    </Card>
+      </details>
+    </li>
   )
 }
 

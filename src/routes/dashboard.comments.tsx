@@ -1,10 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router"
 import { z } from "zod"
 
-import {
-  DashboardEmptyState,
-  DashboardPageHeader,
-} from "@/components/dashboard/dashboard-page-state"
+import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
 import { DashboardCommentsSkeleton } from "@/components/dashboard/dashboard-skeletons"
 import {
   EmailDomainDistribution,
@@ -57,12 +54,8 @@ function DashboardCommentsPage() {
 
   return (
     <>
-      <DashboardPageHeader
-        title="Blog comments"
-        onRefresh={() => router.invalidate()}
-      />
       {data.allTotal ? (
-        <div className="space-y-7">
+        <div className="space-y-4">
           <EmailDomainDistribution
             domains={data.facets.domains}
             kind="comments"

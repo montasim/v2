@@ -68,6 +68,44 @@ describe("InquiryFilters", () => {
     expect(onChange).toHaveBeenLastCalledWith({ query: "", type: "hire" })
   })
 
+  it("changes contact topics without replacing the search or inquiry type", () => {
+    const onChange = vi.fn()
+    const onTopicChange = vi.fn()
+    const { rerender } = render(
+      <InquiryFilters
+        query="Acme"
+        type="contact"
+        topic="all"
+        typeCounts={typeCounts}
+        resultTotal={1}
+        onChange={onChange}
+        onTopicChange={onTopicChange}
+      />
+    )
+    const topics = screen.getByRole("combobox", {
+      name: "Contact topic",
+    })
+    if (!(topics instanceof HTMLSelectElement))
+      throw new Error("Expected a native topic selector")
+    const nextTopic = topics.options[1].value
+    fireEvent.change(topics, { target: { value: nextTopic } })
+    expect(onTopicChange).toHaveBeenCalledWith(nextTopic)
+    expect(onChange).not.toHaveBeenCalled()
+    expect(screen.getByRole("searchbox")).toHaveProperty("value", "Acme")
+    rerender(
+      <InquiryFilters
+        query="Acme"
+        type="hire"
+        topic="all"
+        typeCounts={typeCounts}
+        resultTotal={1}
+        onChange={onChange}
+        onTopicChange={onTopicChange}
+      />
+    )
+    expect(screen.queryByRole("combobox", { name: "Contact topic" })).toBeNull()
+  })
+
   it("offers recovery when no inquiries match", () => {
     const onClear = vi.fn()
     render(<InquiryFilterEmptyState onClear={onClear} />)

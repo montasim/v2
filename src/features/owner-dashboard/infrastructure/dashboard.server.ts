@@ -243,21 +243,27 @@ function subscriberFilters({ domain, query }: OwnerEmailDomainFilters) {
 
 export async function loadOwnerDashboard() {
   const database = getDatabase()
-  const [comments, conversations, inquiries, availability] = await Promise.all([
-    database.select().from(blogComments).orderBy(desc(blogComments.createdAt)),
-    database
-      .select()
-      .from(assistantExchanges)
-      .orderBy(desc(assistantExchanges.createdAt)),
-    database
-      .select()
-      .from(portfolioInquiries)
-      .orderBy(desc(portfolioInquiries.createdAt)),
-    loadAvailabilitySettings(),
-  ])
+  const [comments, conversations, inquiries, availability, subscriberCount] =
+    await Promise.all([
+      database
+        .select()
+        .from(blogComments)
+        .orderBy(desc(blogComments.createdAt)),
+      database
+        .select()
+        .from(assistantExchanges)
+        .orderBy(desc(assistantExchanges.createdAt)),
+      database
+        .select()
+        .from(portfolioInquiries)
+        .orderBy(desc(portfolioInquiries.createdAt)),
+      loadAvailabilitySettings(),
+      database.select({ total: count() }).from(newsletterSubscribers),
+    ])
 
   return {
     availability,
+    subscriberCount: subscriberCount[0]?.total ?? 0,
     comments: comments.map((comment) => ({
       ...comment,
       createdAt: comment.createdAt.toISOString(),
