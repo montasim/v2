@@ -1,0 +1,4 @@
+ILLUSTRATIVE PROTOTYPE EXPORT
+Weekly review
+
+Explored a more compact dashboard layout. This file contains sample data only.

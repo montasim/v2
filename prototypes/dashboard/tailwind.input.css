@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@source "./*.html";
+@theme {
+  --color-canvas: #f6f6f3;
+  --color-panel: #ffffff;
+  --color-ink: #151614;
+  --color-muted: #686a63;
+  --color-line: #d8d8d0;
+  --color-hover: #ecece7;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+}
