@@ -129,6 +129,8 @@ it("guards unsaved history entry edits when returning to the selected parent tab
     workDate: "2026-10-02",
     companyId,
     projectId,
+    companyName,
+    projectName,
     notes: "Saved notes",
     reflection: "",
     summary: "",
@@ -193,9 +195,8 @@ it("guards unsaved history entry edits when returning to the selected parent tab
   ).closest("summary")!
   fireEvent.click(summary)
   expect(summary.closest("details")?.open).toBe(true)
-  expect(
-    screen.getAllByText(`${companyName} · ${projectName}`).length
-  ).toBeGreaterThan(0)
+  expect(screen.getByText(companyName)).toBeTruthy()
+  expect(summary.textContent).toContain(projectName)
   fireEvent.click(
     screen.getByRole("button", { name: "Open entry for 2026-10-02" })
   )

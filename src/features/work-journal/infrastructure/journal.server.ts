@@ -4,6 +4,7 @@ import {
   count,
   desc,
   eq,
+  getTableColumns,
   gte,
   ilike,
   inArray,
@@ -354,9 +355,17 @@ export async function loadHistory(filter: HistoryFilter) {
     .where(where)
   const pageCount = Math.max(1, Math.ceil(total / 20))
   const page = Math.min(filter.page, pageCount)
+  // Names come from the join so the list never depends on a possibly stale
+  // client-side companies/projects list.
   const items = await db
-    .select()
+    .select({
+      ...getTableColumns(entries),
+      companyName: companies.name,
+      projectName: projects.name,
+    })
     .from(entries)
+    .innerJoin(companies, eq(companies.id, entries.companyId))
+    .leftJoin(projects, eq(projects.id, entries.projectId))
     .where(where)
     .orderBy(desc(entries.workDate), desc(entries.id))
     .limit(20)

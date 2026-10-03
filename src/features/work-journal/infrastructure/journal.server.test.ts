@@ -164,7 +164,12 @@ describe("journal PostgreSQL storage", () => {
     await makeCompany()
     const first = await saveEntry(input())
     expect((await saveEntry(input())).id).toBe(first.id)
-    expect((await loadHistory(historySchema.parse({}))).total).toBe(1)
+    const history = await loadHistory(historySchema.parse({}))
+    expect(history.total).toBe(1)
+    expect(history.items[0]).toMatchObject({
+      companyName: "Company A",
+      projectName: null,
+    })
     const edited = await saveEntry({
       ...input(),
       revision: first.revision,
