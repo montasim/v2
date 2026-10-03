@@ -133,7 +133,9 @@ export function Overview({ data }: { data: OwnerDashboardData }) {
             ) : null}
           </Card>
         </section>
-        <div className="space-y-5">
+        {/* xl:pt-8 = the "Recent activity" heading (1.25rem line + 0.75rem
+            margin), so these cards align with the activity card, not its heading. */}
+        <div className="space-y-5 xl:pt-8">
           <Card className="bg-card">
             <h2 className="border-b px-5 py-3 text-sm font-semibold">
               Today’s work
