@@ -64,12 +64,12 @@ describe("daily capture", () => {
     render(
       <EntryEditor setup={setup} onDirty={() => undefined} refresh={refresh} />
     )
-    expect(
+    fireEvent.click(
+      screen.getByRole("combobox", { name: /Project \(optional\)/ })
+    )
+    fireEvent.click(
       screen.getByRole("option", { name: "Existing portfolio app" })
-    ).toBeTruthy()
-    fireEvent.change(screen.getByLabelText("Project (optional)"), {
-      target: { value: "portfolio:project-existing" },
-    })
+    )
     await waitFor(() =>
       expect(mocks.addProject).toHaveBeenCalledWith({
         data: {
@@ -117,10 +117,11 @@ describe("daily capture", () => {
   })
   it("keeps unsaved task text after a failed save", async () => {
     mocks.save.mockRejectedValue(new Error("Temporary database failure"))
+    const onDirty = vi.fn()
     render(
       <EntryEditor
         setup={setup}
-        onDirty={() => undefined}
+        onDirty={onDirty}
         refresh={async () => undefined}
       />
     )
@@ -132,8 +133,6 @@ describe("daily capture", () => {
     expect(screen.getByLabelText<HTMLTextAreaElement>("Task 1").value).toBe(
       "Investigated timeout"
     )
-    await waitFor(() =>
-      expect(screen.getByText("Unsaved changes")).toBeTruthy()
-    )
+    await waitFor(() => expect(onDirty).toHaveBeenLastCalledWith(true))
   })
 })

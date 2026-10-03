@@ -35,6 +35,7 @@ import {
   ArrowRightDoubleIcon,
   ArrowUpRightIcon,
   CircleDashedIcon,
+  LogoutIcon,
   MoonIcon,
   SunIcon,
 } from "@/components/ui/icons"
@@ -146,36 +147,45 @@ function OwnerDashboardPage() {
         >
           {navigationLinks}
         </nav>
-        <div className="space-y-4 border-t p-5">
-          <Link
-            to="/"
-            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline"
-          >
-            View portfolio
-            <ArrowUpRightIcon className="size-3.5" />
-          </Link>
-          <div className="flex items-center gap-3">
+        <div className="border-t p-3">
+          <div className="flex items-center gap-2.5 rounded-lg px-2 py-1.5">
             <Avatar className="size-8 shrink-0">
               <AvatarImage
                 src={auth.user.image ?? undefined}
-                alt={auth.user.name + " profile photo"}
+                alt=""
                 referrerPolicy="no-referrer"
               />
               <AvatarFallback className="text-xs font-semibold">
                 {initials(auth.user.name || "Owner")}
               </AvatarFallback>
             </Avatar>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-semibold">{auth.user.name}</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm leading-5 font-medium">
+                {auth.user.name}
+              </p>
               <p
-                className="mt-0.5 truncate text-xs text-muted-foreground"
+                className="truncate text-xs text-muted-foreground"
                 title={auth.user.email}
               >
                 {auth.user.email}
               </p>
             </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 shrink-0 text-muted-foreground hover:text-foreground"
+              onClick={signOut}
+              disabled={signingOut}
+              aria-label="Sign out"
+              title="Sign out"
+            >
+              {signingOut ? (
+                <CircleDashedIcon className="size-4 animate-spin motion-reduce:animate-none" />
+              ) : (
+                <LogoutIcon className="size-4" />
+              )}
+            </Button>
           </div>
-          {signOutButton}
         </div>
       </aside>
       <div className="min-w-0 lg:ml-56">
@@ -184,6 +194,18 @@ function OwnerDashboardPage() {
           title={page.label}
           description={page.description}
           onRefresh={page.refresh ? () => router.invalidate() : undefined}
+          leadingActions={
+            <Button
+              variant="outline"
+              className="h-10 rounded-lg px-3 text-foreground"
+              asChild
+            >
+              <Link to="/" aria-label="View portfolio">
+                <ArrowUpRightIcon className="size-4" />
+                <span className="hidden sm:inline">View portfolio</span>
+              </Link>
+            </Button>
+          }
           actions={
             <Button
               variant="outline"
@@ -213,9 +235,6 @@ function OwnerDashboardPage() {
             {navigationLinks}
           </nav>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-t pt-3">
-            <Link to="/" className="text-sm underline underline-offset-4">
-              View portfolio
-            </Link>
             {signOutButton}
           </div>
         </details>

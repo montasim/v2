@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/dashboard/dashboard-page-state"
+import { FilesIcon, SearchIcon } from "@/components/ui/icons"
 import { useCallback, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,6 +33,8 @@ import {
   useAction,
   useRemote,
   useUnsaved,
+  companyLogo,
+  projectLogo,
 } from "./shared"
 
 const audienceLabels = {
@@ -179,7 +183,11 @@ export function Reviews({
               >
                 <option value="">Choose company</option>
                 {setup.companies.map((company) => (
-                  <option key={company.id} value={company.id}>
+                  <option
+                    key={company.id}
+                    value={company.id}
+                    data-logo={companyLogo(company.name)}
+                  >
                     {company.name}
                   </option>
                 ))}
@@ -194,7 +202,11 @@ export function Reviews({
                 {setup.projects
                   .filter((project) => project.companyId === form.companyId)
                   .map((project) => (
-                    <option key={project.id} value={project.id}>
+                    <option
+                      key={project.id}
+                      value={project.id}
+                      data-logo={projectLogo(project.name)}
+                    >
                       {project.name}
                     </option>
                   ))}
@@ -243,10 +255,11 @@ export function Reviews({
         {candidates && (
           <div className="space-y-4">
             {!candidates.length ? (
-              <Message>
-                No work was recorded for this selection. Try a different period
-                or company.
-              </Message>
+              <EmptyState
+                icon={SearchIcon}
+                title="No work recorded for this selection"
+                description="Try a different period or company."
+              />
             ) : (
               <>
                 <div className="flex flex-wrap items-center gap-3">
@@ -350,10 +363,11 @@ export function Reviews({
         {!remote.loading && !remote.error && remote.data && (
           <>
             {!remote.data.items.length ? (
-              <Message>
-                Your first review will appear here after you select
-                contributions above.
-              </Message>
+              <EmptyState
+                icon={FilesIcon}
+                title="No saved reviews yet"
+                description="Your first review will appear here after you select contributions above."
+              />
             ) : (
               <ul className="divide-y rounded-xl border bg-card px-4">
                 {remote.data.items.map((review) => (

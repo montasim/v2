@@ -11,7 +11,15 @@ import {
   saveJournalSettings,
 } from "../application/journal"
 import type { Setup } from "./journal-page"
-import { downloadText, Field, Select, useAction, useUnsaved } from "./shared"
+import {
+  Field,
+  Select,
+  companyLogo,
+  downloadText,
+  projectLogo,
+  useAction,
+  useUnsaved,
+} from "./shared"
 import type { z } from "zod"
 
 const emptyCompany = (): z.infer<typeof companySchema> => ({
@@ -257,7 +265,11 @@ export function Manage({
                       !record.archived || record.id === project.companyId
                   )
                   .map((record) => (
-                    <option key={record.id} value={record.id}>
+                    <option
+                      key={record.id}
+                      value={record.id}
+                      data-logo={companyLogo(record.name)}
+                    >
                       {record.name}
                     </option>
                   ))}
@@ -307,7 +319,11 @@ export function Manage({
                   {setup.companies
                     .filter((record) => !record.archived)
                     .map((record) => (
-                      <option key={record.id} value={record.id}>
+                      <option
+                        key={record.id}
+                        value={record.id}
+                        data-logo={companyLogo(record.name)}
+                      >
                         {record.name}
                       </option>
                     ))}
@@ -320,7 +336,11 @@ export function Manage({
                 >
                   <option value="">Choose project</option>
                   {setup.portfolioProjects.map((record) => (
-                    <option key={record.id} value={record.id}>
+                    <option
+                      key={record.id}
+                      value={record.id}
+                      data-logo={projectLogo(record.title)}
+                    >
                       {record.title}
                     </option>
                   ))}

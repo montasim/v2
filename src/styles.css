@@ -601,11 +601,18 @@ body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
 }
 
 /* The approved control-room palette is scoped to the dashboard only. */
+/* Light: reuse the portfolio About tones (#41423e headings/text, #686a63
+   body) and the "Discuss a role" fill for primary buttons. */
 .dashboard-shell {
-  --strong-foreground: var(--foreground);
-  --emphasis-foreground: var(--foreground);
+  --foreground: var(--strong-foreground);
+  --card-foreground: var(--strong-foreground);
+  --popover-foreground: var(--strong-foreground);
+  --primary: var(--emphasis-foreground);
 }
 .dark .dashboard-shell {
+  --strong-foreground: var(--foreground);
+  --emphasis-foreground: var(--foreground);
+  --primary: #e7e9ed;
   --foreground: #e7e9ed;
   --card-foreground: #e7e9ed;
   --muted-foreground: #a0a6af;
@@ -634,4 +641,18 @@ body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
 .dashboard-shell ::selection {
   background: var(--foreground);
   color: var(--card);
+}
+
+/* Radix hides select scrollbars; show them so long option lists read as
+   scrollable (the viewport is capped at five options). */
+[data-radix-select-viewport][data-radix-select-viewport] {
+  scrollbar-width: thin;
+}
+[data-radix-select-viewport][data-radix-select-viewport]::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+[data-radix-select-viewport][data-radix-select-viewport]::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: var(--border);
 }

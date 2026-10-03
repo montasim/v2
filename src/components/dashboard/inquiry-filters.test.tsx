@@ -82,14 +82,11 @@ describe("InquiryFilters", () => {
         onTopicChange={onTopicChange}
       />
     )
-    const topics = screen.getByRole("combobox", {
-      name: "Contact topic",
-    })
-    if (!(topics instanceof HTMLSelectElement))
-      throw new Error("Expected a native topic selector")
-    const nextTopic = topics.options[1].value
-    fireEvent.change(topics, { target: { value: nextTopic } })
-    expect(onTopicChange).toHaveBeenCalledWith(nextTopic)
+    fireEvent.click(screen.getByRole("combobox", { name: "Contact topic" }))
+    fireEvent.click(
+      screen.getByRole("option", { name: "App or project support" })
+    )
+    expect(onTopicChange).toHaveBeenCalledWith("support")
     expect(onChange).not.toHaveBeenCalled()
     expect(screen.getByRole("searchbox")).toHaveProperty("value", "Acme")
     rerender(

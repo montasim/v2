@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card"
 import { FunnelSimpleIcon, SearchIcon, XIcon } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FormSelect } from "@/components/ui/form-select"
 import {
   Select,
   SelectContent,
@@ -184,9 +185,8 @@ export function InquiryFilters({
             >
               Contact topic
             </label>
-            <select
+            <FormSelect
               id="inquiry-topic"
-              className="h-10 w-full rounded-lg border bg-card px-3 text-sm"
               value={topic}
               onChange={(event) =>
                 onTopicChange(
@@ -203,7 +203,7 @@ export function InquiryFilters({
                     : contactTopicLabels[value]}
                 </option>
               ))}
-            </select>
+            </FormSelect>
           </div>
         ) : null}
         <span className="pb-3 text-xs text-muted-foreground">

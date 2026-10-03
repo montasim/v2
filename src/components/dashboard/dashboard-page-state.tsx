@@ -10,16 +10,19 @@ import {
   ChatCircleDotsIcon,
   UsersThreeIcon,
 } from "@/components/ui/icons"
+import type { Icon } from "@/components/ui/icons"
 
 export function DashboardPageHeader({
   title,
   description,
   onRefresh,
+  leadingActions,
   actions,
 }: {
   title: string
   description?: string
   onRefresh?: () => Promise<unknown>
+  leadingActions?: ReactNode
   actions?: ReactNode
 }) {
   const [refreshing, setRefreshing] = useState(false)
@@ -54,6 +57,7 @@ export function DashboardPageHeader({
         ) : null}
       </div>
       <div className="relative flex shrink-0 items-center gap-2">
+        {leadingActions}
         {onRefresh ? (
           <Button
             type="button"
@@ -119,9 +123,18 @@ export function DashboardEmptyState({
 }: {
   kind: keyof typeof emptyStates
 }) {
-  const state = emptyStates[kind]
-  const Icon = state.icon
+  return <EmptyState {...emptyStates[kind]} />
+}
 
+export function EmptyState({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: Icon
+  title: string
+  description: string
+}) {
   return (
     <Card
       asChild
@@ -133,10 +146,10 @@ export function DashboardEmptyState({
             <Icon className="size-5" />
           </span>
           <h2 className="mt-4 text-sm font-semibold text-strong-foreground">
-            {state.title}
+            {title}
           </h2>
           <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
-            {state.description}
+            {description}
           </p>
         </div>
       </section>
