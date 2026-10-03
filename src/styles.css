@@ -642,3 +642,17 @@ body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
   background: var(--foreground);
   color: var(--card);
 }
+
+/* Radix hides select scrollbars; show them so long option lists read as
+   scrollable (the viewport is capped at five options). */
+[data-radix-select-viewport][data-radix-select-viewport] {
+  scrollbar-width: thin;
+}
+[data-radix-select-viewport][data-radix-select-viewport]::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+[data-radix-select-viewport][data-radix-select-viewport]::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: var(--border);
+}
