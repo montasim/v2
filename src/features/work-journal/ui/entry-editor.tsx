@@ -20,6 +20,8 @@ import {
   useAction,
   useRemote,
   useUnsaved,
+  companyLogo,
+  projectLogo,
 } from "./shared"
 
 function newTask(description = ""): Contribution {
@@ -127,20 +129,7 @@ export function EntryEditor({
   )
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="sr-only">
-          {initial ? "Edit entry" : "Record your day"}
-        </h2>
-        <span className="text-xs text-muted-foreground" role="status">
-          {action.busy
-            ? "Working…"
-            : dirty
-              ? "Unsaved changes"
-              : saved
-                ? "Saved"
-                : "New entry"}
-        </span>
-      </div>
+      <h2 className="sr-only">{initial ? "Edit entry" : "Record your day"}</h2>
       {!setup.companies.length && (
         <Message>
           Add a company in Companies & projects to start recording work.
@@ -156,7 +145,7 @@ export function EntryEditor({
       >
         <fieldset
           disabled={action.busy}
-          className="grid min-w-0 gap-5 disabled:opacity-70 xl:grid-cols-[minmax(0,1fr)_280px]"
+          className="grid min-w-0 gap-5 disabled:opacity-70 xl:grid-cols-[minmax(0,1fr)_380px]"
         >
           <div className="min-w-0 space-y-5">
             <div className="grid gap-4 sm:grid-cols-3">
@@ -183,7 +172,11 @@ export function EntryEditor({
                         !company.archived || company.id === entry.companyId
                     )
                     .map((company) => (
-                      <option key={company.id} value={company.id}>
+                      <option
+                        key={company.id}
+                        value={company.id}
+                        data-logo={companyLogo(company.name)}
+                      >
                         {company.name}
                         {company.archived ? " (archived)" : ""}
                       </option>
@@ -215,7 +208,11 @@ export function EntryEditor({
                   <option value="">Company-level work</option>
                   <optgroup label="Company projects">
                     {activeProjects.map((project) => (
-                      <option key={project.id} value={project.id}>
+                      <option
+                        key={project.id}
+                        value={project.id}
+                        data-logo={projectLogo(project.name)}
+                      >
                         {project.name}
                         {project.archived ? " (archived)" : ""}
                       </option>
@@ -235,6 +232,7 @@ export function EntryEditor({
                         <option
                           key={project.id}
                           value={`portfolio:${project.id}`}
+                          data-logo={projectLogo(project.id)}
                         >
                           {project.title}
                         </option>
@@ -580,7 +578,9 @@ export function EntryEditor({
               </Button>
             </div>
           </div>
-          <aside className="min-w-0 space-y-4">
+          {/* xl:pt-[1.375rem] = field label (1rem line + 0.375rem gap), so the
+              summary card lines up with the inputs, not their labels. */}
+          <aside className="min-w-0 space-y-4 xl:pt-[1.375rem]">
             <section className="space-y-4 rounded-xl border bg-card p-5">
               <h3 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
                 Entry summary

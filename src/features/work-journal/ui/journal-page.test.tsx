@@ -47,11 +47,7 @@ it("opens every journal view and returns to today without prompting for unchange
     screen.getByRole("navigation", { name: "Work journal views" })
   )
   fireEvent.click(nav.getByRole("tab", { name: "History" }))
-  expect(
-    await screen.findByText(
-      "No entries match this view. Record your day or change the filters."
-    )
-  ).toBeTruthy()
+  expect(await screen.findByText("No entries match this view")).toBeTruthy()
   fireEvent.click(nav.getByRole("tab", { name: "Reviews" }))
   expect(
     await screen.findByRole("heading", { name: "Prepare a review" })
@@ -117,9 +113,7 @@ it("supports keyboard tab navigation without switching until activated", async (
   expect(screen.getByRole("tabpanel").getAttribute("aria-labelledby")).toBe(
     history.id
   )
-  await screen.findByText(
-    "No entries match this view. Record your day or change the filters."
-  )
+  await screen.findByText("No entries match this view")
 })
 
 it("guards unsaved history entry edits when returning to the selected parent tab", async () => {
@@ -217,7 +211,5 @@ it("guards unsaved history entry edits when returning to the selected parent tab
   expect(notes.value).toBe("Keep the edited notes")
   fireEvent.click(history)
   fireEvent.click(screen.getByRole("button", { name: "Discard and switch" }))
-  await screen.findByText(
-    "No entries match this view. Record your day or change the filters."
-  )
+  await screen.findByText("No entries match this view")
 })

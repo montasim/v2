@@ -1,3 +1,5 @@
+import { EmptyState } from "@/components/dashboard/dashboard-page-state"
+import { ClockIcon, SearchIcon } from "@/components/ui/icons"
 import { useCallback, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -5,7 +7,14 @@ import { categories, historySchema, statuses } from "../domain/journal"
 import type { HistoryFilter } from "../domain/journal"
 import { getJournalHistory } from "../application/journal"
 import type { Setup } from "./journal-page"
-import { Field, LoadState, Message, Select, useRemote } from "./shared"
+import {
+  Field,
+  LoadState,
+  Select,
+  companyLogo,
+  projectLogo,
+  useRemote,
+} from "./shared"
 
 export function History({
   setup,
@@ -38,13 +47,19 @@ export function History({
       >
         <div className="flex flex-wrap items-end gap-3 [&>label]:min-w-40 [&>label]:flex-1">
           <Field label="Search notes and tasks">
-            <Input
-              maxLength={120}
-              value={fields.query}
-              onChange={(event) =>
-                setFields({ ...fields, query: event.target.value })
-              }
-            />
+            <span className="relative block">
+              <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                maxLength={120}
+                value={fields.query}
+                onChange={(event) =>
+                  setFields({ ...fields, query: event.target.value })
+                }
+                placeholder="Search notes and tasks"
+                className="pl-9"
+              />
+            </span>
           </Field>
           <Button type="submit" disabled={remote.loading}>
             Apply filters
@@ -97,7 +112,11 @@ export function History({
               >
                 <option value="">All companies</option>
                 {setup.companies.map((company) => (
-                  <option key={company.id} value={company.id}>
+                  <option
+                    key={company.id}
+                    value={company.id}
+                    data-logo={companyLogo(company.name)}
+                  >
                     {company.name}
                   </option>
                 ))}
@@ -118,7 +137,11 @@ export function History({
                       project.companyId === fields.companyId
                   )
                   .map((project) => (
-                    <option key={project.id} value={project.id}>
+                    <option
+                      key={project.id}
+                      value={project.id}
+                      data-logo={projectLogo(project.name)}
+                    >
                       {project.name}
                     </option>
                   ))}
@@ -163,9 +186,11 @@ export function History({
       {!remote.loading && !remote.error && remote.data && (
         <>
           {!remote.data.items.length ? (
-            <Message>
-              No entries match this view. Record your day or change the filters.
-            </Message>
+            <EmptyState
+              icon={ClockIcon}
+              title="No entries match this view"
+              description="Record your day or change the filters."
+            />
           ) : (
             <ul className="divide-y overflow-hidden rounded-xl border bg-card">
               {remote.data.items.map((entry) => (

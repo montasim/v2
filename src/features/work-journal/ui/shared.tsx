@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import type { ReactNode, SelectHTMLAttributes } from "react"
+import type { ReactNode } from "react"
 import { useBlocker } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
+import { FormSelect } from "@/components/ui/form-select"
+import { experienceCatalog } from "@/lib/content/experience"
+import { projectCatalog } from "@/lib/content/projects"
 
 export function Field({
   label,
@@ -11,20 +14,31 @@ export function Field({
   children: ReactNode
 }) {
   return (
-    <label className="grid min-w-0 gap-1.5 text-xs font-medium text-muted-foreground">
-      <span>{label}</span>
+    <label className="grid min-w-0 gap-1.5">
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       {children}
     </label>
   )
 }
-export function Select(props: SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <select
-      {...props}
-      className="h-10 w-full min-w-0 rounded-lg border border-input bg-card px-3 text-sm text-strong-foreground focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
-    />
-  )
-}
+export { FormSelect as Select }
+
+// Journal companies/projects store names only; logos come from portfolio content.
+const companyLogos = new Map(
+  experienceCatalog.records.map((record) => [
+    record.company.toLowerCase(),
+    record.logoUrl ?? "",
+  ])
+)
+const projectLogos = new Map(
+  projectCatalog.records.flatMap((project) => [
+    [project.id, project.logoUrl ?? ""],
+    [project.title.toLowerCase(), project.logoUrl ?? ""],
+  ])
+)
+export const companyLogo = (name: string) =>
+  companyLogos.get(name.toLowerCase()) ?? ""
+export const projectLogo = (nameOrId: string) =>
+  projectLogos.get(nameOrId) ?? projectLogos.get(nameOrId.toLowerCase()) ?? ""
 export function Message({
   children,
   error = false,
