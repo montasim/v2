@@ -72,6 +72,7 @@ export function ProjectSwitcher({
         <Popover.Content
           align="start"
           sideOffset={8}
+          collisionPadding={16}
           aria-label="Switch project"
           className="z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-lg outline-none"
         >
@@ -115,13 +116,16 @@ export function ProjectSwitcher({
 }
 
 function ProjectLogo({ option }: { option: ProjectSwitcherOption }) {
+  // External logos can fail; fall back to the project type icon.
+  const [failed, setFailed] = useState(false)
   const box =
     "grid size-5 shrink-0 place-items-center rounded-sm text-muted-foreground"
-  return option.logoUrl ? (
+  return option.logoUrl && !failed ? (
     <img
       src={option.logoUrl}
       alt=""
       loading="lazy"
+      onError={() => setFailed(true)}
       className={cn(box, "object-contain")}
     />
   ) : (
