@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Revision (after implementation):** the stats row, all-time summary and most active repositories (Task 3) were built and then removed at the owner's request. The shipped feature shows only the live contribution calendar and total; the GraphQL query requests just `viewer.url` and `contributionCalendar`. Tasks 1, 2 and 4 apply as written apart from those fields.
+
 **Goal:** Show live GitHub contribution data on the homepage Contributions section (calendar, last-12-month totals including private work and code reviews, all-time totals, and most active public repositories) without any manual sync.
 
 **Architecture:** A server-only loader calls the GitHub GraphQL API with the owner's personal access token, validates the response with Zod, and caches the result in module memory for one hour (with a five-minute back-off after failures). A `createServerFn` exposes it to the homepage route loader, so the numbers are in the server-rendered HTML. When the token is missing or GitHub fails, the loader returns the last good result (`stale`) or the bundled `src/data/contributions.json` snapshot, so the homepage never breaks. This mirrors `src/features/project-status` (UptimeRobot).
