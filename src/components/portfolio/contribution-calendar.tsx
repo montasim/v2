@@ -1,6 +1,8 @@
-import { contributionCatalog as contributions } from "@/lib/content/contributions"
-import { profileCatalog } from "@/lib/content/profile"
 import { ExternalLink } from "@/components/shared/navigation-action"
+import type {
+  ContributionWeek,
+  GitHubContributions,
+} from "@/features/github-contributions/domain/contributions"
 
 const monthNames = [
   "Jan",
@@ -37,21 +39,26 @@ function utcDate(date: string) {
   return new Date(`${date}T00:00:00Z`)
 }
 
-const monthLabels = contributions.weeks.reduce<
-  { month: number; start: number; span: number }[]
->((labels, week, index) => {
-  const firstDay = week.contributionDays[0]
-  const month = utcDate(firstDay.date).getUTCMonth()
-  const current = labels.at(-1)
+const formatCount = (value: number) => value.toLocaleString("en")
 
-  if (current?.month === month) {
-    current.span += 1
-  } else {
-    labels.push({ month, start: index, span: 1 })
-  }
+function monthLabels(weeks: readonly ContributionWeek[]) {
+  return weeks.reduce<{ month: number; start: number; span: number }[]>(
+    (labels, week, index) => {
+      const firstDay = week.contributionDays[0]
+      const month = utcDate(firstDay.date).getUTCMonth()
+      const current = labels.at(-1)
 
-  return labels
-}, [])
+      if (current?.month === month) {
+        current.span += 1
+      } else {
+        labels.push({ month, start: index, span: 1 })
+      }
+
+      return labels
+    },
+    []
+  )
+}
 
 function ContributionCell({ count }: { count: number }) {
   return (
@@ -62,8 +69,8 @@ function ContributionCell({ count }: { count: number }) {
   )
 }
 
-export function ContributionCalendar() {
-  const total = contributions.totalContributions.toLocaleString()
+export function ContributionCalendar({ data }: { data: GitHubContributions }) {
+  const total = formatCount(data.totalContributions)
 
   return (
     <div>
@@ -72,11 +79,11 @@ export function ContributionCalendar() {
           <div
             className="mb-1 grid gap-[3px] text-[10px] text-muted-foreground"
             style={{
-              gridTemplateColumns: `repeat(${contributions.weeks.length}, 10px)`,
+              gridTemplateColumns: `repeat(${data.weeks.length}, 10px)`,
             }}
             aria-hidden="true"
           >
-            {monthLabels.map(({ month, start, span }) => (
+            {monthLabels(data.weeks).map(({ month, start, span }) => (
               <span
                 key={`${month}-${start}`}
                 style={{ gridColumn: `${start + 1} / span ${span}` }}
@@ -90,7 +97,7 @@ export function ContributionCalendar() {
             role="img"
             aria-label={`${total} GitHub contributions in the last year`}
           >
-            {contributions.weeks.map((week) => (
+            {data.weeks.map((week) => (
               <div
                 key={week.contributionDays[0].date}
                 className="grid grid-rows-7 gap-[3px]"
@@ -99,7 +106,9 @@ export function ContributionCalendar() {
                   <span
                     key={day.date}
                     className={`size-2.5 rounded-[2px] ${levelClasses[contributionLevel(day.contributionCount)]}`}
-                    style={{ gridRowStart: utcDate(day.date).getUTCDay() + 1 }}
+                    style={{
+                      gridRowStart: utcDate(day.date).getUTCDay() + 1,
+                    }}
                     title={`${day.date}: ${day.contributionCount} contribution${day.contributionCount === 1 ? "" : "s"}`}
                     aria-hidden="true"
                   />
@@ -111,7 +120,7 @@ export function ContributionCalendar() {
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
         <ExternalLink
-          href={profileCatalog.socialUrl("github")}
+          href={data.profileUrl}
           className="rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground hover:underline hover:opacity-80 motion-reduce:transition-none"
         >
           {total} GitHub contributions in the last year

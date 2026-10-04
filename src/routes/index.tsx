@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { getPublicAvailabilitySettings } from "@/features/availability/application/settings"
+import { getGitHubContributions } from "@/features/github-contributions/application/github-contributions"
 import {
   ChatCircleDotsIcon,
   DownloadSimpleIcon,
@@ -33,13 +34,19 @@ import { projectCatalog } from "@/lib/content/projects"
 import { createMeta, site } from "@/lib/site"
 
 export const Route = createFileRoute("/")({
-  loader: () => getPublicAvailabilitySettings(),
+  loader: async () => {
+    const [availabilitySettings, contributions] = await Promise.all([
+      getPublicAvailabilitySettings(),
+      getGitHubContributions(),
+    ])
+    return { availabilitySettings, contributions }
+  },
   head: () => createMeta(site.fullName, site.description),
   component: OverviewPage,
 })
 function OverviewPage() {
   const { profile } = profileCatalog
-  const availabilitySettings = Route.useLoaderData()
+  const { availabilitySettings, contributions } = Route.useLoaderData()
   return (
     <PageShell className="overview-page">
       <section
@@ -197,7 +204,7 @@ function OverviewPage() {
         headingId="contributions-heading"
         title="Contributions"
       >
-        <ContributionCalendar />
+        <ContributionCalendar data={contributions} />
       </PageSection>
       <PageSection
         id="volunteering"
