@@ -558,18 +558,21 @@ describe("PortfolioAssistant chat navigation", () => {
     ).toBe("https://wa.me/montasimmamun")
   })
 
-  it("links the availability card to direct contact without opening chat", () => {
+  it("opens the role inquiry from the availability card without navigating", () => {
     render(
       <>
         <AvailabilityCard />
         <PortfolioAssistant />
       </>
     )
-    const link = screen.getByRole("link", { name: "Discuss a role" })
-    expect(link.getAttribute("href")).toBe(
-      "/contact?topic=collaboration&from=%2Fexperience"
-    )
-    expect(screen.queryByRole("dialog")).toBeNull()
+    const locationBeforeClick = window.location.href
+    fireEvent.click(screen.getByRole("button", { name: "Discuss a role" }))
+
+    expect(screen.getByRole("dialog")).not.toBeNull()
+    expect(screen.getByText("Question 1 of 4")).not.toBeNull()
+    expect(screen.getByText("What role are you hiring for?")).not.toBeNull()
+    expect(window.location.href).toBe(locationBeforeClick)
+    expect(sendMessage).not.toHaveBeenCalled()
   })
 
   it("collects a specific custom project type instead of a generic option", async () => {
