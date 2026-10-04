@@ -10,7 +10,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { CaretDownIcon, CheckIcon } from "@/components/ui/icons"
+import { CaretDownIcon, CheckIcon, SearchIcon } from "@/components/ui/icons"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { projectCatalog } from "@/lib/content/projects"
 import type { Project } from "@/lib/content/projects"
@@ -77,11 +77,19 @@ export function ProjectSwitcher({
           className="z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-xl border bg-popover text-popover-foreground shadow-lg outline-none"
         >
           <Command loop>
-            <CommandInput
-              autoFocus
-              placeholder="Find a project…"
-              className="h-11 py-3 text-sm"
-            />
+            {/* The shared CommandInput wrapper has 1rem side padding; the icon
+                sits in it and the input text is shifted past the icon. */}
+            <div className="relative">
+              <SearchIcon
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-muted-foreground"
+              />
+              <CommandInput
+                autoFocus
+                placeholder="Find a project…"
+                className="h-11 py-3 pl-6 text-sm"
+              />
+            </div>
             <CommandList className="max-h-80 p-1.5">
               <CommandEmpty className="py-6 text-center text-sm text-muted-foreground">
                 No projects found.
