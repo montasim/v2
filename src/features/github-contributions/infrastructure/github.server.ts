@@ -1,9 +1,6 @@
 import { z } from "zod"
 
-import {
-  TOP_REPOSITORY_LIMIT,
-  snapshotContributions,
-} from "@/features/github-contributions/domain/contributions"
+import { snapshotContributions } from "@/features/github-contributions/domain/contributions"
 import type { GitHubContributions } from "@/features/github-contributions/domain/contributions"
 
 const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql"
@@ -11,54 +8,27 @@ const CACHE_TTL_MS = 60 * 60 * 1000
 const FAILURE_BACKOFF_MS = 5 * 60 * 1000
 const REQUEST_TIMEOUT_MS = 4_000
 
-// The viewer is the token owner, so private counts and the full calendar
-// total are included. Private repository names are filtered out below.
+// The viewer is the token owner, so the calendar total includes private
+// contributions (counts only; no repository details are requested).
 const QUERY = `query PortfolioContributions {
   viewer {
     url
-    followers { totalCount }
-    repositories(ownerAffiliations: OWNER, privacy: PUBLIC) { totalCount }
-    pullRequests { totalCount }
-    mergedPullRequests: pullRequests(states: MERGED) { totalCount }
-    issues { totalCount }
     contributionsCollection {
-      totalCommitContributions
-      totalPullRequestContributions
-      totalPullRequestReviewContributions
-      totalIssueContributions
-      totalRepositoryContributions
-      restrictedContributionsCount
       contributionCalendar {
         totalContributions
         weeks { contributionDays { contributionCount date } }
-      }
-      commitContributionsByRepository(maxRepositories: 25) {
-        repository { nameWithOwner url isPrivate }
-        contributions { totalCount }
       }
     }
   }
 }`
 
 const count = z.number().int().nonnegative()
-const total = z.object({ totalCount: count })
 
 const responseSchema = z.object({
   data: z.object({
     viewer: z.object({
       url: z.url(),
-      followers: total,
-      repositories: total,
-      pullRequests: total,
-      mergedPullRequests: total,
-      issues: total,
       contributionsCollection: z.object({
-        totalCommitContributions: count,
-        totalPullRequestContributions: count,
-        totalPullRequestReviewContributions: count,
-        totalIssueContributions: count,
-        totalRepositoryContributions: count,
-        restrictedContributionsCount: count,
         contributionCalendar: z.object({
           totalContributions: count,
           weeks: z.array(
@@ -69,16 +39,6 @@ const responseSchema = z.object({
             })
           ),
         }),
-        commitContributionsByRepository: z.array(
-          z.object({
-            repository: z.object({
-              nameWithOwner: z.string().min(1),
-              url: z.url(),
-              isPrivate: z.boolean(),
-            }),
-            contributions: total,
-          })
-        ),
       }),
     }),
   }),
@@ -90,35 +50,13 @@ function toContributions(
   viewer: Viewer,
   retrievedAt: string
 ): GitHubContributions {
-  const collection = viewer.contributionsCollection
+  const calendar = viewer.contributionsCollection.contributionCalendar
   return {
     source: "live",
     retrievedAt,
     profileUrl: viewer.url,
-    totalContributions: collection.contributionCalendar.totalContributions,
-    weeks: collection.contributionCalendar.weeks,
-    stats: {
-      commits: collection.totalCommitContributions,
-      pullRequests: collection.totalPullRequestContributions,
-      codeReviews: collection.totalPullRequestReviewContributions,
-      issues: collection.totalIssueContributions,
-      repositoriesCreated: collection.totalRepositoryContributions,
-      privateContributions: collection.restrictedContributionsCount,
-      allTimePullRequests: viewer.pullRequests.totalCount,
-      allTimeMergedPullRequests: viewer.mergedPullRequests.totalCount,
-      allTimeIssues: viewer.issues.totalCount,
-      publicRepositories: viewer.repositories.totalCount,
-      followers: viewer.followers.totalCount,
-    },
-    // Private work is only shown as the aggregate privateContributions count.
-    topRepositories: collection.commitContributionsByRepository
-      .filter((entry) => !entry.repository.isPrivate)
-      .slice(0, TOP_REPOSITORY_LIMIT)
-      .map((entry) => ({
-        name: entry.repository.nameWithOwner,
-        url: entry.repository.url,
-        commits: entry.contributions.totalCount,
-      })),
+    totalContributions: calendar.totalContributions,
+    weeks: calendar.weeks,
   }
 }
 

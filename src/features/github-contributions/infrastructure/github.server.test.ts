@@ -7,45 +7,14 @@ const week = {
   ],
 }
 
-function repository(name: string, commits: number, isPrivate = false) {
-  return {
-    repository: {
-      nameWithOwner: `montasim/${name}`,
-      url: `https://github.com/montasim/${name}`,
-      isPrivate,
-    },
-    contributions: { totalCount: commits },
-  }
-}
-
 function graphqlResponse() {
   return new Response(
     JSON.stringify({
       data: {
         viewer: {
           url: "https://github.com/montasim",
-          followers: { totalCount: 111 },
-          repositories: { totalCount: 92 },
-          pullRequests: { totalCount: 535 },
-          mergedPullRequests: { totalCount: 471 },
-          issues: { totalCount: 183 },
           contributionsCollection: {
-            totalCommitContributions: 1832,
-            totalPullRequestContributions: 186,
-            totalPullRequestReviewContributions: 4,
-            totalIssueContributions: 7,
-            totalRepositoryContributions: 43,
-            restrictedContributionsCount: 702,
             contributionCalendar: { totalContributions: 2770, weeks: [week] },
-            commitContributionsByRepository: [
-              repository("PostCraft", 406),
-              repository("client-secret-app", 300, true),
-              repository("devtools", 275),
-              repository("v2", 236),
-              repository("v1", 123),
-              repository("Routempo", 86),
-              repository("BugReceipt", 40),
-            ],
           },
         },
       },
@@ -82,12 +51,11 @@ describe("GitHub contributions loader", () => {
     const result = await (await loader())()
 
     expect(result.source).toBe("snapshot")
-    expect(result.stats).toBeNull()
     expect(result.weeks.length).toBeGreaterThan(0)
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
-  it("maps live totals and hides private repository names", async () => {
+  it("maps the live calendar", async () => {
     const fetchMock = vi.fn().mockResolvedValue(graphqlResponse())
     vi.stubGlobal("fetch", fetchMock)
 
@@ -99,27 +67,7 @@ describe("GitHub contributions loader", () => {
       profileUrl: "https://github.com/montasim",
       totalContributions: 2770,
       weeks: [week],
-      stats: {
-        commits: 1832,
-        pullRequests: 186,
-        codeReviews: 4,
-        issues: 7,
-        repositoriesCreated: 43,
-        privateContributions: 702,
-        allTimePullRequests: 535,
-        allTimeMergedPullRequests: 471,
-        allTimeIssues: 183,
-        publicRepositories: 92,
-        followers: 111,
-      },
     })
-    expect(result.topRepositories.map((repo) => repo.name)).toEqual([
-      "montasim/PostCraft",
-      "montasim/devtools",
-      "montasim/v2",
-      "montasim/v1",
-      "montasim/Routempo",
-    ])
     const [, init] = fetchMock.mock.calls[0]
     expect(init.headers.Authorization).toBe("Bearer test-read-user-token")
   })
