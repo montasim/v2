@@ -4,7 +4,9 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
+  CaseStudySwitcher,
   ProjectSwitcher,
+  caseStudySwitcherOptions,
   projectSwitcherOptions,
 } from "@/components/portfolio/project-switcher"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
@@ -46,7 +48,7 @@ describe("ProjectSwitcher", () => {
   it("lists only projects that have a detail page, with route slugs", () => {
     expect(projectSwitcherOptions.length).toBeGreaterThan(1)
     for (const option of projectSwitcherOptions) {
-      const project = projectCatalog.findBySlug(option.slug)
+      const project = projectCatalog.findBySlug(option.value)
       expect(project?.title).toBe(option.title)
       expect(projectCaseStudyCatalog.findByProjectId(project!.id)).toBeDefined()
     }
@@ -108,5 +110,33 @@ describe("ProjectSwitcher", () => {
     fireEvent.click(screen.getByRole("option", { name: /PostCraft/ }))
 
     expect(navigate).not.toHaveBeenCalled()
+  })
+
+  it("switches between case studies", () => {
+    const caseStudy = projectCaseStudyCatalog.findBySlug("postcraft")!
+    const target = caseStudySwitcherOptions.find(
+      (option) => option.value !== caseStudy.slug
+    )!
+    render(
+      <CaseStudySwitcher
+        current={caseStudy}
+        label={`${caseStudy.project.title} case study`}
+      />
+    )
+    fireEvent.click(
+      screen.getByRole("button", { name: /PostCraft case study/ })
+    )
+
+    expect(screen.getAllByRole("option")).toHaveLength(
+      projectCaseStudyCatalog.records.length
+    )
+    fireEvent.click(
+      screen.getByRole("option", { name: new RegExp(target.title) })
+    )
+
+    expect(navigate).toHaveBeenCalledWith({
+      to: "/case-studies/$slug",
+      params: { slug: target.value },
+    })
   })
 })
