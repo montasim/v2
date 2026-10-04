@@ -67,4 +67,58 @@ describe("ContributionCalendar", () => {
         .getAttribute("href")
     ).toBe("https://github.com/montasim")
   })
+
+  it("shows last-year stats including private work and code reviews", () => {
+    render(<ContributionCalendar data={liveData} />)
+
+    const stats = screen.getByRole("list", { name: "Last 12 months" })
+    for (const text of [
+      "1,832",
+      "Commits",
+      "186",
+      "Pull requests",
+      "0",
+      "Code reviews",
+      "7",
+      "Issues",
+      "43",
+      "New repositories",
+      "702",
+      "Private contributions",
+    ]) {
+      expect(stats.textContent).toContain(text)
+    }
+  })
+
+  it("shows all-time totals and public top repositories", () => {
+    render(<ContributionCalendar data={liveData} />)
+
+    expect(
+      screen.getByText(
+        "All time: 535 pull requests (471 merged) · 183 issues · 92 public repositories · 111 followers"
+      )
+    ).toBeTruthy()
+    expect(
+      screen
+        .getByRole("link", { name: "montasim/PostCraft, 406 commits" })
+        .getAttribute("href")
+    ).toBe("https://github.com/montasim/PostCraft")
+  })
+
+  it("hides stats when only the bundled snapshot is available", () => {
+    render(
+      <ContributionCalendar
+        data={{
+          ...liveData,
+          source: "snapshot",
+          stats: null,
+          topRepositories: [],
+        }}
+      />
+    )
+
+    expect(screen.queryByRole("list", { name: "Last 12 months" })).toBeNull()
+    expect(screen.queryByText(/All time:/)).toBeNull()
+    expect(screen.queryByText("Most active in")).toBeNull()
+  })
 })
