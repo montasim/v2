@@ -52,8 +52,9 @@ The original approved static pages remain in [`prototypes/`](prototypes/) for vi
 
 ### Prerequisites
 
-- Node.js 22.12 or newer
+- Node.js 22.13 or newer
 - pnpm 11 or newer
+- [Infisical CLI](https://infisical.com/docs/cli/overview), authenticated with access to the linked project
 
 The public content is version-controlled JSON. Neon Postgres is required for comments, view counts, owner-dashboard data, inquiries, chat telemetry, and limits. Dynamic chat also needs at least one generation provider; the complete portfolio knowledge packet is compiled locally from the public catalogs and does not require an embedding service or database index.
 
@@ -63,12 +64,19 @@ From the project directory:
 
 ```bash
 pnpm install
+infisical login
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Copy [`.env.example`](.env.example) to `.env.local` and add the services you want to enable:
+Secrets live in the Infisical project linked by [`.infisical.json`](.infisical.json), in the `dev` environment at path `/`. Configure the services you want to enable in that project. [`.env.example`](.env.example) is a reference of variable names and example values only; do not copy it to a local secrets file.
+
+`pnpm dev`, `pnpm preview`, `pnpm chat:evaluate`, and the `pnpm db:*` commands fetch secrets with `infisical run` and inject them into the child process. Shell expansion is disabled to preserve literal secret values. Restart a running command after changing secrets. Vite env-file loading is disabled, and Drizzle and the evaluation runner read only the process environment.
+
+`pnpm build`, tests, and static checks do not require Infisical access. For a command targeting another environment, invoke the underlying tool explicitly, for example `infisical run --env=prod --expand=false -- pnpm exec drizzle-kit migrate`; the `pnpm db:*` shortcuts always target development.
+
+Example configuration (enter actual values in Infisical):
 
 ```dotenv
 GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
@@ -267,7 +275,9 @@ The deployment configuration pins the project's supported Node.js and pnpm
 versions. Verify server-side rendering, static assets, canonical URLs, and the
 social preview after the first deployment.
 
-Configure the server-only variables from [`.env.example`](.env.example) in Netlify; never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The inquiry-range variables and `OPENROUTER_FREE_MODEL` are optional.
+Production secrets are managed by the `montasim-netlify-production` [Infisical Netlify secret sync](https://infisical.com/docs/integrations/secret-syncs/netlify). It syncs the linked project’s `prod` environment at `/` to the `montasim` Netlify site (`b6d4f9c7-f04f-43bb-b379-39b58131e8d5`), in the `production` deploy context. Automatic syncing is enabled, and deletion is disabled to preserve unrelated Netlify variables. Edit production values in Infisical, then verify that the sync succeeds. Keep `DEV_OWNER_AUTH_BYPASS=false` in production.
+
+Netlify receives the values as environment variables available to its Functions runtime; no Infisical CLI login or secret file is required during the build. After changing a secret, trigger a new production deploy: [Netlify Functions apply environment changes on a new deploy](https://docs.netlify.com/build/functions/environment-variables/). Deploy previews and branch deploys are not managed by this production sync. Never use a public Vite prefix for credentials. Apply migrations to the production `DATABASE_URL` before routing traffic to a release that requires the new operational schema. The inquiry-range variables and `OPENROUTER_FREE_MODEL` are optional.
 
 The application no longer reads the legacy portfolio evidence tables. Forward migration `0008_solid_raider` removes both evidence tables and the database vector extension. On an existing deployment, deploy and verify the focused-evidence runtime before applying that cleanup migration; a fresh environment can apply the complete migration chain before receiving traffic.
 

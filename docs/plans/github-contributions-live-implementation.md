@@ -1061,8 +1061,8 @@ The repository owner creates the token; an agent must not create, view or paste 
 1. GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (classic).
 2. Note: `portfolio contributions (read-only)`. Expiration: owner's choice (no expiry avoids rotation; otherwise add a calendar reminder).
 3. Scope: tick only `read:user`. Generate and copy it.
-4. Local: add `GITHUB_CONTRIBUTIONS_TOKEN=<token>` to `.env.local` (git-ignored).
-5. Production: Netlify → Site configuration → Environment variables → add `GITHUB_CONTRIBUTIONS_TOKEN`, scoped to Functions/Runtime, then redeploy.
+4. Local: configure `GITHUB_CONTRIBUTIONS_TOKEN` in the linked Infisical project’s `dev` environment.
+5. Production: configure `GITHUB_CONTRIBUTIONS_TOKEN` in Infisical’s `prod` environment, verify the Netlify production sync succeeds with Functions scope, then redeploy.
 
 - [ ] **Step 3: Verify locally in the browser**
 

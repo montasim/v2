@@ -1,3 +1,6 @@
+# Production secrets are synced from Infisical prod:/ to this site's
+# production context. Keep secrets out of this file: Functions receive them
+# from Netlify's environment. Redeploy after changing synced secrets.
 [build]
   command = "pnpm build"
   publish = "dist/client"
