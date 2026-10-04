@@ -14,7 +14,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import {
@@ -52,6 +51,7 @@ import { getEmailVerificationError } from "@/features/email-verification/domain/
 import { contactHref } from "@/features/contact/domain/contact"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import { blogCatalog } from "@/lib/content/blog"
+import { BlogSwitcher } from "@/components/blog/blog-switcher"
 import type { BlogPost } from "@/lib/content/blog"
 import { projectCatalog } from "@/lib/content/projects"
 import { ExternalAction } from "@/components/shared/navigation-action"
@@ -800,7 +800,7 @@ export function BlogDetailPage({
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem className="min-w-0">
-            <BreadcrumbPage className="truncate">{post.title}</BreadcrumbPage>
+            <BlogSwitcher current={post} />
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

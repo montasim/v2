@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
+import { CaseStudySwitcher } from "@/components/portfolio/project-switcher"
 import {
   ExternalAction,
   ExternalLink,
@@ -28,7 +29,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
@@ -210,7 +210,10 @@ export function ProjectCaseStudyPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{project.title} case study</BreadcrumbPage>
+              <CaseStudySwitcher
+                current={caseStudy}
+                label={`${project.title} case study`}
+              />
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

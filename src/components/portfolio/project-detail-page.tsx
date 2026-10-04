@@ -14,6 +14,7 @@ import { BadgeList } from "@/components/shared/badge-list"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
+import { ProjectSwitcher } from "@/components/portfolio/project-switcher"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -21,7 +22,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import type { Project } from "@/lib/content/projects"
@@ -69,7 +69,7 @@ export function ProjectDetailPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{project.title} details</BreadcrumbPage>
+              <ProjectSwitcher current={project} label={project.title} />
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
