@@ -5,6 +5,7 @@ import viteReact from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
 
 const config = defineConfig({
+  envDir: false,
   resolve: { tsconfigPaths: true },
   plugins: [tailwindcss(), tanstackStart(), netlify(), viteReact()],
 })

@@ -67,7 +67,7 @@ export function getNeonAuthProxyConfiguration() {
 export async function getOwnerAuthState(): Promise<OwnerAuthState> {
   const ownerEmail = process.env.OWNER_EMAIL?.trim()
   // Dev-only Google sign-in bypass. Vite strips this branch from production
-  // builds; it also requires DEV_OWNER_AUTH_BYPASS=true in .env.local.
+  // builds; it also requires DEV_OWNER_AUTH_BYPASS=true in the Infisical dev environment.
   if (import.meta.env.DEV && process.env.DEV_OWNER_AUTH_BYPASS === "true") {
     return {
       status: "owner",
