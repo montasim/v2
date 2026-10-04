@@ -4,7 +4,7 @@ import { SiteContainer } from "@/components/shared/site-container"
 import { profileCatalog } from "@/lib/content/profile"
 
 const footerLinkClass =
-  "inline-flex min-h-11 items-center rounded-sm px-2 text-sm font-medium text-strong-foreground underline-offset-8 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
+  "inline-flex min-h-11 items-center rounded-sm px-2.5 text-sm font-medium text-strong-foreground underline-offset-8 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
 
 export function SiteFooter() {
   const { profile } = profileCatalog
@@ -18,7 +18,7 @@ export function SiteFooter() {
           </p>
           <nav
             aria-label="Footer navigation"
-            className="flex shrink-0 items-center gap-4 sm:ml-auto"
+            className="flex flex-wrap items-center justify-center gap-1 sm:mr-16 sm:ml-auto"
           >
             <Link
               to="/contact"
@@ -30,7 +30,6 @@ export function SiteFooter() {
             >
               Contact
             </Link>
-            <span aria-hidden="true" className="h-3 border-l" />
             <Link
               to="/case-studies"
               className={footerLinkClass}
@@ -40,6 +39,27 @@ export function SiteFooter() {
               }}
             >
               Case studies
+            </Link>
+            <Link
+              to="/blog"
+              search={{ topic: "all", q: "" }}
+              className={footerLinkClass}
+              activeProps={{
+                className: "underline decoration-border",
+                "aria-current": "page",
+              }}
+            >
+              Blog
+            </Link>
+            <Link
+              to="/projects"
+              className={footerLinkClass}
+              activeProps={{
+                className: "underline decoration-border",
+                "aria-current": "page",
+              }}
+            >
+              Projects
             </Link>
           </nav>
         </div>
