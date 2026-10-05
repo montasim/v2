@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { getPublicAvailabilitySettings } from "@/features/availability/application/settings"
 import { getGitHubContributions } from "@/features/github-contributions/application/github-contributions"
 import {
+  ArrowRightCompactIcon,
   ChatCircleDotsIcon,
   DownloadSimpleIcon,
   EnvelopeSimpleIcon,
@@ -104,6 +105,13 @@ function OverviewPage() {
               >
                 <DownloadSimpleIcon className="size-[18px]" />
                 View resume
+              </InternalAction>
+              <InternalAction
+                to="/projects"
+                variant="ghost"
+                className="h-11 font-medium text-strong-foreground"
+              >
+                Explore projects <ArrowRightCompactIcon aria-hidden="true" />
               </InternalAction>
               <ExternalAction
                 href={profileCatalog.socialUrl("linkedin")}
