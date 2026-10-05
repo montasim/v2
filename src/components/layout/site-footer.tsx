@@ -4,7 +4,7 @@ import { SiteContainer } from "@/components/shared/site-container"
 import { profileCatalog } from "@/lib/content/profile"
 
 const footerLinkClass =
-  "inline-flex min-h-11 items-center rounded-sm px-2.5 text-sm font-medium text-strong-foreground underline-offset-8 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
+  "inline-flex min-h-11 items-center rounded-sm px-2.5 last:pr-0 text-sm font-medium text-strong-foreground underline-offset-8 transition-colors hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring motion-reduce:transition-none"
 
 export function SiteFooter() {
   const { profile } = profileCatalog
