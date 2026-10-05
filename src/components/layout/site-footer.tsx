@@ -18,7 +18,7 @@ export function SiteFooter() {
           </p>
           <nav
             aria-label="Footer navigation"
-            className="flex flex-wrap items-center justify-center gap-1 sm:mr-16 sm:ml-auto"
+            className="flex flex-wrap items-center justify-center gap-1 sm:ml-auto"
           >
             <Link
               to="/contact"
