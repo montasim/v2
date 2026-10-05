@@ -1,19 +1,15 @@
-import { z } from "zod"
 import { createFileRoute } from "@tanstack/react-router"
 import { getJournalSetup } from "@/features/work-journal/application/journal"
-import { JournalPage } from "@/features/work-journal/ui/journal-page"
 import {
   JournalError,
   JournalPending,
 } from "@/features/work-journal/ui/journal-route-state"
+import { NewEntryPage } from "@/features/work-journal/ui/new-entry-page"
 
-export const Route = createFileRoute("/dashboard/work-journal")({
-  validateSearch: z.object({
-    tab: z.enum(["history", "reviews", "manage"]).catch("history").optional(),
-  }),
+export const Route = createFileRoute("/dashboard/work-journal_/new")({
   loader: () => getJournalSetup(),
   pendingMs: 150,
   pendingComponent: JournalPending,
   errorComponent: JournalError,
-  component: () => <JournalPage initial={Route.useLoaderData()} />,
+  component: () => <NewEntryPage initial={Route.useLoaderData()} />,
 })

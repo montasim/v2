@@ -69,8 +69,14 @@ export const dashboardNavigation = [
 
 export function dashboardPageFor(pathname: string) {
   const path = pathname.replace(/\/$/, "")
-  return (
-    dashboardNavigation.find((page) => page.to === path) ??
-    dashboardNavigation[0]
-  )
+  const page =
+    dashboardNavigation.find(
+      (item) =>
+        item.to === path ||
+        (item.to !== "/dashboard" && path.startsWith(`${item.to}/`))
+    ) ?? dashboardNavigation[0]
+  return {
+    ...page,
+    detail: path === "/dashboard/work-journal/new" ? "New journal" : null,
+  }
 }

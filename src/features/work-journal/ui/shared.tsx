@@ -157,10 +157,10 @@ export function LoadState({
     )
   return null
 }
-export function useUnsaved(dirty: boolean, onDirty: (dirty: boolean) => void) {
+export function useUnsaved(dirty: boolean, onDirty?: (dirty: boolean) => void) {
   useEffect(() => {
-    onDirty(dirty)
-    return () => onDirty(false)
+    onDirty?.(dirty)
+    return () => onDirty?.(false)
   }, [dirty, onDirty])
   useBlocker({
     shouldBlockFn: () =>

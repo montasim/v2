@@ -73,7 +73,7 @@ export function EntryEditor({
 }: {
   setup: Setup
   initial?: JournalEntry
-  onDirty: (dirty: boolean) => void
+  onDirty?: (dirty: boolean) => void
   refresh: () => Promise<void>
 }) {
   const [entry, setEntry] = useState<EntryInput>(() =>
@@ -132,7 +132,8 @@ export function EntryEditor({
       <h2 className="sr-only">{initial ? "Edit entry" : "Record your day"}</h2>
       {!setup.companies.length && (
         <Message>
-          Add a company in Companies & projects to start recording work.
+          Open Companies & projects in Work Journal to add a company and start
+          recording work.
         </Message>
       )}
       {action.feedback}

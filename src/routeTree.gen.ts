@@ -38,6 +38,7 @@ import { Route as DashboardSubscribersRouteImport } from './routes/dashboard.sub
 import { Route as DashboardWorkJournalRouteImport } from './routes/dashboard.work-journal'
 import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as DashboardWorkJournalNewRouteImport } from './routes/dashboard.work-journal_.new'
 import { Route as ProjectsSlugContactRouteImport } from './routes/projects_.$slug_.contact'
 
 const IndexRoute = IndexRouteImport.update({
@@ -185,6 +186,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardWorkJournalNewRoute = DashboardWorkJournalNewRouteImport.update({
+  id: '/work-journal_/new',
+  path: '/work-journal/new',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const ProjectsSlugContactRoute = ProjectsSlugContactRouteImport.update({
   id: '/projects_/$slug_/contact',
   path: '/projects/$slug/contact',
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/work-journal/new': typeof DashboardWorkJournalNewRoute
   '/projects/$slug/contact': typeof ProjectsSlugContactRoute
 }
 export interface FileRoutesByTo {
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/work-journal/new': typeof DashboardWorkJournalNewRoute
   '/projects/$slug/contact': typeof ProjectsSlugContactRoute
 }
 export interface FileRoutesById {
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/projects_/$slug': typeof ProjectsSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/dashboard/work-journal_/new': typeof DashboardWorkJournalNewRoute
   '/projects_/$slug_/contact': typeof ProjectsSlugContactRoute
 }
 export interface FileRouteTypes {
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/dashboard/'
     | '/api/auth/$'
+    | '/dashboard/work-journal/new'
     | '/projects/$slug/contact'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -350,6 +360,7 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/dashboard'
     | '/api/auth/$'
+    | '/dashboard/work-journal/new'
     | '/projects/$slug/contact'
   id:
     | '__root__'
@@ -382,6 +393,7 @@ export interface FileRouteTypes {
     | '/projects_/$slug'
     | '/dashboard/'
     | '/api/auth/$'
+    | '/dashboard/work-journal_/new'
     | '/projects_/$slug_/contact'
   fileRoutesById: FileRoutesById
 }
@@ -615,6 +627,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/work-journal_/new': {
+      id: '/dashboard/work-journal_/new'
+      path: '/work-journal/new'
+      fullPath: '/dashboard/work-journal/new'
+      preLoaderRoute: typeof DashboardWorkJournalNewRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/projects_/$slug_/contact': {
       id: '/projects_/$slug_/contact'
       path: '/projects/$slug/contact'
@@ -634,6 +653,7 @@ interface DashboardRouteChildren {
   DashboardSubscribersRoute: typeof DashboardSubscribersRoute
   DashboardWorkJournalRoute: typeof DashboardWorkJournalRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardWorkJournalNewRoute: typeof DashboardWorkJournalNewRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -645,6 +665,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardSubscribersRoute: DashboardSubscribersRoute,
   DashboardWorkJournalRoute: DashboardWorkJournalRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardWorkJournalNewRoute: DashboardWorkJournalNewRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

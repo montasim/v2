@@ -10,10 +10,16 @@ period review snapshots, selective report exports, and a private JSON backup.
    company is selected by default. The project picker includes every existing
    portfolio project; choosing one adds it to that company’s private journal.
    Use **Companies & projects** to add more companies or projects.
-2. In **Today**, record rough notes and add tasks. **Add note lines as tasks**
-   copies bullet lines while preserving the original notes.
+2. Work Journal opens on **History**. Choose **New journal** to open
+   `/dashboard/work-journal/new`, record rough notes, and add tasks. The work date
+   defaults to today in your configured timezone and remains editable.
+   **Add note lines as tasks** copies bullet lines while preserving the original notes.
 3. Save before generating a daily draft. Review the generated text, choose
-   **Use draft in editor**, and save to accept it. Manual summaries work without AI.
+   **Use draft in editor**, and save to accept it. Saving keeps the editor open;
+   subsequent saves update the same entry. Manual summaries work without AI.
+   **Back to Work Journal** returns to History. Unsaved edits are guarded when
+   leaving the page or closing/reloading the browser. A fresh visit to **New journal**
+   starts a new form; reopen saved work from History.
 4. Reopen entries from **History** to add evidence, update status, or attach later
    outcomes. Use a consistent related work ID to connect work across days.
 5. In **Reviews**, choose a period, company, audience, and individual contributions.
@@ -118,6 +124,15 @@ and exact-answer catalog expectations. They were not changed for this feature.
 Browser interaction checks used an isolated synthetic-data preview of the actual
 journal components. The live dashboard correctly redirected the signed-out browser
 to `/root`; authenticated browser end-to-end verification remains an owner check.
+
+The New journal navigation update passed 38 focused journal/navigation tests,
+type checking, lint, formatting, and the production build. Tests cover fresh
+entry creation, repeat saves, failed-save recovery, returning to refreshed
+History, tab navigation, route blocking, and browser unload protection. The
+authenticated local dashboard was checked at desktop and 390px mobile widths
+in light and dark themes, including direct entry-page loading and browser Back
+cancel/discard behavior. Save flows used mocked server functions in tests;
+browser checks did not create journal records or invoke AI generation.
 
 Future work: reminders, issue-tracker imports, attachments, and approved public
 portfolio excerpts. These are not included in the first release.

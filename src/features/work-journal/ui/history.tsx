@@ -1,6 +1,12 @@
 import { EmptyState } from "@/components/dashboard/dashboard-page-state"
-import { CaretRightIcon, ClockIcon, SearchIcon } from "@/components/ui/icons"
-import { useCallback, useState } from "react"
+import { CatalogPagination } from "@/components/shared/catalog-pagination"
+import {
+  CaretDownIcon,
+  CaretRightIcon,
+  ClockIcon,
+  SearchIcon,
+} from "@/components/ui/icons"
+import { useCallback, useId, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,6 +34,16 @@ export function History({
     historySchema.parse({})
   )
   const [filter, setFilter] = useState(fields)
+  const [advancedOpen, setAdvancedOpen] = useState(false)
+  const advancedId = useId()
+  const advancedFilterCount = [
+    fields.from,
+    fields.to,
+    fields.companyId,
+    fields.projectId,
+    fields.category,
+    fields.status,
+  ].filter(Boolean).length
   const load = useCallback(() => getJournalHistory({ data: filter }), [filter])
   const remote = useRemote(load)
   return (
@@ -46,7 +62,7 @@ export function History({
         }}
         className="space-y-4"
       >
-        <div className="flex flex-wrap items-end gap-3 [&>label]:min-w-40 [&>label]:flex-1">
+        <div className="flex flex-wrap items-end gap-3 [&>label]:min-w-0 [&>label]:basis-full md:[&>label]:basis-1/2">
           <Field label="Search notes and tasks">
             <span className="relative block">
               <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -62,25 +78,34 @@ export function History({
               />
             </span>
           </Field>
-          <Button type="submit" disabled={remote.loading}>
-            Apply filters
-          </Button>
+          <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              aria-expanded={advancedOpen}
+              aria-controls={advancedId}
+              className="focus-visible:outline-2 focus-visible:outline-offset-2"
+              onClick={() => setAdvancedOpen((open) => !open)}
+            >
+              Advanced filters
+              {advancedFilterCount ? ` · ${advancedFilterCount} selected` : ""}
+              <CaretDownIcon
+                className={`size-4 transition-transform motion-reduce:transition-none ${advancedOpen ? "rotate-180" : ""}`}
+              />
+            </Button>
+            <Button type="submit" disabled={remote.loading}>
+              Apply filters
+            </Button>
+          </div>
         </div>
-        <details className="rounded-lg border bg-card p-4">
-          <summary className="cursor-pointer text-sm font-medium">
-            Advanced filters
-            {[
-              fields.from,
-              fields.to,
-              fields.companyId,
-              fields.projectId,
-              fields.category,
-              fields.status,
-            ].filter(Boolean).length
-              ? ` · ${[fields.from, fields.to, fields.companyId, fields.projectId, fields.category, fields.status].filter(Boolean).length} selected`
-              : ""}
-          </summary>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          id={advancedId}
+          hidden={!advancedOpen}
+          role="group"
+          aria-label="Advanced filters"
+          className="rounded-lg border bg-card p-4"
+        >
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Field label="From">
               <Input
                 type="date"
@@ -181,7 +206,7 @@ export function History({
               </Select>
             </Field>
           </div>
-        </details>
+        </div>
       </form>
       <LoadState {...remote} retry={remote.refresh} />
       {!remote.loading && !remote.error && remote.data && (
@@ -190,7 +215,7 @@ export function History({
             <EmptyState
               icon={ClockIcon}
               title="No entries match this view"
-              description="Record your day or change the filters."
+              description="Choose New journal to record your work, or change the filters."
             />
           ) : (
             <ul className="divide-y overflow-hidden rounded-xl border bg-card">
@@ -287,30 +312,16 @@ export function History({
               ))}
             </ul>
           )}
-          <div className="flex items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              disabled={remote.data.page <= 1}
-              onClick={() =>
-                setFilter({ ...filter, page: (remote.data?.page ?? 1) - 1 })
-              }
-            >
-              Previous
-            </Button>
-            <span className="text-xs text-muted-foreground">
-              {remote.data.total} entries · Page {remote.data.page} of{" "}
-              {remote.data.pageCount}
-            </span>
-            <Button
-              variant="outline"
-              disabled={remote.data.page >= remote.data.pageCount}
-              onClick={() =>
-                setFilter({ ...filter, page: (remote.data?.page ?? 1) + 1 })
-              }
-            >
-              Next
-            </Button>
-          </div>
+          {remote.data.total > 0 && (
+            <CatalogPagination
+              page={remote.data.page}
+              pageCount={remote.data.pageCount}
+              pageSize={20}
+              total={remote.data.total}
+              resultLabel="entries"
+              onPageChange={(page) => setFilter({ ...filter, page })}
+            />
+          )}
         </>
       )}
     </section>

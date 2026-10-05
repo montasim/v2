@@ -1,6 +1,6 @@
 import { EmptyState } from "@/components/dashboard/dashboard-page-state"
-import { FilesIcon, SearchIcon } from "@/components/ui/icons"
-import { useCallback, useState } from "react"
+import { CaretDownIcon, FilesIcon, SearchIcon } from "@/components/ui/icons"
+import { useCallback, useId, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -60,6 +60,8 @@ export function Reviews({
   openReview: (id: string, saved?: boolean) => void
   onDirty: (dirty: boolean) => void
 }) {
+  const [prepareOpen, setPrepareOpen] = useState(false)
+  const prepareId = useId()
   const [page, setPage] = useState(1)
   const load = useCallback(() => getJournalReviews({ data: { page } }), [page])
   const remote = useRemote(load)
@@ -94,268 +96,295 @@ export function Reviews({
   }
   return (
     <div className="space-y-5">
-      <section className="min-w-0 space-y-4 rounded-xl border bg-card p-5">
-        <h2 className="-mx-5 -mt-5 border-b px-5 py-3 font-semibold">
-          Prepare a review
-        </h2>
-        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-          Choose a period and contributions. The review keeps a snapshot of
-          those sources, so later journal edits cannot silently change what you
-          shared.
-        </p>
-        {action.feedback}
-        <div className="flex flex-wrap gap-2">
-          {(["week", "month", "year"] as const).map((period) => (
-            <Button
-              key={period}
-              variant="outline"
-              disabled={action.busy}
-              onClick={() =>
-                change({
-                  ...periodRange(period, today, setup.settings.weekStartsOn),
-                  title: `${period === "week" ? "Weekly" : period === "month" ? "Monthly" : "Annual"} review`,
-                })
-              }
-            >
-              This {period}
-            </Button>
-          ))}
-        </div>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault()
-            void action.run(async () => {
-              const items = await getReviewCandidates({
-                data: {
-                  from: form.from,
-                  to: form.to,
-                  companyId: form.companyId,
-                  projectId: form.projectId || null,
-                },
-              })
-              setCandidates(items)
-              setSelected(
-                new Set(
-                  items.flatMap((entry) =>
-                    entry.contributions.map((task) => `${entry.id}/${task.id}`)
-                  )
-                )
-              )
-            })
-          }}
-        >
-          <fieldset
-            disabled={action.busy}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      <section className="min-w-0 rounded-xl border bg-card">
+        <h2 className="font-semibold">
+          <button
+            type="button"
+            aria-expanded={prepareOpen}
+            aria-controls={prepareId}
+            onClick={() => setPrepareOpen((open) => !open)}
+            className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-5 py-3 text-left hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
-            <Field label="Report title">
-              <Input
-                required
-                maxLength={200}
-                value={form.title}
-                onChange={(event) => change({ title: event.target.value })}
-              />
-            </Field>
-            <Field label="From">
-              <Input
-                required
-                type="date"
-                value={form.from}
-                onChange={(event) => change({ from: event.target.value })}
-              />
-            </Field>
-            <Field label="Through">
-              <Input
-                required
-                type="date"
-                min={form.from}
-                value={form.to}
-                onChange={(event) => change({ to: event.target.value })}
-              />
-            </Field>
-            <Field label="Company">
-              <Select
-                required
-                value={form.companyId}
-                onChange={(event) =>
-                  change({ companyId: event.target.value, projectId: "" })
-                }
-              >
-                <option value="">Choose company</option>
-                {setup.companies.map((company) => (
-                  <option
-                    key={company.id}
-                    value={company.id}
-                    data-logo={companyLogo(company.name)}
-                  >
-                    {company.name}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-            <Field label="Project">
-              <Select
-                value={form.projectId}
-                onChange={(event) => change({ projectId: event.target.value })}
-              >
-                <option value="">All company work</option>
-                {setup.projects
-                  .filter((project) => project.companyId === form.companyId)
-                  .map((project) => (
-                    <option
-                      key={project.id}
-                      value={project.id}
-                      data-logo={projectLogo(project.name)}
-                    >
-                      {project.name}
-                    </option>
-                  ))}
-              </Select>
-            </Field>
-            <Field label="Audience">
-              <Select
-                value={form.audience}
-                onChange={(event) =>
-                  change({
-                    audience: event.target.value as typeof form.audience,
-                    includeReflections: false,
-                  })
-                }
-              >
-                {audiences.map((audience) => (
-                  <option key={audience} value={audience}>
-                    {audienceLabels[audience]}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={form.includeReflections}
-                onChange={(event) =>
-                  change({ includeReflections: event.target.checked })
-                }
-              />
-              Include private reflections
-            </label>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={form.includeLinks}
-                onChange={(event) =>
-                  change({ includeLinks: event.target.checked })
-                }
-              />
-              Include internal evidence URLs
-            </label>
-            <Button type="submit">Find contributions</Button>
-          </fieldset>
-        </form>
-        {candidates && (
-          <div className="space-y-4">
-            {!candidates.length ? (
-              <EmptyState
-                icon={SearchIcon}
-                title="No work recorded for this selection"
-                description="Try a different period or company."
-              />
-            ) : (
-              <>
-                <div className="flex flex-wrap items-center gap-3">
-                  <p className="text-sm font-medium">
-                    Choose what belongs in this report
-                  </p>
-                  <Button
-                    variant="ghost"
-                    disabled={action.busy}
-                    onClick={() => {
-                      setSelected(new Set())
-                      setDirty(true)
-                    }}
-                  >
-                    Deselect all
-                  </Button>
-                </div>
-                <div className="max-h-[28rem] space-y-5 overflow-auto rounded-xl border bg-card p-5">
-                  {candidates.map((entry) => (
-                    <fieldset
-                      key={entry.id}
-                      disabled={action.busy}
-                      className="space-y-3"
-                    >
-                      <legend className="mb-2 text-sm font-semibold">
-                        {entry.workDate} ·{" "}
-                        {setup.projects.find(
-                          (project) => project.id === entry.projectId
-                        )?.name ?? "Company-level work"}
-                      </legend>
-                      {entry.contributions.map((task) => {
-                        const key = `${entry.id}/${task.id}`
-                        return (
-                          <label
-                            key={key}
-                            className="flex items-start gap-3 text-sm leading-6"
-                          >
-                            <input
-                              type="checkbox"
-                              className="mt-1"
-                              checked={selected.has(key)}
-                              onChange={(event) => {
-                                const next = new Set(selected)
-                                if (event.target.checked) next.add(key)
-                                else next.delete(key)
-                                setSelected(next)
-                                setDirty(true)
-                              }}
-                            />
-                            <span className="min-w-0 break-words">
-                              {task.description}
-                              <span className="ml-2 text-xs text-muted-foreground">
-                                {task.status}
-                              </span>
-                            </span>
-                          </label>
-                        )
-                      })}
-                    </fieldset>
-                  ))}
-                </div>
+            Prepare a review
+            <CaretDownIcon
+              className={`size-4 shrink-0 text-muted-foreground ${prepareOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+        </h2>
+        <div
+          id={prepareId}
+          hidden={!prepareOpen}
+          className="space-y-4 border-t p-5"
+        >
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <p className="max-w-2xl min-w-0 text-sm leading-6 text-muted-foreground">
+              Choose a period and contributions. The review keeps a snapshot of
+              those sources, so later journal edits cannot silently change what
+              you shared.
+            </p>
+            <div className="flex shrink-0 flex-wrap gap-2">
+              {(["week", "month", "year"] as const).map((period) => (
                 <Button
-                  disabled={action.busy || !selected.size}
+                  key={period}
+                  variant="outline"
+                  disabled={action.busy}
                   onClick={() =>
-                    void action.run(async () => {
-                      const report = await createJournalReview({
-                        data: {
-                          ...form,
-                          id: requestId,
-                          projectId: form.projectId || null,
-                          selected: candidates
-                            .map((entry) => ({
-                              entryId: entry.id,
-                              contributionIds: entry.contributions
-                                .filter((task) =>
-                                  selected.has(`${entry.id}/${task.id}`)
-                                )
-                                .map((task) => task.id),
-                            }))
-                            .filter(
-                              (selection) => selection.contributionIds.length
-                            ),
-                        },
-                      })
-                      setDirty(false)
-                      onDirty(false)
-                      openReview(report.id, true)
+                    change({
+                      ...periodRange(
+                        period,
+                        today,
+                        setup.settings.weekStartsOn
+                      ),
+                      title: `${period === "week" ? "Weekly" : period === "month" ? "Monthly" : "Annual"} review`,
                     })
                   }
                 >
-                  Create review from {selected.size} contributions
+                  This {period}
                 </Button>
-              </>
-            )}
+              ))}
+            </div>
           </div>
-        )}
+          {action.feedback}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              void action.run(async () => {
+                const items = await getReviewCandidates({
+                  data: {
+                    from: form.from,
+                    to: form.to,
+                    companyId: form.companyId,
+                    projectId: form.projectId || null,
+                  },
+                })
+                setCandidates(items)
+                setSelected(
+                  new Set(
+                    items.flatMap((entry) =>
+                      entry.contributions.map(
+                        (task) => `${entry.id}/${task.id}`
+                      )
+                    )
+                  )
+                )
+              })
+            }}
+          >
+            <fieldset
+              disabled={action.busy}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              <Field label="Report title">
+                <Input
+                  required
+                  maxLength={200}
+                  value={form.title}
+                  onChange={(event) => change({ title: event.target.value })}
+                />
+              </Field>
+              <Field label="From">
+                <Input
+                  required
+                  type="date"
+                  value={form.from}
+                  onChange={(event) => change({ from: event.target.value })}
+                />
+              </Field>
+              <Field label="Through">
+                <Input
+                  required
+                  type="date"
+                  min={form.from}
+                  value={form.to}
+                  onChange={(event) => change({ to: event.target.value })}
+                />
+              </Field>
+              <Field label="Company">
+                <Select
+                  required
+                  value={form.companyId}
+                  onChange={(event) =>
+                    change({ companyId: event.target.value, projectId: "" })
+                  }
+                >
+                  <option value="">Choose company</option>
+                  {setup.companies.map((company) => (
+                    <option
+                      key={company.id}
+                      value={company.id}
+                      data-logo={companyLogo(company.name)}
+                    >
+                      {company.name}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field label="Project">
+                <Select
+                  value={form.projectId}
+                  onChange={(event) =>
+                    change({ projectId: event.target.value })
+                  }
+                >
+                  <option value="">All company work</option>
+                  {setup.projects
+                    .filter((project) => project.companyId === form.companyId)
+                    .map((project) => (
+                      <option
+                        key={project.id}
+                        value={project.id}
+                        data-logo={projectLogo(project.name)}
+                      >
+                        {project.name}
+                      </option>
+                    ))}
+                </Select>
+              </Field>
+              <Field label="Audience">
+                <Select
+                  value={form.audience}
+                  onChange={(event) =>
+                    change({
+                      audience: event.target.value as typeof form.audience,
+                      includeReflections: false,
+                    })
+                  }
+                >
+                  {audiences.map((audience) => (
+                    <option key={audience} value={audience}>
+                      {audienceLabels[audience]}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={form.includeReflections}
+                  onChange={(event) =>
+                    change({ includeReflections: event.target.checked })
+                  }
+                />
+                Include private reflections
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={form.includeLinks}
+                  onChange={(event) =>
+                    change({ includeLinks: event.target.checked })
+                  }
+                />
+                Include internal evidence URLs
+              </label>
+              <Button type="submit">Find contributions</Button>
+            </fieldset>
+          </form>
+          {candidates && (
+            <div className="space-y-4">
+              {!candidates.length ? (
+                <EmptyState
+                  icon={SearchIcon}
+                  title="No work recorded for this selection"
+                  description="Try a different period or company."
+                />
+              ) : (
+                <>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <p className="text-sm font-medium">
+                      Choose what belongs in this report
+                    </p>
+                    <Button
+                      variant="ghost"
+                      disabled={action.busy}
+                      onClick={() => {
+                        setSelected(new Set())
+                        setDirty(true)
+                      }}
+                    >
+                      Deselect all
+                    </Button>
+                  </div>
+                  <div className="max-h-[28rem] space-y-5 overflow-auto rounded-xl border bg-card p-5">
+                    {candidates.map((entry) => (
+                      <fieldset
+                        key={entry.id}
+                        disabled={action.busy}
+                        className="space-y-3"
+                      >
+                        <legend className="mb-2 text-sm font-semibold">
+                          {entry.workDate} ·{" "}
+                          {setup.projects.find(
+                            (project) => project.id === entry.projectId
+                          )?.name ?? "Company-level work"}
+                        </legend>
+                        {entry.contributions.map((task) => {
+                          const key = `${entry.id}/${task.id}`
+                          return (
+                            <label
+                              key={key}
+                              className="flex items-start gap-3 text-sm leading-6"
+                            >
+                              <input
+                                type="checkbox"
+                                className="mt-1"
+                                checked={selected.has(key)}
+                                onChange={(event) => {
+                                  const next = new Set(selected)
+                                  if (event.target.checked) next.add(key)
+                                  else next.delete(key)
+                                  setSelected(next)
+                                  setDirty(true)
+                                }}
+                              />
+                              <span className="min-w-0 break-words">
+                                {task.description}
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  {task.status}
+                                </span>
+                              </span>
+                            </label>
+                          )
+                        })}
+                      </fieldset>
+                    ))}
+                  </div>
+                  <Button
+                    disabled={action.busy || !selected.size}
+                    onClick={() =>
+                      void action.run(async () => {
+                        const report = await createJournalReview({
+                          data: {
+                            ...form,
+                            id: requestId,
+                            projectId: form.projectId || null,
+                            selected: candidates
+                              .map((entry) => ({
+                                entryId: entry.id,
+                                contributionIds: entry.contributions
+                                  .filter((task) =>
+                                    selected.has(`${entry.id}/${task.id}`)
+                                  )
+                                  .map((task) => task.id),
+                              }))
+                              .filter(
+                                (selection) => selection.contributionIds.length
+                              ),
+                          },
+                        })
+                        setDirty(false)
+                        onDirty(false)
+                        openReview(report.id, true)
+                      })
+                    }
+                  >
+                    Create review from {selected.size} contributions
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </section>
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Saved reviews</h2>

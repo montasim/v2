@@ -251,8 +251,16 @@ function OwnerDashboardPage() {
                 Dashboard
               </Link>
               <span aria-hidden="true">/</span>
+              {page.detail && (
+                <>
+                  <Link to={page.to} className="shrink-0 hover:underline">
+                    {page.label}
+                  </Link>
+                  <span aria-hidden="true">/</span>
+                </>
+              )}
               <span aria-current="page" className="truncate">
-                {page.label}
+                {page.detail ?? page.label}
               </span>
             </nav>
             <span className="shrink-0">Private workspace</span>

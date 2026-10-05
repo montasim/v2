@@ -78,6 +78,7 @@ import HugeMoonIcon from "@hugeicons/core-free-icons/Moon02Icon"
 import HugePackageIcon from "@hugeicons/core-free-icons/PackageIcon"
 import HugePencilSimpleIcon from "@hugeicons/core-free-icons/PencilEdit01Icon"
 import HugePlayIcon from "@hugeicons/core-free-icons/PlayIcon"
+import HugePlusIcon from "@hugeicons/core-free-icons/PlusSignIcon"
 import HugePolygonIcon from "@hugeicons/core-free-icons/PolygonIcon"
 import HugeFilePptIcon from "@hugeicons/core-free-icons/Presentation01Icon"
 import HugeQuotesIcon from "@hugeicons/core-free-icons/QuoteDownIcon"
@@ -324,6 +325,7 @@ export const PlugsConnectedIcon = createIcon(
   HugePlugsConnectedIcon,
   "PlugsConnectedIcon"
 )
+export const PlusIcon = createIcon(HugePlusIcon, "PlusIcon")
 export const PolygonIcon = createIcon(HugePolygonIcon, "PolygonIcon")
 export const QuotesIcon = createIcon(HugeQuotesIcon, "QuotesIcon")
 export const RulerIcon = createIcon(HugeRulerIcon, "RulerIcon")
