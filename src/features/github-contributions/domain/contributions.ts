@@ -7,6 +7,8 @@ export type ContributionWeek = { contributionDays: ContributionDay[] }
 export type GitHubContributionsSource = "live" | "stale" | "snapshot"
 
 export type GitHubContributions = {
+  year: number | null
+  availableYears: number[]
   source: GitHubContributionsSource
   retrievedAt: string | null
   profileUrl: string
@@ -17,6 +19,8 @@ export type GitHubContributions = {
 /** Bundled calendar used when the live GitHub API is unconfigured or down. */
 export function snapshotContributions(): GitHubContributions {
   return {
+    year: null,
+    availableYears: [],
     source: "snapshot",
     retrievedAt: null,
     profileUrl: profileCatalog.socialUrl("github"),

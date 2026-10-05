@@ -14,6 +14,7 @@ function graphqlResponse() {
         viewer: {
           url: "https://github.com/montasim",
           contributionsCollection: {
+            contributionYears: [2026, 2025, 2024],
             contributionCalendar: { totalContributions: 2770, weeks: [week] },
           },
         },
@@ -132,5 +133,49 @@ describe("GitHub contributions loader", () => {
     )
 
     expect((await (await loader())()).source).toBe("snapshot")
+  })
+  it("requests exact year boundaries and caches each period separately", async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => graphqlResponse())
+    vi.stubGlobal("fetch", fetchMock)
+    const load = await loader()
+    await load()
+    const historical = await load(2024)
+    await load(2024)
+    await load(2025)
+    expect(historical.year).toBe(2024)
+    expect(historical.availableYears).toEqual([2026, 2025, 2024])
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).variables).toEqual({
+      from: "2024-01-01T00:00:00Z",
+      to: "2024-12-31T23:59:59Z",
+    })
+  })
+
+  it("caps the current calendar year at now", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(graphqlResponse())
+    vi.stubGlobal("fetch", fetchMock)
+    await (
+      await loader()
+    )(2026)
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).variables.to).toBe(
+      "2026-10-04T12:00:00.000Z"
+    )
+  })
+
+  it("never substitutes the rolling snapshot for an unavailable historical year", async () => {
+    vi.stubEnv("GITHUB_CONTRIBUTIONS_TOKEN", "")
+    await expect((await loader())(2025)).rejects.toThrow(
+      "temporarily unavailable"
+    )
+  })
+
+  it("rejects invalid years before contacting GitHub", async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal("fetch", fetchMock)
+    const load = await loader()
+    for (const year of [2007, 2027, 2025.5, NaN]) {
+      await expect(load(year)).rejects.toThrow("Invalid contribution year")
+    }
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })

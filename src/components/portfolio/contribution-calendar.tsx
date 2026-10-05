@@ -1,3 +1,5 @@
+import { useRef, useState } from "react"
+import { getGitHubContributionsForYear } from "@/features/github-contributions/application/github-contributions"
 import { ExternalLink } from "@/components/shared/navigation-action"
 import type {
   ContributionWeek,
@@ -70,7 +72,81 @@ function ContributionCell({ count }: { count: number }) {
 }
 
 export function ContributionCalendar({ data }: { data: GitHubContributions }) {
+  const [selectedYear, setSelectedYear] = useState(
+    data.year ?? new Date().getUTCFullYear()
+  )
+  const [calendar, setCalendar] = useState(data)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const request = useRef(0)
+
+  async function selectYear(year: number) {
+    const id = ++request.current
+    setSelectedYear(year)
+    setError(false)
+    if (year === data.year) {
+      setCalendar(data)
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    try {
+      const result = await getGitHubContributionsForYear({ data: year })
+      if (id === request.current) setCalendar(result)
+    } catch {
+      if (id === request.current) setError(true)
+    } finally {
+      if (id === request.current) setLoading(false)
+    }
+  }
+
+  return (
+    <div className="flex min-w-0 flex-col gap-6 lg:flex-row">
+      <div className="min-w-0 flex-1" aria-busy={loading}>
+        {loading ? (
+          <p role="status" className="py-10 text-sm text-muted-foreground">
+            Loading contributions for {selectedYear}…
+          </p>
+        ) : error ? (
+          <div role="alert" className="py-8 text-sm text-muted-foreground">
+            <p>Contributions for {selectedYear} couldn’t be loaded.</p>
+            <button
+              type="button"
+              onClick={() => void selectYear(selectedYear)}
+              className="mt-3 min-h-11 underline underline-offset-4"
+            >
+              Try again
+            </button>
+          </div>
+        ) : (
+          <CalendarGrid data={calendar} />
+        )}
+      </div>
+      {data.availableYears.length > 0 && (
+        <nav
+          aria-label="Contribution year"
+          className="flex max-h-[140px] w-36 shrink-0 [scrollbar-width:thin] flex-col gap-1 self-start overflow-y-auto overscroll-contain pr-1"
+        >
+          {data.availableYears.map((year) => (
+            <button
+              key={year}
+              type="button"
+              aria-pressed={selectedYear === year}
+              onClick={() => void selectYear(year)}
+              className="h-11 shrink-0 rounded-md px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-muted aria-pressed:text-foreground"
+            >
+              {year}
+            </button>
+          ))}
+        </nav>
+      )}
+    </div>
+  )
+}
+
+function CalendarGrid({ data }: { data: GitHubContributions }) {
   const total = formatCount(data.totalContributions)
+  const period = data.year === null ? "in the last year" : `in ${data.year}`
 
   return (
     <div>
@@ -95,7 +171,7 @@ export function ContributionCalendar({ data }: { data: GitHubContributions }) {
           <div
             className="grid auto-cols-[10px] grid-flow-col gap-[3px]"
             role="img"
-            aria-label={`${total} GitHub contributions in the last year`}
+            aria-label={`${total} GitHub contributions ${period}`}
           >
             {data.weeks.map((week) => (
               <div
@@ -123,7 +199,7 @@ export function ContributionCalendar({ data }: { data: GitHubContributions }) {
           href={data.profileUrl}
           className="rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground hover:underline hover:opacity-80 motion-reduce:transition-none"
         >
-          {total} GitHub contributions in the last year
+          {total} GitHub contributions {period}
         </ExternalLink>
         <div
           className="flex items-center gap-1"
