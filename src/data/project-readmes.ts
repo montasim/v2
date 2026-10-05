@@ -2,6 +2,24 @@ import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { Project } from "@/lib/content/projects"
 
 export const projectReadmes: Readonly<Record<string, string>> = {
+  "clm-api": `
+# CLM API
+
+CLM API is a shared customer lifecycle management backend. My freelance work for WaTheta focused on messaging integrations and conversation workflows.
+
+## My contribution
+
+I implemented WhatsApp, Messenger, and Instagram messaging features, inbound event handling and deduplication, keyword-based automation, and agent routing by skill, department, and priority. Additional work covered durable WhatsApp coexistence bindings, history synchronization, quoted replies, SLA timers, and real-time presence and typing events with conversation access checks.
+
+The implementation uses TypeScript, NestJS, MongoDB/Mongoose, Redis, BullMQ, Socket.IO, and Zod. Unit and end-to-end test changes accompany the messaging work.
+
+## Verified scope
+
+The available Git history contains 47 commits authored by me from 28 May to 10 June 2026, using Bangladesh time. This is the verified contribution window, not confirmation of contractual start and end dates. The broader CLM platform is team work.
+
+The source repository is private. The linked case study summarizes implementation evidence without publishing client source code. Production deployment, operational performance, and external-provider behavior were not independently verified.
+`,
+
   "project-management": `
 # Project Management
 

@@ -3246,5 +3246,70 @@
       "Frontend source connects project controls to Redux actions and API request handling.",
       "The project provides evidence of collaborative frontend work without asserting deployment availability or measured productivity improvements."
     ]
+  },
+  {
+    "slug": "clm-api",
+    "projectId": "project-clm-api",
+    "summary": "Freelance messaging backend development for WaTheta within a shared customer lifecycle management platform. Contributions span Meta webhooks, automation, routing, WhatsApp coexistence, and real-time conversation workflows.",
+    "role": "Freelance Developer",
+    "scope": "Messaging services and integrations, persistence, real-time conversation events, and automated tests",
+    "status": "Implemented contributions verified in repository history; production operation was not independently verified",
+    "verifiedBranch": "main",
+    "verifiedCommit": "9f953cfef401679dcc29c2b9cedb3865b0322692",
+    "problem": "Support teams need to receive and respond to conversations across WhatsApp, Messenger, and Instagram, route them to suitable agents, and preserve conversation state across asynchronous events and service restarts.",
+    "constraints": [
+      "Work took place in an existing multi-tenant backend; the full platform is shared team work, not an individual implementation.",
+      "External messaging providers have distinct event formats, registration flows, media lifetimes, and channel restrictions.",
+      "The 28 May–10 June 2026 contribution window comes from 47 commits attributed to Montasim in the available clone, using UTC+6 author dates; it does not establish contractual start or end dates.",
+      "The repository is private. Repository creation metadata describes the accessible copy created on 21 June 2026; its retained history begins on 16 November 2025.",
+      "Tests were inspected as source evidence, not rerun against external messaging services; deployment and production performance were not verified."
+    ],
+    "architecture": {
+      "summary": "NestJS messaging modules separate application services, domain contracts, and MongoDB persistence. Queued webhook processing connects provider events to conversations, automation, and real-time updates.",
+      "layers": [
+        {
+          "title": "Provider event processing",
+          "detail": "Meta webhook handlers normalize inbound events for WhatsApp, Messenger, and Instagram, with event-specific deduplication and validation."
+        },
+        {
+          "title": "Conversation workflows",
+          "detail": "Application services coordinate keyword automation, routing, quoted replies, agent assignment, and SLA timers."
+        },
+        {
+          "title": "Persistence and real-time delivery",
+          "detail": "MongoDB repositories retain coexistence bindings and conversation state. Redis and Socket.IO support presence, typing, and conversation events with access checks."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Persist coexistence state",
+        "detail": "Replaced process-local coexistence bindings with repository-backed storage and added history-sync lifecycle handling (7654f7bb7)."
+      },
+      {
+        "title": "Make routing fallbacks explicit",
+        "detail": "Added skill, department, and priority routing with fallback reasons and open-conversation counts for agents (6f91a3548)."
+      },
+      {
+        "title": "Check access before real-time actions",
+        "detail": "Added conversation access checks, error handling, and expiration behavior to WebSocket conversation handlers (725c59eb8)."
+      },
+      {
+        "title": "Deduplicate provider events",
+        "detail": "Added event-specific idempotency keys for Instagram comments and Messenger events to handle repeated webhook delivery (a972b9bdc)."
+      }
+    ],
+    "contribution": [
+      "Implemented Meta messaging backend features and subsequent Instagram comment, Messenger postback, opt-in, referral, and reaction handling.",
+      "Connected keyword automation and automatic agent assignment to the inbound message pipeline.",
+      "Implemented durable WhatsApp coexistence bindings, signup completion, contact and history synchronization, and media lifecycle handling.",
+      "Added presence, typing, join, leave, mark-read, quoted-reply, and SLA timer workflows with access checks.",
+      "Added unit and end-to-end tests for coexistence, automation, routing, inbound events, and messaging flows."
+    ],
+    "outcomes": [
+      "Repository history contains 47 commits authored by Montasim between 28 May and 10 June 2026.",
+      "Messaging workflows gained persistent coexistence state, event deduplication, and explicit conversation-routing fallbacks.",
+      "Automated test sources cover provider event handling, real-time access checks, routing, and messaging integration paths; no production performance claim is inferred from those tests."
+    ]
   }
 ]

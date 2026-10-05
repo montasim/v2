@@ -754,6 +754,15 @@
       "category": "Frontend engineering",
       "topic": "tools",
       "featured": false
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-clm-api",
+      "slug": "clm-api-messaging-workflows",
+      "title": "Messaging workflows in CLM API",
+      "category": "Backend engineering",
+      "topic": "product",
+      "featured": false
     }
   ]
 }

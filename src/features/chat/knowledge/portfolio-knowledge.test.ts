@@ -13,10 +13,10 @@ describe("PortfolioKnowledge", () => {
 
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
-      expect.objectContaining({ id: "experience", recordCount: 10 }),
-      expect.objectContaining({ id: "projects", recordCount: 51 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 51 }),
-      expect.objectContaining({ id: "blog", recordCount: 52 }),
+      expect.objectContaining({ id: "experience", recordCount: 11 }),
+      expect.objectContaining({ id: "projects", recordCount: 52 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 52 }),
+      expect.objectContaining({ id: "blog", recordCount: 53 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -185,8 +185,8 @@ describe("PortfolioKnowledge", () => {
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
-    expect(knowledge.toon.length).toBeLessThan(525_000)
-    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(131_250)
+    expect(knowledge.toon.length).toBeLessThan(540_000)
+    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(135_000)
     expect(knowledge.findFact("project:project-postcraft")).toMatchObject({
       recordId: "project-postcraft",
       evidenceRole: "first-party-portfolio",
@@ -247,16 +247,16 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 52,
+      total: 53,
       authored: 5,
-      caseStudyDerived: 47,
+      caseStudyDerived: 48,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 51,
+      total: 52,
       byType: {
-        api: 5,
+        api: 6,
         desktop: 1,
         dataset: 2,
         extension: 5,
@@ -310,7 +310,7 @@ it("connects client projects to engagement evidence and filtered experience link
   const knowledge = getCompiledPortfolioKnowledge()
   expect(
     knowledge.relationships.filter((item) => item.kind === "delivered-for")
-  ).toHaveLength(7)
+  ).toHaveLength(8)
   expect(knowledge.relationships).toContainEqual({
     id: "relationship:project:project-mcq-topper-backend:delivered-for:experience-infomax-freelance-developer",
     fromRecordId: "projects:project-mcq-topper-backend",

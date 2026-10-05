@@ -262,7 +262,7 @@ describe("portfolio exact answers", () => {
     const projectCount = reusableAnswerById(
       "catalog-chronology-comparison:project-count"
     )
-    expect(projectCount.text).toContain("51 project records")
+    expect(projectCount.text).toContain("52 project records")
     expect(projectCount.factIds).toEqual(["derived:catalog-count:projects"])
 
     const bugReceiptAnswers = getExactAnswerCatalog().filter(
@@ -399,6 +399,7 @@ function reusableAnswerById(id: string): ExactAnswer {
 it("includes independent engagements and their corrected dates in chat answers", () => {
   const answers = buildPortfolioExactAnswers()
   for (const [company, start, end] of [
+    ["WaTheta", "2026-05-28", "2026-06-10"],
     ["Infomax", "2024-03-03", "2024-03-05"],
     ["TalendIT", "2023-10-01", "2023-11-28"],
     ["nDevers", "2022-04-29", "2022-08-03"],
@@ -418,7 +419,7 @@ it("includes independent engagements and their corrected dates in chat answers",
       "How many professional experience records does Montasim list?"
   )
   expect(counts?.text).toContain(
-    "7 employment roles and 3 freelance engagements"
+    "7 employment roles and 4 freelance engagements"
   )
 })
 

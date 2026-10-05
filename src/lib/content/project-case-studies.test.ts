@@ -71,6 +71,7 @@ describe("project case-study catalog", () => {
 
     expect(clientWork.map((record) => record.project.id).sort()).toEqual(
       [
+        "project-clm-api",
         "project-mcq-topper-backend",
         "project-school-management-backend",
         "project-school-management",

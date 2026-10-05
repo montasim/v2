@@ -61,3 +61,27 @@ Mappings follow the supplied grouping reflected in the engagement descriptions:
 
 The label includes ventures, but the current entries retain their documented
 Freelance Developer roles. It does not imply ownership or founder status.
+
+## Client description and badge review — October 5, 2026
+
+Rechecked all seven Infomax, TalendIT, and nDevers repositories through the
+authenticated GitHub API. Each default-branch HEAD still matches the commit
+recorded in its existing research note and case study.
+
+Descriptions now emphasize implemented responsibilities using the shared
+RichText styling. Badge lists name relevant integrations and implementation
+tools, rather than copying every installed dependency.
+
+- Infomax: confirmed Helmet and rate limiting in `src/app.js`; retained
+  Nodemailer, Docker, and PM2 alongside the Express API foundation.
+- TalendIT: confirmed Google Maps components in the school frontend's
+  `components/common/Map.jsx` and Google Drive integration in the school
+  backend's `src/helpers/GoogleDriveFileOperations.js`. Included Joi, Swiper,
+  and the documented PHP/MariaDB/MySQLi/Bootstrap stack.
+- nDevers: named Firebase Authentication explicitly and retained Axios,
+  inventory REST requests, and Express/MongoDB resource operations.
+
+Existing user-corrected engagement dates remain unchanged. Prototype boundaries
+and the distinction between the POSDash companion API and the separate inventory
+server remain explicit. Project badges and compiled chat answers were updated
+alongside the engagement records.

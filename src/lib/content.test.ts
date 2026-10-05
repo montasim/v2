@@ -85,13 +85,14 @@ describe("portfolio content", () => {
       "project-release-agent-skill",
     ])
     expect(
-      projectCatalog.records.slice(-13).map((project) => project.id)
+      projectCatalog.records.slice(-14).map((project) => project.id)
     ).toEqual([
       "project-mmh-patient-portal",
       "project-mmh-re-annotation",
       "project-mmh-telemedicine",
       "project-liftuno",
       "project-coaching-management",
+      "project-clm-api",
       "project-mcq-topper-backend",
       "project-school-management-backend",
       "project-school-management",
@@ -359,6 +360,7 @@ it("preserves filter values and maps client projects to the documented engagemen
   })
   expect(projectCatalog.filterSchema.parse("client")).toBe("client")
   const expected = {
+    watheta: ["project-clm-api"],
     infomax: ["project-mcq-topper-backend"],
     talendit: [
       "project-school-management-backend",
@@ -384,5 +386,5 @@ it("preserves filter values and maps client projects to the documented engagemen
   }
   expect(
     projectCatalog.records.filter((project) => project.engagementId)
-  ).toHaveLength(7)
+  ).toHaveLength(8)
 })

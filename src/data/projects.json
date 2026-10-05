@@ -1747,6 +1747,44 @@
     "logoUrl": "https://airtrafficcontrol.netlify.app/icon.svg"
   },
   {
+    "id": "project-clm-api",
+    "engagementId": "experience-watheta-freelance-developer",
+    "title": "CLM API",
+    "type": "api",
+    "featured": false,
+    "description": "A multi-tenant customer lifecycle management API. Freelance work for WaTheta focused on WhatsApp, Messenger, and Instagram messaging, conversation automation and routing, real-time inbox events, and integration tests.",
+    "technologies": [
+      "Meta Graph API",
+      "WhatsApp Cloud API",
+      "Messenger API",
+      "Instagram API",
+      "Meta Conversions API",
+      "TypeScript",
+      "NestJS",
+      "MongoDB",
+      "Mongoose",
+      "Redis",
+      "BullMQ",
+      "Socket.IO",
+      "Zod",
+      "Jest"
+    ],
+    "topics": [
+      "customer-lifecycle-management",
+      "messaging",
+      "meta-integration",
+      "webhooks",
+      "conversation-routing",
+      "multi-tenant"
+    ],
+    "githubRepositoryPrivate": true,
+    "githubRepositoryCreatedAt": "2026-06-21T04:24:27Z",
+    "githubInitialCommitAt": "2025-11-16T05:39:18Z",
+    "githubInitialCommitSha": "36f2ec46eca854df2c594e4cd5c9380be2e72cf9",
+    "imageUrl": null,
+    "clientWork": true
+  },
+  {
     "id": "project-mcq-topper-backend",
     "engagementId": "experience-infomax-freelance-developer",
     "title": "MCQ Topper Backend",
@@ -1757,6 +1795,9 @@
       "JavaScript",
       "Node.js",
       "Express.js",
+      "REST APIs",
+      "Helmet",
+      "express-rate-limit",
       "Nodemailer",
       "Docker",
       "PM2"
@@ -1804,7 +1845,8 @@
       "Next.js",
       "React",
       "Tailwind CSS",
-      "Swiper"
+      "Swiper",
+      "Google Maps API"
     ],
     "topics": ["education", "school-website", "frontend", "prototype"],
     "githubRepositoryPrivate": true,

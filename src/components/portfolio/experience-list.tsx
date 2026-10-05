@@ -36,7 +36,9 @@ function RoleDetails({
       ) : null}
       {projects.length ? (
         <div className="mt-5">
-          <h3 className="text-sm font-semibold">Related work</h3>
+          <h3 className="text-sm font-semibold text-strong-foreground">
+            Related work
+          </h3>
           <ul
             className="mt-2 list-disc space-y-3 pl-5"
             aria-label={`Related work for ${role.company}`}
@@ -49,7 +51,7 @@ function RoleDetails({
                   <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                     <a
                       href={`/projects/${slug}`}
-                      className="rounded-sm font-medium underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                      className="rounded-sm font-medium text-strong-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
                     >
                       {project.title}
                     </a>
@@ -113,7 +115,7 @@ function CompanyCard({
               />
             )}
             <div>
-              <h2 className="text-sm font-semibold">
+              <h2 className="text-sm font-semibold text-strong-foreground">
                 {first.category === "independent" ? company : first.role}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -167,7 +169,9 @@ function CompanyCard({
                 className="absolute top-1.5 -left-1 size-[0.5625rem] rounded-full bg-foreground"
                 aria-hidden="true"
               />
-              <h3 className="text-sm font-semibold">{role.role}</h3>
+              <h3 className="text-sm font-semibold text-strong-foreground">
+                {role.role}
+              </h3>
               <p className="mt-0.5 text-xs text-muted-foreground">
                 {role.period}
               </p>

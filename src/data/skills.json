@@ -27,7 +27,10 @@
       "Bootstrap",
       "jQuery",
       "Responsive Web Design",
-      "Konva.js"
+      "Konva.js",
+      "React Router",
+      "Swiper",
+      "Axios"
     ]
   },
   {
@@ -48,7 +51,17 @@
       "Stripe",
       "Google Drive API",
       "Python",
-      "PHP"
+      "PHP",
+      "NestJS",
+      "Meta Graph API",
+      "WhatsApp Cloud API",
+      "Messenger API",
+      "Instagram API",
+      "Meta Conversions API",
+      "Google Maps API",
+      "Firebase Authentication",
+      "Joi",
+      "Nodemailer"
     ]
   },
   {
@@ -62,7 +75,9 @@
       "Mongoose",
       "Redis",
       "SQLite",
-      "PhpMyAdmin"
+      "PhpMyAdmin",
+      "MariaDB",
+      "MySQLi"
     ]
   },
   {
@@ -88,7 +103,8 @@
       "npm",
       "tsup",
       "esbuild",
-      "IT Operations"
+      "IT Operations",
+      "PM2"
     ]
   },
   {
@@ -125,6 +141,12 @@
   {
     "id": "skills-architecture-security",
     "category": "Architecture & Security",
-    "items": ["System Design", "Microservices", "SSO"]
+    "items": [
+      "System Design",
+      "Microservices",
+      "SSO",
+      "Helmet",
+      "express-rate-limit"
+    ]
   }
 ]

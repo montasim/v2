@@ -9,11 +9,12 @@ it("renders freelance engagements with related work and accurate role labels", (
   )
   const markup = renderToStaticMarkup(<ExperienceList card records={records} />)
   expect(records.map((record) => record.company)).toEqual([
+    "WaTheta",
     "Infomax",
     "TalendIT",
     "nDevers",
   ])
-  expect(markup.match(/<article[ >]/g)).toHaveLength(3)
+  expect(markup.match(/<article[ >]/g)).toHaveLength(4)
   for (const record of records) {
     expect(markup).toContain(record.company)
     expect(markup).toContain(record.role)
@@ -21,12 +22,13 @@ it("renders freelance engagements with related work and accurate role labels", (
   expect(markup).not.toMatch(/<img|data-slot="avatar"|undefined| · <| · {2}· /)
 })
 
-it("links all seven client projects and their case studies from engagements", () => {
+it("links all eight client projects and their case studies from engagements", () => {
   const records = experienceCatalog.records.filter(
     (record) => record.category === "independent"
   )
   const markup = renderToStaticMarkup(<ExperienceList card records={records} />)
   for (const slug of [
+    "clm-api",
     "mcq-topper-backend",
     "school-management-backend",
     "school-management",
@@ -38,5 +40,5 @@ it("links all seven client projects and their case studies from engagements", ()
     expect(markup).toContain(`href="/projects/${slug}"`)
     expect(markup).toContain(`href="/case-studies/${slug}"`)
   }
-  expect(markup.match(/<details/g)).toHaveLength(3)
+  expect(markup.match(/<details/g)).toHaveLength(4)
 })
