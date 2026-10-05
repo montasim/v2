@@ -1,7 +1,7 @@
 {
   "name": "Mohammad Montasim Al Mamun Shuvo",
   "title": "Senior Software Engineer | React, Next.js, Node.js, TypeScript | Real-Time & AI-Driven SaaS",
-  "tagline": "Building deterministic, high-performance web platforms for real-time and AI-driven applications.",
+  "tagline": "Building deterministic, high-performance software with scalable architecture for real-time systems and AI-driven applications.",
   "avatarUrl": "/images/avatar.webp",
   "resumeUrl": "https://drive.google.com/file/d/1v0RP3PyBB6KdsfXhonIHJXU-wgAUSIRT/view?usp=sharing",
   "resumeDownloadUrl": "/api/resume",
@@ -18,7 +18,7 @@
     "visaStatus": null,
     "earliestStartDate": "Immediately"
   },
-  "about": "Most software looks great in the demo. I build the kind that survives production.\n\nI'm a **Senior Software Engineer** with **3+ years** building real-time, AI-driven, multi-tenant SaaS platforms across the full stack: React, Next.js, Node.js, and TypeScript. Promoted twice at the same company, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor the engineers behind me.\n\nKey highlights: cut cloud infrastructure costs **70%** by migrating Azure VMs to App Service with automated CI/CD. Boosted application performance **40%** and hit **Lighthouse 90+** by replacing legacy libraries with custom components. Built a real-time **computer vision** pipeline (MediaPipe) sustaining **60 FPS** at **99.9% reliability**, and designed a deterministic **finite-state-machine** engine that eliminated race conditions during live AI analysis.\n\nHere's what makes my work different: most engineers build for the happy path. I build for the moment it all goes wrong, with predictable state transitions, resilient lifecycles, and async workflows that don't leak, stall, or surprise you. Reliability isn't something I bolt on at the end; it's the architecture I start with.",
+  "about": "I build software around **predictable behavior**, **scalable architecture**, and performance that holds up in production.\n\nI'm a **Senior Software Engineer** with **3+ years** of experience in real-time systems, AI integration, and multi-tenant SaaS. I work across the stack with React, Next.js, Node.js, and TypeScript, connecting user-facing experiences with the services and data behind them. After two promotions at MyMedicalHub, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor fellow engineers.\n\nMy work has reduced cloud infrastructure costs by **70%** through Azure migration and automated CI/CD, improved application performance by **40%**, and achieved **Lighthouse 90+** scores. I've built a real-time **computer vision** pipeline with MediaPipe sustaining **60 FPS** at **99.9% reliability**, and a deterministic **finite-state-machine** engine that eliminated race conditions during live AI analysis.\n\nI pay particular attention to state transitions, asynchronous workflows, and resource lifecycles. Clear boundaries, predictable failure handling, and maintainable code guide how I design systems, integrate AI, and evolve products as their requirements grow.",
   "socialLinks": [
     {
       "platform": "linkedin",
