@@ -3,28 +3,38 @@ import { Link } from "@tanstack/react-router"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ArrowRightIcon } from "@/components/ui/icons"
+import {
+  ArrowRightIcon,
+  BriefcaseIcon,
+  ChatCenteredDotsIcon,
+  ChatCircleDotsIcon,
+  UsersThreeIcon,
+} from "@/components/ui/icons"
 import type { OwnerDashboardData } from "@/features/owner-dashboard/infrastructure/dashboard.server"
 
 export function Overview({ data }: { data: OwnerDashboardData }) {
   const stats = [
     {
       label: "Inquiries",
+      icon: BriefcaseIcon,
       value: data.inquiries.length,
       to: "/dashboard/inquiries",
     },
     {
       label: "Saved exchanges",
+      icon: ChatCenteredDotsIcon,
       value: data.conversations.length,
       to: "/dashboard/conversations",
     },
     {
       label: "Blog comments",
+      icon: ChatCircleDotsIcon,
       value: data.comments.length,
       to: "/dashboard/comments",
     },
     {
       label: "Subscribers",
+      icon: UsersThreeIcon,
       value: data.subscriberCount,
       to: "/dashboard/subscribers",
     },
@@ -64,13 +74,16 @@ export function Overview({ data }: { data: OwnerDashboardData }) {
         aria-label="Portfolio totals"
         className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
       >
-        {stats.map(({ label, value, to }) => (
+        {stats.map(({ label, value, to, icon: Icon }) => (
           <Link
             key={to}
             to={to}
             className="flex min-h-[66px] items-center justify-between gap-3 rounded-xl border bg-card p-4 hover:bg-muted"
           >
-            <span className="text-sm text-muted-foreground">{label}</span>
+            <span className="flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+              <Icon aria-hidden="true" className="size-5 shrink-0" />
+              <span>{label}</span>
+            </span>
             <strong className="text-2xl font-semibold tabular-nums">
               {value}
             </strong>
