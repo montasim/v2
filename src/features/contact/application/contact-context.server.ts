@@ -71,6 +71,7 @@ export function loadContactContext(search: ContactSearch) {
       links: [
         { label: "App Store", href: project.appStoreUrl },
         { label: "Google Play", href: project.googlePlayUrl },
+        { label: "Chrome Web Store", href: project.chromeWebStoreUrl },
         {
           label: "Releases",
           href: project.type === "extension" ? undefined : project.releaseUrl,
