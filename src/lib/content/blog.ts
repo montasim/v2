@@ -57,6 +57,7 @@ const caseStudyDerivedPostSchema = z
     title: z.string().min(1),
     category: z.string().min(1),
     topic: blogTopicSchema.exclude(["all"]),
+    publishedAt: z.iso.date().optional(),
     featured: z.boolean(),
   })
   .strict()
@@ -109,7 +110,7 @@ function estimateReadingMinutes(
 
 function resolveCaseStudyPost(
   metadata: z.infer<typeof caseStudyDerivedPostSchema>,
-  publishedAt: string
+  defaultPublishedAt: string
 ) {
   const caseStudy = projectCaseStudyCatalog.findByProjectId(metadata.projectId)
 
@@ -154,7 +155,7 @@ function resolveCaseStudyPost(
   return resolvedPostSchema.parse({
     ...metadata,
     excerpt,
-    publishedAt,
+    publishedAt: metadata.publishedAt ?? defaultPublishedAt,
     readingMinutes: estimateReadingMinutes(metadata.title, excerpt, sections),
     image: caseStudy.project.imageUrl
       ? {
