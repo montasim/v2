@@ -1,13 +1,19 @@
 import { describe, expect, it } from "vitest"
 
 import { loadOwnerStaticAnswers } from "./static-answers.server"
+import { exactAnswerCategoryTargets } from "@/features/chat/knowledge/exact-answer-catalog"
 
 describe("loadOwnerStaticAnswers", () => {
   it("projects the versioned exact-answer artifact into read-only review data", () => {
     const catalog = loadOwnerStaticAnswers()
 
     expect(catalog.knowledgeHash).toMatch(/^[a-f0-9]{64}$/)
-    expect(catalog.records).toHaveLength(523)
+    expect(catalog.records).toHaveLength(
+      Object.values(exactAnswerCategoryTargets).reduce(
+        (total, count) => total + count,
+        0
+      )
+    )
     expect(catalog.records[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
@@ -23,7 +29,7 @@ describe("loadOwnerStaticAnswers", () => {
       catalog.records.find(
         (record) => record.id === "catalog-chronology-comparison:project-count"
       )?.text
-    ).toContain("43 project records")
+    ).toContain("53 project records")
     expect(
       catalog.records
         .filter(

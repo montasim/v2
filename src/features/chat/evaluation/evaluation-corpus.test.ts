@@ -9,6 +9,7 @@ import {
   getExactAnswerCatalog,
   normalizeExactQuestion,
 } from "@/features/chat/knowledge/exact-answer-catalog"
+import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 
 describe("chat quality evaluation corpus", () => {
   it("builds exactly 300 deterministic non-exact questions across every category", () => {
@@ -103,7 +104,7 @@ describe("chat quality evaluation corpus", () => {
           .filter((entry) => entry.category === "case-study")
           .map((entry) => entityRoot(entry.referenceAnswerId))
       ).size
-    ).toBe(43)
+    ).toBe(projectCaseStudyCatalog.records.length)
   })
 
   it("keeps the known difficult visitor phrasings in the dynamic suite", () => {

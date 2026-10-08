@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 11 }),
-      expect.objectContaining({ id: "projects", recordCount: 52 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 52 }),
-      expect.objectContaining({ id: "blog", recordCount: 53 }),
+      expect.objectContaining({ id: "projects", recordCount: 53 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 53 }),
+      expect.objectContaining({ id: "blog", recordCount: 54 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -185,8 +185,8 @@ describe("PortfolioKnowledge", () => {
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
-    expect(knowledge.toon.length).toBeLessThan(540_000)
-    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(135_000)
+    expect(knowledge.toon.length).toBeLessThan(550_000)
+    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(138_000)
     expect(knowledge.findFact("project:project-postcraft")).toMatchObject({
       recordId: "project-postcraft",
       evidenceRole: "first-party-portfolio",
@@ -229,13 +229,13 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-liftuno",
-      title: "Liftuno",
-      historyStartedAt: "2026-09-08T06:38:28Z",
+      recordId: "project-rootstory",
+      title: "Rootstory",
+      historyStartedAt: "2026-10-08T06:19:42Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
-      recordId: "separating-flight-rules-from-the-renderer",
-      publishedAt: "2026-09-29",
+      recordId: "designing-a-local-first-family-tree-people-can-read",
+      publishedAt: "2026-10-08",
       tieBreak: "catalog-order",
     })
     expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(1)
@@ -247,14 +247,14 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 53,
+      total: 54,
       authored: 5,
-      caseStudyDerived: 48,
+      caseStudyDerived: 49,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 52,
+      total: 53,
       byType: {
         api: 6,
         desktop: 1,
@@ -264,7 +264,7 @@ describe("PortfolioKnowledge", () => {
         skill: 14,
         template: 1,
         tool: 2,
-        website: 17,
+        website: 18,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({

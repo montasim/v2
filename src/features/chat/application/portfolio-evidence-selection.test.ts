@@ -31,7 +31,7 @@ describe("portfolio evidence selection", () => {
     const required = buildEvaluationCorpus().filter(
       (entry) => entry.evidenceRequirement === "reference-overlap-required"
     )
-    const matched = required.filter((entry) => {
+    const unmatched = required.flatMap((entry) => {
       const selection = selectPortfolioEvidence({
         question: entry.question,
         knowledge,
@@ -39,8 +39,13 @@ describe("portfolio evidence selection", () => {
       return entry.expectedFactIds.some((factId) =>
         selection.factIds.includes(factId)
       )
+        ? []
+        : [{ id: entry.id, question: entry.question, facts: selection.factIds }]
     })
 
-    expect(matched.length / required.length).toBeGreaterThanOrEqual(0.99)
+    expect(
+      (required.length - unmatched.length) / required.length,
+      JSON.stringify(unmatched)
+    ).toBeGreaterThanOrEqual(0.99)
   }, 20_000)
 })

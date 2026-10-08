@@ -554,6 +554,9 @@ function paraphraseQuestion(reference: ExactAnswer, angle: EvaluationAngle) {
       "interview-preparation": `Which achievements from his ${match[1]} role merit interview follow-up?`,
     })
   }
+  if ((match = question.match(/^When did Montasim work as (.+)$/u))) {
+    return `What dates and scope are documented for his work as ${match[1]}?`
+  }
   if (
     (match = question.match(/^What skills did Montasim apply in his (.+)$/u))
   ) {

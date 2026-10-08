@@ -165,10 +165,15 @@ describe("portfolio chat evaluation quality contract", () => {
   it("allows a supported alternative evidence path for an open synthesis", () => {
     const evaluationCase = buildEvaluationCorpus().find(
       (entry) =>
-        entry.referenceAnswerId === "project:project-postcraft:overview"
+        entry.referenceAnswerId.startsWith("project:project-") &&
+        knowledge.findFact(
+          `case-study:${entry.referenceAnswerId.split(":")[1]?.replace(/^project-/, "")}`
+        )
     )
     if (!evaluationCase) throw new Error("Missing synthesis evaluation case")
-    const alternative = knowledge.findFact("case-study:postcraft")
+    const alternative = knowledge.findFact(
+      `case-study:${evaluationCase.referenceAnswerId.split(":")[1]?.replace(/^project-/, "")}`
+    )
     if (!alternative) throw new Error("Missing alternative evidence")
 
     const attempt = prepareQualityEvaluation({
