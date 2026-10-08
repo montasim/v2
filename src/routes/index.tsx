@@ -215,6 +215,44 @@ function OverviewPage() {
         <ContributionCalendar data={contributions} />
       </PageSection>
       <PageSection
+        id="awards"
+        headingId="awards-heading"
+        title="Awards & Recognition"
+      >
+        <article className="overflow-hidden rounded-xl border bg-card text-card-foreground">
+          <div className="grid sm:grid-cols-[10rem_minmax(0,1fr)]">
+            <div className="flex items-center justify-between border-b bg-muted/35 px-5 py-4 sm:block sm:border-r sm:border-b-0 sm:px-6 sm:py-7">
+              <p className="text-[0.6875rem] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+                Recognized
+              </p>
+              <time
+                dateTime="2023-10"
+                className="flex items-baseline gap-2 sm:mt-3 sm:block"
+              >
+                <span className="text-3xl font-semibold tracking-tight text-strong-foreground">
+                  2023
+                </span>
+                <span className="text-xs text-muted-foreground sm:mt-1 sm:block">
+                  October
+                </span>
+              </time>
+            </div>
+            <div className="px-5 py-6 sm:px-7 sm:py-7">
+              <p className="text-xs font-medium text-muted-foreground">
+                MedicalHub International Ltd.
+              </p>
+              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-strong-foreground">
+                Employee of the Month
+              </h3>
+              <blockquote className="mt-5 max-w-[66ch] text-sm leading-relaxed text-muted-foreground">
+                Recognized for long-term commitment, hard work, and the
+                knowledge and experience contributed to the team.
+              </blockquote>
+            </div>
+          </div>
+        </article>
+      </PageSection>
+      <PageSection
         id="volunteering"
         headingId="volunteering-heading"
         title="Volunteering"

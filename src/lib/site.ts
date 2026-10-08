@@ -34,6 +34,7 @@ export const landingSectionIds = [
   "skills",
   "background",
   "contributions",
+  "awards",
   "volunteering",
   "organizations",
   "recommendations",
