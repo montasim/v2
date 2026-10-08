@@ -1,5 +1,80 @@
 [
   {
+    "slug": "rootstory",
+    "projectId": "project-rootstory",
+    "summary": "A local-first family archive that combines a readable relationship graph with detailed profiles, timelines, recurring dates, version history, and complete backup restoration without requiring an account.",
+    "role": "Product designer and frontend engineer",
+    "scope": "Product strategy, relationship modeling, responsive interface design, browser persistence, data portability, testing, and deployment",
+    "status": "Publicly deployed; archives remain local to each browser",
+    "verifiedBranch": "main",
+    "verifiedCommit": "1a7cb1bee936cab44b530041db8b6c1a53ac64e3",
+    "problem": "Family history becomes difficult to trust when relationships are visually ambiguous, important life details are scattered across tools, and an export cannot recreate the archive that a family carefully assembled.",
+    "constraints": [
+      "Parent, child, partner, former-partner, and sibling relationships must remain visually distinct without making the tree difficult to scan.",
+      "Portraits, contact details, notes, and living-person records are sensitive, so the application stores its working archive locally and does not silently upload it.",
+      "A complete backup must preserve people, relationships, photos, private fields, sharing records, and display settings, while interoperability formats necessarily carry less information.",
+      "The workspace must remain usable across desktop and small screens while keeping navigation, profile controls, and tree exploration understandable.",
+      "Browser-local storage provides no automatic device synchronization, so users must keep complete backups if the archive matters."
+    ],
+    "architecture": {
+      "summary": "TanStack Start and React render a responsive archive workspace around a typed family domain, IndexedDB persistence, versioned recovery, and explicit import/export boundaries.",
+      "layers": [
+        {
+          "title": "Family domain",
+          "detail": "Typed people and relationship records drive generation levels, relatives, life events, tree ordering, and direct parent-child connectors from one shared graph."
+        },
+        {
+          "title": "Local persistence",
+          "detail": "IndexedDB stores the active archive and recent recoverable versions, with migration support for older browser-local records."
+        },
+        {
+          "title": "Archive workspace",
+          "detail": "Tree, People, Timeline, Calendar, profile, settings, and print surfaces share one responsive application shell with focused scrolling regions."
+        },
+        {
+          "title": "Portability boundary",
+          "detail": "A native Rootstory archive preserves the complete model; GEDCOM, CSV, text, HTML, PDF, and iCalendar exports serve narrower interchange and presentation needs."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Treat relationships as graph data",
+        "detail": "Tree placement, generation labels, parent junctions, sibling grouping, and relationship views are derived from shared relationship records instead of separate presentation-only links."
+      },
+      {
+        "title": "Keep the working archive local",
+        "detail": "The product works without an account and keeps sensitive family information in the current browser unless the user explicitly downloads or imports a file."
+      },
+      {
+        "title": "Separate complete backup from interoperability exports",
+        "detail": "The native backup is the restorable source of truth, while GEDCOM and spreadsheet exports are described honestly as partial interchange formats."
+      },
+      {
+        "title": "Use one visual language for relationship meaning",
+        "detail": "Parent-child, partner, former-partner, and sibling connections use distinct colors and line styles that match the tree legend."
+      }
+    ],
+    "contribution": [
+      "Designed and implemented the landing page, responsive application shell, family tree, profile inspector, People, Timeline, Calendar, settings, and print workflows.",
+      "Modeled people and relationships so parent pairs, children, siblings, partners, former partners, and generation ordering resolve consistently across the product.",
+      "Implemented local persistence, recoverable version history, complete backup restoration, GEDCOM interchange, privacy-safe HTML, CSV, text, PDF, and iCalendar exports.",
+      "Added validation at form and import boundaries plus automated coverage for search, dates, relationship direction, tree ordering, backup restoration, export privacy, and calendar recurrence.",
+      "Prepared the repository for public GitHub collaboration and deployed the TanStack Start SSR build to Netlify."
+    ],
+    "outcomes": [
+      "Families can build and inspect a multi-generation tree with direct, consistently styled relationship connectors.",
+      "The complete archive format restores profiles, relationships, portraits, private fields, sharing records, and display settings together.",
+      "People, Timeline, Calendar, version history, and print views reuse the same validated archive rather than maintaining separate copies.",
+      "Twenty-two automated domain and portability tests, formatting, linting, type checking, and production builds run in the public CI workflow.",
+      "The application is publicly available while keeping each visitor's working family archive local to their browser."
+    ],
+    "screenshot": {
+      "alt": "Rootstory family tree workspace showing three generations and a selected profile",
+      "caption": "The deployed Rootstory workspace keeps the family graph central while profile details remain available in a fixed inspector."
+    }
+  },
+  {
     "slug": "routempo",
     "projectId": "project-routempo",
     "summary": "A timezone-aware routine planner for planning repeatable rhythms, recording outcomes, and learning from real behavior.",

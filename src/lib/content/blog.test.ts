@@ -7,17 +7,18 @@ import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
   it("loads authored and case-study-derived posts from one catalog", () => {
-    expect(blogCatalog.posts).toHaveLength(53)
+    expect(blogCatalog.posts).toHaveLength(54)
     expect(blogCatalog.authoredPosts).toHaveLength(5)
-    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(48)
+    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(49)
     expect(
       blogCatalog.authoredPosts.every((post) => Boolean(post.publishedAt))
     ).toBe(true)
     expect(
-      blogCatalog.caseStudyDerivedPosts.every(
-        (post) => post.publishedAt === blogCatalog.caseStudyPublishedAt
-      )
+      blogCatalog.caseStudyDerivedPosts.every((post) => post.publishedAt)
     ).toBe(true)
+    expect(blogCatalog.findByProjectId("project-rootstory")?.publishedAt).toBe(
+      "2026-10-08"
+    )
     expect(
       blogCatalog.posts.every(
         (post) => post.sections.length > 0 && post.readingMinutes > 0
@@ -28,6 +29,7 @@ describe("blog catalog", () => {
   it("provides routable featured articles", () => {
     expect(blogCatalog.featured.featured).toBe(true)
     expect(blogCatalog.featuredPosts.map((post) => post.slug)).toEqual([
+      "designing-a-local-first-family-tree-people-can-read",
       "company-research-without-a-fake-score",
       "scheduled-publishing-cannot-depend-on-an-open-tab",
       "the-linkedin-page-is-untrusted-input",

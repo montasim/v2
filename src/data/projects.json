@@ -1,5 +1,41 @@
 [
   {
+    "id": "project-rootstory",
+    "type": "website",
+    "featured": true,
+    "title": "Rootstory",
+    "description": "A private, local-first family archive for mapping relationships, preserving life details and photographs, and carrying a complete family history between browsers.",
+    "technologies": [
+      "TanStack Start",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "Radix UI",
+      "Zod",
+      "IndexedDB",
+      "Netlify",
+      "GitHub Actions",
+      "Node.js Test Runner",
+      "System Design"
+    ],
+    "topics": [
+      "family-tree",
+      "genealogy",
+      "local-first",
+      "privacy",
+      "data-portability",
+      "relationship-graph",
+      "responsive-design"
+    ],
+    "imageUrl": "assets/projects/rootstory.webp",
+    "liveUrl": "https://therootstory.netlify.app",
+    "githubUrl": "https://github.com/montasim/rootstory",
+    "githubRepositoryCreatedAt": "2026-10-08T13:52:41Z",
+    "githubInitialCommitAt": "2026-10-08T06:19:42Z",
+    "githubInitialCommitSha": "fafb2b14994bec04d9240d4bddb99411b387f050",
+    "logoUrl": "https://therootstory.netlify.app/favicon.ico"
+  },
+  {
     "id": "project-routempo",
     "type": "website",
     "featured": false,

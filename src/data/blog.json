@@ -6,6 +6,16 @@
   "caseStudyPublishedAt": "2026-08-28",
   "posts": [
     {
+      "kind": "case-study-derived",
+      "projectId": "project-rootstory",
+      "slug": "designing-a-local-first-family-tree-people-can-read",
+      "title": "Designing a Local-First Family Tree People Can Read",
+      "category": "Product engineering",
+      "topic": "product",
+      "publishedAt": "2026-10-08",
+      "featured": true
+    },
+    {
       "kind": "authored",
       "slug": "a-routine-is-not-a-timestamp",
       "projectId": "project-routempo",

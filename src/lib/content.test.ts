@@ -49,6 +49,19 @@ describe("portfolio content", () => {
     ).toBe(project?.snapcraftUrl)
   })
 
+  it("connects Rootstory across project, case study, blog, and contact", () => {
+    const project = projectCatalog.findBySlug("rootstory")
+    expect(project?.liveUrl).toBe("https://therootstory.netlify.app")
+    expect(projectCaseStudyCatalog.findBySlug("rootstory")?.project.id).toBe(
+      project?.id
+    )
+    expect(
+      blogCatalog.find("designing-a-local-first-family-tree-people-can-read")
+        ?.projectId
+    ).toBe(project?.id)
+    expect(loadContactContext({ app: "rootstory" }).projectId).toBe(project?.id)
+  })
+
   it("validates every required JSON catalog", () => {
     expect(profileCatalog.profile.name).toContain("Montasim")
     expect(profileCatalog.profile.workPreferences.timeZone).toBe("UTC+6")
@@ -69,6 +82,7 @@ describe("portfolio content", () => {
       "project-postcraft",
       "project-bugreceipt",
       "project-devtools",
+      "project-rootstory",
     ])
     expect(
       projectCatalog.records.slice(0, 10).map((project) => project.id)
@@ -82,7 +96,7 @@ describe("portfolio content", () => {
       "project-skillfoliox",
       "project-bangladesh-location-registry",
       "project-thoughtline",
-      "project-release-agent-skill",
+      "project-rootstory",
     ])
     expect(
       projectCatalog.records.slice(-14).map((project) => project.id)
@@ -178,7 +192,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-liftuno")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-rootstory")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)
