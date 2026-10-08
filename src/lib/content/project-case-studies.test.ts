@@ -31,7 +31,7 @@ describe("project case-study catalog", () => {
   it("derives the featured carousel from featured projects", () => {
     expect(
       projectCaseStudyCatalog.featured.map((record) => record.project.title)
-    ).toEqual(["Rootstory", "BugReceipt", "PostCraft", "DevTools"])
+    ).toEqual(["BugReceipt", "PostCraft", "DevTools"])
   })
 
   it("orders case studies from newest to oldest", () => {

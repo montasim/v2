@@ -2,7 +2,7 @@
   {
     "id": "project-rootstory",
     "type": "website",
-    "featured": true,
+    "featured": false,
     "title": "Rootstory",
     "description": "A private, local-first family archive for mapping relationships, preserving life details and photographs, and carrying a complete family history between browsers.",
     "technologies": [

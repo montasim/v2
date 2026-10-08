@@ -82,7 +82,6 @@ describe("portfolio content", () => {
       "project-postcraft",
       "project-bugreceipt",
       "project-devtools",
-      "project-rootstory",
     ])
     expect(
       projectCatalog.records.slice(0, 10).map((project) => project.id)
