@@ -97,49 +97,53 @@ function OverviewPage() {
             <p className="mx-auto mt-5 max-w-[56ch] text-base leading-7 text-muted-foreground sm:mx-0">
               {profile.tagline}
             </p>
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-1.5 sm:justify-start">
-              <InternalAction
-                to="/resume"
-                variant="outline"
-                className="h-11 font-medium text-strong-foreground"
-              >
-                <DownloadSimpleIcon className="size-[18px]" />
-                View resume
-              </InternalAction>
-              <InternalAction
-                to="/projects"
-                variant="ghost"
-                className="h-11 font-medium text-strong-foreground"
-              >
-                Explore projects <ArrowRightCompactIcon aria-hidden="true" />
-              </InternalAction>
-              <ExternalAction
-                href={profileCatalog.socialUrl("linkedin")}
-                variant="ghost"
-                size="icon"
-                className="size-11 xl:hidden"
-              >
-                <span className="sr-only">LinkedIn profile</span>
-                <LinkedinLogoIcon className="size-[18px]" />
-              </ExternalAction>
-              <ExternalAction
-                href={profileCatalog.socialUrl("github")}
-                variant="ghost"
-                size="icon"
-                className="size-11 xl:hidden"
-              >
-                <span className="sr-only">GitHub profile</span>
-                <GithubLogoIcon className="size-[18px]" />
-              </ExternalAction>
-              <MailAction
-                email={profile.email}
-                variant="ghost"
-                size="icon"
-                className="size-11 xl:hidden"
-              >
-                <span className="sr-only">Send email</span>
-                <EnvelopeSimpleIcon className="size-[18px]" />
-              </MailAction>
+            <div className="mt-7 flex flex-col items-center gap-1.5 sm:flex-row sm:flex-wrap sm:justify-start">
+              <div className="flex items-center gap-1.5">
+                <InternalAction
+                  to="/resume"
+                  variant="outline"
+                  className="h-11 font-medium text-strong-foreground"
+                >
+                  <DownloadSimpleIcon className="size-[18px]" />
+                  View resume
+                </InternalAction>
+                <InternalAction
+                  to="/projects"
+                  variant="ghost"
+                  className="h-11 font-medium text-strong-foreground"
+                >
+                  Explore projects <ArrowRightCompactIcon aria-hidden="true" />
+                </InternalAction>
+              </div>
+              <div className="flex items-center gap-1.5 xl:hidden">
+                <ExternalAction
+                  href={profileCatalog.socialUrl("linkedin")}
+                  variant="ghost"
+                  size="icon"
+                  className="size-11"
+                >
+                  <span className="sr-only">LinkedIn profile</span>
+                  <LinkedinLogoIcon className="size-[18px]" />
+                </ExternalAction>
+                <ExternalAction
+                  href={profileCatalog.socialUrl("github")}
+                  variant="ghost"
+                  size="icon"
+                  className="size-11"
+                >
+                  <span className="sr-only">GitHub profile</span>
+                  <GithubLogoIcon className="size-[18px]" />
+                </ExternalAction>
+                <MailAction
+                  email={profile.email}
+                  variant="ghost"
+                  size="icon"
+                  className="size-11"
+                >
+                  <span className="sr-only">Send email</span>
+                  <EnvelopeSimpleIcon className="size-[18px]" />
+                </MailAction>
+              </div>
             </div>
           </div>
         </div>
