@@ -21,16 +21,6 @@ export function SiteFooter() {
             className="flex flex-wrap items-center justify-center gap-1 sm:ml-auto"
           >
             <Link
-              to="/contact"
-              className={footerLinkClass}
-              activeProps={{
-                className: "underline decoration-border",
-                "aria-current": "page",
-              }}
-            >
-              Contact
-            </Link>
-            <Link
               to="/case-studies"
               className={footerLinkClass}
               activeProps={{
@@ -50,16 +40,6 @@ export function SiteFooter() {
               }}
             >
               Blog
-            </Link>
-            <Link
-              to="/projects"
-              className={footerLinkClass}
-              activeProps={{
-                className: "underline decoration-border",
-                "aria-current": "page",
-              }}
-            >
-              Projects
             </Link>
           </nav>
         </div>
