@@ -29,14 +29,16 @@ Out of scope (v1): accounts, any server state, Web Worker/OffscreenCanvas pipeli
 
 ## 3. Stack
 
-- TanStack Start, React 19, TypeScript, Tailwind CSS, Vite.
+- TanStack Start (file routes, static prerender), React 19, TypeScript strict, Tailwind CSS 4, Vite.
+- shadcn/ui (`radix-nova` style) for every UI element that has a shadcn equivalent; Hugeicons through a single `components/ui/icons.tsx` wrapper.
+- Feature-first layout: `src/features/<feature>/{domain,application,infrastructure,ui}` with one-way dependencies `ui → application → domain`; `infrastructure` implements `application` ports. Layer boundaries enforced by ESLint.
 - `@mediapipe/tasks-vision` PoseLandmarker (GPU delegate, CPU fallback). Model file served from `public/models/`, not fetched from a CDN at runtime.
 - Vitest for engine and pipeline unit tests. Playwright for one smoke test.
 - Netlify static deploy; no server functions used.
 
 ## 4. Architecture
 
-Three layers with one-way dependencies: `routes/` → `pipeline/` → `engine/`. `engine/` imports nothing from the DOM, React, or MediaPipe.
+Feature `rep-counter` with four layers and one-way dependencies: `ui → application → domain`, and `infrastructure` implementing `application` ports (`PoseDetector`, `FrameSource`, `FrameScheduler`). `domain` (the engine) imports nothing from the DOM, React, or MediaPipe; `application` (the session use-case, adaptive budget, perf tracking) is unit-tested with fakes. Section headings below keep the original names (`engine`, `pipeline`, `routes`) for the concepts; the implementation plan maps them to the layered folders.
 
 ### 4.1 `src/engine/` (pure TypeScript, deterministic)
 
