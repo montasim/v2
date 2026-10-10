@@ -95,6 +95,7 @@ const hiringPriority = [
   "project-bangladesh-location-registry",
   "project-thoughtline",
   "project-rootstory",
+  "project-giftbook",
   "project-release-agent-skill",
   "project-1snap",
   "project-vidquery",

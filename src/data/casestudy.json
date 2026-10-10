@@ -1,5 +1,88 @@
 [
   {
+    "slug": "giftbook",
+    "projectId": "project-giftbook",
+    "summary": "A Bangla-language gift ledger for family events that keeps the record in the owner's own Google Sheet, works offline through a local IndexedDB copy, and lets relatives write to the same ledger by scanning a QR code.",
+    "role": "Product designer and frontend engineer",
+    "scope": "Product specification, Bangla-first interface design, local-first data model, Google Sheets synchronization, sharing workflow, PWA packaging, testing, and Netlify deployment",
+    "status": "Publicly deployed; Google sign-in limited to approved test users while the OAuth app remains in testing mode",
+    "verifiedBranch": "main",
+    "verifiedCommit": "636483017e511f330e6110a4625381a837cfc99d",
+    "problem": "Bangladeshi families track wedding, aqiqah, and birthday gifts in paper notebooks that are hard to search, easy to lose, and impossible for several relatives to update at once, while generic apps store the family's financial records on a third-party server and ignore Bangla numerals and lakh formatting.",
+    "constraints": [
+      "The ledger must live in the owner's Google Drive with no application server or database, so the app may request only the drive.file scope and never see the rest of the Drive.",
+      "Gift entry happens at crowded events with unreliable connectivity, so writes must land locally first and reach the sheet later without duplicating rows.",
+      "Several family members edit the same sheet from different phones, so the sync rule has to be simple, predictable, and safe when two devices change the same row.",
+      "The sheet remains a spreadsheet that people may edit by hand, so the app must detect header changes and stop syncing instead of corrupting data.",
+      "The whole interface, including numerals, dates, currency, and validation errors, must read naturally in Bangla rather than relying on browser defaults in English."
+    ],
+    "architecture": {
+      "summary": "A TanStack Start single-page PWA keeps a per-ledger Dexie database as the working copy, and a sync engine pulls, merges, and pushes rows against a three-tab Google Sheet whose columns are derived from Zod schemas.",
+      "layers": [
+        {
+          "title": "Ledger domain",
+          "detail": "Zod schemas for events, people, and gifts define both form validation and the exact column order of the sheet, with every record carrying updatedAt, updatedBy, and a soft-delete marker."
+        },
+        {
+          "title": "Local persistence",
+          "detail": "Each ledger gets its own Dexie IndexedDB database; a single repository module is the only write path, and live queries feed the pages so edits appear instantly across tabs."
+        },
+        {
+          "title": "Sync engine",
+          "detail": "A pull, merge, save, push cycle runs after writes, on an interval, and when the device comes back online, resolving conflicts by last-write-wins on updatedAt and guarding against duplicate appends."
+        },
+        {
+          "title": "Google boundary",
+          "detail": "Typed Drive, Sheets, Picker, and Identity adapters sit behind one interface with a localStorage mock, so the complete workflow runs and is tested without credentials."
+        },
+        {
+          "title": "Sharing and export",
+          "detail": "Owners share a QR link that grants Drive permission on the sheet; members join through the link or Picker, and any event or the whole ledger exports to Excel or a print page."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Use the owner's Google Sheet as the only backend",
+        "detail": "Avoiding a server means the family keeps ownership of its data, can open or back up the sheet directly, and the product carries no hosting cost or data-retention liability."
+      },
+      {
+        "title": "Write locally first, sync later",
+        "detail": "Dexie holds the working copy so entries never block on the network; the navbar reports synced, syncing, offline with a pending count, or needs attention."
+      },
+      {
+        "title": "Keep conflict resolution last-write-wins with soft deletes",
+        "detail": "Family ledgers rarely see simultaneous edits of the same row, so a simple, explainable rule beat a merge system; deleted rows stay in the sheet with a deletedAt timestamp."
+      },
+      {
+        "title": "Validate sheet headers before every sync",
+        "detail": "Only the schema's leading columns must match, so hand-added columns on the right are tolerated, while a renamed header halts sync with a clear Bangla banner instead of writing bad data."
+      },
+      {
+        "title": "Build a full mock of Google behind the same interface",
+        "detail": "Account chooser, Drive, Picker, and Sheets mocks make the entire product testable in a browser without an OAuth client and let two profiles rehearse the sharing flow."
+      }
+    ],
+    "contribution": [
+      "Specified the product from an approved HTML prototype and rebuilt it in TanStack Start with TypeScript, Tailwind CSS v4, shadcn/ui, and Hugeicons across mobile, tablet, and desktop layouts.",
+      "Designed the Zod-driven ledger schema that doubles as the sheet column contract, the per-ledger Dexie store, the single repository write path, and live-query hooks.",
+      "Implemented the sync engine with header verification, last-write-wins merge, duplicate-append protection, and nine Node.js test runner cases covering rows, merge, and the full cycle.",
+      "Built Google Drive, Sheets, Picker, and Identity Services adapters plus a complete localStorage mock, QR and link sharing with member management, Excel export, and a print view.",
+      "Wrote the Bangla copy, numeral, date, and lakh-grouped currency formatting, custom form validation, PWA manifest and offline shell, social preview assets, and deployed to Netlify with secrets from Infisical."
+    ],
+    "outcomes": [
+      "Families can record who gave what at weddings, aqiqahs, and birthdays from any phone, offline, and see per-event received, given, and unopened-envelope summaries.",
+      "The ledger stays in the owner's Google Drive as an editable spreadsheet, with the app holding only drive.file access and no server-side copy.",
+      "Multiple relatives write to the same ledger through a QR link, and conflicting edits resolve predictably without duplicate rows.",
+      "The complete workflow, including sharing and sync failure simulations, runs in mock mode without Google credentials, and nine automated sync tests guard the merge and cycle logic.",
+      "The app is live at giftbook.netlify.app as an installable PWA with a fully Bangla interface, including numerals and currency."
+    ],
+    "screenshot": {
+      "alt": "Giftbook landing page with a sample wedding ledger card showing received, given, and pending-envelope totals",
+      "caption": "The deployed Giftbook landing page previews an event ledger and states the promise up front: data in your own Google Drive, free, and works offline."
+    }
+  },
+  {
     "slug": "rootstory",
     "projectId": "project-rootstory",
     "summary": "A local-first family archive that combines a readable relationship graph with detailed profiles, timelines, recurring dates, version history, and complete backup restoration without requiring an account.",

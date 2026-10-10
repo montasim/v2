@@ -7,9 +7,9 @@ import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
   it("loads authored and case-study-derived posts from one catalog", () => {
-    expect(blogCatalog.posts).toHaveLength(54)
+    expect(blogCatalog.posts).toHaveLength(55)
     expect(blogCatalog.authoredPosts).toHaveLength(5)
-    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(49)
+    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(50)
     expect(
       blogCatalog.authoredPosts.every((post) => Boolean(post.publishedAt))
     ).toBe(true)
@@ -18,6 +18,9 @@ describe("blog catalog", () => {
     ).toBe(true)
     expect(blogCatalog.findByProjectId("project-rootstory")?.publishedAt).toBe(
       "2026-10-08"
+    )
+    expect(blogCatalog.findByProjectId("project-giftbook")?.publishedAt).toBe(
+      "2026-10-09"
     )
     expect(
       blogCatalog.posts.every(
@@ -29,6 +32,7 @@ describe("blog catalog", () => {
   it("provides routable featured articles", () => {
     expect(blogCatalog.featured.featured).toBe(true)
     expect(blogCatalog.featuredPosts.map((post) => post.slug)).toEqual([
+      "a-family-gift-ledger-that-lives-in-your-own-google-sheet",
       "designing-a-local-first-family-tree-people-can-read",
       "company-research-without-a-fake-score",
       "scheduled-publishing-cannot-depend-on-an-open-tab",

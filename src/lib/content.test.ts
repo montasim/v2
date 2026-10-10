@@ -62,6 +62,20 @@ describe("portfolio content", () => {
     expect(loadContactContext({ app: "rootstory" }).projectId).toBe(project?.id)
   })
 
+  it("connects Giftbook across project, case study, blog, and contact", () => {
+    const project = projectCatalog.findBySlug("giftbook")
+    expect(project?.liveUrl).toBe("https://giftbook.netlify.app")
+    expect(projectCaseStudyCatalog.findBySlug("giftbook")?.project.id).toBe(
+      project?.id
+    )
+    expect(
+      blogCatalog.find(
+        "a-family-gift-ledger-that-lives-in-your-own-google-sheet"
+      )?.projectId
+    ).toBe(project?.id)
+    expect(loadContactContext({ app: "giftbook" }).projectId).toBe(project?.id)
+  })
+
   it("validates every required JSON catalog", () => {
     expect(profileCatalog.profile.name).toContain("Montasim")
     expect(profileCatalog.profile.workPreferences.timeZone).toBe("UTC+6")
@@ -191,7 +205,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-rootstory")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-giftbook")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)

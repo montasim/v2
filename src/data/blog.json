@@ -7,6 +7,16 @@
   "posts": [
     {
       "kind": "case-study-derived",
+      "projectId": "project-giftbook",
+      "slug": "a-family-gift-ledger-that-lives-in-your-own-google-sheet",
+      "title": "A Family Gift Ledger That Lives in Your Own Google Sheet",
+      "category": "Product engineering",
+      "topic": "product",
+      "publishedAt": "2026-10-09",
+      "featured": true
+    },
+    {
+      "kind": "case-study-derived",
       "projectId": "project-rootstory",
       "slug": "designing-a-local-first-family-tree-people-can-read",
       "title": "Designing a Local-First Family Tree People Can Read",
