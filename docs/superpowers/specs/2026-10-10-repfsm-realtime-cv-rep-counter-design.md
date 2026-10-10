@@ -92,14 +92,17 @@ The engine is a class `RepEngine(def)` with `step(frame): EngineEvent[]`, `reset
 - `createSource(kind: 'camera' | 'video', el)`: wraps a `<video>` element; camera via `getUserMedia({video: {facingMode: 'user', width: 640, height: 480}})`.
 - `createDetector()`: loads PoseLandmarker in VIDEO running mode with GPU delegate; on failure retries with CPU delegate and records which one is active.
 - `runLoop({source, detector, engine, onFrame, onPerf})`: uses `video.requestVideoFrameCallback` (falls back to `requestAnimationFrame`). Per callback: if `now - lastInferenceAt < budgetMs` skip inference (count as dropped); else run `detectForVideo`, build `Frame`, call `engine.step`, call `onFrame({landmarks, events, snapshot})`.
-- Adaptive frame budget: target 30 inferences/s. Keep a rolling window (last 30) of inference durations; `budgetMs = max(1000/30, p90(inferenceMs) * 1.2)`. This keeps the main thread responsive on slow devices instead of queueing.
-- Perf samples every 500 ms: `{fps, inferenceP50, inferenceP95, dropped, delegate}`.
-- Frame-skip logic lives in a pure function `shouldInfer(now, lastAt, window)` so it is unit-testable with a fake clock.
+- Adaptive frame budget, two axes:
+  - Load axis: rolling window (last 30) of inference durations; `budgetMs = max(1000/targetFps, p90(inferenceMs) * 1.2)`. Keeps the main thread responsive on slow devices instead of queueing.
+  - Activity axis: `targetFps` is 30 while the engine is `READY`/`DOWN`/`UP` and 10 while it is `IDLE`/`LOST` (nobody in position; save battery). Driven purely by engine state.
+- Rendering is decoupled from inference. The loop stores the latest landmarks in a ref; the overlay draws them on its own `requestAnimationFrame` loop at display rate (60 Hz on most screens) regardless of how often inference runs. The HUD reports `renderFps` and `inferenceFps` separately. This is the public demonstration of "60 FPS rendering with adaptive inference".
+- Perf samples every 500 ms: `{renderFps, inferenceFps, inferenceP50, inferenceP95, dropped, delegate}`.
+- Frame-skip logic lives in a pure function `shouldInfer(now, lastAt, window, targetFps)` so it is unit-testable with a fake clock.
 
 ### 4.3 `src/routes/` (TanStack Start)
 
-- `/` — landing text (what it proves, how) and the live demo: camera permission button, exercise selector (squat/push-up), `<canvas>` skeleton overlay on the video, large rep count, state badge, HUD (FPS, inference p50/p95 ms, dropped %, delegate). "Use sample clip instead" link when camera is denied.
-- `/benchmark` — replays bundled clips `public/clips/squat-10.webm` and `public/clips/pushup-10.webm` (10 ground-truth reps each, ~20–30 s, recorded by the author). Shows per-clip: detected count vs ground truth, FPS p50/p95, inference p50/p95, dropped %, delegate, UA, hardware concurrency. "Export JSON" button downloads the results; "Copy README row" copies a Markdown table row.
+- `/` — landing text (what it proves, how) and the live demo: camera permission button, exercise selector (squat/push-up), `<canvas>` skeleton overlay on the video, large rep count, state badge, HUD (render FPS, inference FPS, inference p50/p95 ms, dropped, delegate). "Use sample clip instead" link when camera is denied.
+- `/benchmark` — replays bundled clips `public/clips/squat-10.webm` and `public/clips/pushup-10.webm` (10 ground-truth reps each, ~20–30 s, recorded by the author). Shows per-clip: detected count vs ground truth, render FPS, inference FPS, inference p50/p95, dropped, delegate, UA, hardware concurrency. "Export JSON" button downloads the results; "Copy README row" copies a Markdown table row.
 - `/how-it-works` — FSM state diagram (static SVG), angle definitions, thresholds, dwell, hysteresis explanation, link to engine source and fixtures.
 
 ### 4.4 Fixtures
@@ -160,7 +163,7 @@ repfsm/
 | Portfolio claim | Public evidence in this project |
 |---|---|
 | FSM-based engine replacing hook state | `src/engine/rep-engine.ts` + fixture tests |
-| 60 FPS / adaptive frame rate | `shouldInfer` adaptive budget + HUD + benchmark JSON |
+| 60 FPS / adaptive frame rate | overlay render loop decoupled from inference (render FPS vs inference FPS in HUD and benchmark JSON), two-axis adaptive budget in `shouldInfer` |
 | Reliability during AI analysis | zero false reps across fixtures, LOST handling tests |
 | MediaPipe pose pipeline | `src/pipeline/detector.ts`, live demo |
 | Lighthouse 90+ | Lighthouse CI on `/` |
@@ -170,3 +173,7 @@ repfsm/
 - Extract `src/engine` to npm as `rep-fsm` (zero deps already).
 - Worker + OffscreenCanvas pipeline if benchmark shows main-thread jank.
 - More exercises via `ExerciseDef` only.
+
+## 12. Independence
+
+This project is designed and written from scratch for public release. It contains no code, constants, identifiers, or file layouts from any employer or client codebase.

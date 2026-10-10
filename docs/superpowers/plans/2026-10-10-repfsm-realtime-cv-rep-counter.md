@@ -18,7 +18,9 @@ Spec: `docs/superpowers/specs/2026-10-10-repfsm-realtime-cv-rep-counter-design.m
 - MediaPipe model and WASM are served from `public/` (no CDN fetch at runtime).
 - Exercises v1: `squat` (hip–knee–ankle: 23/24, 25/26, 27/28) and `pushup` (shoulder–elbow–wrist: 11/12, 13/14, 15/16).
 - Thresholds (from spec): squat `downAngle 100`, `upAngle 160`; push-up `downAngle 90`, `upAngle 155`; both `minDwellMs 200`, `minVisibility 0.6`. EMA smoothing alpha `0.5`. LOST after 3 consecutive low-visibility frames; recovery after 3 consecutive good frames.
-- Adaptive inference budget: `budgetMs = max(1000/30, p90(inferenceMs) * 1.2)` over a rolling window of 30 samples.
+- Adaptive inference budget: `budgetMs = max(1000/targetFps, p90(inferenceMs) * 1.2)` over a rolling window of 30 samples; `targetFps` is 30 when engine state is `READY`/`DOWN`/`UP`, 10 when `IDLE`/`LOST`.
+- Overlay rendering runs on its own `requestAnimationFrame` loop reading the latest landmarks from a ref; it never waits on inference. HUD shows `renderFps` and `inferenceFps` separately.
+- Written from scratch for public release: no code, constants, identifiers, or file layouts from any employer or client codebase (spec §12).
 - No server state, no accounts. All routes prerendered as static HTML; camera/MediaPipe code runs only in `useEffect`.
 - Camera constraints: `{ video: { facingMode: 'user', width: 640, height: 480 } }`.
 - Clips: `public/clips/squat-10.webm`, `public/clips/pushup-10.webm`, 10 ground-truth reps each.
@@ -871,15 +873,16 @@ git commit -m "feat(engine): add deterministic RepEngine finite-state machine"
 - Produces:
   - `class RollingWindow { constructor(size: number); push(v: number): void; percentile(p: number): number; size(): number; values(): number[]; clear(): void }`
   - `budgetMs(window: RollingWindow, targetFps?: number): number` — `max(1000/targetFps, p90 * 1.2)`; when window empty returns `1000/targetFps`.
-  - `shouldInfer(now: number, lastInferenceAt: number | null, window: RollingWindow): boolean`
-  - `type PerfSample = { at: number; fps: number; inferenceP50: number; inferenceP95: number; dropped: number; delegate: 'GPU' | 'CPU' }`
-  - `class PerfTracker { constructor(delegate: 'GPU'|'CPU'); recordInference(ms: number, at: number): void; recordDrop(): void; sample(at: number): PerfSample; reset(): void }` — `fps` = inferences in the last 1000 ms before `at`.
+  - `targetFpsFor(state: State): number` — 30 for `READY`/`DOWN`/`UP`, 10 for `IDLE`/`LOST`.
+  - `shouldInfer(now: number, lastInferenceAt: number | null, window: RollingWindow, targetFps?: number): boolean`
+  - `type PerfSample = { at: number; renderFps: number; inferenceFps: number; inferenceP50: number; inferenceP95: number; dropped: number; delegate: 'GPU' | 'CPU' }`
+  - `class PerfTracker { constructor(delegate: 'GPU'|'CPU'); recordInference(ms: number, at: number): void; recordRender(at: number): void; recordDrop(): void; sample(at: number): PerfSample; reset(): void }` — `inferenceFps`/`renderFps` = events in the last 1000 ms before `at`.
 
 - [ ] **Step 1: Failing tests `src/pipeline/should-infer.test.ts`**
 
 ```ts
 import { describe, expect, it } from "vitest"
-import { RollingWindow, budgetMs, shouldInfer } from "./should-infer"
+import { RollingWindow, budgetMs, shouldInfer, targetFpsFor } from "./should-infer"
 
 describe("RollingWindow", () => {
   it("keeps only the newest `size` values", () => {
@@ -915,6 +918,16 @@ describe("budgetMs", () => {
   })
 })
 
+describe("targetFpsFor", () => {
+  it("runs at 30 while a person is in position and 10 while idle or lost", () => {
+    expect(targetFpsFor("READY")).toBe(30)
+    expect(targetFpsFor("DOWN")).toBe(30)
+    expect(targetFpsFor("UP")).toBe(30)
+    expect(targetFpsFor("IDLE")).toBe(10)
+    expect(targetFpsFor("LOST")).toBe(10)
+  })
+})
+
 describe("shouldInfer", () => {
   it("always infers when nothing has run yet", () => {
     expect(shouldInfer(0, null, new RollingWindow(30))).toBe(true)
@@ -924,6 +937,12 @@ describe("shouldInfer", () => {
     for (let i = 0; i < 30; i++) w.push(100)
     expect(shouldInfer(1050, 1000, w)).toBe(false)
     expect(shouldInfer(1120, 1000, w)).toBe(true)
+  })
+  it("uses a 100ms floor when the target is 10 fps", () => {
+    const w = new RollingWindow(30)
+    for (let i = 0; i < 30; i++) w.push(5)
+    expect(shouldInfer(1050, 1000, w, 10)).toBe(false)
+    expect(shouldInfer(1100, 1000, w, 10)).toBe(true)
   })
 })
 ```
@@ -952,21 +971,29 @@ export class RollingWindow {
   }
 }
 
-export const TARGET_FPS = 30
+import type { State } from "@/engine/types"
 
-export function budgetMs(window: RollingWindow, targetFps = TARGET_FPS): number {
+export const ACTIVE_FPS = 30
+export const IDLE_FPS = 10
+
+/** Inference target by engine state: full rate while someone is in position, low rate while idle or lost. */
+export function targetFpsFor(state: State): number {
+  return state === "IDLE" || state === "LOST" ? IDLE_FPS : ACTIVE_FPS
+}
+
+export function budgetMs(window: RollingWindow, targetFps = ACTIVE_FPS): number {
   const floor = 1000 / targetFps
   if (window.size() === 0) return floor
   return Math.max(floor, window.percentile(90) * 1.2)
 }
 
-export function shouldInfer(now: number, lastInferenceAt: number | null, window: RollingWindow): boolean {
+export function shouldInfer(now: number, lastInferenceAt: number | null, window: RollingWindow, targetFps = ACTIVE_FPS): boolean {
   if (lastInferenceAt === null) return true
-  return now - lastInferenceAt >= budgetMs(window)
+  return now - lastInferenceAt >= budgetMs(window, targetFps)
 }
 ```
 
-- [ ] **Step 4: Run, expect 9 passed.**
+- [ ] **Step 4: Run, expect 11 passed.**
 
 - [ ] **Step 5: Failing tests `src/pipeline/perf.test.ts`**
 
@@ -975,12 +1002,14 @@ import { describe, expect, it } from "vitest"
 import { PerfTracker } from "./perf"
 
 describe("PerfTracker", () => {
-  it("reports fps as inferences in the trailing second and percentiles of inference time", () => {
+  it("reports inference and render fps over the trailing second and percentiles of inference time", () => {
     const p = new PerfTracker("GPU")
     for (let i = 0; i < 20; i++) p.recordInference(10 + i, i * 50) // 20 inferences over 1s
+    for (let i = 0; i < 60; i++) p.recordRender(i * (1000 / 60)) // 60 renders over 1s
     p.recordDrop(); p.recordDrop()
     const s = p.sample(1000)
-    expect(s.fps).toBe(20)
+    expect(s.inferenceFps).toBe(20)
+    expect(s.renderFps).toBe(60)
     expect(s.inferenceP50).toBe(19)
     expect(s.inferenceP95).toBe(28)
     expect(s.dropped).toBe(2)
@@ -991,13 +1020,13 @@ describe("PerfTracker", () => {
     const p = new PerfTracker("CPU")
     p.recordInference(10, 0)
     p.recordInference(10, 1500)
-    expect(p.sample(2000).fps).toBe(1)
+    expect(p.sample(2000).inferenceFps).toBe(1)
   })
   it("reset clears everything", () => {
     const p = new PerfTracker("CPU")
-    p.recordInference(10, 0); p.recordDrop()
+    p.recordInference(10, 0); p.recordRender(0); p.recordDrop()
     p.reset()
-    expect(p.sample(100)).toMatchObject({ fps: 0, dropped: 0, inferenceP50: 0 })
+    expect(p.sample(100)).toMatchObject({ inferenceFps: 0, renderFps: 0, dropped: 0, inferenceP50: 0 })
   })
 })
 ```
@@ -1013,35 +1042,49 @@ export type Delegate = "GPU" | "CPU"
 
 export type PerfSample = {
   at: number
-  fps: number
+  renderFps: number
+  inferenceFps: number
   inferenceP50: number
   inferenceP95: number
   dropped: number
   delegate: Delegate
 }
 
+/** Timestamps within the trailing second; older entries are pruned on push. */
+class Stamps {
+  private list: number[] = []
+  push(at: number): void {
+    this.list.push(at)
+    const cutoff = at - 1000
+    while (this.list.length && this.list[0] < cutoff) this.list.shift()
+  }
+  countSince(cutoff: number): number { return this.list.filter((s) => s > cutoff).length }
+  clear(): void { this.list = [] }
+}
+
 export class PerfTracker {
   readonly window = new RollingWindow(30)
-  private stamps: number[] = []
+  private inferences = new Stamps()
+  private renders = new Stamps()
   private dropped = 0
 
   constructor(private readonly delegate: Delegate) {}
 
   recordInference(ms: number, at: number): void {
     this.window.push(ms)
-    this.stamps.push(at)
-    const cutoff = at - 1000
-    while (this.stamps.length && this.stamps[0] < cutoff) this.stamps.shift()
+    this.inferences.push(at)
   }
+
+  recordRender(at: number): void { this.renders.push(at) }
 
   recordDrop(): void { this.dropped++ }
 
   sample(at: number): PerfSample {
     const cutoff = at - 1000
-    const fps = this.stamps.filter((s) => s > cutoff).length
     return {
       at,
-      fps,
+      renderFps: this.renders.countSince(cutoff),
+      inferenceFps: this.inferences.countSince(cutoff),
       inferenceP50: this.window.percentile(50),
       inferenceP95: this.window.percentile(95),
       dropped: this.dropped,
@@ -1050,7 +1093,8 @@ export class PerfTracker {
   }
 
   reset(): void {
-    this.stamps = []
+    this.inferences.clear()
+    this.renders.clear()
     this.dropped = 0
     this.window.clear()
   }
@@ -1063,7 +1107,7 @@ export class PerfTracker {
 
 ```bash
 git add src/pipeline
-git commit -m "feat(pipeline): add adaptive inference budget and perf tracker"
+git commit -m "feat(pipeline): add two-axis adaptive inference budget and render/inference perf tracker"
 ```
 
 ---
@@ -1079,7 +1123,7 @@ No unit tests (browser-only, MediaPipe/WebGL). Verified through Task 7 manual ru
 - Produces:
   - `createDetector(): Promise<Detector>` where `type Detector = { landmarker: PoseLandmarker; delegate: Delegate; close(): void }`
   - `createCameraSource(video: HTMLVideoElement): Promise<Source>`, `createVideoSource(video: HTMLVideoElement, url: string): Promise<Source>` where `type Source = { video: HTMLVideoElement; kind: 'camera' | 'video'; stop(): void }`
-  - `runLoop(opts: LoopOptions): () => void` (returns stop function) with
+  - `runLoop(opts: LoopOptions): LoopHandle` where `type LoopHandle = { stop(): void; latest(): Landmark[] | null; markRender(at: number): void }` with
     ```ts
     type LoopOptions = {
       source: Source; detector: Detector; engine: RepEngine;
@@ -1184,7 +1228,7 @@ import type { RepEngine } from "@/engine/rep-engine"
 import type { EngineEvent, Frame, Landmark, Snapshot } from "@/engine/types"
 import type { Detector } from "./detector"
 import { PerfTracker, type PerfSample } from "./perf"
-import { shouldInfer } from "./should-infer"
+import { shouldInfer, targetFpsFor } from "./should-infer"
 import type { Source } from "./source"
 
 export type LoopFrame = { landmarks: Landmark[] | null; events: EngineEvent[]; snapshot: Snapshot }
@@ -1198,16 +1242,25 @@ export type LoopOptions = {
   onEnded?: () => void
 }
 
+export type LoopHandle = {
+  stop(): void
+  /** Most recent landmarks; read by the overlay's own render loop. */
+  latest(): Landmark[] | null
+  /** Called by the overlay once per drawn frame so the HUD can report render FPS. */
+  markRender(at: number): void
+}
+
 const PERF_INTERVAL_MS = 500
 
-/** Starts the inference loop. Returns a stop function. Pauses while the tab is hidden. */
-export function runLoop({ source, detector, engine, onFrame, onPerf, onEnded }: LoopOptions): () => void {
+/** Starts the inference loop. Pauses while the tab is hidden. Rendering is the overlay's job. */
+export function runLoop({ source, detector, engine, onFrame, onPerf, onEnded }: LoopOptions): LoopHandle {
   const { video } = source
   const perf = new PerfTracker(detector.delegate)
   let stopped = false
   let lastInferenceAt: number | null = null
   let lastVideoTime = -1
   let lastPerfAt = performance.now()
+  let latestLandmarks: Landmark[] | null = null
   let handle = 0
   const hasRVFC = "requestVideoFrameCallback" in video
 
@@ -1224,7 +1277,7 @@ export function runLoop({ source, detector, engine, onFrame, onPerf, onEnded }: 
     const now = performance.now()
     if (document.hidden || video.paused || video.currentTime === lastVideoTime) { schedule(); return }
 
-    if (!shouldInfer(now, lastInferenceAt, perf.window)) {
+    if (!shouldInfer(now, lastInferenceAt, perf.window, targetFpsFor(engine.snapshot().state))) {
       perf.recordDrop()
       schedule()
       return
@@ -1237,7 +1290,8 @@ export function runLoop({ source, detector, engine, onFrame, onPerf, onEnded }: 
     lastInferenceAt = started
     perf.recordInference(inferenceMs, started)
 
-    const landmarks = (result.landmarks[0] as Landmark[] | undefined) ?? null
+    const landmarks = result.landmarks[0]?.map((l) => ({ x: l.x, y: l.y, z: l.z, visibility: l.visibility ?? 0 })) ?? null
+    latestLandmarks = landmarks
     const frame: Frame = { t: started, landmarks: landmarks ?? [] }
     const events = engine.step(frame)
     onFrame({ landmarks, events, snapshot: engine.snapshot() })
@@ -1253,22 +1307,20 @@ export function runLoop({ source, detector, engine, onFrame, onPerf, onEnded }: 
   document.addEventListener("visibilitychange", onVisibility)
   schedule()
 
-  return () => {
-    stopped = true
-    document.removeEventListener("visibilitychange", onVisibility)
-    if (hasRVFC) (video as HTMLVideoElement & { cancelVideoFrameCallback: (h: number) => void }).cancelVideoFrameCallback(handle)
-    else cancelAnimationFrame(handle)
+  return {
+    stop: () => {
+      stopped = true
+      document.removeEventListener("visibilitychange", onVisibility)
+      if (hasRVFC) (video as HTMLVideoElement & { cancelVideoFrameCallback: (h: number) => void }).cancelVideoFrameCallback(handle)
+      else cancelAnimationFrame(handle)
+    },
+    latest: () => latestLandmarks,
+    markRender: (at) => perf.recordRender(at),
   }
 }
 ```
 
-Note: MediaPipe `landmarks[0]` entries are `NormalizedLandmark { x, y, z, visibility? }`. `visibility` can be `undefined` on some builds; normalize it in the loop before `engine.step`:
-
-```ts
-const landmarks = result.landmarks[0]?.map((l) => ({ x: l.x, y: l.y, z: l.z, visibility: l.visibility ?? 0 })) ?? null
-```
-
-Use this mapped version instead of the cast line above.
+MediaPipe `landmarks[0]` entries are `NormalizedLandmark { x, y, z, visibility? }`; `visibility` can be `undefined`, hence the `?? 0` in the map.
 
 - [ ] **Step 4: Typecheck and lint**
 
@@ -1282,7 +1334,7 @@ Expected: clean. If `requestVideoFrameCallback` types are missing, add `"lib": [
 
 ```bash
 git add src/pipeline
-git commit -m "feat(pipeline): add MediaPipe detector, camera/video sources, and inference loop"
+git commit -m "feat(pipeline): add MediaPipe detector, camera/video sources, and render-decoupled inference loop"
 ```
 
 ---
@@ -1295,7 +1347,7 @@ git commit -m "feat(pipeline): add MediaPipe detector, camera/video sources, and
 
 **Interfaces:**
 - Consumes: Task 3 `EXERCISES`, Task 4 `RepEngine`, Task 6 `createDetector`, `createCameraSource`, `createVideoSource`, `runLoop`.
-- Produces: `useRepSession(opts: { exercise: ExerciseId; mode: 'camera' | { clip: string } ; enabled: boolean })` returning `{ videoRef, status, error, snapshot, landmarks, perf, lastEvents, restart, ended }` where `status: 'idle' | 'loading' | 'running' | 'error' | 'ended'`.
+- Produces: `useRepSession(opts: { exercise: ExerciseId; mode: 'camera' | { clip: string } ; enabled: boolean })` returning `{ videoRef, status, error, snapshot, landmarks, perf, lastEvents, restart, getLandmarks, markRender }` where `status: 'idle' | 'loading' | 'running' | 'error' | 'ended'`, `getLandmarks: () => Landmark[] | null` reads the loop's latest landmarks without React state, and `markRender: (at: number) => void` reports an overlay draw. `landmarks` state still updates per inference for the recorder (Task 8); the overlay must use `getLandmarks`.
 
 - [ ] **Step 1: Write `src/components/useRepSession.ts`**
 
@@ -1305,6 +1357,7 @@ import { RepEngine } from "@/engine/rep-engine"
 import { getExercise } from "@/engine/exercises"
 import type { EngineEvent, ExerciseId, Landmark, Snapshot } from "@/engine/types"
 import type { PerfSample } from "@/pipeline/perf"
+import type { LoopHandle } from "@/pipeline/loop"
 
 export type SessionMode = "camera" | { clip: string }
 export type SessionStatus = "idle" | "loading" | "running" | "error" | "ended"
@@ -1321,6 +1374,9 @@ export function useRepSession({ exercise, mode, enabled }: { exercise: ExerciseI
   const [lastEvents, setLastEvents] = useState<EngineEvent[]>([])
   const [run, setRun] = useState(0)
   const restart = useCallback(() => setRun((n) => n + 1), [])
+  const handleRef = useRef<LoopHandle | null>(null)
+  const getLandmarks = useCallback(() => handleRef.current?.latest() ?? null, [])
+  const markRender = useCallback((at: number) => handleRef.current?.markRender(at), [])
 
   const clip = typeof mode === "object" ? mode.clip : null
 
@@ -1348,7 +1404,7 @@ export function useRepSession({ exercise, mode, enabled }: { exercise: ExerciseI
       stopSource = source.stop
       const engine = new RepEngine(getExercise(exercise))
       setStatus("running")
-      stopLoop = runLoop({
+      const loop = runLoop({
         source, detector, engine,
         onFrame: ({ landmarks, events, snapshot }) => {
           setLandmarks(landmarks); setSnapshot(snapshot)
@@ -1357,6 +1413,8 @@ export function useRepSession({ exercise, mode, enabled }: { exercise: ExerciseI
         onPerf: setPerf,
         onEnded: () => setStatus("ended"),
       })
+      handleRef.current = loop
+      stopLoop = loop.stop
     })().catch((e: unknown) => {
       if (cancelled) return
       setStatus("error")
@@ -1365,11 +1423,12 @@ export function useRepSession({ exercise, mode, enabled }: { exercise: ExerciseI
 
     return () => {
       cancelled = true
+      handleRef.current = null
       stopLoop?.(); stopSource?.(); closeDetector?.()
     }
   }, [enabled, exercise, clip, run])
 
-  return { videoRef, status, error, snapshot, landmarks, perf, lastEvents, restart }
+  return { videoRef, status, error, snapshot, landmarks, perf, lastEvents, restart, getLandmarks, markRender }
 }
 ```
 
@@ -1412,8 +1471,9 @@ export function Hud({ perf }: { perf: PerfSample | null }) {
     <div className="flex flex-col"><span className="text-[10px] uppercase text-neutral-500">{label}</span><span className="font-mono text-sm tabular-nums">{value}</span></div>
   )
   return (
-    <div className="grid grid-cols-5 gap-3 rounded border border-neutral-200 p-2 dark:border-neutral-800" data-testid="hud">
-      {cell("fps", String(perf.fps))}
+    <div className="grid grid-cols-3 gap-3 rounded border border-neutral-200 p-2 sm:grid-cols-6 dark:border-neutral-800" data-testid="hud">
+      {cell("render fps", String(perf.renderFps))}
+      {cell("infer fps", String(perf.inferenceFps))}
       {cell("infer p50", `${perf.inferenceP50.toFixed(1)} ms`)}
       {cell("infer p95", `${perf.inferenceP95.toFixed(1)} ms`)}
       {cell("dropped", String(perf.dropped))}
@@ -1423,7 +1483,7 @@ export function Hud({ perf }: { perf: PerfSample | null }) {
 }
 ```
 
-- [ ] **Step 4: Write `src/components/Overlay.tsx`** (skeleton on a canvas sized to the video)
+- [ ] **Step 4: Write `src/components/Overlay.tsx`** (skeleton on a canvas; draws on its own rAF loop at display rate, independent of inference)
 
 ```tsx
 import { useEffect, useRef } from "react"
@@ -1436,28 +1496,48 @@ const CONNECTIONS: [number, number][] = [
   [23, 25], [25, 27], [24, 26], [26, 28],
 ]
 
-export function Overlay({ landmarks, width, height, highlight }: { landmarks: Landmark[] | null; width: number; height: number; highlight: number[] }) {
+type OverlayProps = {
+  /** Latest landmarks from the loop; read every animation frame, never via React state. */
+  getLandmarks: () => Landmark[] | null
+  /** Reports each drawn frame so the HUD can show render FPS. */
+  onRender?: (at: number) => void
+  width: number
+  height: number
+  highlight: number[]
+  active: boolean
+}
+
+export function Overlay({ getLandmarks, onRender, width, height, highlight, active }: OverlayProps) {
   const ref = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
     const canvas = ref.current
     const ctx = canvas?.getContext("2d")
-    if (!canvas || !ctx) return
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    if (!landmarks) return
-    ctx.lineWidth = 3
-    ctx.strokeStyle = "rgba(16,185,129,0.9)"
-    for (const [a, b] of CONNECTIONS) {
-      const p = landmarks[a], q = landmarks[b]
-      if (!p || !q || p.visibility < 0.5 || q.visibility < 0.5) continue
-      ctx.beginPath(); ctx.moveTo(p.x * canvas.width, p.y * canvas.height); ctx.lineTo(q.x * canvas.width, q.y * canvas.height); ctx.stroke()
+    if (!canvas || !ctx || !active) return
+    let raf = 0
+    const draw = (at: number) => {
+      const landmarks = getLandmarks()
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      if (landmarks) {
+        ctx.lineWidth = 3
+        ctx.strokeStyle = "rgba(16,185,129,0.9)"
+        for (const [a, b] of CONNECTIONS) {
+          const p = landmarks[a], q = landmarks[b]
+          if (!p || !q || p.visibility < 0.5 || q.visibility < 0.5) continue
+          ctx.beginPath(); ctx.moveTo(p.x * canvas.width, p.y * canvas.height); ctx.lineTo(q.x * canvas.width, q.y * canvas.height); ctx.stroke()
+        }
+        ctx.fillStyle = "rgba(245,158,11,0.95)"
+        for (const i of highlight) {
+          const p = landmarks[i]
+          if (!p || p.visibility < 0.5) continue
+          ctx.beginPath(); ctx.arc(p.x * canvas.width, p.y * canvas.height, 6, 0, Math.PI * 2); ctx.fill()
+        }
+      }
+      onRender?.(at)
+      raf = requestAnimationFrame(draw)
     }
-    for (const i of highlight) {
-      const p = landmarks[i]
-      if (!p || p.visibility < 0.5) continue
-      ctx.fillStyle = "rgba(245,158,11,0.95)"
-      ctx.beginPath(); ctx.arc(p.x * canvas.width, p.y * canvas.height, 6, 0, Math.PI * 2); ctx.fill()
-    }
-  }, [landmarks, highlight])
+    raf = requestAnimationFrame(draw)
+    return () => cancelAnimationFrame(raf)
+  }, [getLandmarks, onRender, highlight, active])
   return <canvas ref={ref} width={width} height={height} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
 }
 ```
@@ -1487,7 +1567,7 @@ export function ExercisePicker({ value, onChange }: { value: ExerciseId; onChang
 
 ```tsx
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { ExercisePicker } from "@/components/ExercisePicker"
 import { Hud } from "@/components/Hud"
 import { Overlay } from "@/components/Overlay"
@@ -1501,8 +1581,9 @@ export const Route = createFileRoute("/")({ component: Home })
 function Home() {
   const [exercise, setExercise] = useState<ExerciseId>("squat")
   const [started, setStarted] = useState(false)
-  const { videoRef, status, error, snapshot, landmarks, perf, restart } = useRepSession({ exercise, mode: "camera", enabled: started })
+  const { videoRef, status, error, snapshot, perf, restart, getLandmarks, markRender } = useRepSession({ exercise, mode: "camera", enabled: started })
   const def = getExercise(exercise)
+  const highlight = useMemo(() => def.joints.flat(), [def])
 
   return (
     <div className="space-y-6">
@@ -1525,7 +1606,7 @@ function Home() {
 
       <div className="relative aspect-[4/3] w-full max-w-2xl overflow-hidden rounded bg-black">
         <video ref={videoRef} className="h-full w-full object-contain" playsInline muted />
-        <Overlay landmarks={landmarks} width={640} height={480} highlight={def.joints.flat()} />
+        <Overlay getLandmarks={getLandmarks} onRender={markRender} width={640} height={480} highlight={highlight} active={status === "running"} />
         {snapshot.state === "LOST" && (
           <p className="absolute inset-x-0 bottom-0 bg-rose-600/90 p-2 text-center text-sm text-white" role="status">{def.lostHint}</p>
         )}
@@ -1551,7 +1632,7 @@ function Home() {
 pnpm dev
 ```
 
-Open `http://localhost:3000`, click "Start camera", allow permission, do 5 squats. Expected: skeleton draws, state cycles READY→DOWN→UP→READY, count reaches 5, HUD shows fps > 0 and a delegate. Deny permission in a second tab: error panel with link appears. Then `pnpm typecheck && pnpm lint`.
+Open `http://localhost:3000`, click "Start camera", allow permission, do 5 squats. Expected: skeleton draws, state cycles READY→DOWN→UP→READY, count reaches 5, HUD shows render fps near the display rate (≈60) while infer fps stays ≤ 30, and infer fps drops to ≤ 10 when you step out of frame (LOST). Deny permission in a second tab: error panel with link appears. Then `pnpm typecheck && pnpm lint`.
 
 - [ ] **Step 8: Commit**
 
@@ -1570,7 +1651,7 @@ git commit -m "feat(ui): add live camera demo with skeleton overlay, rep counter
 **Interfaces:**
 - Consumes: Task 7 `useRepSession` with `mode: { clip }`.
 - Produces:
-  - `type ClipResult = { clip: string; exercise: ExerciseId; groundTruth: number; detected: number; fps: PerfSample['fps']; inferenceP50: number; inferenceP95: number; dropped: number; delegate: Delegate }`
+  - `type ClipResult = { clip: string; exercise: ExerciseId; groundTruth: number; detected: number; renderFps: number; inferenceFps: number; inferenceP50: number; inferenceP95: number; dropped: number; delegate: Delegate }`
   - `type BenchmarkReport = { version: 1; date: string; userAgent: string; hardwareConcurrency: number; results: ClipResult[] }`
   - `toReadmeRows(report: BenchmarkReport): string` — Markdown table rows.
   - `CLIPS: { clip: string; exercise: ExerciseId; groundTruth: number }[]`
@@ -1597,9 +1678,9 @@ describe("toReadmeRows", () => {
   it("renders one markdown row per clip", () => {
     const report: BenchmarkReport = {
       version: 1, date: "2026-10-10", userAgent: "UA", hardwareConcurrency: 8,
-      results: [{ clip: "squat-10", exercise: "squat", groundTruth: 10, detected: 10, fps: 29, inferenceP50: 12.3, inferenceP95: 18.9, dropped: 4, delegate: "GPU" }],
+      results: [{ clip: "squat-10", exercise: "squat", groundTruth: 10, detected: 10, renderFps: 60, inferenceFps: 29, inferenceP50: 12.3, inferenceP95: 18.9, dropped: 4, delegate: "GPU" }],
     }
-    expect(toReadmeRows(report)).toBe("| squat-10 | 10/10 | 29 | 12.3 / 18.9 | 4 | GPU | 2026-10-10 | UA (8 cores) |")
+    expect(toReadmeRows(report)).toBe("| squat-10 | 10/10 | 60 / 29 | 12.3 / 18.9 | 4 | GPU | 2026-10-10 | UA (8 cores) |")
   })
 })
 ```
@@ -1621,7 +1702,8 @@ export const CLIPS: ClipSpec[] = [
 
 export type ClipResult = ClipSpec & {
   detected: number
-  fps: number
+  renderFps: number
+  inferenceFps: number
   inferenceP50: number
   inferenceP95: number
   dropped: number
@@ -1638,7 +1720,7 @@ export type BenchmarkReport = {
 
 export function toReadmeRows(report: BenchmarkReport): string {
   return report.results
-    .map((r) => `| ${r.clip} | ${r.detected}/${r.groundTruth} | ${r.fps} | ${r.inferenceP50.toFixed(1)} / ${r.inferenceP95.toFixed(1)} | ${r.dropped} | ${r.delegate} | ${report.date} | ${report.userAgent} (${report.hardwareConcurrency} cores) |`)
+    .map((r) => `| ${r.clip} | ${r.detected}/${r.groundTruth} | ${r.renderFps} / ${r.inferenceFps} | ${r.inferenceP50.toFixed(1)} / ${r.inferenceP95.toFixed(1)} | ${r.dropped} | ${r.delegate} | ${report.date} | ${report.userAgent} (${report.hardwareConcurrency} cores) |`)
     .join("\n")
 }
 ```
@@ -1648,7 +1730,7 @@ export function toReadmeRows(report: BenchmarkReport): string {
 - [ ] **Step 6: Write `src/components/ClipPlayer.tsx`** (runs one clip to the end, reports a `ClipResult`; optional landmark recording)
 
 ```tsx
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Hud } from "@/components/Hud"
 import { Overlay } from "@/components/Overlay"
 import { RepCounter } from "@/components/RepCounter"
@@ -1659,8 +1741,9 @@ import type { ClipResult, ClipSpec } from "@/lib/benchmark-report"
 
 export function ClipPlayer({ spec, record, onDone }: { spec: ClipSpec; record: boolean; onDone: (r: ClipResult, frames: Frame[]) => void }) {
   const [enabled, setEnabled] = useState(false)
-  const { videoRef, status, snapshot, landmarks, perf, restart } = useRepSession({ exercise: spec.exercise, mode: { clip: `/clips/${spec.clip}.webm` }, enabled })
+  const { videoRef, status, snapshot, landmarks, perf, restart, getLandmarks, markRender } = useRepSession({ exercise: spec.exercise, mode: { clip: `/clips/${spec.clip}.webm` }, enabled })
   const def = getExercise(spec.exercise)
+  const highlight = useMemo(() => def.joints.flat(), [def])
   const frames = useRef<Frame[]>([])
   const reported = useRef(false)
 
@@ -1671,7 +1754,7 @@ export function ClipPlayer({ spec, record, onDone }: { spec: ClipSpec; record: b
   useEffect(() => {
     if (status !== "ended" || reported.current || !perf) return
     reported.current = true
-    onDone({ ...spec, detected: snapshot.count, fps: perf.fps, inferenceP50: perf.inferenceP50, inferenceP95: perf.inferenceP95, dropped: perf.dropped, delegate: perf.delegate }, frames.current)
+    onDone({ ...spec, detected: snapshot.count, renderFps: perf.renderFps, inferenceFps: perf.inferenceFps, inferenceP50: perf.inferenceP50, inferenceP95: perf.inferenceP95, dropped: perf.dropped, delegate: perf.delegate }, frames.current)
   }, [status, perf, snapshot.count, spec, onDone])
 
   return (
@@ -1684,7 +1767,7 @@ export function ClipPlayer({ spec, record, onDone }: { spec: ClipSpec; record: b
       </header>
       <div className="relative aspect-[4/3] w-full max-w-xl overflow-hidden rounded bg-black">
         <video ref={videoRef} className="h-full w-full object-contain" playsInline muted />
-        <Overlay landmarks={landmarks} width={640} height={480} highlight={def.joints.flat()} />
+        <Overlay getLandmarks={getLandmarks} onRender={markRender} width={640} height={480} highlight={highlight} active={status === "running"} />
       </div>
       <RepCounter snapshot={snapshot} />
       <Hud perf={perf} />
@@ -1923,7 +2006,7 @@ function HowItWorks() {
     <article className="prose prose-neutral max-w-3xl dark:prose-invert">
       <h1>How it works</h1>
       <h2>Pipeline</h2>
-      <p>Camera or clip → MediaPipe PoseLandmarker (33 landmarks, GPU with CPU fallback) → <code>RepEngine.step(frame)</code> → events. The loop only runs inference when the adaptive budget allows: <code>budget = max(1000/30, p90(inference) × 1.2)</code>, so a slow device drops frames instead of queueing work on the main thread.</p>
+      <p>Camera or clip → MediaPipe PoseLandmarker (33 landmarks, GPU with CPU fallback) → <code>RepEngine.step(frame)</code> → events. Inference runs only when the adaptive budget allows: <code>budget = max(1000/target, p90(inference) × 1.2)</code>, where <code>target</code> is 30 fps while someone is in position and 10 fps while idle or lost. A slow device drops frames instead of queueing work. The skeleton overlay draws on its own animation-frame loop at display rate, so rendering never waits on inference.</p>
       <h2>State machine</h2>
       <FsmDiagram />
       <p>Hysteresis (separate <em>down</em> and <em>up</em> thresholds) stops jitter from double counting. A minimum dwell of 200 ms stops a fast bounce from counting. Angles are smoothed with an exponential moving average (α = 0.5) that resets when the pose is lost.</p>
@@ -2094,7 +2177,7 @@ Live: https://repfsm.netlify.app · Benchmark: https://repfsm.netlify.app/benchm
 | Claim | Evidence |
 |---|---|
 | Deterministic FSM rep engine, no React state in the hot path | [`src/engine/rep-engine.ts`](src/engine/rep-engine.ts), fixture tests in CI |
-| Adaptive frame budgeting keeps the main thread responsive | [`src/pipeline/should-infer.ts`](src/pipeline/should-infer.ts), HUD, benchmark JSON |
+| Rendering decoupled from inference: overlay at display rate, inference on a two-axis adaptive budget (load + activity) | [`src/pipeline/should-infer.ts`](src/pipeline/should-infer.ts), [`src/components/Overlay.tsx`](src/components/Overlay.tsx), HUD, benchmark JSON |
 | No false reps across recorded sessions | `fixtures/landmarks/*` replayed in CI: exact count, dwell spacing, state snapshot |
 | Real MediaPipe pipeline with GPU→CPU fallback | [`src/pipeline/detector.ts`](src/pipeline/detector.ts) |
 | Lighthouse ≥ 90 on landing | Lighthouse CI in `.github/workflows/ci.yml` |
@@ -2103,7 +2186,7 @@ Live: https://repfsm.netlify.app · Benchmark: https://repfsm.netlify.app/benchm
 
 Produced by `/benchmark` on the listed device; raw JSON in [`benchmarks/`](benchmarks/). Re-run it on your own machine and open a PR with your row.
 
-| Clip | Detected / truth | FPS | Inference p50 / p95 (ms) | Dropped | Delegate | Date | Device |
+| Clip | Detected / truth | Render / inference FPS | Inference p50 / p95 (ms) | Dropped | Delegate | Date | Device |
 |---|---|---|---|---|---|---|---|
 <PASTE ROWS FROM "Copy README rows">
 
@@ -2176,4 +2259,4 @@ Run `pnpm test` in the portfolio repo (content tests validate `projects.json`), 
 
 **Placeholder scan:** README template contains `<PASTE ROWS …>` by design with an explicit replacement step and a grep check. No other TBD/TODO.
 
-**Type consistency:** `Delegate` defined in `perf.ts` and imported by `detector.ts` and `benchmark-report.ts`. `Snapshot`, `Frame`, `EngineEvent`, `ExerciseId` from `engine/types.ts` throughout. `PerfSample.fps` used as `ClipResult.fps`. `useRepSession` returns `restart`, used by both `index.tsx` and `ClipPlayer.tsx`.
+**Type consistency:** `LoopHandle` from `loop.ts` used by `useRepSession`; `PerfSample.renderFps`/`inferenceFps` flow into `ClipResult`; `targetFpsFor` imported in `loop.ts` from `should-infer.ts`. `Delegate` defined in `perf.ts` and imported by `detector.ts` and `benchmark-report.ts`. `Snapshot`, `Frame`, `EngineEvent`, `ExerciseId` from `engine/types.ts` throughout. `PerfSample.fps` used as `ClipResult.fps`. `useRepSession` returns `restart`, used by both `index.tsx` and `ClipPlayer.tsx`.
