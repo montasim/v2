@@ -1,4 +1,4 @@
-# RepFSM: Browser Real-Time Pose Rep Counter — Design
+# Repstate: Browser Real-Time Pose Rep Counter — Design
 
 Date: 2026-10-10
 Status: Approved design, pre-implementation
@@ -145,7 +145,7 @@ README claims are limited to what these two layers show. No claim of "99.9%" is 
 ## 9. Repository Layout
 
 ```
-repfsm/
+repstate/
   public/models/pose_landmarker_lite.task
   public/clips/squat-10.webm, pushup-10.webm
   fixtures/landmarks/*.json, *.meta.json

@@ -1,18 +1,18 @@
-# RepFSM Implementation Plan
+# Repstate Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build and deploy RepFSM, an open-source browser app that counts squat and push-up reps from a live camera or bundled clip with a deterministic FSM engine on MediaPipe pose landmarks, with reproducible benchmark numbers.
+**Goal:** Build and deploy Repstate, an open-source browser app that counts squat and push-up reps from a live camera or bundled clip with a deterministic FSM engine on MediaPipe pose landmarks, with reproducible benchmark numbers.
 
 **Architecture:** Feature-first, layered by dependency direction (`ui → application → domain`, `infrastructure` implements `application` ports). `domain` is pure TypeScript with no browser, React, or MediaPipe imports. `application` holds use-cases (the inference session, the adaptive budget, perf tracking) against small port interfaces so they are unit-testable with fakes. `infrastructure` adapts MediaPipe, camera/video elements, and the browser frame scheduler to those ports. `ui` is React with shadcn/ui components and Hugeicons. CI proves engine correctness with recorded landmark fixtures; the in-app `/benchmark` page proves live render/inference FPS and accuracy on real devices.
 
 **Tech Stack:** TanStack Start (file routes, static prerender), React 19, TypeScript (strict), Tailwind CSS 4, shadcn/ui (`radix-nova` style), Hugeicons (`@hugeicons/react` + `@hugeicons/core-free-icons`), `@mediapipe/tasks-vision`, Vitest, Playwright, Lighthouse CI, Netlify, pnpm.
 
-Spec: `docs/superpowers/specs/2026-10-10-repfsm-realtime-cv-rep-counter-design.md` (copied into the new repo in Task 1).
+Spec: `docs/superpowers/specs/2026-10-10-repstate-realtime-cv-rep-counter-design.md` (copied into the new repo in Task 1).
 
 ## Global Constraints
 
-- New standalone repository `repfsm` at `~/Work/Personal/repfsm`. Working name "RepFSM".
+- New standalone repository `repstate` at `~/Work/Personal/repstate`. Name: Repstate.
 - Layer rule, enforced by ESLint `no-restricted-imports` (Task 2): `domain/**` imports nothing outside `domain/`; `application/**` imports only `domain/` and its own `ports.ts`; `infrastructure/**` may import `@mediapipe/*` and DOM; `ui/**` and `routes/**` may import anything. Nothing below `ui` imports React.
 - Engine is deterministic: same `Frame[]` → same `EngineEvent[]`. No `Date.now()`, timers, or randomness in `domain/`.
 - Every public function/class in `domain/` and `application/` has a one-line JSDoc. No `any`. Discriminated unions for events and statuses. No magic numbers: every threshold lives in a named constant or an `ExerciseDef`.
@@ -30,7 +30,7 @@ Spec: `docs/superpowers/specs/2026-10-10-repfsm-realtime-cv-rep-counter-design.m
 ## File Structure
 
 ```
-repfsm/
+repstate/
   .github/workflows/ci.yml                         Task 12
   .nvmrc, LICENSE (MIT), README.md, netlify.toml  Task 1 (README final in Task 13)
   components.json, vite.config.ts, vitest.config.ts, playwright.config.ts, lighthouserc.json, eslint.config.js
@@ -102,8 +102,8 @@ repfsm/
 
 ```bash
 cd ~/Work/Personal
-pnpm create @tanstack/start@latest repfsm --blank -y --package-manager pnpm
-cd repfsm && git init
+pnpm create @tanstack/start@latest repstate --blank -y --package-manager pnpm
+cd repstate && git init
 ```
 
 - [ ] **Step 2: Install dependencies**
@@ -235,10 +235,10 @@ If an icon name does not exist in `@hugeicons/core-free-icons`, pick the nearest
 
 ```ts
 export const site = {
-  name: "RepFSM",
+  name: "Repstate",
   description:
     "Open-source squat and push-up rep counter: MediaPipe pose landmarks, a deterministic finite-state-machine engine, adaptive frame rate, and reproducible benchmarks.",
-  repoUrl: "https://github.com/montasim/repfsm",
+  repoUrl: "https://github.com/montasim/repstate",
 } as const
 
 /** Shared meta tags for a route; title is suffixed with the site name. */
@@ -346,7 +346,7 @@ import { createMeta } from "@/lib/site"
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: createMeta("Live demo") }),
-  component: () => <h1 className="text-3xl font-bold">RepFSM</h1>,
+  component: () => <h1 className="text-3xl font-bold">Repstate</h1>,
 })
 ```
 
@@ -376,7 +376,7 @@ curl -L -o public/models/pose_landmarker_lite.task \
 
 ```json
 {
-  "name": "repfsm",
+  "name": "repstate",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.7.0",
@@ -423,7 +423,7 @@ curl -L -o public/models/pose_landmarker_lite.task \
 `LICENSE`: MIT, 2026, "Mohammad Montasim Al Mamun Shuvo". `README.md` stub:
 
 ```md
-# RepFSM
+# Repstate
 
 Deterministic squat and push-up rep counter in the browser. Under construction; see `docs/superpowers/specs/`.
 ```
@@ -432,7 +432,7 @@ Deterministic squat and push-up rep counter in the browser. Under construction; 
 
 ```bash
 mkdir -p docs/superpowers/specs
-cp ~/Work/Personal/v2/docs/superpowers/specs/2026-10-10-repfsm-realtime-cv-rep-counter-design.md docs/superpowers/specs/
+cp ~/Work/Personal/v2/docs/superpowers/specs/2026-10-10-repstate-realtime-cv-rep-counter-design.md docs/superpowers/specs/
 pnpm install && pnpm typecheck && pnpm lint && pnpm build && ls dist/client/index.html dist/client/wasm | head -3
 ```
 
@@ -442,7 +442,7 @@ Expected: all clean; `index.html` and wasm files present.
 
 ```bash
 git add -A
-git commit -m "chore: scaffold RepFSM with TanStack Start, shadcn/ui, Hugeicons, and MediaPipe assets"
+git commit -m "chore: scaffold Repstate with TanStack Start, shadcn/ui, Hugeicons, and MediaPipe assets"
 ```
 
 ---
@@ -1515,7 +1515,7 @@ export async function createMediaPipeDetector(): Promise<PoseDetector> {
   try {
     return new MediaPipePoseDetector(await build("GPU"), "GPU")
   } catch (gpuError) {
-    console.warn("[repfsm] GPU delegate failed, falling back to CPU", gpuError)
+    console.warn("[repstate] GPU delegate failed, falling back to CPU", gpuError)
     return new MediaPipePoseDetector(await build("CPU"), "CPU")
   }
 }
@@ -2600,11 +2600,11 @@ git commit -m "ci: add Playwright smoke, Lighthouse budget, and GitHub Actions"
 - [ ] **Step 2: `README.md`**
 
 ```md
-# RepFSM
+# Repstate
 
 Squat and push-up rep counter that runs entirely in the browser. MediaPipe pose landmarks → a deterministic, pure-TypeScript finite-state machine → reps. Rendering decoupled from inference, inference on a two-axis adaptive budget. Nothing leaves your device.
 
-Live: https://repfsm.netlify.app · Benchmark: https://repfsm.netlify.app/benchmark · How it works: https://repfsm.netlify.app/how-it-works
+Live: https://repstate.netlify.app · Benchmark: https://repstate.netlify.app/benchmark · How it works: https://repstate.netlify.app/how-it-works
 
 ## What this proves
 
@@ -2657,28 +2657,28 @@ Replace the placeholder row, then `grep -n "<PASTE" README.md` must print nothin
 
 ```bash
 git add README.md benchmarks && git commit -m "docs: add README with claims mapping and first benchmark artifact"
-git remote add origin git@github.com:montasim/repfsm.git && git push -u origin main
+git remote add origin git@github.com:montasim/repstate.git && git push -u origin main
 ```
 
-Netlify → Add new site → Import `montasim/repfsm` (settings from `netlify.toml`), site name `repfsm`. Verify `/benchmark` on the deployed URL shows `10/10` for both clips.
+Netlify → Add new site → Import `montasim/repstate` (settings from `netlify.toml`), site name `repstate`. Verify `/benchmark` on the deployed URL shows `10/10` for both clips.
 
 - [ ] **Step 4: Portfolio entry** (in `~/Work/Personal/v2/src/data/projects.json`, copy the `BugReceipt` object shape)
 
 ```json
 {
-  "id": "repfsm",
-  "title": "RepFSM",
+  "id": "repstate",
+  "title": "Repstate",
   "type": "website",
   "featured": true,
   "description": "Open-source browser rep counter: MediaPipe pose landmarks drive a deterministic finite-state-machine engine with a two-axis adaptive inference budget, render loop decoupled from inference, recorded-landmark fixture tests, and reproducible benchmarks.",
   "technologies": ["TanStack Start", "React 19", "TypeScript", "MediaPipe", "shadcn/ui", "Tailwind CSS", "Vitest", "Playwright", "GitHub Actions", "Netlify"],
   "topics": ["computer-vision", "mediapipe", "state-machine", "real-time", "local-first", "typescript"],
-  "githubUrl": "https://github.com/montasim/repfsm",
-  "liveUrl": "https://repfsm.netlify.app"
+  "githubUrl": "https://github.com/montasim/repstate",
+  "liveUrl": "https://repstate.netlify.app"
 }
 ```
 
-Run `pnpm test` in the portfolio repo, then `git commit -am "feat: add RepFSM project entry"`.
+Run `pnpm test` in the portfolio repo, then `git commit -am "feat: add Repstate project entry"`.
 
 ---
 
