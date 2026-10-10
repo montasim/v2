@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 11 }),
-      expect.objectContaining({ id: "projects", recordCount: 53 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 53 }),
-      expect.objectContaining({ id: "blog", recordCount: 54 }),
+      expect.objectContaining({ id: "projects", recordCount: 54 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 54 }),
+      expect.objectContaining({ id: "blog", recordCount: 55 }),
       expect.objectContaining({ id: "certifications", recordCount: 47 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -185,8 +185,8 @@ describe("PortfolioKnowledge", () => {
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
-    expect(knowledge.toon.length).toBeLessThan(550_000)
-    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(138_000)
+    expect(knowledge.toon.length).toBeLessThan(560_000)
+    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(140_000)
     expect(knowledge.findFact("project:project-postcraft")).toMatchObject({
       recordId: "project-postcraft",
       evidenceRole: "first-party-portfolio",
@@ -229,13 +229,13 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-rootstory",
-      title: "Rootstory",
-      historyStartedAt: "2026-10-08T06:19:42Z",
+      recordId: "project-giftbook",
+      title: "Giftbook",
+      historyStartedAt: "2026-10-09T06:25:34Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
-      recordId: "designing-a-local-first-family-tree-people-can-read",
-      publishedAt: "2026-10-08",
+      recordId: "a-family-gift-ledger-that-lives-in-your-own-google-sheet",
+      publishedAt: "2026-10-09",
       tieBreak: "catalog-order",
     })
     expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(1)
@@ -247,14 +247,14 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 54,
+      total: 55,
       authored: 5,
-      caseStudyDerived: 49,
+      caseStudyDerived: 50,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 53,
+      total: 54,
       byType: {
         api: 6,
         desktop: 1,
@@ -264,7 +264,7 @@ describe("PortfolioKnowledge", () => {
         skill: 14,
         template: 1,
         tool: 2,
-        website: 18,
+        website: 19,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({

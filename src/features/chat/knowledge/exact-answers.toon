@@ -1,6 +1,6 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: e00669d48aef3272a5ce7b24ba7c70aacda91f724258965ab3fdd35678e0dc57
-records[598]:
+knowledgeHash: b311ea0d1d2623ebdf75a9ffbf379ae895f8abf3b5e5291575a87b99ec766256
+records[604]:
   - id: "project:project-postcraft:overview"
     category: project
     question: What is Montasim's PostCraft project?
@@ -121,6 +121,18 @@ records[598]:
     text: "Montasim built Rootstory with TanStack Start, React 19, TypeScript, Tailwind CSS, Radix UI, Zod, IndexedDB, Netlify, GitHub Actions, Node.js Test Runner, System Design. The product goal is clear: A private, local-first family archive for mapping relationships, preserving life details and photographs, and carrying a complete family history between browsers. More importantly, the architecture is explicit: TanStack Start and React render a responsive archive workspace around a typed family domain, IndexedDB persistence, versioned recovery, and explicit import/export boundaries. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-rootstory","case-study:rootstory:architecture"
     supportingExcerpts[2]: "A private, local-first family archive for mapping relationships, preserving life details and photographs, and carrying a complete family history between browsers.\nfalse\n2026-10-08T06:19:42Z\nfafb2b14994bec04d9240d4bddb99411b387f050\n2026-10-08T13:52:41Z\nhttps://github.com/montasim/rootstory\nproject-rootstory\nassets/projects/rootstory.webp\nhttps://therootstory.netlify.app\nhttps://therootstory.netlify.app/favicon.ico\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nRadix UI\nZod\nIndexedDB\nNetlify\nGitHub Actions\nNode.js","Typed people and relationship records drive generation levels, relatives, life events, tree ordering, and direct parent-child connectors from one shared graph.\nFamily domain\nIndexedDB stores the active archive and recent recoverable versions, with migration support for older browser-local records.\nLocal persistence\nTree, People, Timeline, Calendar, profile, settings, and print surfaces share one responsive application shell with focused scrolling regions.\nArchive workspace\nA native Rootstory archive preserves the"
+  - id: "project:project-giftbook:overview"
+    category: project
+    question: What is Montasim's Giftbook project?
+    text: "Montasim built Giftbook, a website project. A Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application server. His role covered product designer and frontend engineer, with scope spanning product specification, Bangla-first interface design, local-first data model, Google Sheets synchronization, sharing workflow, PWA packaging, testing, and Netlify deployment. Families can record who gave what at weddings, aqiqahs, and birthdays from any phone, offline, and see per-event received, given, and unopened-envelope summaries. A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary."
+    factIds[3]: "project:project-giftbook","case-study:giftbook:problem","case-study:giftbook:outcomes"
+    supportingExcerpts[3]: "A Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application server.\nfalse\n2026-10-09T06:25:34Z\n88022a4f297b1b53a040f7dfcab1bea55e93e55a\n2026-10-09T06:27:06Z\nhttps://github.com/montasim/giftbook\nproject-giftbook\nassets/projects/giftbook.webp\nhttps://giftbook.netlify.app\nhttps://giftbook.netlify.app/favicon.ico\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix UI\nTanStack","Bangladeshi families track wedding, aqiqah, and birthday gifts in paper notebooks that are hard to search, easy to lose, and impossible for several relatives to update at once, while generic apps store the family's financial records on a third-party server and ignore Bangla numerals and lakh formatting.\nThe ledger must live in the owner's Google Drive with no application server or database, so the app may request only the drive.file scope and never see the rest of the Drive.\nGift entry happens at crowded events","Families can record who gave what at weddings, aqiqahs, and birthdays from any phone, offline, and see per-event received, given, and unopened-envelope summaries.\nThe ledger stays in the owner's Google Drive as an editable spreadsheet, with the app holding only drive.file access and no server-side copy.\nMultiple relatives write to the same ledger through a QR link, and conflicting edits resolve predictably without duplicate rows.\nThe complete workflow, including sharing and sync failure simulations, runs in mock"
+  - id: "project:project-giftbook:technology"
+    category: project
+    question: Which technologies did Montasim use for Giftbook?
+    text: "Montasim built Giftbook with TanStack Start, React 19, TypeScript, Tailwind CSS, shadcn/ui, Radix UI, TanStack Form, Zod, Dexie, IndexedDB, Google Sheets API, Google Drive API, Google Identity Services, SheetJS, Vite PWA, Netlify, Infisical, Node.js Test Runner, System Design. The product goal is clear: A Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application server. More importantly, the architecture is explicit: A TanStack Start single-page PWA keeps a per-ledger Dexie database as the working copy, and a sync engine pulls, merges, and pushes rows against a three-tab Google Sheet whose columns are derived from Zod schemas. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
+    factIds[2]: "project:project-giftbook","case-study:giftbook:architecture"
+    supportingExcerpts[2]: "A Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application server.\nfalse\n2026-10-09T06:25:34Z\n88022a4f297b1b53a040f7dfcab1bea55e93e55a\n2026-10-09T06:27:06Z\nhttps://github.com/montasim/giftbook\nproject-giftbook\nassets/projects/giftbook.webp\nhttps://giftbook.netlify.app\nhttps://giftbook.netlify.app/favicon.ico\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix UI\nTanStack","Zod schemas for events, people, and gifts define both form validation and the exact column order of the sheet, with every record carrying updatedAt, updatedBy, and a soft-delete marker.\nLedger domain\nEach ledger gets its own Dexie IndexedDB database; a single repository module is the only write path, and live queries feed the pages so edits appear instantly across tabs.\nLocal persistence\nA pull, merge, save, push cycle runs after writes, on an interval, and when the device comes back online, resolving conflicts by"
   - id: "project:project-release-agent-skill:overview"
     category: project
     question: What is Montasim's release-agent-skill project?
@@ -649,6 +661,24 @@ records[598]:
     text: "Montasim built Project Management with JavaScript, React, Redux, Tailwind CSS, Node.js, Express.js, MongoDB, Mongoose. The product goal is clear: A collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces. More importantly, the architecture is explicit: React routes and Redux state connect project interfaces to an Express API. The repository also contains Mongoose project models and controllers for tasks, subtasks, bugs, discussions, and membership. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-project-management","case-study:project-management:architecture"
     supportingExcerpts[2]: "true\nA collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces.\nfalse\n2020-10-01T04:35:09Z\n77d8ead1a20cc7d2156d53673758efe0ef4c0abf\n2020-09-19T04:26:11Z\nfalse\nhttps://github.com/mdjahidhasan009/Project_Management\nproject-project-management\nnull\nJavaScript\nReact\nRedux\nTailwind CSS\nNode.js\nExpress.js\nMongoDB\nMongoose\nProject","React components separate overview, activities, discussions, tasks, bugs, and project-detail editing, with responsive Tailwind classes in the inspected overview.\nProject interface\nRedux actions call a shared HTTP helper for project updates, completion state, and membership operations, then refresh project data.\nState and requests\nExpress routes apply authentication middleware and dispatch to project controllers; Mongoose models hold project and related work records. These are shared application capabilities, not"
+  - id: "case-study:giftbook:problem"
+    category: case-study
+    question: What problem did Montasim address in the Giftbook case study?
+    text: "Bangladeshi families track wedding, aqiqah, and birthday gifts in paper notebooks that are hard to search, easy to lose, and impossible for several relatives to update at once, while generic apps store the family's financial records on a third-party server and ignore Bangla numerals and lakh formatting. Montasim owned product designer and frontend engineer, covering product specification, Bangla-first interface design, local-first data model, Google Sheets synchronization, sharing workflow, PWA packaging, testing, and Netlify deployment. The solution also had to respect “The ledger must live in the owner's Google Drive with no application server or database, so the app may request only the drive.file scope and never see the rest of the Drive”; “Gift entry happens at crowded events with unreliable connectivity, so writes must land locally first and reach the sheet later without duplicating rows”. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request."
+    factIds[1]: "case-study:giftbook:problem"
+    supportingExcerpts[1]: "Bangladeshi families track wedding, aqiqah, and birthday gifts in paper notebooks that are hard to search, easy to lose, and impossible for several relatives to update at once, while generic apps store the family's financial records on a third-party server and ignore Bangla numerals and lakh formatting.\nThe ledger must live in the owner's Google Drive with no application server or database, so the app may request only the drive.file scope and never see the rest of the Drive.\nGift entry happens at crowded events"
+  - id: "case-study:giftbook:architecture"
+    category: case-study
+    question: How did Montasim structure the Giftbook solution?
+    text: "A TanStack Start single-page PWA keeps a per-ledger Dexie database as the working copy, and a sync engine pulls, merges, and pushes rows against a three-tab Google Sheet whose columns are derived from Zod schemas. A representative decision was “Use the owner's Google Sheet as the only backend”: Avoiding a server means the family keeps ownership of its data, can open or back up the sheet directly, and the product carries no hosting cost or data-retention liability. The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve."
+    factIds[1]: "case-study:giftbook:architecture"
+    supportingExcerpts[1]: "Zod schemas for events, people, and gifts define both form validation and the exact column order of the sheet, with every record carrying updatedAt, updatedBy, and a soft-delete marker.\nLedger domain\nEach ledger gets its own Dexie IndexedDB database; a single repository module is the only write path, and live queries feed the pages so edits appear instantly across tabs.\nLocal persistence\nA pull, merge, save, push cycle runs after writes, on an interval, and when the device comes back online, resolving conflicts by"
+  - id: "case-study:giftbook:delivery"
+    category: case-study
+    question: What did Montasim deliver and achieve with Giftbook?
+    text: "Montasim specified the product from an approved HTML prototype and rebuilt it in TanStack Start with TypeScript, Tailwind CSS v4, shadcn/ui, and Hugeicons across mobile, tablet, and desktop layouts. He designed the Zod-driven ledger schema that doubles as the sheet column contract, the per-ledger Dexie store, the single repository write path, and live-query hooks. He implemented the sync engine with header verification, last-write-wins merge, duplicate-append protection, and nine Node.js test runner cases covering rows, merge, and the full cycle. He built Google Drive, Sheets, Picker, and Identity Services adapters plus a complete localStorage mock, QR and link sharing with member management, Excel export, and a print view. He wrote the Bangla copy, numeral, date, and lakh-grouped currency formatting, custom form validation, PWA manifest and offline shell, social preview assets, and deployed to Netlify with secrets from Infisical. The resulting capabilities and outcomes are “Families can record who gave what at weddings, aqiqahs, and birthdays from any phone, offline, and see per-event received, given, and unopened-envelope summaries”; “The ledger stays in the owner's Google Drive as an editable spreadsheet, with the app holding only drive.file access and no server-side copy”; “Multiple relatives write to the same ledger through a QR link, and conflicting edits resolve predictably without duplicate rows”; “The complete workflow, including sharing and sync failure simulations, runs in mock mode without Google credentials, and nine automated sync tests guard the merge and cycle logic”; “The app is live at giftbook.netlify.app as an installable PWA with a fully Bangla interface, including numerals and currency”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
+    factIds[2]: "case-study:giftbook:contribution","case-study:giftbook:outcomes"
+    supportingExcerpts[2]: "Specified the product from an approved HTML prototype and rebuilt it in TanStack Start with TypeScript, Tailwind CSS v4, shadcn/ui, and Hugeicons across mobile, tablet, and desktop layouts.\nDesigned the Zod-driven ledger schema that doubles as the sheet column contract, the per-ledger Dexie store, the single repository write path, and live-query hooks.\nImplemented the sync engine with header verification, last-write-wins merge, duplicate-append protection, and nine Node.js test runner cases covering rows, merge,","Families can record who gave what at weddings, aqiqahs, and birthdays from any phone, offline, and see per-event received, given, and unopened-envelope summaries.\nThe ledger stays in the owner's Google Drive as an editable spreadsheet, with the app holding only drive.file access and no server-side copy.\nMultiple relatives write to the same ledger through a QR link, and conflicting edits resolve predictably without duplicate rows.\nThe complete workflow, including sharing and sync failure simulations, runs in mock"
   - id: "case-study:rootstory:problem"
     category: case-study
     question: What problem did Montasim address in the Rootstory case study?
@@ -1603,6 +1633,12 @@ records[598]:
     text: "Montasim contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces. He refined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements. He implemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior. He added focused component and workflow tests while iterating on a large production React codebase shared by a multidisciplinary product team. The resulting capabilities and outcomes are “Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal”; “Movement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state”; “Feature configuration supports multiple healthcare programs while preserving a shared application foundation”; “Operational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
     factIds[2]: "case-study:mmh-patient-portal:contribution","case-study:mmh-patient-portal:outcomes"
     supportingExcerpts[2]: "Contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces.\nRefined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements.\nImplemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior.\nAdded focused component and workflow tests while","Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal.\nMovement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state.\nFeature configuration supports multiple healthcare programs while preserving a shared application foundation.\nOperational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows."
+  - id: "blog:a-family-gift-ledger-that-lives-in-your-own-google-sheet"
+    category: blog
+    question: What engineering insight does Montasim share in “A Family Gift Ledger That Lives in Your Own Google Sheet”?
+    text: "Montasim's opening insight in “A Family Gift Ledger That Lives in Your Own Google Sheet” is framed as “The visible feature was only the surface”: Bangladeshi families track wedding, aqiqah, and birthday gifts in paper notebooks that are hard to search, easy to lose, and impossible for several relatives to update at once, while generic apps store the family's financial records on a third-party server and ignore Bangla numerals and lakh formatting. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
+    factIds[2]: "blog:a-family-gift-ledger-that-lives-in-your-own-google-sheet","case-study:giftbook:problem"
+    supportingExcerpts[2]: "Product engineering\ntrue\ncase-study-derived\nproject-giftbook\n2026-10-09\na-family-gift-ledger-that-lives-in-your-own-google-sheet\nA Family Gift Ledger That Lives in Your Own Google Sheet\nproduct","Bangladeshi families track wedding, aqiqah, and birthday gifts in paper notebooks that are hard to search, easy to lose, and impossible for several relatives to update at once, while generic apps store the family's financial records on a third-party server and ignore Bangla numerals and lakh formatting.\nThe ledger must live in the owner's Google Drive with no application server or database, so the app may request only the drive.file scope and never see the rest of the Drive.\nGift entry happens at crowded events"
   - id: "blog:designing-a-local-first-family-tree-people-can-read"
     category: blog
     question: What engineering insight does Montasim share in “Designing a Local-First Family Tree People Can Read”?
@@ -3340,21 +3376,21 @@ records[598]:
   - id: "catalog-chronology-comparison:project-count"
     category: catalog-chronology-comparison
     question: How many projects are published in Montasim's portfolio?
-    text: "The portfolio currently publishes 53 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
+    text: "The portfolio currently publishes 54 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
     factIds[1]: "derived:catalog-count:projects"
-    supportingExcerpts[1]: "projects\n53"
+    supportingExcerpts[1]: "projects\n54"
   - id: "catalog-chronology-comparison:case-study-count"
     category: catalog-chronology-comparison
     question: How many project case studies has Montasim documented?
-    text: "Montasim has 53 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
+    text: "Montasim has 54 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
     factIds[1]: "derived:catalog-count:casestudy"
-    supportingExcerpts[1]: "casestudy\n53"
+    supportingExcerpts[1]: "casestudy\n54"
   - id: "catalog-chronology-comparison:blog-count"
     category: catalog-chronology-comparison
     question: How many articles are in Montasim's blog catalog?
-    text: "The blog catalog contains 54 articles: 5 authored essays and 49 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
+    text: "The blog catalog contains 55 articles: 5 authored essays and 50 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "54\n5\n49"
+    supportingExcerpts[1]: "55\n5\n50"
   - id: "catalog-chronology-comparison:credential-count"
     category: catalog-chronology-comparison
     question: How many credentials does Montasim publish?
@@ -3400,15 +3436,15 @@ records[598]:
   - id: "catalog-chronology-comparison:newest-project"
     category: catalog-chronology-comparison
     question: Which project is newest by Montasim's GitHub history?
-    text: "Rootstory is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-10-08, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
-    factIds[2]: "derived:newest-project-by-github-history","project:project-rootstory"
-    supportingExcerpts[2]: "project-rootstory\nRootstory\n2026-10-08T06:19:42Z\nearlier of repository creation and initial commit\nA private, local-first family archive for mapping relationships, preserving life details and photographs, and carrying a complete family history between","A private, local-first family archive for mapping relationships, preserving life details and photographs, and carrying a complete family history between browsers.\nfalse\n2026-10-08T06:19:42Z\nfafb2b14994bec04d9240d4bddb99411b387f050\n2026-10-08T13:52:41Z\nhttps://github.com/montasim/rootstory\nproject-rootstory\nassets/projects/rootstory.webp\nhttps://therootstory.netlify.app\nhttps://therootstory.netlify.app/favicon.ico\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nRadix UI\nZod\nIndexedDB\nNetlify\nGitHub Actions\nNode.js"
+    text: "Giftbook is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-10-09, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
+    factIds[2]: "derived:newest-project-by-github-history","project:project-giftbook"
+    supportingExcerpts[2]: "project-giftbook\nGiftbook\n2026-10-09T06:25:34Z\nearlier of repository creation and initial commit\nA Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application","A Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application server.\nfalse\n2026-10-09T06:25:34Z\n88022a4f297b1b53a040f7dfcab1bea55e93e55a\n2026-10-09T06:27:06Z\nhttps://github.com/montasim/giftbook\nproject-giftbook\nassets/projects/giftbook.webp\nhttps://giftbook.netlify.app\nhttps://giftbook.netlify.app/favicon.ico\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix UI\nTanStack"
   - id: "catalog-chronology-comparison:latest-blog"
     category: catalog-chronology-comparison
     question: Which article is treated as Montasim's latest dated blog entry?
-    text: "The derived chronology selects “Designing a Local-First Family Tree People Can Read” at 2026-10-08. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
+    text: "The derived chronology selects “A Family Gift Ledger That Lives in Your Own Google Sheet” at 2026-10-09. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
     factIds[1]: "derived:latest-dated-blog"
-    supportingExcerpts[1]: "designing-a-local-first-family-tree-people-can-read\nDesigning a Local-First Family Tree People Can Read\n2026-10-08\ndesigning-a-local-first-family-tree-people-can-read\n1\ncatalog-order\nProduct engineering\ntrue\ncase-study-derived\nproject-rootstory\n2026-10-08\ndesigning-a-local-first-family-tree-people-can-read\nDesigning a Local-First Family Tree People Can Read\nproduct"
+    supportingExcerpts[1]: "a-family-gift-ledger-that-lives-in-your-own-google-sheet\nA Family Gift Ledger That Lives in Your Own Google Sheet\n2026-10-09\na-family-gift-ledger-that-lives-in-your-own-google-sheet\n1\ncatalog-order\nProduct engineering\ntrue\ncase-study-derived\nproject-giftbook\n2026-10-09\na-family-gift-ledger-that-lives-in-your-own-google-sheet\nA Family Gift Ledger That Lives in Your Own Google Sheet\nproduct"
   - id: "catalog-chronology-comparison:featured-projects"
     category: catalog-chronology-comparison
     question: How many projects are featured for recruiter review?
@@ -3418,15 +3454,15 @@ records[598]:
   - id: "catalog-chronology-comparison:project-type-distribution"
     category: catalog-chronology-comparison
     question: How is Montasim's project catalog distributed by type?
-    text: "The 53 projects are distributed as website: 18, extension: 5, tool: 2, skill: 14, dataset: 2, desktop: 1, package: 4, template: 1, API: 6. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
+    text: "The 54 projects are distributed as website: 19, extension: 5, tool: 2, skill: 14, dataset: 2, desktop: 1, package: 4, template: 1, API: 6. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
     factIds[1]: "derived:project-type-distribution"
-    supportingExcerpts[1]: "53\n6\n2\n1\n5\n4\n14\n1\n2\n18"
+    supportingExcerpts[1]: "54\n6\n2\n1\n5\n4\n14\n1\n2\n19"
   - id: "catalog-chronology-comparison:authored-versus-linked-writing"
     category: catalog-chronology-comparison
     question: How much of Montasim's writing is standalone versus project-linked?
-    text: "The blog contains 5 authored essays and 49 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
+    text: "The blog contains 5 authored essays and 50 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "54\n5\n49"
+    supportingExcerpts[1]: "55\n5\n50"
   - id: "catalog-chronology-comparison:mymedicalhub-role-count"
     category: catalog-chronology-comparison
     question: How many MyMedicalHub roles document Montasim's progression?
@@ -3436,9 +3472,9 @@ records[598]:
   - id: "catalog-chronology-comparison:project-case-study-coverage"
     category: catalog-chronology-comparison
     question: Does every published project have a corresponding case study?
-    text: "Yes. The validated catalogs contain 53 projects and 53 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
+    text: "Yes. The validated catalogs contain 54 projects and 54 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
     factIds[2]: "derived:catalog-count:projects","derived:catalog-count:casestudy"
-    supportingExcerpts[2]: "projects\n53","casestudy\n53"
+    supportingExcerpts[2]: "projects\n54","casestudy\n54"
   - id: "catalog-chronology-comparison:credential-year-range"
     category: catalog-chronology-comparison
     question: What years do Montasim's published credentials cover?
@@ -3448,9 +3484,9 @@ records[598]:
   - id: "catalog-chronology-comparison:catalog-breadth"
     category: catalog-chronology-comparison
     question: What kinds of evidence are available across Montasim's portfolio?
-    text: "The portfolio combines profile facts, 11 experience records, 53 projects, 53 case studies, 54 articles, 47 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
+    text: "The portfolio combines profile facts, 11 experience records, 54 projects, 54 case studies, 55 articles, 47 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
     factIds[6]: "derived:catalog-count:experience","derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:blog","derived:catalog-count:certifications","derived:catalog-count:recommendations"
-    supportingExcerpts[6]: "experience\n11\n7\n4","projects\n53","casestudy\n53","blog\n54","certifications\n47","recommendations\n16"
+    supportingExcerpts[6]: "experience\n11\n7\n4","projects\n54","casestudy\n54","blog\n55","certifications\n47","recommendations\n16"
   - id: "catalog-chronology-comparison:evidence-relationship"
     category: catalog-chronology-comparison
     question: "How do Montasim's projects, case studies, and blog articles relate?"
@@ -3544,9 +3580,9 @@ records[598]:
   - id: "client-delivery-product-thinking:proof-of-work"
     category: client-delivery-product-thinking
     question: What proof can a client review before contacting Montasim?
-    text: "Before making contact, a client can review 53 project records, 53 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
+    text: "Before making contact, a client can review 54 project records, 54 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
     factIds[3]: "derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:recommendations"
-    supportingExcerpts[3]: "projects\n53","casestudy\n53","recommendations\n16"
+    supportingExcerpts[3]: "projects\n54","casestudy\n54","recommendations\n16"
   - id: "contributions-learning:total"
     category: contributions-learning
     question: How much GitHub contribution activity does Montasim publish?
