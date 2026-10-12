@@ -66,6 +66,13 @@ describe("ContributionCalendar", () => {
         .getByRole("link", { name: /2,770 GitHub contributions/ })
         .getAttribute("href")
     ).toBe("https://github.com/montasim")
+
+    expect(
+      screen
+        .getByRole("navigation", { name: "Contribution year" })
+        .compareDocumentPosition(screen.getByRole("img")) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy()
   })
 })
 

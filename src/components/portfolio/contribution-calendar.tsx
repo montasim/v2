@@ -101,7 +101,25 @@ export function ContributionCalendar({ data }: { data: GitHubContributions }) {
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-6 lg:flex-row">
+    <div className="flex min-w-0 flex-col gap-4 sm:gap-6 lg:flex-row">
+      {data.availableYears.length > 0 && (
+        <nav
+          aria-label="Contribution year"
+          className="order-first flex w-full shrink-0 items-center gap-1 overflow-x-auto overscroll-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:order-2 lg:max-h-[140px] lg:w-36 lg:flex-col lg:items-stretch lg:overflow-x-hidden lg:overflow-y-auto lg:pb-0 lg:pr-1"
+        >
+          {data.availableYears.map((year) => (
+            <button
+              key={year}
+              type="button"
+              aria-pressed={selectedYear === year}
+              onClick={() => void selectYear(year)}
+              className="h-11 min-w-14 shrink-0 rounded-md px-3 py-2 text-center text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-muted aria-pressed:text-foreground lg:w-full lg:text-left"
+            >
+              {year}
+            </button>
+          ))}
+        </nav>
+      )}
       <div className="min-w-0 flex-1" aria-busy={loading}>
         {loading ? (
           <p role="status" className="py-10 text-sm text-muted-foreground">
@@ -122,24 +140,6 @@ export function ContributionCalendar({ data }: { data: GitHubContributions }) {
           <CalendarGrid data={calendar} />
         )}
       </div>
-      {data.availableYears.length > 0 && (
-        <nav
-          aria-label="Contribution year"
-          className="flex max-h-[140px] w-36 shrink-0 [scrollbar-width:thin] flex-col gap-1 self-start overflow-y-auto overscroll-contain pr-1"
-        >
-          {data.availableYears.map((year) => (
-            <button
-              key={year}
-              type="button"
-              aria-pressed={selectedYear === year}
-              onClick={() => void selectYear(year)}
-              className="h-11 shrink-0 rounded-md px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring aria-pressed:bg-muted aria-pressed:text-foreground"
-            >
-              {year}
-            </button>
-          ))}
-        </nav>
-      )}
     </div>
   )
 }
