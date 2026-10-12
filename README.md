@@ -4,7 +4,7 @@
 
 Montasim Portfolio v2 turns a static multi-page prototype into a server-rendered TanStack Start application. It preserves the prototype's compact editorial interface while adding reusable components, typed file-based routes, validated JSON content, structured server logging, responsive navigation, dark mode, and complete social-sharing metadata.
 
-![Montasim Portfolio v2 desktop preview](public/images/portfolio-preview.png)
+![Montasim Portfolio v2 preview](public/images/social-preview-v2.png)
 
 ## Why this project?
 
