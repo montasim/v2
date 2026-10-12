@@ -85,7 +85,7 @@ Transition rules:
 - Any state `→ LOST`: visibility < gate for 3 consecutive frames. Counter frozen.
 - `LOST → READY`: visibility ≥ gate for 3 consecutive frames AND angle ≥ `upAngle`. A rep in progress before LOST is discarded.
 
-Angle smoothing: exponential moving average, alpha 0.5, applied before thresholds. Reset on LOST.
+Angle smoothing: exponential moving average with a time constant τ = 60 ms (α = 1 − e^(−Δt/τ)), applied before thresholds, so behaviour does not depend on inference rate. Reset on LOST. (Changed 2026-10-11 from fixed α = 0.5 after CPU-rate runs dropped reps.)
 
 The engine is a class `RepEngine(def)` with `step(frame): EngineEvent[]`, `reset()`, and a read-only `snapshot()` returning `{state, count, angle, lastRepAt}`. No timers, no globals. Same frame sequence always yields the same events.
 

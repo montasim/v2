@@ -16,6 +16,14 @@ const experienceSchema = z.object({
   location: z.string().min(1).optional(),
   description: z.string().min(1),
   summary: z.string().min(1).optional(),
+  registeredContribution: z
+    .object({
+      description: z.string().min(1),
+      registration: z.string().min(1),
+      owner: z.string().min(1),
+      certificateUrl: z.string().startsWith("/documents/"),
+    })
+    .optional(),
   technologies: z.array(z.string().min(1)),
 })
 

@@ -31,15 +31,14 @@ export function SiteFooter() {
               Case studies
             </Link>
             <Link
-              to="/blog"
-              search={{ topic: "all", q: "" }}
+              to="/contact"
               className={footerLinkClass}
               activeProps={{
                 className: "underline decoration-border",
                 "aria-current": "page",
               }}
             >
-              Blog
+              Contact
             </Link>
           </nav>
         </div>

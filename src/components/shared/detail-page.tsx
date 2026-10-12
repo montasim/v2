@@ -1,11 +1,6 @@
 import type { ReactNode } from "react"
-import { Link, useRouterState } from "@tanstack/react-router"
-import {
-  ArrowLeftCompactIcon,
-  DownloadSimpleIcon,
-  EnvelopeSimpleIcon,
-} from "@/components/ui/icons"
-import { Button } from "@/components/ui/button"
+import { Link } from "@tanstack/react-router"
+import { ArrowLeftCompactIcon, DownloadSimpleIcon } from "@/components/ui/icons"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,7 +14,6 @@ import {
   InternalAction,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
-import { contactHref } from "@/features/contact/domain/contact"
 import { profileCatalog } from "@/lib/content/profile"
 
 export function DetailPage({
@@ -35,9 +29,6 @@ export function DetailPage({
   headerAction?: ReactNode
   children: ReactNode
 }) {
-  const pathname = useRouterState({
-    select: (state) => state.location.pathname,
-  })
   const actionClassName =
     "group/action h-auto gap-2 rounded-md bg-background px-4 py-2.5 font-medium text-strong-foreground"
 
@@ -112,18 +103,6 @@ export function DetailPage({
           <DownloadSimpleIcon />
           Download resume
         </DownloadAction>
-        <Button
-          type="button"
-          variant="outline"
-          size="lg"
-          className={actionClassName}
-          asChild
-        >
-          <a href={contactHref({ topic: "question", from: pathname })}>
-            <EnvelopeSimpleIcon />
-            Contact me
-          </a>
-        </Button>
       </footer>
     </PageShell>
   )

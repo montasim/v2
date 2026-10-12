@@ -76,6 +76,34 @@ function RoleDetails({
         label={`Technologies used as ${role.role}`}
         className={technologiesClassName}
       />
+      {role.registeredContribution ? (
+        <aside
+          className="mt-4 grid gap-3 rounded-lg border bg-muted/30 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
+          aria-label="Registered software contribution"
+        >
+          <div className="min-w-0">
+            <h4 className="text-sm font-semibold text-strong-foreground">
+              Co-author of copyright-registered software
+            </h4>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              {role.registeredContribution.description}
+            </p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Registration: {role.registeredContribution.registration} · Owner:{" "}
+              {role.registeredContribution.owner}
+            </p>
+          </div>
+          <a
+            href={role.registeredContribution.certificateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-9 w-fit items-center rounded-sm text-sm font-medium underline underline-offset-4 hover:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
+          >
+            View certificate
+            <span className="sr-only"> (PDF, opens in a new tab)</span>
+          </a>
+        </aside>
+      ) : null}
     </>
   )
 }

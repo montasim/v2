@@ -30,6 +30,12 @@
     "location": "Mohakhali, Dhaka, Bangladesh",
     "period": "Oct 2023 - Sep 2025",
     "role": "Software Engineer",
+    "registeredContribution": {
+      "description": "Named co-author of MyMedicalHUB’s AI & machine-learning musculoskeletal assessment software, registered with the Bangladesh Copyright Office on 15 September 2024.",
+      "registration": "CRS-30592",
+      "owner": "MyMedicalHUB International Ltd.",
+      "certificateUrl": "/documents/mymedicalhub-copyright-registration.pdf"
+    },
     "description": "Boosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.",
     "technologies": [
       "React.js",
