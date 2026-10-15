@@ -1,7 +1,7 @@
 {
   "name": "Mohammad Montasim Al Mamun Shuvo",
   "title": "Senior Software Engineer | React, Next.js, Node.js, TypeScript | Real-Time & AI-Driven SaaS",
-  "tagline": "Building deterministic, high-performance software with scalable architecture for real-time systems and AI-driven applications.",
+  "tagline": "Building software around predictable behavior, scalable architecture, and performance that holds up in production.",
   "avatarUrl": "/images/avatar.webp",
   "resumeUrl": "https://drive.google.com/file/d/1v0RP3PyBB6KdsfXhonIHJXU-wgAUSIRT/view?usp=sharing",
   "resumeDownloadUrl": "/api/resume",
@@ -18,7 +18,7 @@
     "visaStatus": null,
     "earliestStartDate": "Immediately"
   },
-  "about": "I build software around **predictable behavior**, **scalable architecture**, and performance that holds up in production.\n\nI'm a **Senior Software Engineer** with **3+ years** of experience in real-time systems, AI integration, and multi-tenant SaaS. I work across the stack with React, Next.js, Node.js, and TypeScript, connecting user-facing experiences with the services and data behind them. After two promotions at MyMedicalHub, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor fellow engineers.\n\nMy work has reduced cloud infrastructure costs by **70%** through Azure migration and automated CI/CD, improved application performance by **40%**, and achieved **Lighthouse 90+** scores. I've built a real-time **computer vision** pipeline with MediaPipe sustaining **60 FPS** at **99.9% reliability**, and a deterministic **finite-state-machine** engine that eliminated race conditions during live AI analysis.\n\nI pay particular attention to state transitions, asynchronous workflows, and resource lifecycles. Clear boundaries, predictable failure handling, and maintainable code guide how I design systems, integrate AI, and evolve products as their requirements grow.",
+  "about": "I'm a **Senior Software Engineer** with **3+ years** of experience across frontend, full-stack product work, backend APIs, browser extensions, Windows and Android apps, AI workflows, and data tooling. I work across the stack with React, Next.js, Node.js, and TypeScript, connecting user-facing experiences with the services and data behind them. After two promotions at MyMedicalHub, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor fellow engineers.\n\nMy work has reduced cloud infrastructure costs by **70%** through Azure migration and automated CI/CD, improved application performance by **40%**, and achieved **Lighthouse 90+** scores. I've built a real-time **computer vision** pipeline with MediaPipe sustaining **60 FPS** at **99.9% reliability**, and a deterministic **finite-state-machine** engine that eliminated race conditions during live AI analysis.\n\nI pay particular attention to state transitions, asynchronous workflows, and resource lifecycles. Clear boundaries, predictable failure handling, and maintainable code guide how I design systems, integrate AI, shape datasets, and evolve products across platforms as their requirements grow.",
   "socialLinks": [
     {
       "platform": "linkedin",
