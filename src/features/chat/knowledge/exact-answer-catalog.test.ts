@@ -116,6 +116,14 @@ describe("portfolio exact answers", () => {
   })
 
   it("answers Air Traffic Control download and architecture questions", () => {
+    const download = findExactAnswer(
+      "Where can I download Air Traffic Control?"
+    )?.text
+    expect(download).toMatch(/^Android users/)
+    expect(download).toContain(
+      "https://play.google.com/store/apps/details?id=dev.montasim.airtrafficcontrol"
+    )
+    expect(download).toContain("https://apps.microsoft.com/detail/9N5536ZQ2XZM")
     expect(
       findExactAnswer("Where can I download Air Traffic Control?")?.text
     ).toContain("https://snapcraft.io/air-traffic-control")

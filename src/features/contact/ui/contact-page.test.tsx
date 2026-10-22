@@ -44,6 +44,7 @@ const initial = {
       type: "extension" as const,
       releaseUrl: undefined,
       href: "/projects/example",
+      googlePlayUrl: undefined,
       microsoftStoreUrl: undefined,
       snapcraftUrl: undefined,
       chromeWebStoreUrl: "https://chromewebstore.google.com/example",

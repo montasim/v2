@@ -2860,10 +2860,10 @@
   {
     "slug": "air-traffic-control",
     "projectId": "project-air-traffic-control",
-    "summary": "A browser, Windows, and Linux arcade game that separates flight simulation, rendering, and local progression so routing rules remain testable across delivery targets.",
+    "summary": "An Android, browser, Windows, and Linux arcade game that separates flight simulation, rendering, and local progression so routing rules remain testable across delivery targets.",
     "role": "Game design and TypeScript engineering",
     "scope": "Traffic simulation, pointer routing, local progression, browser delivery, and Windows and Linux desktop distribution",
-    "status": "Browser deployment, Microsoft Store distribution for Windows, and Snap Store distribution for Linux",
+    "status": "Google Play distribution for Android, browser deployment, Microsoft Store distribution for Windows, and Snap Store distribution for Linux",
     "verifiedBranch": "main",
     "verifiedCommit": "897159962c163a7c40c618701e6cb41d7b64c213",
     "problem": "A flight-path drawing game needs collision and landing rules that agree with what players see, while keeping progress meaningful across short sessions and different screen layouts.",
@@ -2890,7 +2890,7 @@
         },
         {
           "title": "Delivery",
-          "detail": "Vite and a service worker support cached browser play. Electron loads bundled assets through a restricted custom protocol, with AppImage and Snap packaging for Linux. Windows players can install the game from the Microsoft Store."
+          "detail": "Vite and a service worker support cached browser play. Electron loads bundled assets through a restricted custom protocol, with AppImage and Snap packaging for Linux. Android players can install the game from Google Play. Windows players can install the game from the Microsoft Store."
         }
       ]
     },
@@ -2919,14 +2919,14 @@
       "Added automated coverage for simulation, progression, storage, audio, and UI behavior."
     ],
     "outcomes": [
-      "Players can draw routes for three aircraft types across nine airfields in the browser or Windows and Linux desktop apps.",
+      "Players can draw routes for three aircraft types on Android, in the browser, or in Windows and Linux desktop apps. The Android release features twelve airfields; the browser and desktop versions documented here feature nine.",
       "Local career progression and achievements persist between completed sessions without requiring an account.",
       "The simulation can be tested independently of Phaser rendering.",
-      "The product provides a browser entry point, a Microsoft Store installation path for Windows, and a Snap Store installation path for Linux."
+      "The product provides a Google Play installation path for Android, a browser entry point, a Microsoft Store installation path for Windows, and a Snap Store installation path for Linux."
     ],
     "screenshot": {
-      "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and desktop store links",
-      "caption": "Air Traffic Control home screen showing flight setup and desktop download options."
+      "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and Google Play, Microsoft Store, and Snap Store links",
+      "caption": "Air Traffic Control home screen showing flight setup and Android, Windows, and Linux download options."
     }
   },
   {

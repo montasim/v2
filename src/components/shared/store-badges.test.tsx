@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server"
 import { expect, it } from "vitest"
 import { StoreBadges } from "./store-badges"
-import { extensionReleaseUrl } from "@/lib/content/projects"
+import { projectCatalog, extensionReleaseUrl } from "@/lib/content/projects"
 
 const extension = {
   title: "Example",
@@ -31,4 +31,17 @@ it("prefers Chrome over GitHub releases for a published extension", () => {
 it("does not offer the extension fallback without a release or for other project types", () => {
   expect(extensionReleaseUrl({ type: "extension" })).toBeUndefined()
   expect(extensionReleaseUrl({ ...extension, type: "package" })).toBeUndefined()
+})
+
+it("lists Google Play before Microsoft and Snap for Air Traffic Control", () => {
+  const project = projectCatalog.findBySlug("air-traffic-control")!
+  const markup = renderToStaticMarkup(<StoreBadges project={project} />)
+  expect(markup).toContain(`href="${project.googlePlayUrl}"`)
+  expect(markup).toContain("Get Air Traffic Control for Android on Google Play")
+  expect(markup.indexOf("google-play.svg")).toBeLessThan(
+    markup.indexOf("microsoft-store.svg")
+  )
+  expect(markup.indexOf("microsoft-store.svg")).toBeLessThan(
+    markup.indexOf("snap-store.svg")
+  )
 })

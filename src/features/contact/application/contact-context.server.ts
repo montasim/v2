@@ -62,6 +62,7 @@ export function loadContactContext(search: ContactSearch) {
       iconUrl: project.logoUrl,
       type: project.type,
       releaseUrl: project.releaseUrl,
+      googlePlayUrl: project.googlePlayUrl,
       microsoftStoreUrl: project.microsoftStoreUrl,
       snapcraftUrl: project.snapcraftUrl,
       chromeWebStoreUrl: project.chromeWebStoreUrl,
@@ -70,7 +71,6 @@ export function loadContactContext(search: ContactSearch) {
         project.liveUrl || `/projects/${project.id.replace(/^project-/, "")}`,
       links: [
         { label: "App Store", href: project.appStoreUrl },
-        { label: "Google Play", href: project.googlePlayUrl },
         { label: "Chrome Web Store", href: project.chromeWebStoreUrl },
         {
           label: "Releases",

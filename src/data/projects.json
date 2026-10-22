@@ -1776,7 +1776,7 @@
     "type": "desktop",
     "featured": false,
     "title": "Air Traffic Control",
-    "description": "A flight-path drawing arcade game for browsers, Windows, and Linux. Guide three aircraft types across nine airfields, avoid collisions, and build a local career with offline play.",
+    "description": "A flight-path drawing arcade game for Android, browsers, Windows, and Linux. Guide three aircraft types across varied airfields, avoid collisions, and build a local career with offline play.",
     "technologies": [
       "TypeScript",
       "Phaser",
@@ -1788,6 +1788,7 @@
       "Playwright"
     ],
     "liveUrl": "https://airtrafficcontrol.netlify.app",
+    "googlePlayUrl": "https://play.google.com/store/apps/details?id=dev.montasim.airtrafficcontrol",
     "snapcraftUrl": "https://snapcraft.io/air-traffic-control",
     "microsoftStoreUrl": "https://apps.microsoft.com/detail/9N5536ZQ2XZM",
     "githubUrl": "https://github.com/montasim/air-traffic-control",
@@ -1798,7 +1799,7 @@
     "gallery": [
       {
         "src": "/images/projects/air-traffic-control-home.webp",
-        "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and desktop store links"
+        "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and Google Play, Microsoft Store, and Snap Store links"
       },
       {
         "src": "/images/projects/air-traffic-control-airfields.webp",
@@ -1820,6 +1821,7 @@
     "topics": [
       "arcade-game",
       "air-traffic-control",
+      "android",
       "air-control",
       "windows",
       "linux",

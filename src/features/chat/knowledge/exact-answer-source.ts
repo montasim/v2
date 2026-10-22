@@ -301,8 +301,15 @@ function buildProjectAnswers(): readonly ExactAnswer[] {
       }),
     ]
 
-    if (project.microsoftStoreUrl || project.snapcraftUrl) {
+    if (
+      project.googlePlayUrl ||
+      project.microsoftStoreUrl ||
+      project.snapcraftUrl
+    ) {
       const downloads = [
+        project.googlePlayUrl
+          ? `Android users can install it from Google Play: ${project.googlePlayUrl}.`
+          : undefined,
         project.microsoftStoreUrl
           ? `Windows users can install it from the Microsoft Store: ${project.microsoftStoreUrl}.`
           : undefined,

@@ -21,6 +21,7 @@ import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as RecommendationsRouteImport } from './routes/recommendations'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as RootRouteImport } from './routes/root'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
@@ -99,6 +100,11 @@ const ResumeRoute = ResumeRouteImport.update({
 const RootRoute = RootRouteImport.update({
   id: '/root',
   path: '/root',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SkillsRoute = SkillsRouteImport.update({
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/recommendations': typeof RecommendationsRoute
   '/resume': typeof ResumeRoute
   '/root': typeof RootRoute
+  '/services': typeof ServicesRoute
   '/skills': typeof SkillsRoute
   '/status': typeof StatusRoute
   '/api/chat': typeof ApiChatRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/recommendations': typeof RecommendationsRoute
   '/resume': typeof ResumeRoute
   '/root': typeof RootRoute
+  '/services': typeof ServicesRoute
   '/skills': typeof SkillsRoute
   '/status': typeof StatusRoute
   '/api/chat': typeof ApiChatRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/recommendations': typeof RecommendationsRoute
   '/resume': typeof ResumeRoute
   '/root': typeof RootRoute
+  '/services': typeof ServicesRoute
   '/skills': typeof SkillsRoute
   '/status': typeof StatusRoute
   '/api/chat': typeof ApiChatRoute
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/resume'
     | '/root'
+    | '/services'
     | '/skills'
     | '/status'
     | '/api/chat'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/resume'
     | '/root'
+    | '/services'
     | '/skills'
     | '/status'
     | '/api/chat'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/resume'
     | '/root'
+    | '/services'
     | '/skills'
     | '/status'
     | '/api/chat'
@@ -410,6 +422,7 @@ export interface RootRouteChildren {
   RecommendationsRoute: typeof RecommendationsRoute
   ResumeRoute: typeof ResumeRoute
   RootRoute: typeof RootRoute
+  ServicesRoute: typeof ServicesRoute
   SkillsRoute: typeof SkillsRoute
   StatusRoute: typeof StatusRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -506,6 +519,13 @@ declare module '@tanstack/react-router' {
       path: '/root'
       fullPath: '/root'
       preLoaderRoute: typeof RootRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/skills': {
@@ -685,6 +705,7 @@ const rootRouteChildren: RootRouteChildren = {
   RecommendationsRoute: RecommendationsRoute,
   ResumeRoute: ResumeRoute,
   RootRoute: RootRoute,
+  ServicesRoute: ServicesRoute,
   SkillsRoute: SkillsRoute,
   StatusRoute: StatusRoute,
   ApiChatRoute: ApiChatRoute,

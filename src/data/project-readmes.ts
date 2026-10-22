@@ -216,7 +216,7 @@ and validation. The source repository is private.
 
 Draw flight paths. Land aircraft. Avoid collisions.
 
-Air Traffic Control is an arcade game for browsers, Windows, and Linux. Guide airliners, commuter aircraft, and helicopters to their matching runways or helipads while keeping traffic apart.
+Air Traffic Control is an arcade game for Android, browsers, Windows, and Linux. Guide airliners, commuter aircraft, and helicopters to their matching runways or helipads while keeping traffic apart.
 
 ## How to play
 
@@ -224,11 +224,11 @@ Choose an airfield and difficulty, then press an aircraft with a mouse, finger, 
 
 ## Build a local career
 
-Start at Saltmarsh Gateway or River Bend and unlock more locations through career promotions. Nine airfields, three difficulty levels, seven ranks, and nine achievements provide different traffic challenges. Completed shifts count toward progression; practice, restarts, and abandoned shifts do not.
+Start at Saltmarsh Gateway or River Bend and unlock more locations through career promotions. The browser and desktop versions described here feature nine airfields, three difficulty levels, seven ranks, and nine achievements. The Android release on Google Play features twelve airfields. Completed shifts count toward progression; practice, restarts, and abandoned shifts do not.
 
-## Play in your browser, on Windows, or on Linux
+## Play on Android, in your browser, on Windows, or on Linux
 
-[Play in the browser](https://airtrafficcontrol.netlify.app), [install for Windows from the Microsoft Store](https://apps.microsoft.com/detail/9N5536ZQ2XZM), or [install for Linux from the Snap Store](https://snapcraft.io/air-traffic-control). The browser version caches assets for offline use after an online visit. The Electron desktop version bundles the game for offline play.
+[Get it on Google Play for Android](https://play.google.com/store/apps/details?id=dev.montasim.airtrafficcontrol), [play in the browser](https://airtrafficcontrol.netlify.app), [install for Windows from the Microsoft Store](https://apps.microsoft.com/detail/9N5536ZQ2XZM), or [install for Linux from the Snap Store](https://snapcraft.io/air-traffic-control). The browser version caches assets for offline use after an online visit. The Electron desktop version bundles the game for offline play.
 
 ## Saves and controls
 

@@ -57,6 +57,7 @@ const projectSchema = z.object({
 
 export type Project = z.infer<typeof projectSchema>
 export type ProjectFilter =
+  | "android"
   | "all"
   | "client"
   | "collaborative"
@@ -173,6 +174,7 @@ const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "client", label: "Client work & Ventures" },
   { value: "collaborative", label: "Collaborative work" },
   { value: "website", label: "Web apps" },
+  { value: "android", label: "Android apps" },
   { value: "desktop", label: "Desktop apps" },
   { value: "extension", label: "Extensions" },
   { value: "package", label: "npm packages" },
@@ -205,6 +207,7 @@ export const projectCatalog = {
       "client",
       "collaborative",
       "website",
+      "android",
       "desktop",
       "extension",
       "package",
@@ -235,6 +238,7 @@ export const projectCatalog = {
     if (filter === "client") return project.clientWork === true
     if (filter === "collaborative") return project.collaborativeWork === true
     if (filter === "employment") return project.professionalWork === true
+    if (filter === "android") return Boolean(project.googlePlayUrl)
     if (filter === "package") return Boolean(project.npmUrl)
     return project.type === filter
   },

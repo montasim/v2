@@ -16,6 +16,26 @@ import { catalogFilterNavigation } from "./content/shared"
 import { createMeta, site } from "./site"
 
 describe("portfolio content", () => {
+  it("filters published Android apps without removing their desktop classification", () => {
+    expect(projectCatalog.filterSchema.parse("android")).toBe("android")
+    expect(projectCatalog.filters).toContainEqual({
+      value: "android",
+      label: "Android apps",
+    })
+    const project = projectCatalog.findBySlug("air-traffic-control")!
+    expect(projectCatalog.matches(project, "android")).toBe(true)
+    expect(projectCatalog.matches(project, "desktop")).toBe(true)
+    expect(
+      projectCatalog.matches(
+        { ...project, googlePlayUrl: undefined },
+        "android"
+      )
+    ).toBe(false)
+    expect(
+      projectCatalog.matches({ ...project, googlePlayUrl: "" }, "android")
+    ).toBe(false)
+  })
+
   it("uses employment and client labels while preserving existing filter links", () => {
     expect(projectCatalog.filterSchema.parse("employment")).toBe("employment")
     expect(projectCatalog.filterSchema.parse("professional")).toBe("employment")
@@ -42,7 +62,13 @@ describe("portfolio content", () => {
     expect(
       blogCatalog.find("separating-flight-rules-from-the-renderer")?.projectId
     ).toBe(project?.id)
+    expect(project?.googlePlayUrl).toBe(
+      "https://play.google.com/store/apps/details?id=dev.montasim.airtrafficcontrol"
+    )
     const contact = loadContactContext({ app: "air-traffic-control" })
+    expect(
+      contact.projects.find((item) => item.id === project?.id)?.googlePlayUrl
+    ).toBe(project?.googlePlayUrl)
     expect(contact.projectId).toBe(project?.id)
     expect(
       contact.projects.find((item) => item.id === project?.id)?.snapcraftUrl

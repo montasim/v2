@@ -1,4 +1,6 @@
 export const descriptions = {
+  services:
+    "Product engineering services across web applications, APIs, AI workflows, extensions, desktop tools, and mobile experiences.",
   experience:
     "A role-by-role record of product engineering, real-time systems, cloud delivery, and technical leadership.",
   projects:

@@ -16,6 +16,7 @@ export function StoreBadges({
     | "type"
     | "releaseUrl"
     | "title"
+    | "googlePlayUrl"
     | "microsoftStoreUrl"
     | "snapcraftUrl"
     | "chromeWebStoreUrl"
@@ -24,6 +25,13 @@ export function StoreBadges({
   className?: string
 }) {
   const stores = [
+    {
+      href: project.googlePlayUrl,
+      image: "google-play.svg",
+      label: `Get ${project.title} for Android on Google Play`,
+      width: 239,
+      height: 71,
+    },
     {
       href: project.microsoftStoreUrl,
       image: "microsoft-store.svg",
