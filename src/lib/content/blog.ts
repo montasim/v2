@@ -2,7 +2,10 @@ import { z } from "zod"
 
 import blogJson from "@/data/blog.json"
 import { optimizedImage } from "@/lib/assets"
-import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
+import {
+  localizeCaseStudy,
+  projectCaseStudyCatalog,
+} from "@/lib/content/project-case-studies"
 
 export const blogTopicSchema = z.enum(["all", "product", "career", "tools"])
 export const blogPostSlugSchema = z
@@ -25,6 +28,16 @@ const imageSchema = z.object({
   alt: z.string().min(1),
 })
 
+export const blogLanguageSchema = z.enum(["en", "bn"])
+
+const translationSchema = z
+  .object({
+    title: z.string().min(1),
+    excerpt: z.string().min(1),
+    sections: z.array(sectionSchema).min(1),
+  })
+  .strict()
+
 const resolvedPostSchema = z.object({
   kind: z.enum(["authored", "case-study-derived"]),
   slug: blogPostSlugSchema,
@@ -39,6 +52,7 @@ const resolvedPostSchema = z.object({
   featured: z.boolean(),
   image: imageSchema.nullable(),
   sections: z.array(sectionSchema).min(1),
+  translations: z.object({ bn: translationSchema }).partial().optional(),
 })
 
 const authoredPostSchema = resolvedPostSchema
@@ -59,6 +73,12 @@ const caseStudyDerivedPostSchema = z
     topic: blogTopicSchema.exclude(["all"]),
     publishedAt: z.iso.date().optional(),
     featured: z.boolean(),
+    image: imageSchema.optional(),
+    // The Bangla body is built from the translated case study; only the title is stored.
+    translations: z
+      .object({ bn: z.object({ title: z.string().min(1) }).strict() })
+      .strict()
+      .optional(),
   })
   .strict()
 
@@ -108,6 +128,65 @@ function estimateReadingMinutes(
   return Math.max(1, Math.ceil(wordCount / 200))
 }
 
+const derivedSectionText = {
+  en: {
+    problem: ["The problem", "Why it was needed"],
+    architecture: ["Architecture", "How it is built"],
+    delivery: ["Delivery", "What changed"],
+    keyDecision: "The key decision",
+    role: "My role",
+    scope: "Scope",
+    stop: ".",
+  },
+  bn: {
+    problem: ["সমস্যা", "কেন দরকার ছিল"],
+    architecture: ["Architecture", "কীভাবে বানানো"],
+    delivery: ["Delivery", "কী বদলেছে"],
+    keyDecision: "মূল সিদ্ধান্ত",
+    role: "আমার ভূমিকা",
+    scope: "পরিসর",
+    stop: "।",
+  },
+} as const satisfies Record<BlogLanguage, Record<string, unknown>>
+
+// Sections come straight from the case study, so the article carries no filler.
+function caseStudySections(
+  caseStudy: ReturnType<typeof localizeCaseStudy>
+): Array<z.infer<typeof sectionSchema>> {
+  const text = derivedSectionText[caseStudy.language]
+  const [firstDecision] = caseStudy.decisions
+  return [
+    {
+      id: "problem",
+      label: text.problem[0],
+      title: text.problem[1],
+      paragraphs: [caseStudy.problem, caseStudy.constraints.join(" ")],
+    },
+    {
+      id: "architecture",
+      label: text.architecture[0],
+      title: text.architecture[1],
+      paragraphs: [
+        caseStudy.architecture.summary,
+        ...caseStudy.decisions.map(
+          (decision) => `${decision.title}${text.stop} ${decision.detail}`
+        ),
+      ],
+      callout: `${text.keyDecision}: ${firstDecision.title}${text.stop}`,
+    },
+    {
+      id: "delivery",
+      label: text.delivery[0],
+      title: text.delivery[1],
+      paragraphs: [
+        caseStudy.contribution.join(" "),
+        caseStudy.outcomes.join(" "),
+        `${text.role}: ${caseStudy.role}${text.stop} ${text.scope}: ${caseStudy.scope}${text.stop}`,
+      ],
+    },
+  ]
+}
+
 function resolveCaseStudyPost(
   metadata: z.infer<typeof caseStudyDerivedPostSchema>,
   defaultPublishedAt: string
@@ -118,53 +197,43 @@ function resolveCaseStudyPost(
     throw new Error(`Unknown project blog source: ${metadata.projectId}`)
   }
 
-  const excerpt = caseStudy.summary
-  const sections = [
-    {
-      id: "problem",
-      label: "The real problem",
-      title: "The visible feature was only the surface",
-      paragraphs: [
-        caseStudy.problem,
-        `The system also had to respect concrete constraints. ${caseStudy.constraints.join(" ")}`,
-        `My role covered ${caseStudy.role.toLocaleLowerCase()}, with responsibility for ${caseStudy.scope.toLocaleLowerCase()}.`,
-      ],
-    },
-    {
-      id: "architecture",
-      label: "Architecture",
-      title: "I turned the constraints into boundaries",
-      paragraphs: [
-        caseStudy.architecture.summary,
-        ...caseStudy.decisions.map((decision) => decision.detail),
-      ],
-      callout: `The key decision: ${caseStudy.decisions[0].title}.`,
-    },
-    {
-      id: "delivery",
-      label: "Delivery",
-      title: "The implementation had to prove the model",
-      paragraphs: [
-        `I delivered the work across the full path: ${caseStudy.contribution.join(" ")}`,
-        `The result is concrete: ${caseStudy.outcomes.join(" ")}`,
-        "The senior engineering lesson was that solving the visible workflow is only half the job. The architecture must also make constraints, failure modes, evidence, and ownership explicit enough for the next change to remain safe.",
-      ],
-    },
-  ] satisfies Array<z.infer<typeof sectionSchema>>
+  const english = localizeCaseStudy(caseStudy, "en")
+  const bangla = localizeCaseStudy(caseStudy, "bn")
+  const sections = caseStudySections(english)
+  const banglaTitle = metadata.translations?.bn.title
+  const { translations: _translations, ...postMetadata } = metadata
 
   return resolvedPostSchema.parse({
-    ...metadata,
-    excerpt,
+    ...postMetadata,
+    excerpt: english.summary,
     publishedAt: metadata.publishedAt ?? defaultPublishedAt,
-    readingMinutes: estimateReadingMinutes(metadata.title, excerpt, sections),
-    image: caseStudy.project.imageUrl
-      ? {
-          src: projectImagePath(caseStudy.project.imageUrl),
-          alt:
-            caseStudy.screenshot?.alt ?? `${caseStudy.project.title} project`,
-        }
-      : null,
+    readingMinutes: estimateReadingMinutes(
+      metadata.title,
+      english.summary,
+      sections
+    ),
+    // An article illustration, when provided, outranks the project screenshot.
+    image:
+      metadata.image ??
+      (caseStudy.project.imageUrl
+        ? {
+            src: projectImagePath(caseStudy.project.imageUrl),
+            alt:
+              caseStudy.screenshot?.alt ?? `${caseStudy.project.title} project`,
+          }
+        : null),
     sections,
+    ...(banglaTitle && bangla.language === "bn"
+      ? {
+          translations: {
+            bn: {
+              title: banglaTitle,
+              excerpt: bangla.summary,
+              sections: caseStudySections(bangla),
+            },
+          },
+        }
+      : {}),
   })
 }
 
@@ -225,6 +294,20 @@ function assertBlogCatalogIntegrity(posts: readonly ResolvedBlogPost[]) {
     throw new Error(
       "The blog catalog must link exactly one article to every project"
     )
+  }
+
+  // Translations reuse the English section ids so anchors and the outline hold.
+  for (const post of posts) {
+    const translation = post.translations?.bn
+    if (!translation) continue
+
+    const sourceIds = post.sections.map((section) => section.id).join()
+    const translatedIds = translation.sections
+      .map((section) => section.id)
+      .join()
+    if (sourceIds !== translatedIds) {
+      throw new Error(`Bangla sections do not match English for ${post.slug}`)
+    }
   }
 }
 
@@ -302,5 +385,21 @@ export const blogCatalog = {
   },
 } as const
 
+/** Returns the post's text in the requested language, falling back to English. */
+export function localizeBlogPost(
+  post: ResolvedBlogPost,
+  language: BlogLanguage
+) {
+  const translation = language === "bn" ? post.translations?.bn : undefined
+
+  return {
+    language: translation ? language : "en",
+    title: translation?.title ?? post.title,
+    excerpt: translation?.excerpt ?? post.excerpt,
+    sections: translation?.sections ?? post.sections,
+  } as const
+}
+
 export type BlogPost = ResolvedBlogPost
 export type BlogTopic = z.infer<typeof blogTopicSchema>
+export type BlogLanguage = z.infer<typeof blogLanguageSchema>

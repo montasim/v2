@@ -36,7 +36,7 @@
       "owner": "MyMedicalHUB International Ltd.",
       "certificateUrl": "/documents/mymedicalhub-copyright-registration.pdf"
     },
-    "description": "Boosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.",
+    "description": "Boosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% cloud infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.",
     "technologies": [
       "React.js",
       "Tailwind CSS",

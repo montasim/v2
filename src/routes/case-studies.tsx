@@ -13,25 +13,40 @@ export const Route = createFileRoute("/case-studies")({
   validateSearch: z.object({
     filter: projectCaseStudyCatalog.filterSchema.catch("all").default("all"),
     q: z.string().catch("").default(""),
+    page: z.coerce.number().int().min(1).catch(1).default(1),
   }),
   component: Page,
 })
 
 function Page() {
-  const { filter, q } = Route.useSearch()
+  const { filter, page, q } = Route.useSearch()
   const navigate = Route.useNavigate()
 
   return (
     <CaseStudyIndexPage
       filter={filter}
       query={q}
+      page={page}
       onQueryChange={(nextQuery) =>
         navigate({
           replace: true,
           resetScroll: false,
-          search: (previous) => ({ ...previous, q: nextQuery }),
+          search: (previous) => ({ ...previous, q: nextQuery, page: 1 }),
         })
       }
+      onPageChange={async (nextPage) => {
+        await navigate({
+          resetScroll: false,
+          search: (previous) => ({ ...previous, page: nextPage }),
+        })
+        requestAnimationFrame(() => {
+          const heading = document.getElementById("browse-case-studies-heading")
+          heading?.focus({ preventScroll: true })
+          document
+            .getElementById("browse-case-studies-section")
+            ?.scrollIntoView({ block: "start" })
+        })
+      }}
     />
   )
 }

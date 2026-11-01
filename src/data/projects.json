@@ -124,7 +124,7 @@
     "type": "website",
     "featured": false,
     "title": "Foliofarer",
-    "description": "Foliofarer is an interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, featuring an accessible career Atlas, local Passport progress and adaptive WebGL rendering.",
+    "description": "An interactive 3D developer portfolio built with Next.js, React Three Fiber, Three.js and TypeScript, with an accessible career Atlas, local Passport progress and adaptive WebGL rendering.",
     "technologies": [
       "Next.js",
       "React",
@@ -167,7 +167,7 @@
     "type": "extension",
     "featured": false,
     "title": "VidQuery - YouTube Q&A Extension",
-    "description": "Chromium extension that adds Gemini-powered Q&A to YouTube using visible video metadata, transcripts, and the user's own API key.",
+    "description": "A Chromium extension that answers questions about a YouTube video with Gemini, using its visible metadata, transcript and the viewer's own API key.",
     "technologies": [
       "WXT",
       "TypeScript",
@@ -442,7 +442,7 @@
     "type": "skill",
     "featured": false,
     "title": "release-agent-skill",
-    "description": "An end-to-end release skill for Codex and Claude Code that validates portable Agent Skills, synchronizes release metadata, inspects npm archives, executes explicitly authorized publication stages, and verifies public artifacts.",
+    "description": "An end-to-end release skill for Codex and Claude Code that validates portable Agent Skills, inspects npm archives, runs only authorized publication stages and verifies the public artifacts.",
     "technologies": [
       "Agent Skills",
       "JavaScript",
@@ -478,7 +478,7 @@
     "type": "skill",
     "featured": false,
     "title": "verify-github-npm-release",
-    "description": "A release-verification skill for Codex and Claude Code that compares local Git state, GitHub tags and releases, npm versions and dist-tags, CI evidence, advertised commands, and optional catalog records without changing release state.",
+    "description": "A read-only release check for Codex and Claude Code that confirms Git tags, GitHub releases, npm versions, CI evidence and install commands all agree for one release.",
     "technologies": [
       "Agent Skills",
       "JavaScript",
@@ -837,7 +837,7 @@
     "type": "template",
     "featured": false,
     "title": "EduCanvas",
-    "description": "Theme-driven educational website and content-management starter built with Next.js",
+    "description": "A theme-driven education website and content-management starter built with Next.js.",
     "technologies": [
       "Next.js",
       "React",
@@ -1055,7 +1055,7 @@
     "type": "website",
     "featured": false,
     "title": "b4joinacompany",
-    "description": "Research a company before you apply, interview, or accept an offer.",
+    "description": "An evidence-labeled company research tool that helps job seekers prepare before they apply, interview or accept an offer.",
     "technologies": [
       "Next.js",
       "React",
@@ -1258,7 +1258,7 @@
     "type": "website",
     "featured": false,
     "title": "Ramadan Clock",
-    "description": "🌙 District-aware Sehri and Iftar schedules for Bangladesh, with PDF exports and protected timetable management. Next.js, PostgreSQL, Prisma.",
+    "description": "District-aware Sehri and Iftar schedules for Bangladesh, with PDF exports and an authenticated area for managing timetables.",
     "technologies": [
       "Next.js",
       "TypeScript",
@@ -1294,7 +1294,7 @@
     "type": "tool",
     "featured": true,
     "title": "DevTools",
-    "description": "A comprehensive suite of 30+ free developer tools for formatting, validating, generating, and transforming data. All tools run entirely in your browser.",
+    "description": "A suite of 50+ free developer tools for formatting, validating, generating and transforming data, where local tools keep your input in the browser by default.",
     "technologies": [
       "Next.js",
       "React",
@@ -1346,7 +1346,7 @@
     "type": "website",
     "featured": true,
     "title": "PostCraft",
-    "description": "AI-powered social media manager to generate, preview, score, and auto-publish engaging posts for LinkedIn, X, and Facebook using Gemini AI and custom brand guardrails.",
+    "description": "A social media manager that generates, scores, previews and schedules posts for LinkedIn, X and Facebook, using Gemini and stored brand guardrails.",
     "technologies": [
       "Next.js",
       "React",
@@ -1391,7 +1391,7 @@
     "type": "dataset",
     "featured": false,
     "title": "TIN Audit Checker - Bangladesh",
-    "description": "Check if your Bangladesh TIN is selected for NBR Risk-Based Audit (AY 2023-24). Client-side, private, instant lookup of 72,342 returns.",
+    "description": "A private, browser-only lookup for checking whether a Bangladesh TIN appears on a historical NBR risk-based audit selection list for AY 2023-24, covering 72,342 returns.",
     "technologies": [
       "Next.js",
       "React",
@@ -1672,7 +1672,7 @@
     "type": "skill",
     "featured": false,
     "title": "build-android-app-from-web",
-    "description": "An evidence-driven mobile-development skill that discovers a web application's routes, workflows, data, states, and integrations; maps every capability to an Android disposition; guides native platform adaptation; and verifies that no feature is silently omitted.",
+    "description": "An evidence-driven skill that inventories a web app's routes, workflows and integrations, maps each capability to an Android decision, and verifies that nothing is silently dropped.",
     "technologies": [
       "Agent Skills",
       "Python",
@@ -1741,7 +1741,7 @@
     "type": "skill",
     "featured": false,
     "title": "integrate-supportkori-widget",
-    "description": "A SupportKori-specific frontend skill that checks lifecycle mounting, CSP and extension constraints, native visual treatment, embedded-panel behavior, and runtime evidence while preserving authorization boundaries.",
+    "description": "A SupportKori-specific frontend skill that integrates one theme-consistent support trigger across websites and browser extensions, checking lifecycle, CSP and runtime evidence.",
     "technologies": [
       "Agent Skills",
       "JavaScript",

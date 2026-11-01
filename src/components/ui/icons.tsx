@@ -75,7 +75,9 @@ import HugeChatCircleDotsIcon from "@hugeicons/core-free-icons/MessageCircleMore
 import HugeChatCenteredDotsIcon from "@hugeicons/core-free-icons/MessageSquareMoreIcon"
 import HugeDevicesIcon from "@hugeicons/core-free-icons/MonitorSmartphoneIcon"
 import HugeMoonIcon from "@hugeicons/core-free-icons/Moon02Icon"
+import HugeNpmIcon from "@hugeicons/core-free-icons/NpmIcon"
 import HugePackageIcon from "@hugeicons/core-free-icons/PackageIcon"
+import HugePlayStoreIcon from "@hugeicons/core-free-icons/PlayStoreIcon"
 import HugePencilSimpleIcon from "@hugeicons/core-free-icons/PencilEdit01Icon"
 import HugePlayIcon from "@hugeicons/core-free-icons/PlayIcon"
 import HugePlusIcon from "@hugeicons/core-free-icons/PlusSignIcon"
@@ -311,7 +313,9 @@ export const MicrosoftStoreIcon = forwardRef<SVGSVGElement, IconProps>(
   }
 )
 export const MoonIcon = createIcon(HugeMoonIcon, "MoonIcon")
+export const NpmIcon = createIcon(HugeNpmIcon, "NpmIcon")
 export const PackageIcon = createIcon(HugePackageIcon, "PackageIcon")
+export const PlayStoreIcon = createIcon(HugePlayStoreIcon, "PlayStoreIcon")
 export const PaperPlaneTiltIcon = createIcon(
   HugePaperPlaneTiltIcon,
   "PaperPlaneTiltIcon"

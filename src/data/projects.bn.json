@@ -1,0 +1,164 @@
+{
+  "project-giftbook": {
+    "description": "পরিবারের অনুষ্ঠানে পাওয়া উপহারের হিসাব মালিকের নিজের Google Sheet এ রাখার জন্য একটা Bangla-first, offline-capable PWA; এতে আছে QR-based family sharing আর Excel export, কোনো application server নেই।"
+  },
+  "project-rootstory": {
+    "description": "সম্পর্কের map তৈরি, জীবনের খুঁটিনাটি আর ছবি সংরক্ষণ, এবং পুরো পারিবারিক ইতিহাস এক browser থেকে আরেক browser এ নিয়ে যাওয়ার জন্য একটা private, local-first family archive।"
+  },
+  "project-routempo": {
+    "description": "বারবার অনুসরণযোগ্য rhythm পরিকল্পনা, ফলাফল রেকর্ড করা আর বাস্তব আচরণ থেকে শেখার জন্য একটা timezone-aware routine planner।"
+  },
+  "project-foliofarer": {
+    "description": "Next.js, React Three Fiber, Three.js আর TypeScript দিয়ে বানানো একটা interactive 3D developer portfolio, যেখানে আছে accessible career Atlas, local Passport progress আর adaptive WebGL rendering।"
+  },
+  "project-vidquery": {
+    "description": "একটা Chromium extension, যা Gemini দিয়ে YouTube video নিয়ে প্রশ্নের উত্তর দেয়; এর জন্য ব্যবহার করে video র visible metadata, transcript আর viewer এর নিজের API key।"
+  },
+  "project-thoughtline": {
+    "description": "User-controlled একটা Chrome side-panel extension, যা paste বা select করা LinkedIn post থেকে reply draft করে, লেখা refine করে, আর প্রতিটা publish action manual রাখে।"
+  },
+  "project-bugreceipt": {
+    "description": "Local-first Chrome extension, যা privacy-filtered console, network, reproduction-step আর visual evidence capture করে একটা reviewable bug report এ সাজিয়ে দেয়।"
+  },
+  "project-1snap": {
+    "description": "Local-first Chrome extension, যা পুরো web page capture করে, page state restore করে, browser এর মধ্যেই frame stitch করে, আর PNG export এর আগে non-destructive annotation যোগ করে।"
+  },
+  "project-mulalens": {
+    "description": "Chrome Web Store এ published একটা extension, যা Deshi Mula র company page এ identity, workplace, salary, job, story আর cited-research context যোগ করে।"
+  },
+  "project-skillfoliox": {
+    "description": "Claude Code, OpenAI Codex, Cursor আর অন্যান্য AI coding agent এর জন্য reusable SKILL.md capability র একটা curated portfolio।"
+  },
+  "project-release-agent-skill": {
+    "description": "Codex আর Claude Code এর জন্য একটা end-to-end release skill, যা portable Agent Skills validate করে, npm archive inspect করে, শুধু authorized publication stage গুলো চালায় আর public artifact verify করে।"
+  },
+  "project-verify-github-npm-release": {
+    "description": "Codex আর Claude Code এর জন্য একটা read-only release check, যা নিশ্চিত করে যে একটা release এর Git tag, GitHub release, npm version, CI evidence আর install command সব একে অপরের সাথে মিলে যায়।"
+  },
+  "project-write-complete-project-readme": {
+    "description": "Codex আর Claude Code এর জন্য একটা evidence-driven, project-type-aware skill, যা portable installation আর deterministic validation সহ একটা software project এর root README তৈরি বা regenerate করে।"
+  },
+  "project-publish-verified-github-release": {
+    "description": "একটা cross-provider release-writing skill, যা Git history, manifest, changelog আর validation evidence সংগ্রহ করে, user-focused note draft করে, এবং শুধু explicit authorization পেলেই GitHub release state পরিবর্তন করে।"
+  },
+  "project-fix-project-metadata-mismatches": {
+    "description": "Codex আর Claude Code এর জন্য একটা evidence-first maintenance skill, যা manifest, lockfile, documentation, deployment configuration আর catalog জুড়ে metadata drift detect করে, তারপর request করা হলেই কেবল local file গুলো align করে।"
+  },
+  "project-make-app-netlify-ready": {
+    "description": "Codex আর Claude Code এর জন্য একটা deployment-readiness skill, যা framework আর runtime behavior detect করে, Netlify configuration আর output path validate করে, এবং implicitly deploy না করেই evidence-backed local repair প্রস্তুত করে।"
+  },
+  "project-find-ui-inconsistencies": {
+    "description": "Codex আর Claude Code এর জন্য একটা frontend-review skill, যা intentional design direction ঠিক রেখে typography, spacing, color, layout, shared UI, responsive behavior, skeleton, motion আর visible accessibility state মূল্যায়ন করে।"
+  },
+  "project-make-project-github-ready": {
+    "description": "Codex আর Claude Code এর জন্য একটা repository-readiness skill, যা authorized local বা GitHub change apply করার আগে identity, metadata, topic, community health, security guidance, CI আর Git state মূল্যায়ন করে।"
+  },
+  "project-update-skillfolio-catalog": {
+    "description": "একটা catalog-maintenance skill, যা public package আর repository evidence resolve করে, সঠিক local authority গুলো update করে, derived data regenerate করে, এবং implicitly deploy না করেই target Skillfolio application verify করে।"
+  },
+  "project-fix-social-link-previews": {
+    "description": "Codex আর Claude Code এর জন্য একটা evidence-based skill, যা crawler-visible Open Graph আর Twitter Card metadata validate করে, framework-native metadata ঠিক করে, আর দরকার হলে branded 1200×630 preview asset তৈরি করে।"
+  },
+  "project-bangladesh-location-registry": {
+    "description": "সরকারি প্রকাশিত source থেকে নেওয়া census, postal, facility, ward আর infrastructure data সহ একটা versioned, provenance-rich Bangladesh location registry।"
+  },
+  "project-educanvas": {
+    "description": "Next.js দিয়ে বানানো একটা theme-driven education website আর content-management starter।"
+  },
+  "project-content-types-lite": {
+    "description": "Parsing, formatting, matching আর validation এর জন্য ছোট, type-safe HTTP media type constant আর utility।"
+  },
+  "project-http-status-lite": {
+    "description": "Node.js আর browser এর জন্য ছোট, standards-backed, type-safe HTTP status code।"
+  },
+  "project-mime-types-lite": {
+    "description": "HTTP API, upload আর file extension এর জন্য ছোট, zero-dependency, type-safe MIME constant আর helper।"
+  },
+  "project-client-parser": {
+    "description": "User-Agent, Client Hints আর HTTP header support সহ একটা ছোট, type-safe client classifier।"
+  },
+  "project-b4joinacompany": {
+    "description": "একটা evidence-labeled company research tool, যা job seeker দের apply, interview বা offer accept করার আগে প্রস্তুতি নিতে সাহায্য করে।"
+  },
+  "project-book-heaven": {
+    "description": "Shadcn আর Next.js দিয়ে বানানো Admin Dashboard UI।"
+  },
+  "project-markdown-typing-svg": {
+    "description": "GitHub profile, README file আর website এ ব্যবহারের জন্য customizable animated typing SVG র generator আর cacheable API।"
+  },
+  "project-shrnkly": {
+    "description": "URL shorten করা, text share করা, QR code generate করা আর basic usage analytics দেখার জন্য একটা multilingual Next.js application।"
+  },
+  "project-github-readme-counter": {
+    "description": "একটা Express service, যা file-backed counter বাড়ায় এবং বর্তমান মান customizable SVG image হিসেবে ফেরত দেয়।"
+  },
+  "project-ramadan-clock": {
+    "description": "বাংলাদেশের জন্য district-aware সেহরি ও ইফতারের সময়সূচি, সাথে PDF export আর timetable manage করার জন্য একটা authenticated area।"
+  },
+  "project-devtools": {
+    "description": "Data format, validate, generate আর transform করার জন্য ৫০টার বেশি free developer tool এর একটা suite, যেখানে local tool গুলো default ভাবে আপনার input browser এর মধ্যেই রাখে।"
+  },
+  "project-postcraft": {
+    "description": "একটা social media manager, যা Gemini আর stored brand guardrail ব্যবহার করে LinkedIn, X আর Facebook এর জন্য post generate, score, preview আর schedule করে।"
+  },
+  "project-tin-audit-checker": {
+    "description": "একটা private, browser-only lookup, যা দিয়ে দেখা যায় কোনো Bangladesh TIN AY 2023-24 এর historical NBR risk-based audit selection list এ আছে কিনা; list টিতে ৭২,৩৪২টা return রয়েছে।"
+  },
+  "project-formflow": {
+    "description": "Institution-owned form, versioned submission workflow, employee assignment, requester-visible progress, notification আর audit history র জন্য একটা bilingual, role-aware platform।"
+  },
+  "project-liftuno": {
+    "description": "বাংলাদেশের জন্য একটা bilingual gym-management platform, যা কাগজের খাতার বদলে নিয়ে আসে নির্ভরযোগ্য membership coverage, billing, attendance, receipt, offer আর role-aware operation।"
+  },
+  "project-coaching-management": {
+    "description": "Coaching institute গুলোর জন্য একটা multi-tenant SaaS platform, যা দিয়ে academic structure, student, teacher, attendance, payment, expense, biometric device আর SMS outreach manage করা যায়।"
+  },
+  "project-mmh-patient-portal": {
+    "description": "Patient onboarding, AI-assisted intake, movement assessment, exercise program, report, billing, appointment আর remote-assistance workflow র জন্য একটা multi-tenant digital-health portal।"
+  },
+  "project-mmh-re-annotation": {
+    "description": "একটা clinical review workspace, যেখানে recorded movement frame select করা, detected key point, line আর angle সংশোধন করা, reference guidance এর সাথে তুলনা করা আর validated measurement save করা যায়।"
+  },
+  "project-mmh-telemedicine": {
+    "description": "Guided movement assessment, exercise recording, pain ও strength workflow, clinician collaboration আর tenant-configured session behavior সহ একটা real-time telehealth application।"
+  },
+  "project-build-android-app-from-web": {
+    "description": "একটা evidence-driven skill, যা একটা web app এর route, workflow আর integration এর inventory তৈরি করে, প্রতিটা capability কে একটা Android decision এর সাথে map করে, এবং verify করে যে কোনো কিছুই নিঃশব্দে বাদ পড়ছে না।"
+  },
+  "project-deploy-prebuilt-app-to-netlify": {
+    "description": "একটা deployment skill, যা local output validate করে, unsafe artifact tree আটকায়, উপযুক্ত Netlify CLI flow বেছে নেয়, শুধু explicitly authorized remote mutation চালায় আর deployed result verify করে।"
+  },
+  "project-integrate-supportkori-widget": {
+    "description": "SupportKori-specific একটা frontend skill, যা lifecycle, CSP আর runtime evidence যাচাই করে website আর browser extension জুড়ে একটা theme-consistent support trigger integrate করে।"
+  },
+  "project-air-traffic-control": {
+    "description": "Android, browser, Windows আর Linux এর জন্য একটা flight-path drawing arcade game। বিভিন্ন airfield এ ৩ ধরনের aircraft গাইড করুন, collision এড়িয়ে চলুন, আর offline play সহ একটা local career গড়ে তুলুন।"
+  },
+  "project-clm-api": {
+    "description": "একটা multi-tenant customer lifecycle management API। WaTheta র জন্য freelance কাজ, যার focus ছিল WhatsApp, Messenger আর Instagram messaging, conversation automation ও routing, real-time inbox event আর integration test।"
+  },
+  "project-mcq-topper-backend": {
+    "description": "একটা MCQ learning platform এর জন্য Express API foundation, যেখানে আছে versioned domain route, shared response handling, request middleware আর email error notification। Domain operation গুলো এখনো scaffold implementation পর্যায়ে।"
+  },
+  "project-school-management-backend": {
+    "description": "School administration আর website content এর জন্য একটা modular Express ও MongoDB prototype, যেখানে আছে admission resource, student record, academic download আর Google Drive file integration।"
+  },
+  "project-school-management": {
+    "description": "Notice, admission, routine, result, download, staff আর gallery র জন্য একটা responsive Next.js school website prototype, যা local sample content আর একটা demonstration admin interface ব্যবহার করে।"
+  },
+  "project-survey-module-backend": {
+    "description": "School-dropout research এর জন্য একটা Express ও Mongoose API prototype, যা user, role, permission আর authentication module এর পাশাপাশি survey, template আর completed survey record আলাদা রাখে।"
+  },
+  "project-warehouse-management-client": {
+    "description": "Firebase sign-in, item browsing, stock update ও delivery control, আর user-specific item page সহ একটা legacy React inventory client। Data workflow গুলো আলাদা একটা POSDash API র উপর নির্ভরশীল।"
+  },
+  "project-inventory-management-system-server": {
+    "description": "একটা legacy Express ও MongoDB API, যা pharmacy ও non-pharmacy product, order, return, customer, employee আর supplier record গুলোকে resource router এ সাজায়।"
+  },
+  "project-technofire": {
+    "description": "Database-backed product page, gallery, client content আর session-based administration area সহ একটা legacy PHP ও MariaDB fire-safety catalog prototype, যা Abid Hasan Piash এর সাথে যৌথভাবে তৈরি।"
+  },
+  "project-project-management": {
+    "description": "Task, subtask, bug, discussion, member আর project progress এর জন্য React dashboard সহ একটা collaborative project-management application। Montasim frontend development আর responsive Tailwind CSS interface এ কাজ করেছেন।"
+  }
+}

@@ -103,16 +103,15 @@ describe("PortfolioKnowledge", () => {
     ).toBe("/projects/bugreceipt#architecture")
 
     const articleEvidence = knowledge.findFact(
-      "blog:reproducible-bug-reports-without-default-surveillance:problem"
+      "blog:reproducible-bug-reports-without-default-surveillance:it-broke"
     )
-    expect(articleEvidence?.supportingFactIds).toEqual([
-      "case-study:bugreceipt",
-      "case-study:bugreceipt:problem",
-    ])
+    expect(knowledge.textForFact(articleEvidence?.id ?? "")).toContain(
+      "BugReceipt is a Chrome extension"
+    )
     expect(
       knowledge.findCitation(articleEvidence?.citationId ?? "")?.href
     ).toBe(
-      "/blog/reproducible-bug-reports-without-default-surveillance#problem"
+      "/blog/reproducible-bug-reports-without-default-surveillance#it-broke"
     )
 
     expect(knowledge.relationships).toEqual(
@@ -125,12 +124,15 @@ describe("PortfolioKnowledge", () => {
           id: "relationship:blog:reproducible-bug-reports-without-default-surveillance:explains:project-bugreceipt",
           kind: "explains",
         }),
-        expect.objectContaining({
-          id: "relationship:blog:reproducible-bug-reports-without-default-surveillance:derived-from:bugreceipt",
-          kind: "derived-from",
-        }),
       ])
     )
+    expect(
+      knowledge.relationships.some(
+        (relationship) =>
+          relationship.id ===
+          "relationship:blog:reproducible-bug-reports-without-default-surveillance:derived-from:bugreceipt"
+      )
+    ).toBe(false)
   })
 
   it("connects 1Snap project, case-study, and article evidence to citations", () => {
@@ -154,15 +156,14 @@ describe("PortfolioKnowledge", () => {
     )
 
     const articleEvidence = knowledge.findFact(
-      "blog:full-page-screenshots-without-cloud-capture:problem"
+      "blog:full-page-screenshots-without-cloud-capture:viewport-only"
     )
-    expect(articleEvidence?.supportingFactIds).toEqual([
-      "case-study:1snap",
-      "case-study:1snap:problem",
-    ])
+    expect(knowledge.textForFact(articleEvidence?.id ?? "")).toContain(
+      "Chrome only captures what is visible"
+    )
     expect(
       knowledge.findCitation(articleEvidence?.citationId ?? "")?.href
-    ).toBe("/blog/full-page-screenshots-without-cloud-capture#problem")
+    ).toBe("/blog/full-page-screenshots-without-cloud-capture#viewport-only")
 
     expect(knowledge.relationships).toEqual(
       expect.arrayContaining([
@@ -174,19 +175,24 @@ describe("PortfolioKnowledge", () => {
           id: "relationship:blog:full-page-screenshots-without-cloud-capture:explains:project-1snap",
           kind: "explains",
         }),
-        expect.objectContaining({
-          id: "relationship:blog:full-page-screenshots-without-cloud-capture:derived-from:1snap",
-          kind: "derived-from",
-        }),
       ])
     )
+    expect(
+      knowledge.relationships.some(
+        (relationship) =>
+          relationship.id ===
+          "relationship:blog:full-page-screenshots-without-cloud-capture:derived-from:1snap"
+      )
+    ).toBe(false)
   })
 
   it("keeps the complete prompt packet compact with record-level evidence IDs", () => {
     const knowledge = compilePortfolioKnowledge()
 
-    expect(knowledge.toon.length).toBeLessThan(560_000)
-    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(140_000)
+    // The full packet is hashed, not sent; prompts carry selected evidence only.
+    // The budget covers the hand-written articles added to the blog.
+    expect(knowledge.toon.length).toBeLessThan(700_000)
+    expect(Math.ceil(knowledge.toon.length / 4)).toBeLessThan(175_000)
     expect(knowledge.findFact("project:project-postcraft")).toMatchObject({
       recordId: "project-postcraft",
       evidenceRole: "first-party-portfolio",
@@ -208,7 +214,7 @@ describe("PortfolioKnowledge", () => {
     ])
     expect(
       knowledge.textForFact("blog:video-qa-without-processing-video:problem")
-    ).toContain("Viewers must scrub long YouTube videos")
+    ).toContain("Viewers often scrub through long YouTube videos")
   })
 
   it("derives answer-ready facts with explicit provenance and ambiguity", () => {
@@ -248,8 +254,8 @@ describe("PortfolioKnowledge", () => {
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
       total: 55,
-      authored: 5,
-      caseStudyDerived: 50,
+      authored: 23,
+      caseStudyDerived: 32,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data

@@ -206,6 +206,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* Bangla conjuncts and vowel signs need a Bengali face and taller lines. */
+  :lang(bn) {
+    font-family:
+      "Noto Sans Bengali", "Hind Siliguri", "Nirmala UI", "Kohinoor Bangla",
+      "Bangla Sangam MN", var(--font-sans);
+  }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
@@ -655,4 +661,10 @@ body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
 [data-radix-select-viewport][data-radix-select-viewport]::-webkit-scrollbar-thumb {
   border-radius: 9999px;
   background: var(--border);
+}
+
+/* Unlayered so it outranks leading-* utilities on article text. */
+article:lang(bn) p,
+article:lang(bn) blockquote {
+  line-height: 1.85;
 }

@@ -10,6 +10,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { CaretDownIcon, CheckIcon, SearchIcon } from "@/components/ui/icons"
+import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 
 export type BreadcrumbSwitcherOption = {
@@ -119,16 +120,30 @@ export function BreadcrumbSwitcher({
 function OptionImage({ option }: { option: BreadcrumbSwitcherOption }) {
   // External images can fail; fall back to the option's icon.
   const [failed, setFailed] = useState(false)
+  // Logos come from each project's own site, so hold their place until loaded.
+  const [loaded, setLoaded] = useState(false)
   const box =
     "grid size-5 shrink-0 place-items-center rounded-sm text-muted-foreground"
   return option.imageUrl && !failed ? (
-    <img
-      src={option.imageUrl}
-      alt=""
-      loading="lazy"
-      onError={() => setFailed(true)}
-      className={cn(box, "object-contain")}
-    />
+    <div className="relative size-5 shrink-0">
+      {loaded ? null : <Skeleton className="absolute inset-0 rounded-sm" />}
+      <img
+        // A cached logo is complete before React attaches onLoad.
+        ref={(image) => {
+          if (image?.complete && image.naturalWidth > 0) setLoaded(true)
+        }}
+        src={option.imageUrl}
+        alt=""
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        onError={() => setFailed(true)}
+        className={cn(
+          box,
+          "object-contain transition-opacity duration-200 motion-reduce:transition-none",
+          loaded ? "opacity-100" : "opacity-0"
+        )}
+      />
+    </div>
   ) : (
     <span aria-hidden="true" className={box}>
       {option.fallbackIcon}

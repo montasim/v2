@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 
 import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
 import { PageShell } from "@/components/shared/page-shell"
+import { CatalogPagination } from "@/components/shared/catalog-pagination"
 import { Card } from "@/components/ui/card"
 import {
   Carousel,
@@ -28,6 +29,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { optimizedImage } from "@/lib/assets"
+import { blogCatalog } from "@/lib/content/blog"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import type {
   ProjectCaseStudy,
@@ -36,11 +38,14 @@ import type {
 import { cn } from "@/lib/utils"
 import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 
+const CASE_STUDIES_PER_PAGE = 9
+
+// Screenshots lead; projects without one fall back to their article illustration.
 function projectImage(caseStudy: ProjectCaseStudy) {
   const source = caseStudy.project.imageUrl
-  if (!source) return undefined
-  const name = source.split("/").at(-1)
-  return name ? optimizedImage(`/images/projects/${name}`) : undefined
+  const name = source?.split("/").at(-1)
+  if (name) return optimizedImage(`/images/projects/${name}`)
+  return blogCatalog.findByProjectId(caseStudy.projectId)?.image?.src
 }
 
 function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
@@ -332,16 +337,30 @@ function FeaturedCaseStudyCarousel({
 export function CaseStudyIndexPage({
   filter,
   query,
+  page,
   onQueryChange,
+  onPageChange,
 }: {
   filter: ProjectCaseStudyFilter
   query: string
+  page: number
   onQueryChange: (query: string) => void
+  onPageChange: (page: number) => void
 }) {
   const caseStudies = projectCaseStudyCatalog.filter(filter, query)
+  const pageCount = Math.max(
+    1,
+    Math.ceil(caseStudies.length / CASE_STUDIES_PER_PAGE)
+  )
+  const currentPage = Math.min(page, pageCount)
+  const firstIndex = (currentPage - 1) * CASE_STUDIES_PER_PAGE
+  const visibleCaseStudies = caseStudies.slice(
+    firstIndex,
+    firstIndex + CASE_STUDIES_PER_PAGE
+  )
 
   return (
-    <PageShell className="pt-10 pb-24">
+    <PageShell className="pt-10 pb-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -356,11 +375,11 @@ export function CaseStudyIndexPage({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <header className="mt-8 border-b pb-8">
+      <header className="mt-8 border-b pb-10">
         <h1 className="text-xl leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground sm:text-3xl">
           Case studies of software built to hold up.
         </h1>
-        <p className="mt-4.5 max-w-[62ch] text-[1.0625rem] leading-[1.6] text-muted-foreground">
+        <p className="mt-4.5 text-[1.0625rem] leading-[1.6] text-muted-foreground">
           Deep dives into the problems, architecture, tradeoffs, and outcomes
           behind my projects.
         </p>
@@ -368,7 +387,7 @@ export function CaseStudyIndexPage({
 
       <section
         aria-labelledby="featured-case-study-heading"
-        className="border-b pt-8 pb-12"
+        className="border-b py-10"
       >
         <FeaturedCaseStudyCarousel
           caseStudies={projectCaseStudyCatalog.featured}
@@ -376,12 +395,14 @@ export function CaseStudyIndexPage({
       </section>
 
       <section
+        id="browse-case-studies-section"
         aria-labelledby="browse-case-studies-heading"
-        className="pt-13.5"
+        className="scroll-mt-14 pt-10"
       >
         <div className="mb-6 flex items-end justify-between gap-8 max-md:flex-col max-md:items-start max-md:gap-2">
           <h2
             id="browse-case-studies-heading"
+            tabIndex={-1}
             className="text-xl font-bold tracking-[-0.035em] text-strong-foreground sm:text-2xl"
           >
             Browse case studies
@@ -421,7 +442,7 @@ export function CaseStudyIndexPage({
               <Link
                 key={item.value}
                 to="/case-studies"
-                search={{ filter: item.value, q: query }}
+                search={{ filter: item.value, q: query, page: 1 }}
                 resetScroll={false}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
@@ -444,12 +465,12 @@ export function CaseStudyIndexPage({
           <div
             className={cn(
               "mt-3 grid gap-4",
-              caseStudies.length === 1 && "max-w-95 grid-cols-1",
-              caseStudies.length === 2 && "sm:grid-cols-2",
-              caseStudies.length > 2 && "sm:grid-cols-2 lg:grid-cols-3"
+              visibleCaseStudies.length === 1 && "max-w-95 grid-cols-1",
+              visibleCaseStudies.length === 2 && "sm:grid-cols-2",
+              visibleCaseStudies.length > 2 && "sm:grid-cols-2 lg:grid-cols-3"
             )}
           >
-            {caseStudies.map((caseStudy) => (
+            {visibleCaseStudies.map((caseStudy) => (
               <CaseStudyCard key={caseStudy.slug} caseStudy={caseStudy} />
             ))}
           </div>
@@ -463,7 +484,7 @@ export function CaseStudyIndexPage({
             </p>
             <Link
               to="/case-studies"
-              search={{ filter: "all", q: "" }}
+              search={{ filter: "all", q: "", page: 1 }}
               className="mt-4 inline-flex rounded-md text-sm font-semibold text-strong-foreground underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
             >
               Clear filters
@@ -471,6 +492,18 @@ export function CaseStudyIndexPage({
           </Card>
         )}
       </section>
+
+      {caseStudies.length ? (
+        <CatalogPagination
+          page={currentPage}
+          pageCount={pageCount}
+          pageSize={CASE_STUDIES_PER_PAGE}
+          total={caseStudies.length}
+          resultLabel="case studies"
+          onPageChange={onPageChange}
+          className="mt-10 pt-10"
+        />
+      ) : null}
     </PageShell>
   )
 }

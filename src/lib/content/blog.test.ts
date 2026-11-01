@@ -1,15 +1,15 @@
 import { existsSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 
-import { blogCatalog } from "./blog"
+import { blogCatalog, localizeBlogPost } from "./blog"
 import { projectCatalog } from "./projects"
 import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
   it("loads authored and case-study-derived posts from one catalog", () => {
     expect(blogCatalog.posts).toHaveLength(55)
-    expect(blogCatalog.authoredPosts).toHaveLength(5)
-    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(50)
+    expect(blogCatalog.authoredPosts).toHaveLength(23)
+    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(32)
     expect(
       blogCatalog.authoredPosts.every((post) => Boolean(post.publishedAt))
     ).toBe(true)
@@ -77,6 +77,26 @@ describe("blog catalog", () => {
     expect(new Set(coveredProjectIds)).toEqual(
       new Set(projectCatalog.records.map((project) => project.id))
     )
+  })
+
+  it("serves every post in Bangla with English fallback", () => {
+    const translated = blogCatalog.posts.filter((post) => post.translations?.bn)
+    expect(translated).toHaveLength(blogCatalog.posts.length)
+
+    for (const post of translated) {
+      const bangla = localizeBlogPost(post, "bn")
+      expect(bangla.language).toBe("bn")
+      expect(bangla.title).not.toBe(post.title)
+      expect(bangla.sections.map((section) => section.id)).toEqual(
+        post.sections.map((section) => section.id)
+      )
+    }
+
+    const untranslated = { ...blogCatalog.posts[0], translations: undefined }
+    expect(localizeBlogPost(untranslated, "bn")).toMatchObject({
+      language: "en",
+      title: untranslated.title,
+    })
   })
 
   it("cycles to another article", () => {

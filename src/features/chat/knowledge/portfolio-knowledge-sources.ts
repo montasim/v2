@@ -210,9 +210,12 @@ export function loadPortfolioSourceSnapshots(): readonly PortfolioSourceSnapshot
         },
         "blog.metadata"
       ),
-      records: blogJson.posts.map((entry) =>
-        record(entry.slug, entry.title, entry)
-      ),
+      // The assistant answers from English facts; Bangla translations would
+      // only duplicate them and inflate the prompt packet.
+      records: blogJson.posts.map((entry) => {
+        const { translations: _translations, ...english } = entry
+        return record(english.slug, english.title, english)
+      }),
     },
     {
       id: "certifications",

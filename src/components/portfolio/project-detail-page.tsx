@@ -25,6 +25,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import type { Project } from "@/lib/content/projects"
+import { hasProjectTranslation, localizeProject } from "@/lib/content/projects"
+import { hasProjectReadmeTranslation } from "@/data/project-readmes"
+import type { ContentLanguage } from "@/lib/content/content-language"
+import { LanguageSwitch } from "@/components/shared/language-switch"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import type { BlogPost } from "@/lib/content/blog"
 import { contactHref } from "@/features/contact/domain/contact"
@@ -32,6 +36,7 @@ import { ProjectReadmeDocument } from "@/components/portfolio/project-readme-doc
 import type { ProjectReadmeSource } from "@/components/portfolio/project-readme-document"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
 import { ContentMediaGallery } from "@/components/shared/content-media-gallery"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 import { getProjectMedia } from "@/lib/content/project-media"
 
 export function ProjectDetailPage({
@@ -40,14 +45,23 @@ export function ProjectDetailPage({
   caseStudy,
   blogPost,
   readmeSource,
+  language = "en",
+  onLanguageChange,
 }: {
   project: Project
   nextProject: Project
   caseStudy?: ProjectCaseStudy
   blogPost?: BlogPost
   readmeSource?: ProjectReadmeSource
+  language?: ContentLanguage
+  onLanguageChange?: (language: ContentLanguage) => void
 }) {
+  const content = localizeProject(project, language)
+  const translated =
+    hasProjectTranslation(project.id) && hasProjectReadmeTranslation(project)
   const media = getProjectMedia(project, caseStudy?.screenshot?.alt)
+  // Projects without a demo or screenshots fall back to their article illustration.
+  const illustration = blogPost?.image
 
   return (
     <PageShell padded className="pb-20">
@@ -76,7 +90,7 @@ export function ProjectDetailPage({
 
         <div className="mt-8">
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight text-strong-foreground sm:text-4xl">
                 {project.title}
               </h1>
@@ -84,9 +98,21 @@ export function ProjectDetailPage({
                 <ProjectTypeIcon type={project.type} className="size-[1em]" />
                 {project.type === "desktop" ? "desktop app" : project.type}
               </Badge>
+              {translated && onLanguageChange ? (
+                <div className="sm:ml-auto">
+                  <LanguageSwitch
+                    label="Project language"
+                    language={content.language}
+                    onChange={onLanguageChange}
+                  />
+                </div>
+              ) : null}
             </div>
-            <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg">
-              {project.description}
+            <p
+              lang={content.language}
+              className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg"
+            >
+              {content.description}
             </p>
             <ProjectEngagement project={project} />
           </div>
@@ -144,12 +170,25 @@ export function ProjectDetailPage({
           loading="eager"
           className="mt-10 h-[380px] w-full rounded-xl border bg-card"
         />
+      ) : illustration ? (
+        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+          <ContentPreviewImage
+            src={illustration.src}
+            alt={illustration.alt}
+            width="1600"
+            height="1000"
+            fetchPriority="high"
+            className="h-auto w-full rounded-lg border"
+          />
+        </figure>
       ) : null}
 
       <div className="mt-12 w-full">
         <div>
           {readmeSource ? (
-            <ProjectReadmeDocument source={readmeSource} />
+            <div lang={content.language}>
+              <ProjectReadmeDocument source={readmeSource} />
+            </div>
           ) : (
             <section className="border-t py-10">
               <h2 className="text-xl font-semibold">README unavailable</h2>

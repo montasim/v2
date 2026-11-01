@@ -19,6 +19,7 @@ export function CatalogPagination({
   total,
   resultLabel,
   onPageChange,
+  className,
 }: {
   page: number
   pageCount: number
@@ -26,13 +27,17 @@ export function CatalogPagination({
   total: number
   resultLabel: string
   onPageChange: (page: number) => void
+  className?: string
 }) {
   const first = (page - 1) * pageSize + 1
   const last = Math.min(page * pageSize, total)
 
   return (
     <Pagination
-      className="mt-8 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center"
+      className={cn(
+        "mt-8 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center",
+        className
+      )}
       aria-label={`${resultLabel} pagination`}
     >
       <p className="text-xs text-muted-foreground" aria-live="polite">
