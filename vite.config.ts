@@ -7,7 +7,14 @@ import tailwindcss from "@tailwindcss/vite"
 const config = defineConfig({
   envDir: false,
   resolve: { tsconfigPaths: true },
-  plugins: [tailwindcss(), tanstackStart(), netlify(), viteReact()],
+  plugins: [
+    tailwindcss(),
+    tanstackStart(),
+    // The site ships no edge functions, and the Deno that Netlify's dev server
+    // downloads (2.9+) rejects the --allow-scripts flag it passes.
+    netlify({ dev: { edgeFunctions: { enabled: false } } }),
+    viteReact(),
+  ],
 })
 
 export default config
