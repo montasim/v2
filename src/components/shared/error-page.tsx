@@ -69,7 +69,11 @@ export function ErrorPage({ status, onRetry }: ErrorPageProps) {
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
             {status === "500" ? (
-              <Button size="lg" className={actionClassName} onClick={onRetry}>
+              <Button
+                size="lg"
+                className={`${actionClassName} bg-emphasis-foreground text-background hover:bg-emphasis-foreground/80`}
+                onClick={onRetry}
+              >
                 <ArrowClockwiseIcon />
                 Try again
               </Button>
