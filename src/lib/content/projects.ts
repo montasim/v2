@@ -1,6 +1,8 @@
 import { experienceCatalog } from "@/lib/content/experience"
 import { z } from "zod"
 import projectsJson from "@/data/projects.json"
+import projectsBnJson from "@/data/projects.bn.json"
+import type { ContentLanguage } from "@/lib/content/content-language"
 import type { CatalogFilter } from "@/lib/content/shared"
 import { optionalUrlSchema } from "@/lib/content/shared"
 
@@ -145,6 +147,36 @@ const records = [...parsedRecords].sort(
 const recordsBySlug = new Map(
   records.map((project) => [project.id.replace(/^project-/, ""), project])
 )
+
+const projectTranslations = new Map(
+  Object.entries(
+    z
+      .record(
+        z.string().min(1),
+        z.object({ description: z.string().min(1) }).strict()
+      )
+      .parse(projectsBnJson)
+  )
+)
+for (const projectId of projectTranslations.keys()) {
+  if (!records.some((project) => project.id === projectId)) {
+    throw new Error(`Bangla project has no source: ${projectId}`)
+  }
+}
+
+/** Returns the project's description in the requested language, falling back to English. */
+export function localizeProject(project: Project, language: ContentLanguage) {
+  const translation =
+    language === "bn" ? projectTranslations.get(project.id) : undefined
+  return {
+    language: translation ? language : "en",
+    description: translation?.description ?? project.description,
+  } as const
+}
+
+export function hasProjectTranslation(projectId: string) {
+  return projectTranslations.has(projectId)
+}
 
 // GitHub chronology is evidence of when a project first existed in repository
 // history, not its release or deployment date. Taking the earlier timestamp

@@ -20,14 +20,21 @@ import { extensionReleaseUrl } from "@/lib/content/projects"
 import type { Project } from "@/lib/content/projects"
 import { projectCaseStudyCatalog } from "@/lib/content/project-case-studies"
 import { optimizedImage } from "@/lib/assets"
+import { blogCatalog } from "@/lib/content/blog"
 import { cn } from "@/lib/utils"
 import { YouTubeVideo } from "@/components/shared/youtube-video"
 import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 
+// Screenshots lead; projects without one fall back to their article illustration.
 function projectImage(project: Project) {
-  if (!project.imageUrl) return null
-  const name = project.imageUrl.split("/").at(-1)
-  return name ? optimizedImage(`/images/projects/${name}`) : null
+  const name = project.imageUrl?.split("/").at(-1)
+  if (name) {
+    return {
+      src: optimizedImage(`/images/projects/${name}`),
+      alt: `${project.title} interface preview`,
+    }
+  }
+  return blogCatalog.findByProjectId(project.id)?.image ?? null
 }
 
 export function ProjectPreviewUnavailable({
@@ -116,8 +123,8 @@ export function ProjectCard({ project }: { project: Project }) {
   const caseStudy = projectCaseStudyCatalog.findByProjectId(project.id)
   const preview = image ? (
     <ContentPreviewImage
-      src={image}
-      alt={`${project.title} interface preview`}
+      src={image.src}
+      alt={image.alt}
       width="1600"
       height="1000"
       loading="lazy"

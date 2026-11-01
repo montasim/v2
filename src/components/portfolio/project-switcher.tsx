@@ -38,9 +38,12 @@ export const caseStudySwitcherOptions: readonly BreadcrumbSwitcherOption[] =
 export function ProjectSwitcher({
   current,
   label,
+  destination = "details",
 }: {
   current: Project
   label: string
+  /** Which page of the chosen project to open; contact keeps support visitors on support. */
+  destination?: "details" | "contact"
 }) {
   const navigate = useNavigate()
   return (
@@ -49,7 +52,11 @@ export function ProjectSwitcher({
       current={projectSlug(current)}
       options={projectSwitcherOptions}
       onSelect={(slug) =>
-        void navigate({ to: "/projects/$slug", params: { slug } })
+        void navigate(
+          destination === "contact"
+            ? { to: "/projects/$slug/contact", params: { slug } }
+            : { to: "/projects/$slug", params: { slug } }
+        )
       }
       ariaLabel="Switch project"
       searchPlaceholder="Find a project…"

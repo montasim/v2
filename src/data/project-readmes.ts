@@ -1,4 +1,9 @@
+import { z } from "zod"
+import projectReadmesBnJson from "@/data/project-readmes.bn.json"
+import type { ContentLanguage } from "@/lib/content/content-language"
+import { localizeCaseStudy } from "@/lib/content/project-case-studies"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
+import { localizeProject } from "@/lib/content/projects"
 import type { Project } from "@/lib/content/projects"
 
 export const projectReadmes: Readonly<Record<string, string>> = {
@@ -240,16 +245,38 @@ A TypeScript simulation handles traffic pacing, route geometry, and aircraft-sha
 `,
 }
 
-const projectTypeLabels: Record<Project["type"], string> = {
-  website: "web application",
-  desktop: "desktop application",
-  extension: "browser extension",
-  package: "software package",
-  skill: "AI-agent skill",
-  dataset: "data resource",
-  tool: "developer tool",
-  api: "API",
-  template: "project template",
+const readmeHeadings = {
+  en: {
+    whatItIs: "What it is",
+    problem: "The problem",
+    delivers: "What it delivers",
+    limits: "Limits to know",
+    status: "Status and role",
+    statusLabel: "Status",
+    roleLabel: "My role",
+    scopeLabel: "Scope",
+  },
+  bn: {
+    whatItIs: "এটা কী",
+    problem: "সমস্যাটা",
+    delivers: "যা পাওয়া যায়",
+    limits: "যে সীমাবদ্ধতা জানা দরকার",
+    status: "অবস্থা ও ভূমিকা",
+    statusLabel: "অবস্থা",
+    roleLabel: "আমার ভূমিকা",
+    scopeLabel: "পরিসর",
+  },
+} as const satisfies Record<ContentLanguage, Record<string, string>>
+
+const translatedReadmes = new Map(
+  Object.entries(
+    z.record(z.string().min(1), z.string().min(1)).parse(projectReadmesBnJson)
+  )
+)
+for (const key of translatedReadmes.keys()) {
+  if (!(key in projectReadmes)) {
+    throw new Error(`Bangla README has no English source: ${key}`)
+  }
 }
 
 function projectSlug(project: Project) {
@@ -260,53 +287,60 @@ function bulletList(items: readonly string[]) {
   return items.map((item) => `- ${item}`).join("\n")
 }
 
-function createProjectReadme(project: Project, caseStudy: ProjectCaseStudy) {
-  const type = projectTypeLabels[project.type]
+// Built only from the project's own facts, so no section is generic filler.
+function createProjectReadme(
+  project: Project,
+  caseStudy: ProjectCaseStudy,
+  language: ContentLanguage
+) {
+  const text = localizeCaseStudy(caseStudy, language)
+  const { description } = localizeProject(project, language)
+  const heading = readmeHeadings[text.language]
   return `
 # ${project.title}
 
-> ${project.description}
+> ${description}
 
-${project.title} is a ${type} created to make a real workflow clearer, faster, and easier to trust. It turns a focused product idea into something people can use, evaluate, and understand without needing to inspect the source code.
+## ${heading.whatItIs}
 
-## Why ${project.title} exists
+${text.summary}
 
-${caseStudy.problem}
+## ${heading.problem}
 
-The goal is not simply to add another tool. ${project.title} is designed to reduce the friction around that problem and give people a more dependable way to complete the work.
+${text.problem}
 
-## What it delivers
+## ${heading.delivers}
 
-${bulletList(caseStudy.outcomes)}
+${bulletList(text.outcomes)}
 
-## The experience
+## ${heading.limits}
 
-${caseStudy.summary}
+${bulletList(text.constraints)}
 
-The project brings the important parts of the workflow into one coherent experience. Its interface and behavior are shaped around the people using it, while the implementation stays focused on predictable results and honest feedback.
+## ${heading.status}
 
-## What to know
-
-Every product has boundaries. These are the most important considerations for ${project.title}:
-
-${bulletList(caseStudy.constraints)}
-
-These limitations are presented openly so visitors can understand where the project works well, what it depends on, and what may change in future versions.
-
-## Current status
-
-**${caseStudy.status}.** The current release demonstrates the core value of the project and the main end-to-end experience.
-
-My role was ${caseStudy.role.toLocaleLowerCase()}, covering ${caseStudy.scope.toLocaleLowerCase()}. The related case study explains the decisions and delivery process in greater depth for visitors who want the engineering story behind the product.
+- **${heading.statusLabel}:** ${text.status}
+- **${heading.roleLabel}:** ${text.role}
+- **${heading.scopeLabel}:** ${text.scope}
 `
 }
 
 export function getProjectReadme(
   project: Project,
-  caseStudy: ProjectCaseStudy
+  caseStudy: ProjectCaseStudy,
+  language: ContentLanguage = "en"
 ) {
+  const slug = projectSlug(project)
+  if (!(slug in projectReadmes)) {
+    return createProjectReadme(project, caseStudy, language)
+  }
   return (
-    projectReadmes[projectSlug(project)] ??
-    createProjectReadme(project, caseStudy)
+    (language === "bn" ? translatedReadmes.get(slug) : undefined) ??
+    projectReadmes[slug]
   )
+}
+
+export function hasProjectReadmeTranslation(project: Project) {
+  const slug = projectSlug(project)
+  return !(slug in projectReadmes) || translatedReadmes.has(slug)
 }

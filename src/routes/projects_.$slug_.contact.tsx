@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { ProjectSwitcher } from "@/components/portfolio/project-switcher"
 import { getContactContext } from "@/features/contact/application/contact-context"
 import { ContactPage } from "@/features/contact/ui/contact-page"
 import { projectCatalog } from "@/lib/content/projects"
@@ -74,11 +75,11 @@ function ProjectContactPage() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/projects/$slug" params={{ slug }}>
-                    {project.title}
-                  </Link>
-                </BreadcrumbLink>
+                <ProjectSwitcher
+                  current={project}
+                  label={project.title}
+                  destination="contact"
+                />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
