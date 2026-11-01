@@ -20,7 +20,9 @@
 Camera, recorder, socket, timer, এগুলোর মালিক আপনি। React শুধু দেখায়।
 ```
 
-**First comment:** none
+**Scheduled:** not scheduled (removed from LinkedIn)
+
+**First comment:** `Patient Portal case study, camera আর recording lifecycle সহ: https://montasim.dev/case-studies/mmh-patient-portal?lang=bn`
 
 ---
 
@@ -31,6 +33,8 @@ User-Agent string দেখে "এটা iPhone" বলা একটা অন�
 
 Analytics এর জন্য চলবে। Login, permission বা feature চালু করার সিদ্ধান্ত এর ওপর নেবেন না। ওখানে feature detection লাগে।
 ```
+
+**Scheduled:** Tue, Nov 17, 2026, 9:00 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/designing-an-api-that-admits-user-agent-uncertainty?lang=bn`
 
@@ -55,6 +59,8 @@ OpenRouter, Gemini আর Groq, তিনটার মাঝে fallback, কি
 AI tool এর input যদি internet থেকে আসে, সেটা একটা public form এর মতো। যা আসবে, আগে সন্দেহ করুন।
 ```
 
+**Scheduled:** Wed, Nov 18, 2026, 9:00 AM (Bangladesh time)
+
 **First comment:** `https://montasim.dev/blog/the-linkedin-page-is-untrusted-input?lang=bn`
 
 ---
@@ -77,7 +83,9 @@ AI tool এর input যদি internet থেকে আসে, সেটা এ
 প্রথম fork টা সবসময় "শুধু এই একবার" হয়। দ্বিতীয়টা থেকে ওটা আপনার architecture।
 ```
 
-**First comment:** none
+**Scheduled:** not scheduled (removed from LinkedIn)
+
+**First comment:** `Tenant configuration আর feature flag এর পুরো case study: https://montasim.dev/case-studies/mmh-patient-portal?lang=bn`
 
 ---
 
@@ -100,6 +108,8 @@ Release দেওয়ার পর একটা dashboard সবুজ দে�
 
 একটা সবুজ dashboard প্রমাণ করে শুধু একটা system ঠিক আছে। Release মানে সবগুলো একসাথে।
 ```
+
+**Scheduled:** not scheduled (removed from LinkedIn)
 
 **First comment:** `https://montasim.dev/blog/one-green-dashboard-does-not-prove-a-release?lang=bn`
 
@@ -126,6 +136,8 @@ Animation চলছে, তাই দুটো frame মেলে না।
 User এর page এ হাত দিলে, যেমন পেয়েছিলেন তেমন রেখে আসুন।
 ```
 
+**Scheduled:** Thu, Nov 19, 2026, 9:00 AM (Bangladesh time)
+
 **First comment:** `https://montasim.dev/blog/full-page-screenshots-without-cloud-capture?lang=bn`
 
 ---
@@ -148,4 +160,6 @@ Side project এ কেউ deadline দেয় না, কেউ review কর
 নিজের জন্য যেভাবে বানান, client আর company র জন্যও সেভাবেই বানাবেন।
 ```
 
-**First comment:** `সব project, case study সহ: https://montasim.dev/projects`
+**Scheduled:** Fri, Nov 20, 2026, 10:30 AM (Bangladesh time)
+
+**First comment:** `৫৪টা case study, প্রতিটা বাংলাতেও পড়া যায়: https://montasim.dev/case-studies`

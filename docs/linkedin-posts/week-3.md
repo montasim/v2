@@ -18,7 +18,9 @@ Managed platform এ (Azure App Service) সরে গেলাম। Server, OS
 Cloud খরচ কমানোর প্রথম ধাপ সস্তা machine খোঁজা না। আগে জিজ্ঞেস করুন, কোন কাজটা আপনার করার দরকারই নেই।
 ```
 
-**First comment:** none
+**Scheduled:** Wed, Nov 11, 2026, 9:00 AM (Bangladesh time)
+
+**First comment:** `Experience আর বাকি কাজ: https://montasim.dev` (home page has no Bangla version)
 
 ---
 
@@ -29,6 +31,8 @@ Prayer time এর app এ "সঠিক সময়" বলে কিছু �
 
 Ramadan Clock বানাতে গিয়ে শিখলাম, এক মিনিট বেশি precise দেখানোর চেয়ে source টা দেখানো বেশি সৎ।
 ```
+
+**Scheduled:** Thu, Nov 12, 2026, 9:00 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/prayer-time-software-needs-provenance?lang=bn`
 
@@ -50,6 +54,8 @@ Air Traffic Control বানালাম, একটা flight-path drawing game
 Game এর নিয়ম যদি player যা দেখে তার সাথে না মেলে, player ভুল ভাবে না। ভাবে game টা অন্যায্য।
 ```
 
+**Scheduled:** Fri, Nov 13, 2026, 10:30 AM (Bangladesh time)
+
 **First comment:** `Play Store, Microsoft Store, Snap Store আর browser link: https://montasim.dev/blog/separating-flight-rules-from-the-renderer?lang=bn`
 
 ---
@@ -69,6 +75,8 @@ NBR এর risk-based audit selection হিসেবে একটা পুর�
 
 সব কিছু server এ পাঠানো default হওয়া উচিত না। প্রশ্ন করুন, এই data আসলে আমার দেখার দরকার আছে কি?
 ```
+
+**Scheduled:** not scheduled (removed from LinkedIn)
 
 **First comment:** `https://montasim.dev/blog/keeping-tax-id-lookups-out-of-the-server?lang=bn`
 
@@ -94,6 +102,8 @@ NBR এর risk-based audit selection হিসেবে একটা পুর�
 Code public করা একটা button না। এটা একটা security আর operations এর সিদ্ধান্ত।
 ```
 
+**Scheduled:** Sat, Nov 14, 2026, 10:30 AM (Bangladesh time)
+
 **First comment:** `https://montasim.dev/blog/making-a-codebase-public-safely?lang=bn`
 
 ---
@@ -114,6 +124,8 @@ FormFlow বানাচ্ছি, institution গুলোর জন্য এ�
 শুধু data কে version করলে হয় না। যে নিয়মে data তৈরি হয়েছিল, সেটাকেও version করতে হয়।
 ```
 
+**Scheduled:** Sun, Nov 15, 2026, 9:00 AM (Bangladesh time)
+
 **First comment:** `https://montasim.dev/blog/version-the-workflow-not-just-the-form?lang=bn`
 
 ---
@@ -133,5 +145,7 @@ AI দিয়ে README লেখালে একটা অদ্ভুত জ
 
 AI first মানে AI কে সব কিছু করতে দেওয়া না। মানে AI কে এমনভাবে বাঁধা, যাতে সে মিথ্যা বলতে না পারে।
 ```
+
+**Scheduled:** Mon, Nov 16, 2026, 9:00 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/readme-generation-must-start-with-evidence?lang=bn`
