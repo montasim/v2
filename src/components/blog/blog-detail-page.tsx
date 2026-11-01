@@ -4,7 +4,6 @@ import { Link } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
-import { VisitorCountBadge } from "@/components/shared/visitor-count-badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -21,6 +20,7 @@ import {
   ArrowRightCompactIcon,
   ArrowUpCompactIcon,
   ArrowUpRightIcon,
+  BookOpenTextIcon,
   ChatCenteredDotsIcon,
   CheckIcon,
   CircleDashedIcon,
@@ -50,9 +50,10 @@ import { verifyVisitorEmail } from "@/features/email-verification/application/ve
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import { contactHref } from "@/features/contact/domain/contact"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
-import { blogCatalog } from "@/lib/content/blog"
+import { localizeBlogPost } from "@/lib/content/blog"
 import { BlogSwitcher } from "@/components/blog/blog-switcher"
-import type { BlogPost } from "@/lib/content/blog"
+import { LanguageSwitch } from "@/components/shared/language-switch"
+import type { BlogLanguage, BlogPost } from "@/lib/content/blog"
 import { projectCatalog } from "@/lib/content/projects"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { cn } from "@/lib/utils"
@@ -309,12 +310,9 @@ function BlogDiscussion({
   }
 
   return (
-    <div id="discussion" className="scroll-mt-24">
+    <div id="discussion" className="mt-10 grid scroll-mt-24 gap-4">
       {comments.length > 0 ? (
-        <Card
-          asChild
-          className="mt-4 overflow-hidden rounded-2xl bg-background"
-        >
+        <Card asChild className="overflow-hidden rounded-2xl bg-background">
           <section aria-labelledby="discussion-heading">
             <header className="flex items-center gap-4 border-b px-4 py-5 sm:px-6">
               <div className="min-w-0 flex-1">
@@ -376,7 +374,7 @@ function BlogDiscussion({
         </Card>
       ) : null}
 
-      <Card asChild className="mt-4 overflow-hidden rounded-2xl bg-background">
+      <Card asChild className="overflow-hidden rounded-2xl bg-background">
         <section aria-labelledby="reply-heading">
           <header className="min-h-18 border-b px-4 py-4.5 sm:px-6">
             <h2
@@ -605,7 +603,7 @@ function BlogDiscussion({
                   }
                 }}
                 placeholder="Add to the discussion"
-                className="max-h-28 min-h-9 min-w-0 flex-1 resize-y border-0 bg-transparent p-2 text-sm leading-[1.4] shadow-none focus-visible:ring-0 dark:bg-transparent"
+                className="max-h-80 min-h-34 min-w-0 flex-1 resize-y border-0 bg-transparent p-2 text-sm leading-[1.4] shadow-none focus-visible:ring-0 dark:bg-transparent"
               />
               <Button
                 type="submit"
@@ -655,7 +653,7 @@ function BlogProjectInquiry({ slug }: { slug: string }) {
   return (
     <section
       aria-labelledby="blog-project-inquiry-heading"
-      className="mt-4 border-y py-8 sm:py-10"
+      className="border-y py-10"
     >
       <h2
         id="blog-project-inquiry-heading"
@@ -690,18 +688,26 @@ function BlogProjectInquiry({ slug }: { slug: string }) {
 export function BlogDetailPage({
   post,
   nextPost,
+  language = "en",
+  onLanguageChange,
 }: {
   post: BlogPost
   nextPost: BlogPost
+  language?: BlogLanguage
+  onLanguageChange?: (language: BlogLanguage) => void
 }) {
   const getViewCount = useServerFn(getBlogPostViewCount)
   const recordView = useServerFn(recordBlogPostView)
+  const content = localizeBlogPost(post, language)
+  const hasTranslation = Boolean(post.translations?.bn)
   const sectionLinks = useMemo(
     () => [
-      ...post.sections.map((section) => [section.id, section.label] as const),
+      ...content.sections.map(
+        (section) => [section.id, section.label] as const
+      ),
       ["discussion", "Discussion"] as const,
     ],
-    [post.sections]
+    [content.sections]
   )
   const [activeSection, setActiveSection] = useState(sectionLinks[0][0])
   const [shareStatus, setShareStatus] = useState("")
@@ -710,10 +716,15 @@ export function BlogDetailPage({
     ? projectCatalog.records.find((project) => project.id === post.projectId)
     : undefined
   const projectMedia = relatedProject ? getProjectMedia(relatedProject) : []
+  // Article illustrations explain the post's idea, so they lead over product media.
+  const illustration = post.image?.src.startsWith("/images/blog/")
+    ? post.image
+    : null
   const hasMedia = Boolean(
     relatedProject?.youtubeVideoId || projectMedia.length > 0 || post.image
   )
-  const viewCount = useVisitorCount({
+  // Views are still recorded for analytics; the count is no longer shown.
+  useVisitorCount({
     resourceKey: "blog",
     slug: post.slug,
     getCount: getViewCount,
@@ -761,8 +772,8 @@ export function BlogDetailPage({
 
   async function shareArticle() {
     const shareData = {
-      title: post.title,
-      text: post.excerpt,
+      title: content.title,
+      text: content.excerpt,
       url: window.location.href,
     }
 
@@ -782,7 +793,7 @@ export function BlogDetailPage({
   }
 
   return (
-    <PageShell className="pt-11 pb-27">
+    <PageShell className="pt-10 pb-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -805,7 +816,7 @@ export function BlogDetailPage({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <header className="mt-8.5">
+      <header className="mt-8">
         <div className="flex flex-col items-start gap-3">
           <div className="contents sm:flex sm:w-full sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
@@ -821,18 +832,56 @@ export function BlogDetailPage({
                 {post.category}
               </Badge>
             </div>
+            {hasTranslation && onLanguageChange ? (
+              <LanguageSwitch
+                label="Article language"
+                language={content.language}
+                onChange={onLanguageChange}
+              />
+            ) : null}
           </div>
-          <h1 className="order-1 w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:order-none sm:text-3xl">
-            {post.title}
+          <h1
+            lang={content.language}
+            className="order-1 w-full max-w-none text-xl leading-tight font-bold tracking-[-0.025em] text-strong-foreground sm:order-none sm:text-3xl"
+          >
+            {content.title}
           </h1>
         </div>
-        <p className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground">
-          {post.excerpt}
+        <p
+          lang={content.language}
+          className="mt-4.5 w-full max-w-none text-[1.0625rem] leading-[1.6] text-muted-foreground"
+        >
+          {content.excerpt}
         </p>
-        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4 sm:justify-between">
-          {relatedProject ? <StoreBadges project={relatedProject} /> : null}
+        {relatedProject ? (
+          <div className="mt-6 empty:hidden">
+            <StoreBadges project={relatedProject} />
+          </div>
+        ) : null}
+        <div
+          className={cn(
+            "mt-6 flex flex-wrap items-center justify-between gap-3 pb-6 text-xs text-muted-foreground",
+            hasMedia && "border-b"
+          )}
+        >
+          <div className="flex flex-wrap items-center gap-1">
+            <span className="inline-flex items-center gap-1.5 font-medium text-muted-foreground">
+              <BookOpenTextIcon className="size-4" />
+              {post.readingMinutes} min read
+            </span>
+            <Button
+              asChild
+              variant="ghost"
+              className="border-0 bg-transparent text-xs hover:bg-transparent"
+            >
+              <a href="#discussion">
+                <ChatCenteredDotsIcon />
+                {commentCount} {commentCount === 1 ? "comment" : "comments"}
+              </a>
+            </Button>
+          </div>
           <div
-            className="flex flex-wrap items-center gap-2 sm:ml-auto"
+            className="flex flex-wrap items-center gap-2"
             role="group"
             aria-label="Article actions"
           >
@@ -851,90 +900,17 @@ export function BlogDetailPage({
             ) : null}
           </div>
         </div>
-        <div
-          className={cn(
-            "mt-5 flex flex-col gap-3 pb-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between",
-            hasMedia && "border-b"
-          )}
-        >
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-            <div className="flex min-w-0 items-center gap-2.5">
-              <img
-                src={blogCatalog.author.avatarUrl}
-                alt=""
-                width="32"
-                height="32"
-                className="size-8 rounded-full object-cover"
-              />
-              <span>
-                Written by{" "}
-                <Link
-                  to="/"
-                  className="font-medium text-muted-foreground underline-offset-4 hover:underline focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2"
-                >
-                  {blogCatalog.author.name}
-                </Link>
-              </span>
-            </div>
-            <span aria-hidden="true" className="text-border">
-              ·
-            </span>
-            <span className="font-medium text-muted-foreground">
-              {post.readingMinutes} min read
-            </span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end">
-            <VisitorCountBadge
-              count={viewCount}
-              className="border-0 bg-transparent"
-            />
-            <Button
-              asChild
-              variant="ghost"
-              className="border-0 bg-transparent text-xs hover:bg-transparent"
-            >
-              <a href="#discussion">
-                <ChatCenteredDotsIcon />
-                {commentCount} {commentCount === 1 ? "comment" : "comments"}
-              </a>
-            </Button>
-          </div>
-        </div>
         <p className="sr-only" role="status" aria-live="polite">
           {shareStatus}
         </p>
       </header>
 
-      {hasMedia ? (
-        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
-          {relatedProject?.youtubeVideoId ? (
-            <YouTubeVideo
-              videoId={relatedProject.youtubeVideoId}
-              title={`${relatedProject.title} product demonstration`}
-              loading="eager"
-              className="rounded-lg"
-            />
-          ) : projectMedia.length > 0 ? (
-            <ContentMediaGallery media={projectMedia} priority />
-          ) : post.image ? (
-            <ContentPreviewImage
-              src={post.image.src}
-              alt={post.image.alt}
-              width="1600"
-              height="1000"
-              fetchPriority="high"
-              className="h-auto w-full rounded-lg border"
-            />
-          ) : null}
-        </figure>
-      ) : null}
-
-      <div className="mt-14 grid items-start gap-7 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">
+      <div className="mt-10 grid items-start gap-10 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">
         <aside className="sticky top-14 z-30 flex items-center gap-2.5 overflow-x-auto rounded-xl border bg-background/95 px-2.5 py-2 backdrop-blur-sm lg:top-24 lg:grid lg:gap-0 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <p className="mr-1 shrink-0 text-xs font-medium text-muted-foreground lg:mb-2.5">
             On this page
           </p>
-          <nav aria-label="Article sections">
+          <nav aria-label="Article sections" lang={content.language}>
             <ul className="flex text-[0.8125rem] lg:grid">
               {sectionLinks.map(([id, label]) => (
                 <li key={id} className="shrink-0">
@@ -958,16 +934,47 @@ export function BlogDetailPage({
         </aside>
 
         <div className="min-w-0">
-          <article className={cn(hasMedia && "border-t")}>
-            {post.sections.map((section, index) => (
+          {hasMedia ? (
+            <figure className="mb-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
+              {illustration ? (
+                <ContentPreviewImage
+                  src={illustration.src}
+                  alt={illustration.alt}
+                  width="1600"
+                  height="1000"
+                  fetchPriority="high"
+                  className="h-auto w-full rounded-lg border"
+                />
+              ) : relatedProject?.youtubeVideoId ? (
+                <YouTubeVideo
+                  videoId={relatedProject.youtubeVideoId}
+                  title={`${relatedProject.title} product demonstration`}
+                  loading="eager"
+                  className="rounded-lg"
+                />
+              ) : projectMedia.length > 0 ? (
+                <ContentMediaGallery media={projectMedia} priority />
+              ) : post.image ? (
+                <ContentPreviewImage
+                  src={post.image.src}
+                  alt={post.image.alt}
+                  width="1600"
+                  height="1000"
+                  fetchPriority="high"
+                  className="h-auto w-full rounded-lg border"
+                />
+              ) : null}
+            </figure>
+          ) : null}
+          <article lang={content.language}>
+            {content.sections.map((section, index) => (
               <section
                 key={section.id}
                 id={section.id}
                 aria-labelledby={`${section.id}-heading`}
                 className={cn(
                   "scroll-mt-24 pb-10",
-                  index > 0 && "border-t pt-10",
-                  index === 0 && hasMedia && "pt-10"
+                  index > 0 && "border-t pt-10"
                 )}
               >
                 <h2
@@ -988,7 +995,7 @@ export function BlogDetailPage({
                   </p>
                 ))}
                 {section.callout ? (
-                  <blockquote className="my-9 border-l-3 border-emphasis-foreground py-1.5 pl-5.5 text-base leading-7 text-strong-foreground">
+                  <blockquote className="my-9 border-l-3 border-emphasis-foreground py-1.5 pl-5.5 text-base leading-7 text-strong-foreground last:mb-0">
                     {section.callout}
                   </blockquote>
                 ) : null}
@@ -1002,7 +1009,7 @@ export function BlogDetailPage({
 
           <nav
             aria-label="Article navigation"
-            className="mt-8 grid gap-3 sm:grid-cols-2"
+            className="mt-10 grid gap-3 sm:grid-cols-2"
           >
             <Card asChild className="bg-background">
               <Link

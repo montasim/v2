@@ -6,14 +6,124 @@
   "caseStudyPublishedAt": "2026-08-28",
   "posts": [
     {
-      "kind": "case-study-derived",
-      "projectId": "project-giftbook",
+      "kind": "authored",
       "slug": "a-family-gift-ledger-that-lives-in-your-own-google-sheet",
+      "projectId": "project-giftbook",
       "title": "A Family Gift Ledger That Lives in Your Own Google Sheet",
+      "excerpt": "Giftbook records wedding, aqiqah and birthday gifts without a server. The ledger lives in the family's own Google Sheet, entries land offline first, and sync stops rather than corrupt a hand-edited sheet.",
       "category": "Product engineering",
       "topic": "product",
       "publishedAt": "2026-10-09",
-      "featured": true
+      "readingMinutes": 3,
+      "featured": true,
+      "image": {
+        "src": "/images/blog/giftbook-ledger.webp",
+        "alt": "Phones writing gift entries to a local store that syncs into one shared spreadsheet"
+      },
+      "sections": [
+        {
+          "id": "the-notebook",
+          "label": "The problem",
+          "title": "A family's gift notebook is a real ledger",
+          "paragraphs": [
+            "In most Bangladeshi families, gifts at weddings, aqiqahs and birthdays are recorded in a paper notebook: who gave what, and what the family gave back. It is a financial record that matters for years. It is also hard to search, easy to lose and impossible for two relatives to update at once.",
+            "Generic apps solve the search problem by putting that record on someone else's server, and they rarely handle Bangla numerals or lakh-style grouping. I wanted the digital notebook without either compromise."
+          ]
+        },
+        {
+          "id": "no-server",
+          "label": "Architecture",
+          "title": "The owner's Google Sheet is the only backend",
+          "paragraphs": [
+            "Giftbook has no application server and no database. The ledger lives in a Google Sheet in the owner's own Drive. The app requests only the drive.file scope, so it can see the files it created and nothing else in that Drive.",
+            "This decision did several jobs at once. The family keeps ownership of its data, can open or back up the sheet directly, and the product carries no hosting cost and no data-retention liability. The sheet is also a format every relative already understands."
+          ],
+          "callout": "The safest place for a family's financial record is somewhere the family already controls."
+        },
+        {
+          "id": "offline-first",
+          "label": "Sync",
+          "title": "Write locally first, sync later, and keep the rule simple",
+          "paragraphs": [
+            "Gifts are recorded at crowded events with poor connectivity, so a write can never wait for the network. Every entry lands in a local Dexie store first, and the navbar reports the honest state: synced, syncing, offline with a pending count, or needs attention.",
+            "Several relatives write to the same ledger from different phones through a QR link. I chose last-write-wins with soft deletes over a merge system. Two people rarely edit the same gift row at the same moment, and a rule a family can understand beats a clever one they cannot. Deleted rows stay in the sheet with a deletedAt timestamp, and duplicate-append protection stops a retried sync from adding a row twice."
+          ]
+        },
+        {
+          "id": "hand-edits",
+          "label": "Safety",
+          "title": "People will edit the sheet by hand, so the app checks before it writes",
+          "paragraphs": [
+            "Because the ledger is a normal spreadsheet, someone will eventually rename a column. Before every sync, Giftbook verifies that the schema's leading headers still match. Extra columns added on the right are fine. A renamed header halts sync with a clear Bangla banner instead of writing data into the wrong place.",
+            "The Zod schema that validates entries also defines the sheet's column contract, so the app and the spreadsheet cannot quietly disagree."
+          ]
+        },
+        {
+          "id": "bangla-and-testing",
+          "label": "Delivery",
+          "title": "Bangla throughout, and testable without Google",
+          "paragraphs": [
+            "The whole interface reads naturally in Bangla, including numerals, dates, taka with lakh grouping and validation messages, rather than falling back to English browser defaults.",
+            "To make the product testable, I built mocks of the Google account chooser, Drive, Picker and Sheets behind the same interfaces as the real adapters. The full workflow, including two profiles rehearsing the sharing flow and simulated sync failures, runs without an OAuth client. Nine automated tests cover rows, merging and the full sync cycle.",
+            "Giftbook is live as an installable PWA. While the Google OAuth app is in testing mode, sign-in is limited to approved test users."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "উপহারের হিসাব, পরিবারের নিজের Google Sheet এ",
+          "excerpt": "Giftbook কোনো server ছাড়াই বিয়ে, আকিকা আর জন্মদিনের উপহারের হিসাব রাখে। Ledger টা থাকে পরিবারের নিজের Google Sheet এ, entry আগে offline এ জমা হয়, আর হাতে edit করা sheet নষ্ট করার বদলে sync থেমে যায়।",
+          "sections": [
+            {
+              "id": "the-notebook",
+              "label": "সমস্যা",
+              "title": "পরিবারের উপহারের খাতা আসলে একটা ledger",
+              "paragraphs": [
+                "বেশিরভাগ বাংলাদেশি পরিবারে বিয়ে, আকিকা আর জন্মদিনের উপহার লেখা থাকে একটা কাগজের খাতায়: কে কী দিল, আর পরিবার বদলে কী দিল। এটা এমন একটা financial record যেটা বছরের পর বছর কাজে লাগে। আবার এতে কিছু খুঁজে পাওয়া কঠিন, হারিয়ে যাওয়া সহজ, আর দুজন আত্মীয়ের একসাথে update করা অসম্ভব।",
+                "Generic app গুলো search এর সমস্যা মেটায় record টা অন্য কারো server এ রেখে, আর বাংলা সংখ্যা বা লাখ ধরনের grouping খুব কমই ঠিকমতো handle করে। আমি এই দুটোর কোনোটাতেই ছাড় না দিয়ে একটা digital খাতা চেয়েছিলাম।"
+              ]
+            },
+            {
+              "id": "no-server",
+              "label": "Architecture",
+              "title": "Owner এর Google Sheet ই একমাত্র backend",
+              "paragraphs": [
+                "Giftbook এর কোনো application server নেই, database ও নেই। Ledger থাকে owner এর নিজের Drive এর একটা Google Sheet এ। App শুধু drive.file scope চায়, তাই সে নিজের তৈরি করা file গুলোই দেখতে পায়, ওই Drive এর আর কিছু না।",
+                "এই এক সিদ্ধান্ত একসাথে কয়েকটা কাজ করেছে। Data র মালিকানা পরিবারের হাতেই থাকে, তারা সরাসরি sheet খুলতে বা backup নিতে পারে, আর product এর কোনো hosting cost বা data-retention এর দায় নেই। তার ওপর sheet এমন একটা format যেটা প্রত্যেক আত্মীয় আগে থেকেই বোঝে।"
+              ],
+              "callout": "পরিবারের financial record রাখার সবচেয়ে নিরাপদ জায়গা সেটাই, যেটা পরিবার আগে থেকেই নিজে নিয়ন্ত্রণ করে।"
+            },
+            {
+              "id": "offline-first",
+              "label": "Sync",
+              "title": "আগে local এ write, পরে sync, আর নিয়মটা সহজ",
+              "paragraphs": [
+                "উপহার লেখা হয় ভিড়ের অনুষ্ঠানে, যেখানে network দুর্বল, তাই কোনো write network এর জন্য অপেক্ষা করতে পারে না। প্রতিটা entry আগে একটা local Dexie store এ জমা হয়, আর navbar সত্যিকারের অবস্থাটাই দেখায়: synced, syncing, pending count সহ offline, অথবা needs attention।",
+                "কয়েকজন আত্মীয় একটা QR link দিয়ে আলাদা আলাদা phone থেকে একই ledger এ লেখেন। আমি merge system এর বদলে soft delete সহ last-write-wins বেছে নিয়েছি। দুজন মানুষ একই মুহূর্তে একই gift row edit করেন খুব কমই, আর পরিবার বুঝতে পারে এমন একটা নিয়ম, বুঝতে পারে না এমন চতুর নিয়মের চেয়ে ভালো। Delete হওয়া row গুলো deletedAt timestamp সহ sheet এই থেকে যায়, আর duplicate-append protection নিশ্চিত করে যে retry হওয়া sync একই row দুবার যোগ করবে না।"
+              ]
+            },
+            {
+              "id": "hand-edits",
+              "label": "নিরাপত্তা",
+              "title": "মানুষ হাতে sheet edit করবেই, তাই write এর আগে app যাচাই করে নেয়",
+              "paragraphs": [
+                "Ledger যেহেতু একটা সাধারণ spreadsheet, কেউ না কেউ একসময় একটা column এর নাম বদলাবেই। প্রতিটা sync এর আগে Giftbook যাচাই করে schema র শুরুর header গুলো এখনো মিলছে কিনা। ডান দিকে বাড়তি column যোগ করলে সমস্যা নেই। কিন্তু কোনো header rename হলে ভুল জায়গায় data লেখার বদলে sync থেমে যায়, সাথে একটা পরিষ্কার বাংলা banner দেখায়।",
+                "যে Zod schema entry গুলো validate করে, সেটাই sheet এর column contract ও define করে, তাই app আর spreadsheet চুপচাপ দ্বিমত করতে পারে না।"
+              ]
+            },
+            {
+              "id": "bangla-and-testing",
+              "label": "Delivery",
+              "title": "পুরোটা বাংলায়, আর Google ছাড়াই testable",
+              "paragraphs": [
+                "পুরো interface স্বাভাবিক বাংলায় পড়া যায়, সংখ্যা, তারিখ, লাখ grouping সহ টাকা আর validation message সহ, browser এর English default এ ফিরে না গিয়ে।",
+                "Product টা testable করতে আমি Google account chooser, Drive, Picker আর Sheets এর mock বানিয়েছি, আসল adapter গুলোর একই interface এর পেছনে। পুরো workflow, দুটো profile দিয়ে sharing flow এর মহড়া আর simulated sync failure সহ, কোনো OAuth client ছাড়াই চলে। নয়টা automated test row, merging আর পুরো sync cycle cover করে।",
+                "Giftbook এখন installable PWA হিসেবে live। Google OAuth app যতদিন testing mode এ আছে, sign-in শুধু approved test user দের জন্য খোলা।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -23,7 +133,16 @@
       "category": "Product engineering",
       "topic": "product",
       "publishedAt": "2026-10-08",
-      "featured": true
+      "featured": true,
+      "image": {
+        "src": "/images/blog/family-tree.webp",
+        "alt": "A family tree with distinct parent, partner and sibling connections kept local to the browser"
+      },
+      "translations": {
+        "bn": {
+          "title": "পড়তে সহজ, local-first একটা family tree"
+        }
+      }
     },
     {
       "kind": "authored",
@@ -37,8 +156,8 @@
       "readingMinutes": 7,
       "featured": false,
       "image": {
-        "src": "/images/projects/routempo.webp",
-        "alt": "Routempo timezone-aware routine planner interface"
+        "src": "/images/blog/routine-time.webp",
+        "alt": "A clock with timezones beside planned routines and recorded outcomes"
       },
       "sections": [
         {
@@ -92,7 +211,66 @@
             "That is the senior engineering lesson I took from Routempo: recurring software becomes reliable when the model preserves meaning, not merely timestamps."
           ]
         }
-      ]
+      ],
+      "translations": {
+        "bn": {
+          "title": "Routine মানে timestamp না: real-world time এর জন্য Routempo design করা",
+          "excerpt": "একটা routine planner এর কঠিন অংশ recurrence ছিল না। কঠিন ছিল timezone, actual outcome, reminder আর external calendar জুড়ে user এর intent ঠিক রাখা।",
+          "sections": [
+            {
+              "id": "false-model",
+              "label": "আসল সমস্যা",
+              "title": "Recurring task ছিল ভুল domain model",
+              "paragraphs": [
+                "Routempo শুরু হয়েছিল একটা পরিচিত product idea দিয়ে: মানুষ repeatable routine define করবে, ঠিক সময়ে reminder পাবে, আর নিজের progress দেখবে। Interface দেখে মনে হচ্ছিল এটা একটা scheduling problem। Data খুব তাড়াতাড়িই অন্য কথা বলল।",
+                "Schedule শুধু intention record করে। মানুষটা routine শুরু করেছে, শেষ করেছে, skip করেছে, নাকি বদলে ফেলেছে, সেটা schedule আমাকে বলে না। এই সবকিছু যদি একটা recurring record এ রাখি, তাহলে প্রতিটা edit history rewrite করার ঝুঁকি তৈরি করে। Timezone বদলালে ambiguity আরও বাড়ে: user কি একটা fixed instant বুঝিয়েছিল, নাকি একটা local সকালের rhythm, যেটা তার সাথে সাথে যাওয়া উচিত?",
+                "আসল engineering problem ছিল এটাই। আমার এমন একটা model দরকার ছিল যেটা কী plan করা হয়েছিল, আসলে কী ঘটেছে, আর দুটোর পেছনের local-time অর্থ, তিনটাই ধরে রাখতে পারে।"
+              ],
+              "callout": "Time কোনো formatting এর বিষয় ছিল না। এটা ছিল product এর domain language এরই অংশ।"
+            },
+            {
+              "id": "separate-intent-outcome",
+              "label": "Domain model",
+              "title": "আমি routine intent কে behavioral evidence থেকে আলাদা করলাম",
+              "paragraphs": [
+                "আমি routine কে model করলাম durable plan হিসেবে, আর session কে সেটা পালন করার একেকটা সুযোগ হিসেবে। Check-in আর review system এর outcome দিকের অংশ, recurring definition এর না। এই boundary থাকায় user আগামীকালের plan বদলাতে পারে, গতকালের evidence না বদলেই।",
+                "এই পার্থক্য product টাকে আরও সৎ করেছে। একটা completed checkbox আর একটা reusable routine definition এক জিনিস না, আর skip করা session ও কাজের behavioral data। PostgreSQL আর Drizzle queryable, portable history দেয়, record টা browser-only state এ লুকিয়ে থাকে না।",
+                "এই concept গুলো আলাদা হওয়ার পর application service নিয়ে চিন্তা করা সহজ হয়ে গেল। Planning intent তৈরি করে। Daily execution একটা outcome record করে। Review দুটোই পড়ে, কোনোটাকেই mutate না করে।"
+              ]
+            },
+            {
+              "id": "timezone-boundary",
+              "label": "Timezone",
+              "title": "Timezone correctness এর জন্য একটা explicit boundary লাগত",
+              "paragraphs": [
+                "System টা user এর timezone কে edge এ যোগ করা display preference হিসেবে না দেখে schedule আর completion এর semantics জুড়ে বহন করে। যখনই একটা routine, session, reminder আর calendar event কে “today” মানে কী, সেটা নিয়ে একমত হতে হয়, তখন এটা গুরুত্বপূর্ণ।",
+                "আমি conversion rule গুলো domain service এর পেছনে রেখেছি, যাতে route component গুলো date এর নিজস্ব interpretation বানিয়ে না ফেলে। UI একজন মানুষের জন্য value format করতে পারে, কিন্তু underlying workflow তে একটাই জায়গা থাকে যেটা ঠিক করে একটা action কোন local day আর কোন planned session এর।",
+                "এটা ছোট একটা architectural choice, কিন্তু ভুল হলে প্রভাব অনেক বড়। Temporal rule যখন component জুড়ে duplicate হয়, system দেখতে ঠিক মনে হতে পারে, অথচ নিঃশব্দে একটা outcome ভুল দিনের সাথে জুড়ে দিতে পারে।"
+              ]
+            },
+            {
+              "id": "integration-boundaries",
+              "label": "Integration",
+              "title": "Reminder আর calendar কে core product এর মালিক হতে দেওয়া যায়নি",
+              "paragraphs": [
+                "Web Push একটা distributed workflow: browser permission দেয়, একটা subscription store হয়, আর একটা scheduled server invocation শেষ পর্যন্ত delivery র চেষ্টা করে। Google Calendar আর Tasks নিয়ে আসে OAuth scope, provider configuration, আর এমন failure mode যেগুলো planner এর নিয়ন্ত্রণের বাইরে।",
+                "আমি এই capability গুলো adapter এর পেছনে isolate করে optional রেখেছি। Provider configuration না থাকলে বা notification permission reject হলে একটা enhancement বন্ধ হওয়া উচিত, পুরো routine planner অচল হওয়া না। Scheduled summary একই domain behavior কে call করে, সেটার দ্বিতীয় কোনো implementation হয়ে ওঠে না।",
+                "এই boundary failure গুলোকেও একটা owner দিয়েছে। কোনো notification বা external sync আলাদাভাবে retry বা ব্যাখ্যা করার দরকার হলেও core সফলভাবে একটা session record করতে পারে।"
+              ]
+            },
+            {
+              "id": "ownership",
+              "label": "ফলাফল",
+              "title": "Reliability র মধ্যে একটা exit path ও ছিল",
+              "paragraphs": [
+                "Product টা যেহেতু personal behavioral history store করে, তাই import, export আর deletion কোনো secondary setting না। এগুলো data contract এরই অংশ। User রা তাদের account data ভেতরে আনতে আর বাইরে নিতে পারে, আর system daily workflow এর পাশাপাশি এই path গুলোও validate করে।",
+                "Final architecture টা কোনো চতুর recurrence algorithm এর চেয়ে বেশি stable boundary নিয়ে: plan বনাম evidence, local time বনাম presentation, core behavior বনাম optional provider, আর product data বনাম user ownership।",
+                "Routempo থেকে আমি এই senior engineering শিক্ষাটা নিয়েছি: recurring software তখনই reliable হয় যখন model শুধু timestamp না, অর্থটা ধরে রাখে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "authored",
@@ -106,8 +284,8 @@
       "readingMinutes": 8,
       "featured": true,
       "image": {
-        "src": "/images/projects/thoughtline.webp",
-        "alt": "Thoughtline LinkedIn writing assistant side-panel interface"
+        "src": "/images/blog/untrusted-envelope.webp",
+        "alt": "LinkedIn page content sealed in an untrusted, bounded envelope before four reply drafts"
       },
       "sections": [
         {
@@ -161,7 +339,66 @@
             "The senior engineering work was not making the model write more. It was deciding what the model could see, what the page could influence, how providers could fail, and where the user remained in control."
           ]
         }
-      ]
+      ],
+      "translations": {
+        "bn": {
+          "title": "LinkedIn page একটা untrusted input: নিরাপদ AI writing assistant বানানো",
+          "excerpt": "Page content, model provider, browser permission আর local credential কে আলাদা আলাদা trust boundary হিসেবে ধরার পরই Thoughtline reliable হয়েছে।",
+          "sections": [
+            {
+              "id": "context-not-control",
+              "label": "আসল সমস্যা",
+              "title": "Context দরকার, কিন্তু control ছেড়ে না দিয়ে",
+              "paragraphs": [
+                "Thoughtline একজন মানুষকে চোখের সামনে থাকা LinkedIn conversation বুঝতে আর নিজের ভাষায় reply বা post সাজাতে সাহায্য করে। Text generate করাটা ছিল সহজ demo। আসল project ছিল এমন একটা browser extension বানানো, যেটাকে আমি page content, API credential, লেখার history আর provider failure নিয়ে বিশ্বাস করতে পারি।",
+                "কাজে লাগার জন্য assistant এর যথেষ্ট context লাগে, কিন্তু LinkedIn page আমার database ও না, trusted instruction source ও না। এটা বদলাতে থাকা third-party content। DOM সরাসরি prompt এ পাঠালে data, instruction, অপ্রাসঙ্গিক page text আর সম্ভাব্য hostile content সব মিলে একটা অস্বচ্ছ string হয়ে যেত।",
+                "তাই আমি system টা একটা কড়া নিয়মের ওপর দাঁড় করিয়েছি: page content একটা request কে তথ্য দিতে পারে, কিন্তু application কে control করতে পারে না।"
+              ],
+              "callout": "AI feature শুরু হয় একটা trust boundary থেকে, model call থেকে না।"
+            },
+            {
+              "id": "bounded-envelope",
+              "label": "Input boundary",
+              "title": "Untrusted content কে একটা bounded envelope এ রেখেছি",
+              "paragraphs": [
+                "Content script শুধু ততটুকু context extract করে যতটুকু একটা workflow এর দরকার। কোনো কিছু provider এর কাছে পৌঁছানোর আগে data একটা typed, size-bounded, validated envelope এ ঢোকে। এতে application এর কাছে কী capture হলো তার একটা explicit contract থাকে, আর ইচ্ছামতো page structure বাকি system এ ছড়িয়ে পড়তে পারে না।",
+                "Validation জাদুর মতো prompt injection দূর করে দেয় না, আর আমি সেটা দাবিও করি না। এটা attack surface আর data ছড়িয়ে পড়ার surface কমায়, application instruction আর quoted source material এর মধ্যে স্পষ্ট পার্থক্য রাখে, আর malformed extraction কে নিরাপদে fail করার একটা জায়গা দেয়।",
+                "একই সিদ্ধান্তে maintainability ও বেড়েছে। LinkedIn DOM বদলালে extraction একটা boundary তেই ভাঙতে পারে, side panel, prompt builder আর storage model কে selector বুঝতে বাধ্য না করে।"
+              ]
+            },
+            {
+              "id": "provider-ports",
+              "label": "Provider design",
+              "title": "Model fallback একটা policy, catch block না",
+              "paragraphs": [
+                "Thoughtline প্রথমে Gemini ব্যবহার করে, আর Groq শুধু eligible fallback এর জন্য। কোনো provider এর response shape আমি UI জুড়ে ছড়াতে দিইনি। Typed drafting আর source-research port গুলো ঠিক করে product এর কী দরকার; adapter গুলো provider-specific request, response আর error অনুবাদ করে।",
+                "এতে fallback হয়ে যায় একটা explicit application policy। System ঠিক করতে পারে কোন failure eligible, একবার controlled fallback চেষ্টা করে, আর তবুও একটা normalized result ফেরত দেয়। এতে সেই বিপজ্জনক pattern এড়ানো যায়, যেখানে প্রতিটা error চুপচাপ আরেকটা provider কে trigger করে আর user বুঝতেই পারে না তার data কোন service এর কাছে গেল।",
+                "এখানে provider abstraction কাজে লেগেছে কারণ এটা product core থেকে আসল volatility সরিয়ে দিয়েছে। দুইটা SDK call কে একরকম দেখানোর জন্য abstraction করা হয়নি।"
+              ]
+            },
+            {
+              "id": "browser-trust",
+              "label": "Browser trust",
+              "title": "Permission, credential আর retention এর মালিকানা দৃশ্যমান হতে হবে",
+              "paragraphs": [
+                "Browser extension থাকে user এর browsing activity র খুব কাছে, তাই সুবিধার অজুহাতে বিস্তৃত, অদৃশ্য access নেওয়া যায় না। Thoughtline প্রতিটা permission কে onboarding checkbox হিসেবে না ধরে, যখন কোনো workflow এর দরকার হয় তখনই capability চায়।",
+                "Provider credential আর setting থাকে encrypted browser storage এ, migration আর recovery path সহ। Configuration backup, history archive, retention control আর restore validation মিলে local-first storage কে সময়ের সাথে চালানোর মতো করে তোলে; শুধু encryption দিয়ে schema drift, ভুল করে data হারানো বা অস্পষ্ট মালিকানার সমাধান হতো না।",
+                "এই সিদ্ধান্তগুলো product এ নতুন branch যোগ করে। একটা permission decline হতে পারে, stored data র migration লাগতে পারে, একটা restore validation এ fail করতে পারে। এই complexity আমি মেনে নিয়েছি, কারণ প্রতিটা branch এমন একটা control এর সাথে মেলে যেটা user এর আসলেই থাকা উচিত।"
+              ]
+            },
+            {
+              "id": "proof",
+              "label": "ফলাফল",
+              "title": "শুধু React component না, packaged system টা test করেছি",
+              "paragraphs": [
+                "Quality gate গুলো cover করে static check, unit behavior, packed extension, accessibility, responsive layout আর visual regression। এটা জরুরি, কারণ একটা extension component test pass করেও Manifest V3 packaging, permission resolution বা content-script injection এর পর fail করতে পারে।",
+                "ফলাফল একটা writing assistant যার সীমাগুলো ভেবেচিন্তে ঠিক করা: bounded page context, বদলানো যায় এমন provider adapter, নির্দিষ্ট fallback, recover করা যায় এমন local data, আর দৃশ্যমান capability র সাথে যুক্ত permission।",
+                "আসল senior engineering কাজটা model কে দিয়ে বেশি লেখানো ছিল না। কাজটা ছিল ঠিক করা model কী দেখতে পাবে, page কতটুকু প্রভাব ফেলতে পারবে, provider কীভাবে fail করতে পারে, আর control কোথায় user এর হাতে থাকবে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "authored",
@@ -175,8 +412,8 @@
       "readingMinutes": 7,
       "featured": false,
       "image": {
-        "src": "/images/projects/foliofarer.webp",
-        "alt": "Foliofarer interactive 3D developer portfolio interface"
+        "src": "/images/blog/accessible-atlas.webp",
+        "alt": "A layered 3D world shown as equal to a plain accessible Atlas document"
       },
       "sections": [
         {
@@ -230,7 +467,66 @@
             "Foliofarer reinforced a principle I use in senior frontend work: ambitious presentation is safest when content and behavior have deeper, renderer-independent foundations."
           ]
         }
-      ]
+      ],
+      "translations": {
+        "bn": {
+          "title": "আমি WebGL কে ঢোকার একমাত্র পথ হতে দিইনি: Foliofarer এর পেছনের architecture",
+          "excerpt": "একটা 3D portfolio মনে রাখার মতো হয়েও তার user দের ব্যর্থ করতে পারে। আমি Foliofarer এমনভাবে design করেছি যাতে content, navigation, performance আর testing কখনো একটা renderer এর উপর নির্ভর না করে।",
+          "sections": [
+            {
+              "id": "memorable-is-not-usable",
+              "label": "আসল সমস্যা",
+              "title": "মনে রাখার মতো portfolio ও জরুরি information লুকিয়ে ফেলতে পারে",
+              "paragraphs": [
+                "Foliofarer একটা career কে explorable 3D world হিসেবে দেখায়। এতে first impression জোরালো হয়, কিন্তু product এর আরও গুরুত্বপূর্ণ একটা কাজ আছে: visitor কে আমার কাজ বুঝতে সাহায্য করা। Evidence পর্যন্ত পৌঁছাতে একজন recruiter এর gaming instinct, শক্তিশালী GPU, নিখুঁত pointer control, বা motion সহ্য করার ক্ষমতা লাগা উচিত না।",
+                "প্রথম architectural risk টা স্পষ্ট ছিল। WebGL যদি content model এর মালিক হয়, তাহলে প্রতিটা fallback আসল site এর একটা ছোট version হয়ে যাবে। Accessibility হবে একটা patch, search আর testing scene state এর উপর নির্ভর করবে, আর কম capability র device গুলো কম information পাবে।",
+                "আমি অন্য একটা constraint বেছে নিলাম: experience এর মালিক 3D হতে পারে, কিন্তু content এ access এর মালিক হতে পারবে না।"
+              ],
+              "callout": "Progressive enhancement তখনই কাজ করে যখন enhanced layer টাই একমাত্র source of truth না হয়।"
+            },
+            {
+              "id": "atlas",
+              "label": "Accessible path",
+              "title": "Atlas একটা সম্পূর্ণ interface, fallback এর জন্য ক্ষমা চাওয়া না",
+              "paragraphs": [
+                "আমি world এর সাথে একটা accessible Atlas জুড়ে দিয়েছি, যেটা একই professional history একটা document-oriented surface এ দেখায়। এটা keyboard-friendly navigation support করে, আর visitor রা scene চালানো ছাড়াই সরাসরি project আর career landmark জুড়ে ঘুরতে পারে।",
+                "দুটো experience ই validated portfolio data দিয়ে চলে। Scene সেই data কে geography আর interaction এ রূপ দিতে পারে, আর Atlas সেটাকে heading, link আর readable structure এ রূপ দেয়। কোনোটারই অন্যটাকে scrape বা reverse-engineer করতে হয় না।",
+                "এই separation আমার feature evaluate করার ধরনটাই বদলে দিয়েছে। নতুন একটা landmark Three.js এ সুন্দর দেখালেই complete হতো না। Complete হতো তখন, যখন তার অর্থ shared data তে represent করা থাকত আর দুই path দিয়েই সেখানে পৌঁছানো যেত।"
+              ]
+            },
+            {
+              "id": "deterministic-world",
+              "label": "World generation",
+              "title": "আমি world টা হাতে বসাইনি, compile করেছি",
+              "paragraphs": [
+                "হাতে লেখা coordinate দিয়ে প্রথম scene টা দ্রুত বানানো যেত, কিন্তু পরের প্রতিটা change fragile হয়ে যেত। Navigation, minimap, landmark, progression আর test, সবাইকে একই route নিয়ে একমত হতে হয়। ছোট visual edit এর কারণে unreachable content বা nondeterministic test failure তৈরি হতে দেওয়া যায় না।",
+                "Foliofarer route আর world data তৈরি করতে একটা deterministic journey compiler আর generator ব্যবহার করে। Compiler complexity বাড়ায়, কিন্তু একটা stable contract তৈরি করে: একই input এমন একটা world তৈরি করে যেটা navigation আর test consistently inspect করতে পারে।",
+                "এই decision procedural generation কে visual decoration থেকে একটা engineering tool এ পরিণত করে। Repeatability থাকায় generated environment debug করা যায়। Visitor scene এর ভেতরে খুঁজে পাওয়ার আগেই validation ভাঙা route assumption ধরে ফেলে।"
+              ]
+            },
+            {
+              "id": "adaptive-rendering",
+              "label": "Performance",
+              "title": "Maximum fidelity quality র default সংজ্ঞা ছিল না",
+              "paragraphs": [
+                "একটা single rendering profile ধরে নেয় যে প্রতিটা device আর visitor একই জিনিসকে গুরুত্ব দেয়। Foliofarer এর বদলে adaptive quality tier আর preference signal ব্যবহার করে, যার মধ্যে আছে viewport, connection ও device capability, reduced motion আর reduced data।",
+                "লক্ষ্য একটা benchmark score নিখুঁতভাবে অনুমান করা না। লক্ষ্য হলো সবচেয়ে ভারী experience টাকে ঢোকার মূল্য না বানানো। Capability-aware rendering scene এর কাজ কমাতে পারে, আর Atlas সম্পূর্ণ information path টা ধরে রাখে।",
+                "Reduced motion ও একটা product decision, পরে যোগ করা CSS না। Movement যখন navigation আর atmosphere এর অংশ, তখন preference টা মানতে হলে movement কমানোর পরেও interaction model কে বোধগম্য থাকতে হয়।"
+              ]
+            },
+            {
+              "id": "testable-experience",
+              "label": "ফলাফল",
+              "title": "Architecture একটা অস্বাভাবিক interface কে testable করেছে",
+              "paragraphs": [
+                "Project টা compiler, interaction, accessibility, browser আর visual-baseline test maintain করে। প্রতিটা suite আলাদা একটা contract রক্ষা করে: valid generated route, usable navigation, reachable content, real browser behavior আর intentional presentation।",
+                "Visitor রা 3D career world explore করতে পারে, Atlas এ একই history পড়তে পারে, local Passport progress track করতে পারে, আর আরও বিস্তৃত capability ও preference জুড়ে experience টা ব্যবহার করতে পারে।",
+                "Foliofarer আমার senior frontend work এর একটা নীতিকে আরও পোক্ত করেছে: ambitious presentation সবচেয়ে নিরাপদ থাকে যখন content আর behavior এর ভিত্তি আরও গভীরে, renderer-independent জায়গায় থাকে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "authored",
@@ -243,7 +539,7 @@
       "readingMinutes": 3,
       "featured": false,
       "image": {
-        "src": "/images/blog/deterministic-systems.png",
+        "src": "/images/blog/deterministic-systems.webp",
         "alt": "A deterministic state machine coordinating a real-time biometric assessment pipeline"
       },
       "sections": [
@@ -296,7 +592,64 @@
             "But when your UI orchestrates real-time ML inference, video encoding, and audio playback in parallel — and the cost of a state bug is a patient losing their assessment data — you need deterministic state transitions."
           ]
         }
-      ]
+      ],
+      "translations": {
+        "bn": {
+          "title": "৪০টার বেশি useEffect মুছে একটা State Machine: biometric pipeline কে deterministic করার গল্প",
+          "excerpt": "৪০টার বেশি useEffect মুছে দিয়ে সেগুলোর জায়গায় একটা Finite State Machine বসিয়েছিলাম। আমাদের biometric assessment pipeline এর জন্য এটাই ছিল আমার নেওয়া সেরা সিদ্ধান্ত।",
+          "sections": [
+            {
+              "id": "introduction",
+              "label": "ভূমিকা",
+              "title": "useEffect এর জট থেকে deterministic system এ",
+              "paragraphs": [
+                "৪০টার বেশি useEffect মুছে দিয়ে আমি সেগুলোর জায়গায় একটা Finite State Machine বসিয়েছি।",
+                "আমাদের biometric assessment pipeline এর জন্য এটাই ছিল আমার নেওয়া সবচেয়ে ভালো সিদ্ধান্ত।",
+                "আমাদের movement assessment system এ একসাথে চলে real-time computer vision (MediaPipe Pose, TensorFlow.js MoveNet), WebRTC video recording আর Azure text-to-speech দিয়ে audio guidance, সবকিছু একই সময়ে browser এর ভেতরে।"
+              ]
+            },
+            {
+              "id": "problem",
+              "label": "সমস্যা",
+              "title": "সমস্যা developer দের ছিল না, ছিল paradigm এ",
+              "paragraphs": [
+                "আগের code এ এসব সামলানো হতো এদিক-ওদিক ছড়ানো useState + useEffect chain দিয়ে।",
+                "১০টা boolean flag। সব জায়গায় race condition। “আমার machine এ তো চলে” হয়ে গিয়েছিল স্বাভাবিক ব্যাপার। State transition এর কোনো boundary ছিল না। একটা flag ঠিকমতো flip না হলেই recording নষ্ট, মানে patient এর data হারিয়ে যাওয়া।",
+                "যখন একটা system এ ১০টা আলাদা state, ১৯টা event, guard condition, parallel detection loop আর 60 fps এ real-time pose estimation একসাথে চলছে, তখন useEffect এর dependency array দিয়ে সেই বাস্তবতা model করা যায় না। এটাকে কখনো সেই কাজের জন্য design করাই হয়নি।"
+              ]
+            },
+            {
+              "id": "architecture",
+              "label": "Architecture",
+              "title": "তাই পুরো flow টা একটা custom FSM architecture এর ওপর নতুন করে দাঁড় করালাম",
+              "paragraphs": [
+                "সব transition সামলায় একটা pure reducer function। প্রতিটা state explicit, প্রতিটা event এর একটা নাম আছে, প্রতিটা transition guard দিয়ে সুরক্ষিত।",
+                "একটা detection bridge pattern 60fps এর pose pipeline কে state transition এর সাথে জুড়ে দেয়, stale closure এর ঝামেলা ছাড়াই।",
+                "একটা priority-based audio manager নিশ্চিত করে যে একটা instruction আরেকটার ঘাড়ে এসে পড়ে না।",
+                "Race condition শূন্য। Phantom state শূন্য। “এখানে এলাম কীভাবে?” প্রশ্নও শূন্য।"
+              ]
+            },
+            {
+              "id": "result",
+              "label": "ফলাফল",
+              "title": "Debugging ঘণ্টা থেকে নেমে এল মিনিটে",
+              "paragraphs": [
+                "আগে যে জিনিস debug করতে তিন ঘণ্টা লাগত (৫টা component জুড়ে useEffect chain trace করে), এখন সেটা লাগে তিন মিনিট। State chart টাই এখন documentation। System যদি RECORDING_MOVEMENT_VIDEO তে থাকে, আমি ঠিক জানি এর পরে কোন তিনটা event আসতে পারে আর প্রতিটার guard কী।"
+              ],
+              "callout": "Finite state machine শুধু bug ঠিক করে না। এটা সেই architecture shift, যেটা “চলে” আর “ভরসা করা যায়” এর মধ্যে পার্থক্য তৈরি করে।"
+            },
+            {
+              "id": "truth",
+              "label": "সত্যিটা",
+              "title": "যে অস্বস্তিকর সত্যটা বেশিরভাগ frontend dev এড়িয়ে যায়",
+              "paragraphs": [
+                "সব state problem এর জন্য XState লাগে না। আবার সব state problem useState দিয়েও সমাধান হয় না।",
+                "কিন্তু যখন আপনার UI একসাথে real-time ML inference, video encoding আর audio playback orchestrate করছে, আর একটা state bug এর মূল্য হলো একজন patient এর assessment data হারিয়ে যাওয়া, তখন deterministic state transition ছাড়া উপায় নেই।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -305,25 +658,218 @@
       "title": "I Stopped Treating Video Q&A as a Media-Processing Problem",
       "category": "AI engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/video-qa.webp",
+        "alt": "A video transcript answering a viewer's question without downloading the video"
+      },
+      "translations": {
+        "bn": {
+          "title": "Video Q&A কে আর media-processing সমস্যা ভাবিনি"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-bugreceipt",
+      "kind": "authored",
       "slug": "reproducible-bug-reports-without-default-surveillance",
+      "projectId": "project-bugreceipt",
       "title": "Turning ‘It Broke’ Into Reproducible Evidence Without Default Surveillance",
+      "excerpt": "BugReceipt turns \"it broke\" into a report with steps, console and network evidence and a recording. The harder design problem was deciding what never to collect.",
       "category": "Privacy engineering",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/bug-evidence.webp",
+        "alt": "Captured browser evidence passing through a local filter and review step before export"
+      },
+      "sections": [
+        {
+          "id": "it-broke",
+          "label": "The real problem",
+          "title": "\"It broke\" is not a bug report",
+          "paragraphs": [
+            "Screenshots and vague descriptions lose almost everything a developer needs: the sequence of actions, the console errors, the failed request, the environment and what the page actually looked like. Reproducing the bug becomes guesswork.",
+            "BugReceipt is a Chrome extension that captures reproduction steps, bounded console and network evidence, environment details and a recording or screenshot in one reviewable report."
+          ]
+        },
+        {
+          "id": "not-collected",
+          "label": "Boundaries",
+          "title": "The most important feature is what it refuses to capture",
+          "paragraphs": [
+            "Browser diagnostics are full of secrets: session cookies, tokens in headers, customer data in forms. A bug-reporting tool can easily become the leak it was meant to help debug.",
+            "So BugReceipt deliberately does not collect DOM snapshots, cookies, browser storage, headers, form values, keystrokes, clipboard contents or audio. It records selected console and network evidence within fixed bounds instead of taking the whole page."
+          ],
+          "callout": "A debugging tool's first job is not to become a new security incident."
+        },
+        {
+          "id": "local-first",
+          "label": "Pipeline",
+          "title": "Filter locally, then let a person review",
+          "paragraphs": [
+            "Evidence is captured and filtered inside the extension before any sharing path exists. Deterministic filters remove tokens, email addresses and secret-shaped fields from URLs, diagnostic text and supported response bodies.",
+            "Filtering cannot recognise every secret, and I do not claim it can. That is why review is part of the pipeline rather than an optional step. Before export, an editable review surface lets the reporter remove any individual step, log or visual.",
+            "Downloading a local Markdown-and-visual bundle is the default. Sending by email is a separate, explicit action through a TanStack Start endpoint and Resend, with size limits and no server credentials bundled into the extension."
+          ]
+        },
+        {
+          "id": "shipping",
+          "label": "Delivery",
+          "title": "Built to be verified",
+          "paragraphs": [
+            "Under the hood, a background service worker owns the capture session, page instrumentation runs isolated, and cross-origin navigation is handled as an interruption rather than silently dropping evidence.",
+            "To test it honestly, I built a deterministic broken-app fixture with known failures, and releases ship as unpacked Chrome archives with published checksums. BugReceipt is in public pre-release, and the boundary list above is the contract I hold it to."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "\"It broke\" থেকে reproducible evidence, default surveillance ছাড়াই",
+          "excerpt": "BugReceipt \"it broke\" কে steps, console আর network evidence, আর একটা recording সহ একটা report এ পরিণত করে। তবে design এর আসল কঠিন কাজ ছিল ঠিক করা, কোন জিনিস কখনোই collect করা হবে না।",
+          "sections": [
+            {
+              "id": "it-broke",
+              "label": "আসল সমস্যা",
+              "title": "\"It broke\" কোনো bug report না",
+              "paragraphs": [
+                "Screenshot আর অস্পষ্ট description এ একজন developer এর দরকারি প্রায় সবকিছুই হারিয়ে যায়: action এর sequence, console error, fail হওয়া request, environment, আর page টা আসলে দেখতে কেমন ছিল। তখন bug reproduce করাটা পুরোপুরি অনুমানের খেলা হয়ে দাঁড়ায়।",
+                "BugReceipt একটা Chrome extension, যেটা reproduction steps, নির্দিষ্ট সীমার মধ্যে console আর network evidence, environment details, আর একটা recording বা screenshot, সব একটাই reviewable report এ capture করে।"
+              ]
+            },
+            {
+              "id": "not-collected",
+              "label": "সীমারেখা",
+              "title": "সবচেয়ে গুরুত্বপূর্ণ feature: এটা কী capture করে না",
+              "paragraphs": [
+                "Browser diagnostics ভর্তি থাকে secret এ: session cookie, header এর ভেতর token, form এ customer data। একটা bug-reporting tool খুব সহজেই নিজেই সেই leak হয়ে যেতে পারে, যেটা debug করতে সাহায্য করার কথা ছিল।",
+                "তাই BugReceipt ইচ্ছা করেই DOM snapshot, cookie, browser storage, header, form value, keystroke, clipboard content বা audio collect করে না। পুরো page তুলে নেওয়ার বদলে এটা fixed bound এর মধ্যে বাছাই করা console আর network evidence record করে।"
+              ],
+              "callout": "একটা debugging tool এর প্রথম কাজ হলো নিজে নতুন একটা security incident হয়ে না ওঠা।"
+            },
+            {
+              "id": "local-first",
+              "label": "Pipeline",
+              "title": "আগে local এ filter, তারপর মানুষের review",
+              "paragraphs": [
+                "কোনো sharing path তৈরি হওয়ার আগেই evidence extension এর ভেতরে capture আর filter হয়। Deterministic filter গুলো URL, diagnostic text আর supported response body থেকে token, email address আর secret এর মতো দেখতে field সরিয়ে দেয়।",
+                "Filtering সব secret চিনতে পারে না, আর আমি সেটা দাবিও করি না। এজন্যই review টা pipeline এর অংশ, optional কোনো step না। Export এর আগে একটা editable review surface এ reporter চাইলে যেকোনো একটা step, log বা visual আলাদা করে সরিয়ে দিতে পারে।",
+                "Default হলো একটা local Markdown-আর-visual bundle download করা। Email এ পাঠানো একটা আলাদা, explicit action, যেটা যায় একটা TanStack Start endpoint আর Resend হয়ে, size limit সহ, আর extension এর ভেতরে কোনো server credential bundle করা থাকে না।"
+              ]
+            },
+            {
+              "id": "shipping",
+              "label": "Delivery",
+              "title": "Verify করা যায়, এমনভাবেই বানানো",
+              "paragraphs": [
+                "ভেতরে capture session এর মালিক একটা background service worker, page instrumentation চলে isolated ভাবে, আর cross-origin navigation কে interruption হিসেবে handle করা হয়, চুপচাপ evidence ফেলে দেওয়া হয় না।",
+                "সৎভাবে test করার জন্য আমি জানা failure সহ একটা deterministic broken-app fixture বানিয়েছি, আর release গুলো ship হয় published checksum সহ unpacked Chrome archive হিসেবে। BugReceipt এখন public pre-release এ আছে, আর উপরের boundary list টাই সেই contract, যেটা মেনে চলতে আমি এটাকে বাধ্য রাখি।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-1snap",
+      "kind": "authored",
       "slug": "full-page-screenshots-without-cloud-capture",
+      "projectId": "project-1snap",
       "title": "Capturing the Whole Page Without Sending It to the Cloud",
+      "excerpt": "1Snap captures a whole web page as one PNG inside Chrome, with no upload. The hard part was not taking the frames. It was leaving the page exactly as the user had it.",
       "category": "Browser engineering",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/full-page-capture.webp",
+        "alt": "A tall web page captured as stitched frames and assembled locally into one image"
+      },
+      "sections": [
+        {
+          "id": "viewport-only",
+          "label": "The real problem",
+          "title": "Chrome only captures what is visible",
+          "paragraphs": [
+            "Chrome's standard screenshot flow captures the visible viewport. Many full-page tools solve that by adding heavy editors, accounts or cloud upload. I wanted one complete, annotatable image without sending the page anywhere.",
+            "Because Chrome can only capture the active visible tab, 1Snap has to scroll the page and record frame after frame while the tab stays active, then stitch them together."
+          ]
+        },
+        {
+          "id": "stabilise",
+          "label": "Capture",
+          "title": "Pages fight back while you capture them",
+          "paragraphs": [
+            "Real pages do not hold still. Sticky headers appear in every frame and would repeat down the final image. Lazy images have not loaded yet. Animations make adjacent frames disagree. And when capture ends, the user's page has been scrolled somewhere else.",
+            "So before capturing, 1Snap measures the document, plans the scroll positions, pauses animations, handles fixed and sticky elements and waits for visible images and fonts. On success or failure, it restores the original scroll position and every temporary presentation change."
+          ],
+          "callout": "If you touch the user's page, leave it exactly as you found it."
+        },
+        {
+          "id": "local-stitch",
+          "label": "Architecture",
+          "title": "Stitching and editing stay in the browser",
+          "paragraphs": [
+            "Frames and annotations are stored in IndexedDB and stitched on a local canvas. There is no account and no remote image processing.",
+            "Annotations are vector geometry kept separate from the screenshot until export. Users can select, move, resize, undo, redo or clear Marker, Highlight and Border marks, and only the final export composes them into the PNG at original resolution."
+          ]
+        },
+        {
+          "id": "limits",
+          "label": "Safety",
+          "title": "Explicit limits instead of crashing the tab",
+          "paragraphs": [
+            "Very long pages can exhaust browser memory. Captures are bounded to 50 frames, 16,000 by 32,000 output pixels and 120 million pixels in total. Larger captures are proportionally downscaled or stopped instead of running out of memory.",
+            "1Snap v0.1.1 shipped as a Manifest V3 Chrome ZIP with a published SHA-256 checksum, plus a product website and unit and UI test coverage."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Cloud এ না পাঠিয়ে পুরো page capture",
+          "excerpt": "1Snap Chrome এর ভেতরেই পুরো web page কে একটা PNG হিসেবে capture করে, কোনো upload ছাড়া। কঠিন অংশটা frame নেওয়া ছিল না। কঠিন ছিল page টা user যেমন রেখেছিলেন ঠিক তেমন রেখে আসা।",
+          "sections": [
+            {
+              "id": "viewport-only",
+              "label": "আসল সমস্যা",
+              "title": "Chrome শুধু যা দেখা যাচ্ছে সেটাই capture করে",
+              "paragraphs": [
+                "Chrome এর standard screenshot flow শুধু visible viewport capture করে। অনেক full-page tool এটা সমাধান করে ভারী editor, account বা cloud upload যোগ করে। আমি চেয়েছিলাম page কোথাও না পাঠিয়ে একটা সম্পূর্ণ, annotate করা যায় এমন image।",
+                "যেহেতু Chrome শুধু active visible tab capture করতে পারে, 1Snap কে tab active রেখে page scroll করে করে একের পর এক frame record করতে হয়, তারপর সেগুলো জোড়া দিতে হয়।"
+              ]
+            },
+            {
+              "id": "stabilise",
+              "label": "Capture",
+              "title": "Capture এর সময় page নিজেই বাধা দেয়",
+              "paragraphs": [
+                "Real page স্থির থাকে না। Sticky header প্রতিটা frame এ আসে, আর শেষ image এ বারবার repeat হতো। Lazy image তখনো load হয়নি। Animation এর কারণে পাশাপাশি frame মেলে না। আর capture শেষে দেখা যায় user এর page অন্য কোথাও scroll হয়ে আছে।",
+                "তাই capture এর আগে 1Snap document measure করে, scroll position plan করে, animation pause করে, fixed আর sticky element সামলায়, আর visible image ও font এর জন্য অপেক্ষা করে। Success হোক বা failure, শেষে original scroll position আর প্রতিটা temporary presentation change আগের অবস্থায় ফিরিয়ে দেয়।"
+              ],
+              "callout": "User এর page এ হাত দিলে, যেমন পেয়েছিলেন ঠিক তেমন রেখে আসুন।"
+            },
+            {
+              "id": "local-stitch",
+              "label": "Architecture",
+              "title": "Stitching আর editing browser এর ভেতরেই",
+              "paragraphs": [
+                "Frame আর annotation IndexedDB তে store হয়, আর local canvas এ stitch হয়। কোনো account নেই, কোনো remote image processing নেই।",
+                "Annotation গুলো vector geometry, export পর্যন্ত screenshot থেকে আলাদা রাখা হয়। User Marker, Highlight আর Border mark select, move, resize, undo, redo বা clear করতে পারেন, আর শুধু final export এই সেগুলোকে original resolution এ PNG এর সাথে compose করা হয়।"
+              ]
+            },
+            {
+              "id": "limits",
+              "label": "নিরাপত্তা",
+              "title": "Tab crash করানোর বদলে explicit limit",
+              "paragraphs": [
+                "খুব লম্বা page browser memory শেষ করে দিতে পারে। তাই capture এর সীমা ৫০টা frame, 16,000 by 32,000 output pixel, আর মোট 120 million pixel। এর চেয়ে বড় capture memory শেষ হওয়ার আগেই আনুপাতিক হারে downscale হয় বা থেমে যায়।",
+                "1Snap v0.1.1 ship হয়েছে একটা Manifest V3 Chrome ZIP হিসেবে, published SHA-256 checksum সহ, সাথে একটা product website আর unit ও UI test coverage।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -332,7 +878,16 @@
       "title": "Putting Workplace Evidence Where Job Seekers Need It—Without Tracking the Web",
       "category": "Browser engineering",
       "topic": "product",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/workplace-context.webp",
+        "alt": "A company page with a cited workplace context panel beside it"
+      },
+      "translations": {
+        "bn": {
+          "title": "Web track না করেই job seeker এর কাছে workplace evidence"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -341,7 +896,16 @@
       "title": "How I Made AI Agent Skills Comparable Without Hiding Source Drift",
       "category": "Agent engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/skill-catalog.webp",
+        "alt": "A grid of SKILL.md cards with version and host compatibility chips"
+      },
+      "translations": {
+        "bn": {
+          "title": "Source drift না লুকিয়ে AI agent skill তুলনাযোগ্য করা"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -350,25 +914,210 @@
       "title": "Shipping Across npm, GitHub, and Agent Hosts Without Pretending It Is Atomic",
       "category": "Release engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/release-stages.webp",
+        "alt": "Validate, pack, publish, release and verify as separate proven stages"
+      },
+      "translations": {
+        "bn": {
+          "title": "npm, GitHub আর agent host জুড়ে release, atomic হওয়ার ভান ছাড়া"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-verify-github-npm-release",
+      "kind": "authored",
       "slug": "one-green-dashboard-does-not-prove-a-release",
+      "projectId": "project-verify-github-npm-release",
       "title": "A Release Is Not Done Because One Dashboard Is Green",
+      "excerpt": "A release can look finished in one system and be wrong in another. The verify-github-npm-release skill checks Git, GitHub, npm, CI and install docs read-only, and never confuses \"missing\" with \"could not verify\".",
       "category": "Release engineering",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/release-verify.webp",
+        "alt": "Git tag, package registry, CI and install docs checked side by side for one release"
+      },
+      "sections": [
+        {
+          "id": "partial-truth",
+          "label": "The real problem",
+          "title": "Every system shows its own version of done",
+          "paragraphs": [
+            "After a release, GitHub shows a tag, npm shows a package, CI shows a green run, and the README shows an install command. Each looks fine on its own. Together they can disagree: a v1.2.0 tag over a package.json still at 1.1.9, an npm publish from a different commit, an install command pointing at an older version.",
+            "I built the verify-github-npm-release skill for Claude Code and Codex to check all of those surfaces against one release identity."
+          ],
+          "callout": "A green dashboard proves one system is fine. A release is all of them agreeing."
+        },
+        {
+          "id": "read-only",
+          "label": "Boundaries",
+          "title": "An audit must never repair",
+          "paragraphs": [
+            "The skill has a strict read-only boundary. It resolves the release across local Git state, GitHub releases and tags, the npm registry, CI results, install commands and catalog entries, and it reports. It never retags, republishes or edits anything, because an audit that changes what it audits cannot be trusted."
+          ]
+        },
+        {
+          "id": "four-states",
+          "label": "Findings",
+          "title": "Missing and unverifiable are different findings",
+          "paragraphs": [
+            "Instead of one vague success flag, findings are normalised into explicit states. The most important distinction is between an artifact that is missing and one that could not be checked. An authentication or network error is never reported as absence. Those two findings need completely different responses.",
+            "It also prefers immutable evidence. Checking package@1.2.0 proves something. Checking that \"latest\" looks right is weaker, because latest moves, so a correct mutable alias is reported as conditional rather than proof."
+          ]
+        },
+        {
+          "id": "report",
+          "label": "Delivery",
+          "title": "Exact surfaces, with evidence links",
+          "paragraphs": [
+            "The report names the exact failing surface and links to the evidence. It does not claim an install was executed when it was only checked. Deterministic evaluators cover Git, GitHub, npm and catalog state, with regression, installer-safety and package-contract tests. The skill is published on npm as version 0.1.0."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "একটা dashboard green মানেই release শেষ না",
+          "excerpt": "একটা release এক system এ শেষ দেখাতে পারে, আরেকটায় ভুল থাকতে পারে। verify-github-npm-release skill টা Git, GitHub, npm, CI আর install doc read-only ভাবে check করে, আর \"missing\" আর \"verify করা যায়নি\" কখনো গুলিয়ে ফেলে না।",
+          "sections": [
+            {
+              "id": "partial-truth",
+              "label": "আসল সমস্যা",
+              "title": "প্রতিটা system নিজের মতো করে done দেখায়",
+              "paragraphs": [
+                "Release এর পর GitHub একটা tag দেখায়, npm একটা package দেখায়, CI একটা green run দেখায়, আর README একটা install command দেখায়। আলাদা আলাদা করে সবই ঠিক মনে হয়। কিন্তু একসাথে এগুলো মিলতে নাও পারে: v1.2.0 tag অথচ package.json এখনো 1.1.9 এ, অন্য commit থেকে npm publish, বা install command পুরনো version কে point করছে।",
+                "এই সবগুলো surface কে একটা release identity র বিপরীতে check করার জন্য আমি Claude Code আর Codex এর জন্য verify-github-npm-release skill টা বানিয়েছি।"
+              ],
+              "callout": "Green dashboard প্রমাণ করে একটা system ঠিক আছে। Release মানে সবগুলো একমত হওয়া।"
+            },
+            {
+              "id": "read-only",
+              "label": "সীমারেখা",
+              "title": "Audit কখনো repair করবে না",
+              "paragraphs": [
+                "Skill টার একটা কড়া read-only boundary আছে। এটা local Git state, GitHub release আর tag, npm registry, CI result, install command আর catalog entry জুড়ে release টা resolve করে, তারপর report করে। এটা কখনো retag, republish বা কিছু edit করে না, কারণ যে audit নিজেই audit করা জিনিস বদলে দেয় তাকে বিশ্বাস করা যায় না।"
+              ]
+            },
+            {
+              "id": "four-states",
+              "label": "Finding গুলো",
+              "title": "Missing আর unverifiable আলাদা finding",
+              "paragraphs": [
+                "একটা অস্পষ্ট success flag এর বদলে finding গুলো explicit state এ normalise করা হয়। সবচেয়ে গুরুত্বপূর্ণ পার্থক্য হলো, একটা artifact missing, নাকি check করাই যায়নি। Authentication বা network error কে কখনো অনুপস্থিতি হিসেবে report করা হয় না। এই দুই finding এর response সম্পূর্ণ আলাদা।",
+                "এটা immutable evidence কেও বেশি গুরুত্ব দেয়। package@1.2.0 check করলে কিছু একটা প্রমাণ হয়। \"latest\" ঠিক দেখাচ্ছে কি না check করা দুর্বল, কারণ latest সরে যায়, তাই সঠিক mutable alias কে proof না বলে conditional হিসেবে report করা হয়।"
+              ]
+            },
+            {
+              "id": "report",
+              "label": "Delivery",
+              "title": "নির্দিষ্ট surface, evidence link সহ",
+              "paragraphs": [
+                "Report ঠিক কোন surface fail করছে তার নাম বলে আর evidence এর link দেয়। শুধু check করা হয়েছে এমন install কে execute করা হয়েছে বলে দাবি করে না। Deterministic evaluator গুলো Git, GitHub, npm আর catalog state cover করে, সাথে regression, installer-safety আর package-contract test। Skill টা npm এ version 0.1.0 হিসেবে publish করা আছে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-write-complete-project-readme",
+      "kind": "authored",
       "slug": "readme-generation-must-start-with-evidence",
+      "projectId": "project-write-complete-project-readme",
       "title": "Why I Made README Generation Start With Evidence",
+      "excerpt": "AI-written READMEs are confident and often wrong. The write-complete-project-readme skill reads the project first, treats the old README as a claim to verify, and labels every fact as verified, inferred or unknown.",
       "category": "Documentation systems",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/readme-evidence.webp",
+        "alt": "Repository files sorted into verified, inferred and unknown before a README is written"
+      },
+      "sections": [
+        {
+          "id": "confident-wrong",
+          "label": "The real problem",
+          "title": "Generated READMEs sound right and are often wrong",
+          "paragraphs": [
+            "Ask an AI to improve a README and you usually get polished prose that preserves stale claims, adds features that never existed and lists commands that are not in the project. Generic sections appear because the generator never inspected the repository or separated evidence from guesswork.",
+            "The problem is not the model's writing. It is that we let it write without proof."
+          ],
+          "callout": "AI-first does not mean letting AI do everything. It means constraining it so it cannot invent."
+        },
+        {
+          "id": "evidence-first",
+          "label": "Method",
+          "title": "The old README is evidence to verify, not a template",
+          "paragraphs": [
+            "The write-complete-project-readme skill for Claude Code and Codex reads the project before writing. The existing README is treated as a set of claims to check against the code, manifests and configuration, not as text to keep.",
+            "Every fact is classified as verified, inferred or unknown. Features, commands, compatibility, status, URLs, metrics and license terms are never invented. If a license is missing, the README says so instead of guessing."
+          ]
+        },
+        {
+          "id": "routing",
+          "label": "Project types",
+          "title": "Different projects need different reading flows",
+          "paragraphs": [
+            "An application, a package, an API, a CLI, a monorepo, a dataset and an agent skill all need different READMEs. The skill routes by project type and follows an evidence priority for each, so a library gets install and API usage while an app gets setup, environment and deployment.",
+            "It also enforces a full-document contract. A badge-only change or a single patched section does not count as done, and structural and content checks validate the finished README. The skill only edits the root README."
+          ]
+        },
+        {
+          "id": "family",
+          "label": "Takeaway",
+          "title": "One rule across all my agent skills",
+          "paragraphs": [
+            "The same principle runs through the release, deployment and metadata skills I have built: gather evidence first, then act, and say plainly what could not be verified. This skill is published on npm as version 0.4.0, with installer, release-workflow, compatibility and package tests."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "README লেখা কেন evidence দিয়ে শুরু হয়",
+          "excerpt": "AI দিয়ে লেখা README আত্মবিশ্বাসী শোনায়, কিন্তু প্রায়ই ভুল। write-complete-project-readme skill টা আগে project পড়ে, পুরনো README কে যাচাই করার মতো একটা দাবি হিসেবে ধরে, আর প্রতিটা fact কে verified, inferred বা unknown হিসেবে label করে।",
+          "sections": [
+            {
+              "id": "confident-wrong",
+              "label": "আসল সমস্যা",
+              "title": "Generated README শুনতে ঠিক, কিন্তু প্রায়ই ভুল",
+              "paragraphs": [
+                "AI কে README improve করতে বললে সাধারণত পাওয়া যায় ঝকঝকে লেখা, যেটা পুরনো stale দাবিগুলো রেখে দেয়, কখনো ছিল না এমন feature যোগ করে, আর project এ নেই এমন command list করে। Generic section গুলো আসে কারণ generator কখনো repository টা খুলে দেখেনি, evidence আর অনুমানকেও আলাদা করেনি।",
+                "সমস্যাটা model এর লেখায় না। সমস্যা হলো আমরা ওকে প্রমাণ ছাড়াই লিখতে দিই।"
+              ],
+              "callout": "AI-first মানে AI কে সব করতে দেওয়া না। মানে ওকে এমনভাবে constrain করা যাতে কিছু বানিয়ে বলতে না পারে।"
+            },
+            {
+              "id": "evidence-first",
+              "label": "পদ্ধতি",
+              "title": "পুরনো README template না, যাচাই করার evidence",
+              "paragraphs": [
+                "Claude Code আর Codex এর জন্য write-complete-project-readme skill টা লেখার আগে project পড়ে। বিদ্যমান README কে রেখে দেওয়ার মতো text হিসেবে না, বরং code, manifest আর configuration এর সাথে মিলিয়ে দেখার মতো কিছু দাবির set হিসেবে ধরা হয়।",
+                "প্রতিটা fact কে verified, inferred বা unknown হিসেবে classify করা হয়। Feature, command, compatibility, status, URL, metric আর license term কখনো বানানো হয় না। License না থাকলে README সেটাই বলে, অনুমান করে না।"
+              ]
+            },
+            {
+              "id": "routing",
+              "label": "Project এর ধরন",
+              "title": "ভিন্ন project এর জন্য ভিন্ন পড়ার ধারা",
+              "paragraphs": [
+                "একটা application, package, API, CLI, monorepo, dataset আর agent skill, প্রত্যেকটার আলাদা ধরনের README লাগে। Skill টা project type অনুযায়ী route করে আর প্রতিটার জন্য একটা evidence priority মেনে চলে, তাই library পায় install আর API usage, আর app পায় setup, environment আর deployment।",
+                "এটা একটা full-document contract ও enforce করে। শুধু badge বদলানো বা একটা section patch করা মানে কাজ শেষ না, আর structural ও content check দিয়ে শেষ README validate করা হয়। Skill টা শুধু root README edit করে।"
+              ]
+            },
+            {
+              "id": "family",
+              "label": "শিক্ষা",
+              "title": "আমার সব agent skill এ একটাই নিয়ম",
+              "paragraphs": [
+                "আমার বানানো release, deployment আর metadata skill গুলোতেও একই নীতি চলে: আগে evidence জোগাড় করো, তারপর কাজ করো, আর যা verify করা যায়নি সেটা সোজাসুজি বলো। এই skill টা npm এ version 0.4.0 হিসেবে publish করা আছে, installer, release-workflow, compatibility আর package test সহ।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -377,7 +1126,16 @@
       "title": "Turning Commit History Into Release Notes Users Can Trust",
       "category": "Release engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/release-notes.webp",
+        "alt": "Commit history filtered into release notes with breaking changes separated"
+      },
+      "translations": {
+        "bn": {
+          "title": "Commit history থেকে বিশ্বাসযোগ্য release note"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -386,16 +1144,116 @@
       "title": "There Is No Single Source of Truth for Project Metadata",
       "category": "Developer tooling",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/metadata-sources.webp",
+        "alt": "Several metadata files compared field by field with one version mismatch reported"
+      },
+      "translations": {
+        "bn": {
+          "title": "Project metadata র কোনো single source of truth নেই"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-make-app-netlify-ready",
+      "kind": "authored",
       "slug": "local-build-does-not-prove-deployability",
+      "projectId": "project-make-app-netlify-ready",
       "title": "A Successful Local Build Does Not Prove a Deployable System",
+      "excerpt": "A green local build only proves the code compiles. Deploys fail on base paths, publish directories, runtime models and redirects, so I built an agent skill that writes the build contract down first.",
       "category": "Platform engineering",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/build-contract.webp",
+        "alt": "A passing local build next to a deployment pipeline with mismatched paths"
+      },
+      "sections": [
+        {
+          "id": "works-locally",
+          "label": "The real problem",
+          "title": "It builds on my machine, and fails on Netlify",
+          "paragraphs": [
+            "A build that succeeds locally can still fail on Netlify, or worse, deploy successfully and serve the wrong thing. The usual causes are not compiler errors. They are a wrong base path in a monorepo, a wrong publish directory, a static deployment of an SSR app, a missing adapter, or environment variables that only exist on one laptop.",
+            "Static sites, SPAs, hybrid apps and SSR apps each need a different routing and function contract, and Netlify adapter behaviour depends on the framework and its version. Guessing produces sites that open but are empty, or where only the home page works."
+          ]
+        },
+        {
+          "id": "contract-first",
+          "label": "The approach",
+          "title": "Derive the build contract before touching configuration",
+          "paragraphs": [
+            "The make-app-netlify-ready skill for Claude Code and Codex starts by detecting the package manager, framework and runtime model, then writes down an explicit contract: where the build runs, what it produces, which directory is published, which routes need functions and how they are redirected.",
+            "Only then does it change configuration, and only minimally. A Python auditor checks netlify.toml against the contract, with codified rules for base, publish, functions, redirects and adapters."
+          ],
+          "callout": "Most deploy bugs are visible in writing before they are visible in production."
+        },
+        {
+          "id": "rules",
+          "label": "Guardrails",
+          "title": "Prefer maintained adapters, never hide defects",
+          "paragraphs": [
+            "The skill prefers maintained framework adapters over hand-written function shims, because shims silently drift when the framework changes. It preserves unrelated configuration rather than rewriting the file.",
+            "It also never adds a catch-all redirect to make a broken build look healthy. Sending every route to index.html can turn a real build failure into a site that appears to work, which is the hardest kind of bug to notice."
+          ]
+        },
+        {
+          "id": "authority",
+          "label": "Boundaries",
+          "title": "Local readiness is not a deployment",
+          "paragraphs": [
+            "Dashboard settings, environment variables and actual deploys are remote actions that need explicit authority, so the skill separates a deployment-ready local state from actions it has not performed. It verifies root and nested routes and the output shape locally, and reports clearly what still has to happen on Netlify.",
+            "The package is published on npm as version 0.1.0, with installer and package verification tests."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Local build সফল মানেই deployable system না",
+          "excerpt": "Green local build শুধু প্রমাণ করে যে code compile হয়। Deploy fail করে base path, publish directory, runtime model আর redirect এ, তাই আমি একটা agent skill বানিয়েছি যেটা আগে build contract টা লিখে ফেলে।",
+          "sections": [
+            {
+              "id": "works-locally",
+              "label": "আসল সমস্যা",
+              "title": "আমার machine এ build হয়, Netlify তে fail করে",
+              "paragraphs": [
+                "Local এ সফল হওয়া একটা build Netlify তে fail করতে পারে, অথবা আরো খারাপ, সফলভাবে deploy হয়ে ভুল জিনিস serve করতে পারে। সাধারণত কারণগুলো compiler error না। কারণ হলো monorepo তে ভুল base path, ভুল publish directory, SSR app কে static deploy করা, adapter missing থাকা, অথবা এমন environment variable যেটা শুধু একটা laptop এই আছে।",
+                "Static site, SPA, hybrid app আর SSR app, প্রত্যেকটার আলাদা routing আর function contract লাগে, আর Netlify adapter এর behaviour নির্ভর করে framework আর তার version এর উপর। আন্দাজে কাজ করলে এমন site তৈরি হয় যেটা open হয় কিন্তু ফাঁকা, অথবা যেখানে শুধু home page টাই কাজ করে।"
+              ]
+            },
+            {
+              "id": "contract-first",
+              "label": "পদ্ধতি",
+              "title": "Configuration এ হাত দেওয়ার আগে build contract",
+              "paragraphs": [
+                "Claude Code আর Codex এর জন্য বানানো make-app-netlify-ready skill টা শুরুতেই package manager, framework আর runtime model detect করে, তারপর একটা explicit contract লিখে ফেলে: build কোথায় চলে, কী output দেয়, কোন directory publish হয়, কোন route এ function লাগে আর সেগুলো কীভাবে redirect হয়।",
+                "শুধু তারপরই এটা configuration change করে, তাও যতটুকু না করলেই নয়। একটা Python auditor contract এর সাথে netlify.toml মিলিয়ে check করে, base, publish, functions, redirects আর adapters এর জন্য codified rule দিয়ে।"
+              ],
+              "callout": "বেশিরভাগ deploy bug production এ দেখা দেওয়ার আগেই লিখিত রূপে চোখে পড়ে।"
+            },
+            {
+              "id": "rules",
+              "label": "Guardrails",
+              "title": "Maintained adapter আগে, defect কখনো লুকানো না",
+              "paragraphs": [
+                "Skill টা হাতে লেখা function shim এর চেয়ে maintained framework adapter কে প্রাধান্য দেয়, কারণ framework বদলালে shim চুপচাপ drift করে। পুরো file rewrite না করে এটা অপ্রাসঙ্গিক configuration গুলো যেমন আছে তেমনই রেখে দেয়।",
+                "আর একটা broken build কে healthy দেখানোর জন্য এটা কখনো catch-all redirect যোগ করে না। সব route index.html এ পাঠিয়ে দিলে একটা আসল build failure এমন একটা site এ পরিণত হতে পারে যেটা দেখে মনে হয় ঠিকঠাক চলছে, আর এই ধরনের bug ধরা সবচেয়ে কঠিন।"
+              ]
+            },
+            {
+              "id": "authority",
+              "label": "সীমারেখা",
+              "title": "Local readiness মানে deployment না",
+              "paragraphs": [
+                "Dashboard setting, environment variable আর আসল deploy হলো remote action, যেগুলোর জন্য explicit authority লাগে। তাই skill টা deployment-ready local state আর যে action গুলো এটা নিজে করেনি, সেগুলো আলাদা রাখে। এটা local এ root আর nested route আর output shape verify করে, আর Netlify তে এখনো কী কী করা বাকি, সেটা পরিষ্কার করে report করে।",
+                "Package টা npm এ version 0.1.0 হিসেবে published, সাথে installer আর package verification test আছে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -404,16 +1262,116 @@
       "title": "Why I Audit Design Systems Before Fixing Screenshots",
       "category": "Frontend architecture",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/design-audit.webp",
+        "alt": "Two pages with mismatched button styles traced back to shared design tokens"
+      },
+      "translations": {
+        "bn": {
+          "title": "Screenshot ঠিক করার আগে design system audit কেন করি"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-make-project-github-ready",
+      "kind": "authored",
       "slug": "making-a-codebase-public-safely",
+      "projectId": "project-make-project-github-ready",
       "title": "Making a Codebase Public Is a Security and Operations Change",
+      "excerpt": "Flipping a repository to public is not a button. It changes your security exposure and your operations, so the make-project-github-ready skill separates local preparation from every remote change.",
       "category": "Platform engineering",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/repo-public.webp",
+        "alt": "A private repository passing through security and readiness checks before becoming public"
+      },
+      "sections": [
+        {
+          "id": "not-a-button",
+          "label": "The real problem",
+          "title": "Technically ready is not publicly ready",
+          "paragraphs": [
+            "A codebase can build and pass tests while its Git identity, metadata, security guidance, community files, secret hygiene and CI are nowhere near ready for public collaboration. Making it public exposes all of that at once, including whatever is buried in the history.",
+            "I built the make-project-github-ready skill for Claude Code and Codex to make that transition deliberate instead of a single click."
+          ],
+          "callout": "Making code public is a security and operations change, not a visibility toggle."
+        },
+        {
+          "id": "inventory",
+          "label": "Audit",
+          "title": "Inventory before changing anything",
+          "paragraphs": [
+            "The skill first builds an inventory: recognised manifests, community files such as README, SECURITY and contribution guidance, CI workflows and secret-named configuration. It proposes accurate repository metadata, including description, homepage, topics and default branch, based on what the project actually is.",
+            "Some choices cannot be inferred and must not be defaulted. Visibility and license require an explicit decision from the owner. A homepage URL is never invented."
+          ]
+        },
+        {
+          "id": "two-stages",
+          "label": "Boundaries",
+          "title": "Local edits and remote mutations are separate stages",
+          "paragraphs": [
+            "Preparing files locally is reversible. Creating a repository, changing visibility, updating branch settings and pushing are external mutations. The skill keeps those stages apart and performs remote changes only when they are authorised.",
+            "If a remote step partly succeeds, it reports exactly what changed. It does not attempt destructive compensation to make the state look clean."
+          ]
+        },
+        {
+          "id": "read-back",
+          "label": "Verification",
+          "title": "Trust the read-back, not the response",
+          "paragraphs": [
+            "After changes, the skill reads the remote settings and commit SHAs back and compares them with what was intended, instead of trusting a successful API response.",
+            "My own checklist before any repository goes public is short: search the full history for secrets and rotate anything found, check fixtures, logs and screenshots for real data, choose a license deliberately, document how to report security issues, make sure CI never exposes secrets to pull requests from forks, and confirm the final settings by reading them back. The package is published on npm as version 0.1.0."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Codebase public করা মানে security আর operations এর পরিবর্তন",
+          "excerpt": "একটা repository কে public করা শুধু একটা button চাপা না। এতে security exposure আর operations দুটোই বদলে যায়, তাই make-project-github-ready skill টা local প্রস্তুতি আর প্রতিটা remote change কে আলাদা রাখে।",
+          "sections": [
+            {
+              "id": "not-a-button",
+              "label": "আসল সমস্যা",
+              "title": "Technically ready মানেই public এর জন্য ready না",
+              "paragraphs": [
+                "একটা codebase build হতে পারে, test pass করতে পারে, অথচ তার Git identity, metadata, security guidance, community file, secret hygiene আর CI public collaboration এর জন্য একদমই তৈরি না থাকতে পারে। Public করলে এই সবকিছু একসাথে সবার সামনে চলে আসে, history তে যা চাপা পড়ে আছে সেটাও।",
+                "এই transition টা যেন এক click এর ব্যাপার না হয়ে ভেবেচিন্তে করা কাজ হয়, সেজন্য আমি Claude Code আর Codex এর জন্য make-project-github-ready skill টা বানিয়েছি।"
+              ],
+              "callout": "Code public করা একটা security আর operations change, শুধু visibility toggle না।"
+            },
+            {
+              "id": "inventory",
+              "label": "Audit",
+              "title": "কিছু বদলানোর আগে inventory",
+              "paragraphs": [
+                "Skill টা প্রথমে একটা inventory বানায়: চেনা manifest, README, SECURITY আর contribution guidance এর মতো community file, CI workflow, আর secret নামের configuration। এরপর project টা আসলে কী, তার ভিত্তিতে সঠিক repository metadata propose করে, যেমন description, homepage, topic আর default branch।",
+                "কিছু সিদ্ধান্ত অনুমান করা যায় না, আর default ধরে নেওয়াও উচিত না। Visibility আর license এর জন্য owner এর স্পষ্ট সিদ্ধান্ত লাগে। Homepage URL কখনো বানিয়ে বসানো হয় না।"
+              ]
+            },
+            {
+              "id": "two-stages",
+              "label": "সীমারেখা",
+              "title": "Local edit আর remote mutation আলাদা ধাপ",
+              "paragraphs": [
+                "Local এ file প্রস্তুত করা reversible। কিন্তু repository তৈরি করা, visibility বদলানো, branch setting update করা আর push করা হলো external mutation। Skill টা এই ধাপগুলো আলাদা রাখে, আর authorise করা হলেই কেবল remote change করে।",
+                "কোনো remote step আংশিক সফল হলে ঠিক কী কী বদলেছে সেটা report করে। State টা পরিষ্কার দেখানোর জন্য কোনো destructive compensation চালানোর চেষ্টা করে না।"
+              ]
+            },
+            {
+              "id": "read-back",
+              "label": "যাচাই",
+              "title": "Response না, read-back এর ওপর ভরসা",
+              "paragraphs": [
+                "Change এর পর skill টা successful API response এর ওপর ভরসা না করে remote setting আর commit SHA আবার পড়ে আনে, তারপর যা চাওয়া হয়েছিল তার সাথে মিলিয়ে দেখে।",
+                "কোনো repository public করার আগে আমার নিজের checklist ছোট: পুরো history তে secret খুঁজে দেখা আর যা পাওয়া যায় rotate করা, fixture, log আর screenshot এ real data আছে কি না দেখা, ভেবেচিন্তে license বেছে নেওয়া, security issue কীভাবে report করতে হবে সেটা document করা, fork থেকে আসা pull request এ CI যেন কখনো secret expose না করে সেটা নিশ্চিত করা, আর শেষ setting গুলো আবার পড়ে confirm করা। Package টা npm এ version 0.1.0 হিসেবে publish করা আছে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -422,16 +1380,120 @@
       "title": "Publishing One Catalog Entry Without Breaking Every Consumer",
       "category": "Agent engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/catalog-entry.webp",
+        "alt": "One updated catalog entry verified against every consumer"
+      },
+      "translations": {
+        "bn": {
+          "title": "একটা catalog entry publish, কোনো consumer না ভেঙে"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-fix-social-link-previews",
+      "kind": "authored",
       "slug": "when-the-page-is-right-but-the-link-card-is-wrong",
+      "projectId": "project-fix-social-link-previews",
       "title": "The Page Looked Right. The Link Card Was Still Broken",
+      "excerpt": "A page can look perfect in the browser while LinkedIn or Slack show a broken card. The fix starts by separating what your code controls from what the platform caches.",
       "category": "Web platform",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/link-card.webp",
+        "alt": "A correct web page beside a crawler view that sees only a broken link card"
+      },
+      "sections": [
+        {
+          "id": "two-views",
+          "label": "The real problem",
+          "title": "The browser and the crawler read different pages",
+          "paragraphs": [
+            "A familiar bug report: the page looks right, but when someone shares the link on LinkedIn, the card has no image, the wrong title, or an old preview. The page is fine. The link card is not.",
+            "The browser runs JavaScript, carries your session and renders the final page. A link-preview crawler fetches raw HTML, does not run your app and has no login. If the metadata only exists after hydration, or the image sits behind authentication, the crawler simply does not see it."
+          ],
+          "callout": "Test the HTML a crawler receives, not the page you see."
+        },
+        {
+          "id": "two-kinds",
+          "label": "Diagnosis",
+          "title": "Implementation problems and cache problems need different fixes",
+          "paragraphs": [
+            "I built the fix-social-link-previews agent skill around one distinction. Some failures are implementation eligibility: missing or client-only Open Graph tags, relative image URLs, an image that is too small, unreachable, or not the format its extension claims. Those are your code's problems.",
+            "Other failures are platform cache: the implementation is correct now, but the platform still holds an old card. No code change fixes that. You refresh it through the platform's own tools, such as LinkedIn's Post Inspector.",
+            "Mixing the two up is how teams \"fix\" correct metadata three times while the real issue is a stale cache, or wait on a cache that will never refresh because the tags are still wrong."
+          ]
+        },
+        {
+          "id": "repair",
+          "label": "The approach",
+          "title": "Audit the raw response, then make the smallest repair",
+          "paragraphs": [
+            "The skill audits the raw HTML, the meta tags and the image response itself. It checks that metadata is server-rendered, that URLs are absolute and reachable, and it validates image dimensions from the actual bytes for PNG, JPEG and supported WebP, rather than trusting a file extension.",
+            "Repairs preserve metadata that is already valid and use the framework's native way of setting tags. New preview assets are standardised at 1200×630. Results come back with explicit exit codes, so an agent can tell \"fixed locally\", \"verified on the deployed site\" and \"blocked by platform cache\" apart.",
+            "What it never does is promise a specific platform layout. Social platforms choose and cache cards with their own rules, and pretending otherwise would be a false claim."
+          ]
+        },
+        {
+          "id": "checklist",
+          "label": "Takeaway",
+          "title": "The five checks I run first",
+          "paragraphs": [
+            "Are the tags in the server HTML? Is og:image an absolute https URL? Is the image at least 1200×630 and really the type it claims? Can it be fetched without a login or redirect? And only after all four pass: is this just the platform's cache?",
+            "That order matters. The first four are yours to fix. The last one is not, and you only get to blame it once the first four are clean."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Page ঠিক ছিল, link card তবুও ভাঙা",
+          "excerpt": "Browser এ একটা page একদম ঠিক দেখাতে পারে, অথচ LinkedIn বা Slack এ ভাঙা card দেখায়। Fix শুরু হয় দুটো জিনিস আলাদা করে: আপনার code কী নিয়ন্ত্রণ করে, আর platform কী cache করে রাখে।",
+          "sections": [
+            {
+              "id": "two-views",
+              "label": "আসল সমস্যা",
+              "title": "Browser আর crawler আলাদা page পড়ে",
+              "paragraphs": [
+                "খুব চেনা একটা bug report: page ঠিকঠাক দেখাচ্ছে, কিন্তু কেউ LinkedIn এ link share করলে card এ কোনো image নেই, title ভুল, অথবা পুরোনো preview। Page ঠিক আছে। Link card ঠিক নেই।",
+                "Browser JavaScript চালায়, আপনার session বহন করে আর final page render করে। একটা link-preview crawler raw HTML fetch করে, আপনার app চালায় না, আর তার কোনো login নেই। Metadata যদি শুধু hydration এর পরে তৈরি হয়, অথবা image যদি authentication এর পেছনে থাকে, crawler সেটা দেখতেই পায় না।"
+              ],
+              "callout": "আপনি যে page দেখেন সেটা না, crawler যে HTML পায় সেটা test করুন।"
+            },
+            {
+              "id": "two-kinds",
+              "label": "সমস্যা খোঁজা",
+              "title": "Implementation সমস্যা আর cache সমস্যার fix আলাদা",
+              "paragraphs": [
+                "fix-social-link-previews agent skill টা আমি একটা পার্থক্যকে ঘিরে বানিয়েছি। কিছু failure implementation eligibility এর: Open Graph tag নেই বা শুধু client এ আছে, relative image URL, image খুব ছোট, reachable না, অথবা extension যে format দাবি করে আসলে সেটা না। এগুলো আপনার code এর সমস্যা।",
+                "বাকি failure গুলো platform cache এর: implementation এখন ঠিক আছে, কিন্তু platform তখনও পুরোনো card ধরে রেখেছে। কোনো code change এটা ঠিক করে না। এটা refresh করতে হয় platform এর নিজের tool দিয়ে, যেমন LinkedIn এর Post Inspector।",
+                "এই দুটো গুলিয়ে ফেলার কারণেই team গুলো ঠিক থাকা metadata তিনবার “fix” করে, অথচ আসল সমস্যা stale cache; অথবা এমন একটা cache এর জন্য অপেক্ষা করে যেটা কখনো refresh হবে না, কারণ tag গুলো এখনো ভুল।"
+              ]
+            },
+            {
+              "id": "repair",
+              "label": "পদ্ধতি",
+              "title": "আগে raw response audit, তারপর সবচেয়ে ছোট repair",
+              "paragraphs": [
+                "Skill টা raw HTML, meta tag আর image response নিজেই audit করে। এটা check করে metadata server-rendered কিনা, URL গুলো absolute আর reachable কিনা, আর file extension এর ওপর ভরসা না করে PNG, JPEG আর supported WebP এর আসল byte থেকে image dimension validate করে।",
+                "Repair করার সময় আগে থেকে valid metadata অক্ষত রাখা হয়, আর tag set করতে framework এর native পদ্ধতিই ব্যবহার হয়। নতুন preview asset গুলো 1200×630 এ standardise করা। Result আসে explicit exit code সহ, যাতে একটা agent “fixed locally”, “verified on the deployed site” আর “blocked by platform cache” আলাদা করে চিনতে পারে।",
+                "যেটা এটা কখনো করে না, সেটা হলো কোনো নির্দিষ্ট platform layout এর প্রতিশ্রুতি দেওয়া। Social platform গুলো নিজেদের নিয়মে card বাছাই আর cache করে, আর উল্টোটা দাবি করলে সেটা হতো একটা মিথ্যা দাবি।"
+              ]
+            },
+            {
+              "id": "checklist",
+              "label": "শিক্ষা",
+              "title": "যে পাঁচটা check আমি সবার আগে চালাই",
+              "paragraphs": [
+                "Tag গুলো কি server HTML এ আছে? og:image কি একটা absolute https URL? Image কি অন্তত 1200×630, আর সত্যিই কি সেই type যেটা সে দাবি করে? Login বা redirect ছাড়া কি সেটা fetch করা যায়? আর এই চারটা pass করার পরেই শুধু: এটা কি নিছক platform এর cache?",
+                "এই order টা গুরুত্বপূর্ণ। প্রথম চারটা ঠিক করা আপনার দায়িত্ব। শেষটা না, আর প্রথম চারটা পরিষ্কার হওয়ার পরেই কেবল cache কে দোষ দেওয়ার সুযোগ আসে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -440,7 +1502,16 @@
       "title": "Normalizing Bangladesh Location Data Without Erasing Provenance",
       "category": "Data engineering",
       "topic": "product",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/location-registry.webp",
+        "alt": "A division, district and upazila hierarchy with source tags and export formats"
+      },
+      "translations": {
+        "bn": {
+          "title": "Provenance না মুছে বাংলাদেশের location data normalize করা"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -449,7 +1520,16 @@
       "title": "One Education Platform, Three Institution Types, Zero Codebase Forks",
       "category": "Application architecture",
       "topic": "product",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/one-codebase-three-themes.webp",
+        "alt": "One codebase producing three differently themed institution websites"
+      },
+      "translations": {
+        "bn": {
+          "title": "একটা education platform, তিন ধরনের প্রতিষ্ঠান, শূন্য fork"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -458,7 +1538,16 @@
       "title": "I Built a Smaller Content-Type Library by Refusing Feature Creep",
       "category": "Library design",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/content-type.webp",
+        "alt": "A Content-Type header parsed into type, subtype and parameter with zero dependencies"
+      },
+      "translations": {
+        "bn": {
+          "title": "Feature creep ফিরিয়ে দিয়ে ছোট একটা content-type library"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -467,7 +1556,16 @@
       "title": "HTTP Status Codes Are Data, Not a Switch Statement",
       "category": "Library design",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/http-status.webp",
+        "alt": "HTTP status codes laid out as data, with obsolete and unused codes marked"
+      },
+      "translations": {
+        "bn": {
+          "title": "HTTP status code হলো data, switch statement না"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -476,16 +1574,116 @@
       "title": "Filename-to-MIME Lookup Is Useful—Until You Mistake It for Validation",
       "category": "Library design",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/mime-lookup.webp",
+        "alt": "Two PDF filenames mapped to the same MIME type while file bytes stay uninspected"
+      },
+      "translations": {
+        "bn": {
+          "title": "Filename থেকে MIME lookup কাজের, যতক্ষণ না একে validation ভাবছেন"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-client-parser",
+      "kind": "authored",
       "slug": "designing-an-api-that-admits-user-agent-uncertainty",
+      "projectId": "project-client-parser",
       "title": "User-Agent Parsing Is Heuristic. I Designed the API to Admit It",
+      "excerpt": "User-Agent parsing is a guess that anyone can spoof. client-parser combines User-Agent and Client Hints into one typed result, and its API says plainly that the result is for analytics, not decisions.",
       "category": "Library design",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/user-agent.webp",
+        "alt": "A spoofable user-agent string and client hints merged into one labelled best guess"
+      },
+      "sections": [
+        {
+          "id": "heuristic",
+          "label": "The real problem",
+          "title": "Every User-Agent parser is guessing",
+          "paragraphs": [
+            "Analytics and diagnostics need a normalised view of which browser, OS, device or bot made a request. The raw material is a User-Agent string that any client can change, plus Client Hints whose availability varies and may be restricted for privacy.",
+            "Many parsers are heavy, and many APIs quietly encourage using the result for things it cannot support, such as gating features or making security decisions."
+          ],
+          "callout": "A User-Agent string is a claim, not a fact."
+        },
+        {
+          "id": "admit-it",
+          "label": "API design",
+          "title": "The API states its own limits",
+          "paragraphs": [
+            "client-parser documents its heuristic boundary as part of the API. Results are suitable for analytics and presentation. For behaviour, the documentation points to feature detection, and for authentication, authorisation or capability decisions it says not to use the result at all.",
+            "That is not a disclaimer buried at the bottom. It shapes how the library is meant to be called."
+          ]
+        },
+        {
+          "id": "one-output",
+          "label": "Implementation",
+          "title": "Two signals, one normalised result",
+          "paragraphs": [
+            "The library combines User-Agent parsing and Client Hints into one typed output covering browser, OS, device, mobile and bot classification, so consumers do not juggle two inconsistent sources.",
+            "It has zero dependencies and stays pre-1.0 on purpose. Parsing rules change as clients change, so the project relies on a maintained corpus of representative regression tests and careful changelog review rather than promising stability it cannot guarantee yet."
+          ]
+        },
+        {
+          "id": "playground",
+          "label": "Delivery",
+          "title": "A playground that never sends your input anywhere",
+          "paragraphs": [
+            "An interactive playground lets you paste any client string and inspect the classification. It runs the library locally in the page, with no server parser, so experimenting with real headers does not send them anywhere.",
+            "The broader lesson for API design: when your output is uncertain, put the uncertainty into the contract. Users will build on whatever you imply."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "User-Agent parsing একটা অনুমান, API তে সেটা স্বীকার করেছি",
+          "excerpt": "User-Agent parsing একটা অনুমান, যেটা যে কেউ spoof করতে পারে। client-parser User-Agent আর Client Hints মিলিয়ে একটা typed result দেয়, আর এর API পরিষ্কার বলে দেয় result টা analytics এর জন্য, সিদ্ধান্ত নেওয়ার জন্য না।",
+          "sections": [
+            {
+              "id": "heuristic",
+              "label": "আসল সমস্যা",
+              "title": "প্রতিটা User-Agent parser আসলে অনুমান করছে",
+              "paragraphs": [
+                "Analytics আর diagnostics এর জন্য একটা normalised ধারণা লাগে, কোন browser, OS, device বা bot request টা করেছে। কাঁচামাল হলো একটা User-Agent string, যেটা যেকোনো client বদলাতে পারে, আর Client Hints, যেগুলো সবসময় পাওয়া যায় না এবং privacy র জন্য restricted থাকতে পারে।",
+                "অনেক parser ভারী, আর অনেক API চুপচাপ এমন কাজে result ব্যবহার করতে উৎসাহ দেয় যেটা সে সামলাতে পারে না, যেমন feature gate করা বা security সিদ্ধান্ত নেওয়া।"
+              ],
+              "callout": "User-Agent string একটা দাবি, fact না।"
+            },
+            {
+              "id": "admit-it",
+              "label": "API design",
+              "title": "API নিজেই নিজের সীমা বলে দেয়",
+              "paragraphs": [
+                "client-parser তার heuristic boundary কে API র অংশ হিসেবেই document করে। Result analytics আর presentation এর জন্য উপযুক্ত। Behaviour এর জন্য documentation feature detection এর দিকে দেখায়, আর authentication, authorisation বা capability সিদ্ধান্তের জন্য পরিষ্কার বলে result টা একদমই ব্যবহার না করতে।",
+                "এটা নিচে লুকিয়ে রাখা কোনো disclaimer না। Library টা কীভাবে call করা উচিত, সেটাই এটা ঠিক করে দেয়।"
+              ]
+            },
+            {
+              "id": "one-output",
+              "label": "Implementation",
+              "title": "দুইটা signal, একটা normalised result",
+              "paragraphs": [
+                "Library টা User-Agent parsing আর Client Hints মিলিয়ে একটা typed output দেয়, যেখানে browser, OS, device, mobile আর bot classification থাকে, যাতে consumer দের দুইটা অসামঞ্জস্যপূর্ণ source নিয়ে টানাটানি করতে না হয়।",
+                "এর কোনো dependency নেই, আর ইচ্ছা করেই pre-1.0 রাখা হয়েছে। Client বদলালে parsing rule ও বদলায়, তাই project টা এমন stability promise না করে যেটা এখনো guarantee দিতে পারে না, বরং representative regression test এর একটা maintained corpus আর সাবধানী changelog review এর ওপর নির্ভর করে।"
+              ]
+            },
+            {
+              "id": "playground",
+              "label": "Delivery",
+              "title": "এমন playground যেটা আপনার input কোথাও পাঠায় না",
+              "paragraphs": [
+                "একটা interactive playground আছে যেখানে যেকোনো client string paste করে classification দেখা যায়। এটা page এর ভেতরেই library টা local এ চালায়, কোনো server parser নেই, তাই real header নিয়ে experiment করলেও সেগুলো কোথাও যায় না।",
+                "API design এর বড় শিক্ষা: output অনিশ্চিত হলে সেই অনিশ্চয়তাটা contract এর মধ্যেই রাখুন। আপনি যা ইঙ্গিত দেবেন, user রা সেটার ওপরই build করবে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -494,16 +1692,124 @@
       "title": "How I Modeled Company Research Without Producing a Fake Score",
       "category": "Evidence systems",
       "topic": "career",
-      "featured": true
+      "featured": true,
+      "image": {
+        "src": "/images/blog/company-research.webp",
+        "alt": "Reported, submitted, official and unknown evidence with a crossed-out company score"
+      },
+      "translations": {
+        "bn": {
+          "title": "Fake score ছাড়া company research কীভাবে model করলাম"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-book-heaven",
+      "kind": "authored",
       "slug": "a-merged-pull-request-is-not-a-deployed-feature",
+      "projectId": "project-book-heaven",
       "title": "A Merged Pull Request Is Not a Deployed Feature",
+      "excerpt": "The SupportKori widget was correct and merged, but visitors never saw it. The fault was in the delivery path, and fixing it meant treating merge, build, deploy and live HTML as four separate proofs.",
       "category": "Release engineering",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/merged-is-not-deployed.webp",
+        "alt": "A merged branch stopping at a broken build stage before it reaches production"
+      },
+      "sections": [
+        {
+          "id": "looked-missing",
+          "label": "The symptom",
+          "title": "The feature looked missing, but the code was right",
+          "paragraphs": [
+            "The task was small: add the SupportKori support widget to Book Heaven. The integration lived in the root layout as a Next.js Script component with the exact script URL, account ID, message, colour and position. It was reviewed and merged to main.",
+            "Then someone opened the live site and the widget was not there. The natural reaction is to reopen the frontend code and look for a bug. That would have been the wrong place to look.",
+            "The merged code was correct. The Vercel production deployment had failed before the new build ever reached visitors, so the public site was still serving the previous deployment. The feature was not broken. It had never shipped."
+          ],
+          "callout": "A merged pull request proves the code was accepted. It does not prove anyone can see it."
+        },
+        {
+          "id": "two-blockers",
+          "label": "Diagnosis",
+          "title": "Two unrelated failures were hiding behind one red build",
+          "paragraphs": [
+            "I reproduced the production build locally and found two separate problems. The first was memory. Book Heaven is a large Next.js application, and compiling all its routes and integrations exhausted the default Node.js heap inside Vercel's build envelope.",
+            "The second was dependency drift. Stripe was declared with a caret range, so the install picked up a newer release whose TypeScript types expected a later API version than the one the application intentionally used. The code had not changed, but the contract under it had.",
+            "There was also noise to filter out. Environment-backed providers initialise during route collection, so a local build without production credentials fails in its own ways. I had to separate those expected local failures from the real ones before changing anything."
+          ]
+        },
+        {
+          "id": "explicit-budget",
+          "label": "The fix",
+          "title": "I made the build budget and the dependency contract explicit",
+          "paragraphs": [
+            "For memory, I gave every production build path a 4 GB Node.js heap and limited Next.js to two build workers. Retrying a deployment and hoping it passes is not a fix. A stated resource budget makes the build behave the same way every time.",
+            "For Stripe, I pinned the package to 20.1.0, the release whose types match the API version the application selects. The alternative was to bump the API version to satisfy the new types, which would have changed payment behaviour just to make a build pass. That trade is never worth it.",
+            "Both changes went through reviewed pull requests, the same way the widget had."
+          ],
+          "callout": "Never change runtime behaviour to satisfy a type error caused by an upgrade you did not ask for."
+        },
+        {
+          "id": "release-proof",
+          "label": "Verification",
+          "title": "Done meant the visitor's HTML, not a green check",
+          "paragraphs": [
+            "I treated the release as a chain of evidence: GitHub status on the commit, the Vercel preview, the production deployment status, and finally the HTML the public site actually returned. The incident was resolved only when that response contained the SupportKori script with every required attribute.",
+            "The lasting change is in how the workflow talks about state. Merged, deployed and verified in production are now three different words with three different checks. Most \"the fix didn't work\" conversations I have seen were really \"the fix never arrived\" conversations."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Merge হওয়া pull request মানেই deploy হওয়া feature না",
+          "excerpt": "SupportKori widget এর code ঠিক ছিল, merge ও হয়েছিল, কিন্তু visitor রা কখনো সেটা দেখেনি। গলদ ছিল delivery path এ, আর সেটা ঠিক করতে গিয়ে merge, build, deploy আর live HTML কে চারটা আলাদা প্রমাণ হিসেবে দেখতে হয়েছে।",
+          "sections": [
+            {
+              "id": "looked-missing",
+              "label": "লক্ষণ",
+              "title": "Feature টা নেই মনে হচ্ছিল, অথচ code ঠিক ছিল",
+              "paragraphs": [
+                "কাজটা ছোট ছিল: Book Heaven এ SupportKori এর support widget যোগ করা। Integration টা root layout এ একটা Next.js Script component হিসেবে বসানো হয়েছিল, সাথে ঠিকঠাক script URL, account ID, message, colour আর position। Review হয়ে main এ merge ও হয়ে গিয়েছিল।",
+                "তারপর কেউ একজন live site খুলে দেখল widget টা নেই। স্বাভাবিক প্রতিক্রিয়া হলো আবার frontend code খুলে bug খোঁজা। কিন্তু সেটা হতো ভুল জায়গায় খোঁজা।",
+                "Merge হওয়া code ঠিকই ছিল। নতুন build visitor দের কাছে পৌঁছানোর আগেই Vercel এর production deployment fail করেছিল, তাই public site তখনও আগের deployment টাই serve করছিল। Feature টা broken ছিল না। ওটা আসলে কখনো ship ই হয়নি।"
+              ],
+              "callout": "একটা merged pull request প্রমাণ করে code টা accept হয়েছে। কেউ সেটা দেখতে পাচ্ছে, সেটা প্রমাণ করে না।"
+            },
+            {
+              "id": "two-blockers",
+              "label": "সমস্যা খোঁজা",
+              "title": "একটা red build এর পেছনে লুকিয়ে ছিল দুটো আলাদা failure",
+              "paragraphs": [
+                "Local এ production build টা reproduce করে দুটো আলাদা সমস্যা পেলাম। প্রথমটা memory। Book Heaven একটা বড় Next.js application, আর এর সব route আর integration compile করতে গিয়ে Vercel এর build envelope এর ভেতরে default Node.js heap শেষ হয়ে যাচ্ছিল।",
+                "দ্বিতীয়টা dependency drift। Stripe declare করা ছিল caret range দিয়ে, তাই install এর সময় একটা নতুন release চলে এসেছিল, যার TypeScript type গুলো application ইচ্ছা করেই যে API version ব্যবহার করে তার চেয়ে পরের একটা version আশা করছিল। Code বদলায়নি, কিন্তু তার নিচের contract টা বদলে গিয়েছিল।",
+                "কিছু noise ও ছেঁকে বাদ দিতে হয়েছে। Environment-backed provider গুলো route collection এর সময় initialise হয়, তাই production credential ছাড়া local build নিজের মতো করেই fail করে। কিছু বদলানোর আগে সেই প্রত্যাশিত local failure গুলোকে আসল failure থেকে আলাদা করতে হয়েছে।"
+              ]
+            },
+            {
+              "id": "explicit-budget",
+              "label": "সমাধান",
+              "title": "Build budget আর dependency contract দুটোকেই explicit করলাম",
+              "paragraphs": [
+                "Memory র জন্য প্রতিটা production build path কে 4 GB Node.js heap দিলাম আর Next.js কে দুটো build worker এ সীমিত রাখলাম। Deployment retry করে pass হবে বলে আশা করা কোনো fix না। একটা নির্দিষ্ট resource budget থাকলে build প্রতিবার একইভাবে আচরণ করে।",
+                "Stripe এর জন্য package টা 20.1.0 তে pin করলাম, যে release এর type application এর select করা API version এর সাথে মেলে। বিকল্প ছিল নতুন type গুলোকে সন্তুষ্ট করতে API version bump করা, যাতে শুধু build pass করানোর জন্য payment behaviour বদলে যেত। এই trade কখনোই লাভজনক না।",
+                "দুটো change ই গেছে reviewed pull request হয়ে, ঠিক widget টা যেভাবে গিয়েছিল।"
+              ],
+              "callout": "যে upgrade আপনি চাননি, তার কারণে আসা type error ঠিক করতে কখনো runtime behaviour বদলাবেন না।"
+            },
+            {
+              "id": "release-proof",
+              "label": "যাচাই",
+              "title": "Done মানে visitor এর HTML, green check না",
+              "paragraphs": [
+                "Release টাকে আমি একটা evidence chain হিসেবে দেখেছি: commit এর GitHub status, Vercel preview, production deployment status, আর শেষে public site আসলে যে HTML return করছে সেটা। সেই response এ SupportKori script টা সব দরকারি attribute সহ পাওয়ার পরেই incident টা resolved ধরেছি।",
+                "স্থায়ী পরিবর্তনটা এসেছে workflow এ state নিয়ে কথা বলার ধরনে। Merged, deployed আর verified in production এখন তিনটা আলাদা শব্দ, তিনটা আলাদা check। আমি যত “fix টা কাজ করেনি” আলাপ দেখেছি, তার বেশিরভাগই আসলে ছিল “fix টা পৌঁছায়ইনি” আলাপ।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -512,7 +1818,16 @@
       "title": "Generating Dynamic README SVGs Without Storing a Single Image",
       "category": "API design",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/typing-svg.webp",
+        "alt": "A URL query rendered on demand into an animated typing SVG, with an error SVG fallback"
+      },
+      "translations": {
+        "bn": {
+          "title": "একটা image ও store না করে dynamic README SVG"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -521,25 +1836,214 @@
       "title": "URLs, Text Shares, and QR Codes Needed One Lifecycle Model",
       "category": "System design",
       "topic": "product",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/link-lifecycle.webp",
+        "alt": "URLs, text shares and QR codes flowing through one active, limited and expired lifecycle"
+      },
+      "translations": {
+        "bn": {
+          "title": "URL, text share আর QR code এর জন্য একটাই lifecycle model"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-github-readme-counter",
+      "kind": "authored",
       "slug": "a-readme-counter-measures-requests-not-people",
+      "projectId": "project-github-readme-counter",
       "title": "A README Counter Measures Requests, Not People",
+      "excerpt": "A README visitor badge cannot count visitors. It counts requests from bots, caches, image proxies and refreshes, so I named it honestly and designed around what it really measures.",
       "category": "API design",
       "topic": "tools",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/readme-counter.webp",
+        "alt": "Bots, caches and refreshes all feeding one request counter badge"
+      },
+      "sections": [
+        {
+          "id": "why-svg",
+          "label": "The constraint",
+          "title": "Markdown cannot run code, so the counter had to be an image",
+          "paragraphs": [
+            "A GitHub README cannot run JavaScript or call an API and render the result. If you want a number that changes, the only thing Markdown will embed is an image URL. So the counter is a small Express service that increments a named counter on each request and returns the current value as an SVG badge.",
+            "SVG keeps the response tiny and customisable: colours, label and style come from the request, and all user-supplied text is escaped before it goes into the markup."
+          ]
+        },
+        {
+          "id": "what-it-counts",
+          "label": "Honesty",
+          "title": "The number is requests, not people",
+          "paragraphs": [
+            "Here is the part most visitor badges skip. Every fetch of the image increments the counter. That includes bots, GitHub's image proxy, caches, renderers and the same person refreshing the page. The value is a request count, not unique human visitors.",
+            "So I describe it that way in the product and documentation. A counter that says \"1,240 visitors\" when it means 1,240 requests is a small lie that people repeat in their own READMEs."
+          ],
+          "callout": "Name a metric after what it measures, not after what you wish it measured."
+        },
+        {
+          "id": "tradeoffs",
+          "label": "Trade-offs",
+          "title": "Simple persistence, with its limits written down",
+          "paragraphs": [
+            "Counters persist to a file. That makes self-hosting trivial, with no database to provision, at the cost of horizontal scaling and durability. On an ephemeral filesystem the count can reset, and two processes cannot safely share it.",
+            "The endpoint also has no authentication and no documented rate limiting. I documented all of this beside the embedding and configuration instructions rather than leaving users to discover it. A health and status route reports uptime so a self-hoster can at least see the process is alive."
+          ]
+        },
+        {
+          "id": "lesson",
+          "label": "Takeaway",
+          "title": "Small tools teach the same lesson as big ones",
+          "paragraphs": [
+            "This is one of my smallest projects, and it carries the same lesson as the large ones: the most useful thing you can tell a user is what your system cannot do. Self-hosters chose it knowing the limits, and nobody has to find out the hard way that a page refresh counts as a visit."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "README counter মানুষ গোনে না, request গোনে",
+          "excerpt": "README এর visitor badge visitor গুনতে পারে না। এটা গোনে bot, cache, image proxy আর refresh থেকে আসা request, তাই আমি এর নাম সৎভাবে রেখেছি আর এটা আসলে যা measure করে সেটা ঘিরেই design করেছি।",
+          "sections": [
+            {
+              "id": "why-svg",
+              "label": "সীমাবদ্ধতা",
+              "title": "Markdown code চালাতে পারে না, তাই counter কে image হতে হয়েছে",
+              "paragraphs": [
+                "GitHub README JavaScript চালাতে পারে না, API call করে result render ও করতে পারে না। বদলাতে থাকা একটা সংখ্যা চাইলে Markdown একমাত্র যেটা embed করবে সেটা হলো image URL। তাই counter টা একটা ছোট Express service, যেটা প্রতিটা request এ একটা named counter বাড়ায় আর current value টা SVG badge হিসেবে return করে।",
+                "SVG রাখায় response ছোট আর customisable থাকে: colour, label আর style আসে request থেকে, আর user এর দেওয়া সব text markup এ ঢোকার আগে escape করা হয়।"
+              ]
+            },
+            {
+              "id": "what-it-counts",
+              "label": "সততা",
+              "title": "সংখ্যাটা request এর, মানুষের না",
+              "paragraphs": [
+                "এই অংশটাই বেশিরভাগ visitor badge এড়িয়ে যায়। Image টা যতবার fetch হয়, counter ততবার বাড়ে। এর মধ্যে আছে bot, GitHub এর image proxy, cache, renderer, আর একই মানুষের বারবার page refresh করা। Value টা একটা request count, unique human visitor না।",
+                "তাই product আর documentation এ আমি এটাকে সেভাবেই বর্ণনা করি। যে counter ১,২৪০টা request বোঝাতে “1,240 visitors” লেখে, সেটা একটা ছোট মিথ্যা, যেটা মানুষ নিজেদের README তে আবার ছড়িয়ে দেয়।"
+              ],
+              "callout": "Metric এর নাম রাখুন সেটা যা measure করে তার নামে, আপনি যা measure করাতে চান তার নামে না।"
+            },
+            {
+              "id": "tradeoffs",
+              "label": "Trade-offs",
+              "title": "সহজ persistence, সীমাবদ্ধতাগুলো লিখে রাখা সহ",
+              "paragraphs": [
+                "Counter গুলো persist হয় একটা file এ। এতে self-hosting খুব সহজ হয়ে যায়, provision করার মতো কোনো database নেই, কিন্তু বিনিময়ে horizontal scaling আর durability ছাড়তে হয়। Ephemeral filesystem এ count reset হয়ে যেতে পারে, আর দুটো process নিরাপদে এটা share করতে পারে না।",
+                "Endpoint টার কোনো authentication নেই, documented rate limiting ও নেই। User দের নিজে খুঁজে বের করার জন্য ফেলে না রেখে আমি এসব embedding আর configuration instruction এর পাশেই document করে দিয়েছি। একটা health and status route uptime report করে, যাতে self-hoster অন্তত দেখতে পান process টা চালু আছে।"
+              ]
+            },
+            {
+              "id": "lesson",
+              "label": "শিক্ষা",
+              "title": "ছোট tool ও বড়গুলোর মতো একই শিক্ষা দেয়",
+              "paragraphs": [
+                "এটা আমার সবচেয়ে ছোট project গুলোর একটা, তবু এটাও বড়গুলোর মতো একই শিক্ষা দেয়: user কে সবচেয়ে কাজের যে কথাটা বলতে পারেন, সেটা হলো আপনার system কী করতে পারে না। Self-hoster রা সীমাবদ্ধতা জেনেই এটা বেছে নিয়েছেন, আর কাউকে ঠেকে শিখতে হয় না যে একটা page refresh ও visit হিসেবে গোনা হয়।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-ramadan-clock",
+      "kind": "authored",
       "slug": "prayer-time-software-needs-provenance",
+      "projectId": "project-ramadan-clock",
       "title": "Prayer-Time Software Needs Provenance, Not False Precision",
+      "excerpt": "Sehri and Iftar times depend on the source, method and location. Ramadan Clock shows where each time comes from instead of pretending to a precision it cannot have.",
       "category": "Data engineering",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/prayer-provenance.webp",
+        "alt": "Daily Sehri and Iftar times traced back to their source and calculation method"
+      },
+      "sections": [
+        {
+          "id": "no-single-truth",
+          "label": "The real problem",
+          "title": "There is no single correct prayer time",
+          "paragraphs": [
+            "Ramadan Clock shows district-aware Sehri and Iftar schedules for Bangladesh. It sounds like a lookup table. It is not. Calculated times depend on the source, the calculation method, the exact location and the local authority people follow. Two respectable sources can disagree by minutes.",
+            "An app that shows one time to the second, with no context, implies a certainty it does not have. For something people plan their fasting around, that false precision is worse than a visible caveat."
+          ],
+          "callout": "For a schedule people rely on, provenance is more honest than precision."
+        },
+        {
+          "id": "persisted",
+          "label": "Architecture",
+          "title": "Store validated times, do not recalculate on every visit",
+          "paragraphs": [
+            "Times are persisted as normalised date and location records rather than calculated on every public request. That makes the public view fast and stable, and it means a correction made by an administrator actually sticks.",
+            "Public reads use tagged caching and revalidation, so a timetable fix can be pushed out deliberately rather than waiting for caches to expire."
+          ]
+        },
+        {
+          "id": "imports",
+          "label": "Data quality",
+          "title": "Bad data is rejected before it is written",
+          "paragraphs": [
+            "Administrators can fetch times for many districts from external sources or upload JSON and CSV. External fetching uses retries and rate limits, and it is not allowed to overwrite validated data indiscriminately.",
+            "Uploads are checked for size, required fields, row limits and duplicate date-and-location rows before anything is written. A malformed import fails as a whole with a clear reason instead of partially corrupting a district's timetable. Upload history and fetch progress are visible to administrators."
+          ]
+        },
+        {
+          "id": "public",
+          "label": "Delivery",
+          "title": "The public view carries its own caveats",
+          "paragraphs": [
+            "Visitors can check today's times, the full Ramadan calendar and their district, and export schedules as PDF or images. The source and method guidance travels with the data, including in exports.",
+            "Ramadan Clock is a pre-release Next.js, PostgreSQL and Prisma application with Vitest coverage and API documentation. The lesson applies far beyond prayer times: when the truth depends on a choice, show the choice."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Prayer-time software এ দরকার provenance, false precision না",
+          "excerpt": "Sehri আর Iftar এর সময় নির্ভর করে source, method আর location এর উপর। Ramadan Clock প্রতিটা সময় কোথা থেকে এসেছে সেটা দেখায়, এমন precision এর ভান করে না যেটা থাকা সম্ভবই না।",
+          "sections": [
+            {
+              "id": "no-single-truth",
+              "label": "আসল সমস্যা",
+              "title": "একটাই সঠিক prayer time বলে কিছু নেই",
+              "paragraphs": [
+                "Ramadan Clock বাংলাদেশের জন্য district-aware Sehri আর Iftar schedule দেখায়। শুনতে একটা lookup table এর মতো লাগে। আসলে তা না। Calculated time নির্ভর করে source, calculation method, exact location আর মানুষ কোন local authority অনুসরণ করে তার উপর। দুইটা বিশ্বস্ত source এর মধ্যেও কয়েক মিনিটের পার্থক্য হতে পারে।",
+                "যে app কোনো context ছাড়া একটা সময় একদম সেকেন্ড পর্যন্ত দেখায়, সেটা এমন একটা নিশ্চয়তা বোঝায় যেটা তার আসলে নেই। মানুষ যেটার উপর ভিত্তি করে রোজার plan করে, সেখানে এই false precision চোখে পড়ার মতো একটা caveat এর চেয়েও খারাপ।"
+              ],
+              "callout": "মানুষ যে schedule এর উপর নির্ভর করে, সেখানে precision এর চেয়ে provenance বেশি সৎ।"
+            },
+            {
+              "id": "persisted",
+              "label": "Architecture",
+              "title": "Validated time store হয়, প্রতি visit এ recalculate না",
+              "paragraphs": [
+                "প্রতিটা public request এ calculate না করে সময়গুলো normalised date আর location record হিসেবে persist করা হয়। এতে public view fast আর stable থাকে, আর administrator এর করা correction সত্যিই টিকে থাকে।",
+                "Public read এ tagged caching আর revalidation ব্যবহার হয়, তাই একটা timetable fix cache expire হওয়ার অপেক্ষায় না থেকে ইচ্ছা করেই push করা যায়।"
+              ]
+            },
+            {
+              "id": "imports",
+              "label": "Data quality",
+              "title": "Write হওয়ার আগেই bad data reject হয়",
+              "paragraphs": [
+                "Administrator রা external source থেকে অনেকগুলো district এর সময় fetch করতে পারে, অথবা JSON আর CSV upload করতে পারে। External fetching এ retry আর rate limit আছে, আর validated data কে নির্বিচারে overwrite করার অনুমতি এর নেই।",
+                "কিছু write হওয়ার আগেই upload গুলো size, required field, row limit আর duplicate date-and-location row এর জন্য check হয়। একটা malformed import কোনো district এর timetable আংশিক নষ্ট না করে, পরিষ্কার কারণ সহ পুরোটাই fail করে। Upload history আর fetch progress administrator রা দেখতে পায়।"
+              ]
+            },
+            {
+              "id": "public",
+              "label": "Delivery",
+              "title": "Public view এর সাথেই থাকে তার caveat",
+              "paragraphs": [
+                "Visitor রা আজকের সময়, পুরো Ramadan calendar আর নিজের district দেখতে পারে, আর schedule PDF বা image হিসেবে export করতে পারে। Source আর method এর guidance data র সাথেই যায়, export এও।",
+                "Ramadan Clock একটা pre-release Next.js, PostgreSQL আর Prisma application, Vitest coverage আর API documentation সহ। শিক্ষাটা prayer time ছাড়িয়ে অনেক দূর পর্যন্ত খাটে: সত্যটা যখন একটা choice এর উপর নির্ভর করে, তখন choice টাই দেখাও।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -548,7 +2052,16 @@
       "title": "How I Scaled 50+ Developer Utilities Without 50 Architectures",
       "category": "Frontend architecture",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/devtools-shell.webp",
+        "alt": "Fifty developer tools sharing one searchable shell"
+      },
+      "translations": {
+        "bn": {
+          "title": "৫০টার বেশি developer tool, কিন্তু ৫০টা architecture না"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -557,43 +2070,418 @@
       "title": "Scheduled Publishing Cannot Depend on an Open Browser Tab",
       "category": "Distributed systems",
       "topic": "product",
-      "featured": true
+      "featured": true,
+      "image": {
+        "src": "/images/blog/durable-queue.webp",
+        "alt": "Scheduled posts moving from a closed browser tab to a durable queue that publishes later"
+      },
+      "translations": {
+        "bn": {
+          "title": "Scheduled publishing খোলা browser tab এর ওপর নির্ভর করতে পারে না"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-tin-audit-checker",
+      "kind": "authored",
       "slug": "keeping-tax-id-lookups-out-of-the-server",
+      "projectId": "project-tin-audit-checker",
       "title": "I Kept Tax-ID Lookups Out of the Server",
+      "excerpt": "Checking whether a TIN was on a published audit list should not mean sending that TIN to someone's server. The lookup runs entirely in the browser, and the tool is explicit about what that does and does not protect.",
       "category": "Privacy engineering",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/tin-browser.webp",
+        "alt": "A tax ID lookup running entirely inside the browser with the server unaware of the query"
+      },
+      "sections": [
+        {
+          "id": "the-list",
+          "label": "The real problem",
+          "title": "A useful list in an unusable format",
+          "paragraphs": [
+            "A list circulated as the NBR risk-based audit selection for assessment year 2023-24, covering more than 72,000 returns. Searching a static list for one TIN is painful, especially on a phone, so I built a focused lookup.",
+            "The obvious design is an API: the user types a TIN, the server searches and responds. That design also means every person's tax identifier lands in my server logs. I did not need to see anyone's TIN, so I designed the tool so that I cannot."
+          ],
+          "callout": "Before sending data to a server, ask whether you need to see it at all."
+        },
+        {
+          "id": "client-side",
+          "label": "Architecture",
+          "title": "The search happens on the user's device",
+          "paragraphs": [
+            "The list is fetched once per session and cached in memory. Every search after that runs in the browser. Typed TINs are never submitted to an application API.",
+            "Input is normalised by stripping spaces and formatting characters, but a match still requires the exact digits. A fuzzy match on a tax identifier would be worse than no match."
+          ]
+        },
+        {
+          "id": "tradeoff",
+          "label": "Trade-offs",
+          "title": "Being honest about what this protects",
+          "paragraphs": [
+            "Keeping queries local has a cost I state openly. Because the dataset ships to the browser, the records themselves are retrievable by anyone. The privacy benefit is about what people search for, not about hiding the list.",
+            "The data is also historical. It is not a live audit or compliance status, and its provenance, completeness and redistribution terms are not established by me. So a match shows the mapped details without inferring reasons, and both matches and non-matches tell the user to confirm with official sources."
+          ]
+        },
+        {
+          "id": "lesson",
+          "label": "Takeaway",
+          "title": "Small tools, real privacy decisions",
+          "paragraphs": [
+            "This is a tiny tool, but the decision is the same one large systems face: default to collecting nothing you do not need, and write down the limits of the protection you do provide. I also documented what the repository still lacks, including tests, a security policy and a license, rather than letting the tool look more finished than it is."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Tax-ID lookup আমি server এ যেতে দিইনি",
+          "excerpt": "একটা TIN published audit list এ আছে কিনা check করতে গিয়ে সেই TIN কারো server এ পাঠানোর দরকার হওয়া উচিত না। Lookup টা পুরোপুরি browser এ চলে, আর tool টা স্পষ্ট করে বলে এটা কী protect করে আর কী করে না।",
+          "sections": [
+            {
+              "id": "the-list",
+              "label": "আসল সমস্যা",
+              "title": "কাজের list, অকাজের format",
+              "paragraphs": [
+                "NBR এর assessment year 2023-24 এর risk-based audit selection হিসেবে একটা list ছড়িয়েছিল, যেখানে ৭২,০০০ এর বেশি return ছিল। একটা static list এ একটা TIN খোঁজা ঝামেলার, বিশেষ করে phone এ, তাই আমি একটা focused lookup বানিয়েছি।",
+                "সহজ design হলো একটা API: user TIN type করবে, server search করে response দেবে। কিন্তু এই design মানে প্রত্যেকের tax identifier আমার server log এ গিয়ে পড়বে। কারো TIN দেখার দরকার আমার ছিল না, তাই tool টা এমনভাবে design করেছি যাতে আমি দেখতেই না পারি।"
+              ],
+              "callout": "Server এ data পাঠানোর আগে নিজেকে জিজ্ঞেস করুন, আদৌ এটা দেখার দরকার আছে কিনা।"
+            },
+            {
+              "id": "client-side",
+              "label": "Architecture",
+              "title": "Search হয় user এর device এ",
+              "paragraphs": [
+                "List টা প্রতি session এ একবার fetch হয়ে memory তে cache থাকে। এরপরের প্রতিটা search browser এই চলে। Type করা TIN কখনো কোনো application API তে submit হয় না।",
+                "Space আর formatting character সরিয়ে input normalise করা হয়, কিন্তু match এর জন্য তারপরও exact digit লাগে। Tax identifier এ fuzzy match, কোনো match না থাকার চেয়েও খারাপ।"
+              ]
+            },
+            {
+              "id": "tradeoff",
+              "label": "Trade-offs",
+              "title": "এটা আসলে কী protect করে, সেটা নিয়ে সৎ থাকা",
+              "paragraphs": [
+                "Query local রাখার একটা cost আছে, যেটা আমি খোলাখুলি বলি। Dataset যেহেতু browser এ ship হয়, record গুলো যে কেউ বের করে নিতে পারে। Privacy র সুবিধাটা হলো মানুষ কী search করছে সেটা নিয়ে, list লুকানো নিয়ে না।",
+                "Data টা historical ও। এটা live audit বা compliance status না, আর এর provenance, completeness আর redistribution terms আমি প্রতিষ্ঠা করিনি। তাই match হলে কোনো কারণ অনুমান না করে শুধু mapped details দেখানো হয়, আর match হোক বা না হোক, দুই ক্ষেত্রেই user কে official source থেকে confirm করে নিতে বলা হয়।"
+              ]
+            },
+            {
+              "id": "lesson",
+              "label": "শিক্ষা",
+              "title": "ছোট tool, আসল privacy decision",
+              "paragraphs": [
+                "Tool টা ছোট, কিন্তু সিদ্ধান্তটা সেই একই যেটা বড় system গুলোকেও নিতে হয়: দরকার নেই এমন কিছুই default এ collect না করা, আর যে protection দিচ্ছি তার limit লিখে রাখা। Repository তে এখনো কী কী নেই, যেমন test, security policy আর license, সেটাও আমি document করেছি, যাতে tool টা আসলে যতটা finished, তার চেয়ে বেশি finished না দেখায়।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-formflow",
+      "kind": "authored",
       "slug": "version-the-workflow-not-just-the-form",
+      "projectId": "project-formflow",
       "title": "Version the Workflow, Not Just the Form",
+      "excerpt": "When an institution edits a form or its approval workflow, older requests should keep the meaning and process they started with. FormFlow pins every submission to immutable published versions.",
       "category": "Multi-tenant systems",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 2,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/versioned-workflow.webp",
+        "alt": "Submissions pinned to the form and workflow versions they entered"
+      },
+      "sections": [
+        {
+          "id": "scattered",
+          "label": "The real problem",
+          "title": "Requests live in chat, spreadsheets and memory",
+          "paragraphs": [
+            "Institutions handle operational requests across chat, spreadsheets, fixed forms and verbal follow-up. The submitted information ends up separated from who owns it, where it stands and who is accountable. FormFlow is a bilingual platform where institutions define their own forms and workflows, and every request carries its history in one record.",
+            "The interesting problem appears months later. An admin adds a question to a form or an approval step to a workflow. What happens to requests submitted under the old version?"
+          ]
+        },
+        {
+          "id": "versions",
+          "label": "Data model",
+          "title": "Published forms and workflows are immutable versions",
+          "paragraphs": [
+            "Publishing creates an immutable Form Version and Workflow Version. Each submission records the versions it entered. Later edits create new versions and never rewrite the meaning or the required process of work already in flight.",
+            "Without this, an old request suddenly has a required field it never saw, or skips an approval it should have had. With it, every historical record stays interpretable exactly as it was submitted."
+          ],
+          "callout": "Versioning the data is not enough. Version the rules that produced it."
+        },
+        {
+          "id": "identity",
+          "label": "Security",
+          "title": "Signing in proves who you are, not what you may do",
+          "paragraphs": [
+            "Google sign-in establishes identity. Platform authority and institution membership are separate boundaries that decide what a person can see and change. Role-aware navigation helps usability, but every protected read and mutation is authorised on the server and through institution-scoped queries.",
+            "Requester-visible updates are also separate from internal work records, so staff can keep operational detail without publishing every internal note to the person who submitted the request."
+          ]
+        },
+        {
+          "id": "delivery",
+          "label": "Delivery",
+          "title": "Built for real roles, in two languages",
+          "paragraphs": [
+            "FormFlow has role-specific journeys for Super Admins, Admins, Managers, Requesters and Employees, with complete English and Bengali interfaces including numeral handling. Requesters get a tracking number and visible progress. Managers review queues and assign work. Employees accept assignments, record evidence and complete or return work through explicit states.",
+            "Domain, application, authorisation, route and presentation checks run in GitHub Actions, and the app is publicly deployed on Netlify as an early-stage product."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Form না, workflow টাকেও version করুন",
+          "excerpt": "কোনো প্রতিষ্ঠান form বা তার approval workflow edit করলে পুরনো request গুলোর অর্থ আর process যেমন ছিল তেমনই থাকা উচিত। FormFlow প্রতিটা submission কে immutable published version এর সাথে pin করে রাখে।",
+          "sections": [
+            {
+              "id": "scattered",
+              "label": "আসল সমস্যা",
+              "title": "Request গুলো ছড়িয়ে থাকে chat, spreadsheet আর মানুষের মনে",
+              "paragraphs": [
+                "প্রতিষ্ঠানগুলো operational request সামলায় chat, spreadsheet, fixed form আর মুখে মুখে follow-up দিয়ে। ফলে submit করা তথ্য আলাদা হয়ে যায় এর owner কে, এখন কোন অবস্থায় আছে, আর দায়িত্ব কার, সেই তথ্য থেকে। FormFlow একটা bilingual platform, যেখানে প্রতিষ্ঠান নিজের form আর workflow নিজেই define করে, আর প্রতিটা request তার পুরো history এক record এ বহন করে।",
+                "আসল interesting সমস্যাটা আসে কয়েক মাস পরে। একজন admin form এ একটা প্রশ্ন যোগ করলেন, বা workflow এ একটা approval step। পুরনো version এ submit হওয়া request গুলোর তখন কী হবে?"
+              ]
+            },
+            {
+              "id": "versions",
+              "label": "Data model",
+              "title": "Published form আর workflow হলো immutable version",
+              "paragraphs": [
+                "Publish করলে একটা immutable Form Version আর Workflow Version তৈরি হয়। প্রতিটা submission যে version এ ঢুকেছে সেটা record করে রাখে। পরের edit গুলো নতুন version বানায়, চলমান কাজের অর্থ বা required process কখনো rewrite করে না।",
+                "এটা না থাকলে একটা পুরনো request এ হঠাৎ এমন required field চলে আসে যেটা সে কখনো দেখেইনি, বা যে approval পাওয়ার কথা ছিল সেটা বাদ পড়ে যায়। এটা থাকলে প্রতিটা historical record ঠিক যেভাবে submit হয়েছিল সেভাবেই বোঝা যায়।"
+              ],
+              "callout": "শুধু data version করা যথেষ্ট না। যে rule দিয়ে data তৈরি হয়েছে, সেটাও version করুন।"
+            },
+            {
+              "id": "identity",
+              "label": "Security",
+              "title": "Sign in প্রমাণ করে আপনি কে, আপনি কী করতে পারবেন সেটা না",
+              "paragraphs": [
+                "Google sign-in identity প্রতিষ্ঠা করে। Platform authority আর institution membership আলাদা boundary, এগুলোই ঠিক করে একজন কী দেখতে আর বদলাতে পারবে। Role-aware navigation usability তে সাহায্য করে, কিন্তু প্রতিটা protected read আর mutation server এ এবং institution-scoped query দিয়ে authorise হয়।",
+                "Requester যে update দেখেন সেগুলোও internal work record থেকে আলাদা, যাতে staff operational detail রাখতে পারেন, অথচ প্রতিটা internal note request submit করা মানুষটার কাছে publish হয়ে না যায়।"
+              ]
+            },
+            {
+              "id": "delivery",
+              "label": "Delivery",
+              "title": "Real role এর জন্য বানানো, দুই ভাষায়",
+              "paragraphs": [
+                "FormFlow এ Super Admin, Admin, Manager, Requester আর Employee দের জন্য আলাদা role-specific journey আছে, সাথে সম্পূর্ণ English আর বাংলা interface, numeral handling সহ। Requester রা একটা tracking number আর দৃশ্যমান progress পান। Manager রা queue review করেন আর কাজ assign করেন। Employee রা assignment accept করেন, evidence record করেন, আর explicit state এর মধ্য দিয়ে কাজ complete বা return করেন।",
+                "Domain, application, authorisation, route আর presentation check গুলো GitHub Actions এ চলে, আর app টা early-stage product হিসেবে Netlify তে public ভাবে deploy করা আছে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-liftuno",
+      "kind": "authored",
       "slug": "gym-membership-debt-cannot-be-invented-by-a-calendar",
+      "projectId": "project-liftuno",
       "title": "A Gym Membership Calendar Must Not Invent Debt",
+      "excerpt": "Liftuno replaces paper ledgers for Bangladeshi gyms. The core design choice: a member who stops coming has expired coverage, not debt, so the calendar never invents money owed.",
       "category": "Domain modeling",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/gym-coverage.webp",
+        "alt": "Prepaid coverage periods on a timeline with a gap that creates no debt"
+      },
+      "sections": [
+        {
+          "id": "paper",
+          "label": "The real problem",
+          "title": "Gyms run on paper and memory",
+          "paragraphs": [
+            "Liftuno is a gym-management platform I am building for a client in Bangladesh. Many local gyms track members, payments, attendance and outstanding balances in paper records or in a staff member's head. Daily work is slow, and financial history becomes ambiguous the moment anyone disagrees.",
+            "The product has to support English and Bangla, Bangladeshi taka, Asia/Dhaka dates and phone-first use, with an Android client planned on the same foundation."
+          ]
+        },
+        {
+          "id": "no-invented-debt",
+          "label": "Domain model",
+          "title": "Inactivity is not debt",
+          "paragraphs": [
+            "Most billing software starts from a recurring charge: every month, the member owes a fee. That model breaks on how gyms actually work. A member who does not come for three months has not borrowed three months of fees. They just stopped coming.",
+            "So Liftuno models prepaid coverage. A payment buys a coverage period. When it expires, no new charge appears. When the member returns and is recorded, the next payable period begins. Expired coverage and money owed stay two different facts, and staff can see which is which.",
+            "Partial payments, offers and reversals keep explicit financial meaning on top of that model, instead of being edits to a running balance."
+          ],
+          "callout": "Software should record financial reality, not generate it from a calendar."
+        },
+        {
+          "id": "retries",
+          "label": "Reliability",
+          "title": "A retry must never create a second payment",
+          "paragraphs": [
+            "Gym front desks work on unreliable connections, and people tap buttons twice. Payment and attendance commands carry stable command identities, and uniqueness rules ensure that retrying a request cannot duplicate a transaction or record two check-ins for the same day.",
+            "This had to be in the domain from the start. Adding idempotency after duplicates appear means cleaning up money that already looks real."
+          ]
+        },
+        {
+          "id": "tenancy",
+          "label": "Access",
+          "title": "The backend decides who sees which gym",
+          "paragraphs": [
+            "Platform operators, gym administrators, staff and members need different permissions with strict separation between gyms. Protected reads and commands resolve access grants inside Convex, so the backend never trusts a role or organisation choice made by the interface.",
+            "Authentication uses Better Auth with an invitation lifecycle and an account-attempt budget. The highest-risk financial and access rules are covered by domain, authentication and backend integration tests, and the web app and planned Android client share one Expo codebase while platform-specific behaviour stays explicit."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Gym এর calendar যেন দেনা বানিয়ে না ফেলে",
+          "excerpt": "Liftuno বাংলাদেশের gym গুলোর কাগজের খাতার জায়গা নিচ্ছে। মূল design সিদ্ধান্ত: যে member আসা বন্ধ করেছেন তার coverage expire হয়েছে, দেনা হয়নি, তাই calendar কখনো নিজে থেকে পাওনা টাকা তৈরি করে না।",
+          "sections": [
+            {
+              "id": "paper",
+              "label": "আসল সমস্যা",
+              "title": "Gym চলে কাগজ আর মুখস্থ হিসাবে",
+              "paragraphs": [
+                "Liftuno একটা gym-management platform, যেটা আমি বাংলাদেশের একজন client এর জন্য বানাচ্ছি। অনেক local gym member, payment, attendance আর বকেয়া হিসাব রাখে কাগজের record এ, নয়তো কোনো staff এর মাথায়। দৈনন্দিন কাজ ধীর, আর কেউ দ্বিমত করলেই financial history অস্পষ্ট হয়ে যায়।",
+                "Product টাকে English আর বাংলা, বাংলাদেশি টাকা, Asia/Dhaka তারিখ আর phone-first ব্যবহার support করতে হয়, সাথে একই foundation এর ওপর একটা Android client এর পরিকল্পনাও আছে।"
+              ]
+            },
+            {
+              "id": "no-invented-debt",
+              "label": "Domain model",
+              "title": "না আসা মানে দেনা না",
+              "paragraphs": [
+                "বেশিরভাগ billing software শুরু হয় recurring charge থেকে: প্রতি মাসে member এর একটা fee বকেয়া হয়। Gym আসলে যেভাবে চলে, সেখানে এই model ভেঙে পড়ে। যে member তিন মাস আসেননি, তিনি তিন মাসের fee ধার নেননি। তিনি শুধু আসা বন্ধ করেছেন।",
+                "তাই Liftuno model করে prepaid coverage। একটা payment দিয়ে একটা coverage period কেনা হয়। সেটা expire হলে নতুন কোনো charge আসে না। Member ফিরে এলে আর সেটা record হলে পরের payable period শুরু হয়। Expired coverage আর পাওনা টাকা দুটো আলাদা fact হিসেবেই থাকে, আর staff দেখতে পান কোনটা কোনটা।",
+                "Partial payment, offer আর reversal এই model এর ওপরেই নিজেদের explicit financial অর্থ ধরে রাখে, running balance এ edit হিসেবে না।"
+              ],
+              "callout": "Software এর কাজ financial বাস্তবতা record করা, calendar থেকে সেটা বানিয়ে নেওয়া না।"
+            },
+            {
+              "id": "retries",
+              "label": "Reliability",
+              "title": "Retry যেন কখনো দ্বিতীয় payment তৈরি না করে",
+              "paragraphs": [
+                "Gym এর front desk চলে অনির্ভরযোগ্য connection এ, আর মানুষ button দুবার চাপে। Payment আর attendance command গুলো stable command identity বহন করে, আর uniqueness rule নিশ্চিত করে যে request retry করলে transaction duplicate হবে না, একই দিনে দুটো check-in ও record হবে না।",
+                "এটা শুরু থেকেই domain এ থাকা দরকার ছিল। Duplicate দেখা দেওয়ার পরে idempotency যোগ করা মানে এমন টাকা পরিষ্কার করা, যেটা ইতিমধ্যে আসল বলে মনে হচ্ছে।"
+              ]
+            },
+            {
+              "id": "tenancy",
+              "label": "Access",
+              "title": "কে কোন gym দেখবে, সেটা ঠিক করে backend",
+              "paragraphs": [
+                "Platform operator, gym administrator, staff আর member দের আলাদা permission দরকার, gym গুলোর মধ্যে কঠোর বিভাজন সহ। Protected read আর command গুলো Convex এর ভেতরেই access grant resolve করে, তাই interface থেকে আসা কোনো role বা organisation বাছাইকে backend কখনো বিশ্বাস করে না।",
+                "Authentication এ Better Auth ব্যবহার করেছি, invitation lifecycle আর account-attempt budget সহ। সবচেয়ে ঝুঁকিপূর্ণ financial আর access rule গুলো domain, authentication আর backend integration test দিয়ে cover করা। Web app আর পরিকল্পিত Android client একটাই Expo codebase share করে, আর platform-specific behaviour explicit রাখা হয়।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-coaching-management",
+      "kind": "authored",
       "slug": "one-attendance-model-for-multiple-biometric-vendors",
+      "projectId": "project-coaching-management",
       "title": "One Attendance Model for Multiple Biometric Vendors",
+      "excerpt": "A coaching platform had to accept attendance from two biometric vendors with different protocols. One internal device contract and an adapter per vendor kept hardware quirks out of the business logic.",
       "category": "Multi-tenant systems",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/biometric-adapters.webp",
+        "alt": "Two different biometric devices feeding one attendance model through adapters"
+      },
+      "sections": [
+        {
+          "id": "disconnected",
+          "label": "The real problem",
+          "title": "Institutes run on disconnected tools",
+          "paragraphs": [
+            "Coaching institutes often split student records, class structures, attendance devices, fee collection, expenses and SMS across separate tools. The client platform I am building brings them into one multi-tenant system, where each organisation must never see or change another organisation's data.",
+            "Attendance was the hardest integration. Students and teachers share physical biometric devices, and the institutes use devices from two vendors, Steller and Tipsoi, with different protocols and data formats."
+          ]
+        },
+        {
+          "id": "adapter",
+          "label": "Architecture",
+          "title": "One internal contract, one adapter per vendor",
+          "paragraphs": [
+            "The quick solution was an if-else in the attendance code: vendor A works this way, vendor B that way. It would have worked for two vendors. The third vendor would have meant reopening attendance logic again, and over time each vendor's quirks would have leaked into the core workflow.",
+            "Instead I defined an internal device contract. The attendance workflow only knows that contract. Each vendor gets an adapter that translates its protocol into the platform's language, and a new vendor means a new adapter, not a change to attendance rules.",
+            "The same boundary holds the sensitive parts: biometric device credentials are encrypted, there is a shared device-identity strategy for people with different roles, and polling is handled in one workflow rather than per vendor."
+          ],
+          "callout": "Hardware will change and vendors will change. The business logic should not need to know."
+        },
+        {
+          "id": "tenancy",
+          "label": "Isolation",
+          "title": "Organisation scope is part of every protected query",
+          "paragraphs": [
+            "Tenant identity and granular role checks are applied at server boundaries, so client state can never widen access to academic or financial records. Roles separate platform administration, organisation administration, finance and academic coordination.",
+            "Server Components handle initial data and access boundaries, while TanStack Query supports the high-interaction screens, so the whole application does not become client state."
+          ]
+        },
+        {
+          "id": "audit",
+          "label": "Records",
+          "title": "Critical records are never destroyed",
+          "paragraphs": [
+            "Students, teachers, payments and related records use soft deletion with reasons and history. A financial correction leaves evidence behind instead of erasing it, which matters the first time two people remember a payment differently.",
+            "Attendance alerts and marketing messages go out as Bangla SMS through a scheduling and batch-delivery design that respects provider limits and tracks delivery state. The platform is a private client SaaS under active development."
+          ]
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "একাধিক biometric vendor, একটাই attendance model",
+          "excerpt": "একটা coaching platform কে দুইটা biometric vendor থেকে attendance নিতে হতো, যাদের protocol আলাদা। একটা internal device contract আর প্রতি vendor এর জন্য একটা করে adapter মিলে hardware এর quirk গুলো business logic থেকে দূরে রেখেছে।",
+          "sections": [
+            {
+              "id": "disconnected",
+              "label": "আসল সমস্যা",
+              "title": "Institute গুলো চলে বিচ্ছিন্ন tool এ",
+              "paragraphs": [
+                "Coaching institute গুলো প্রায়ই student record, class structure, attendance device, fee collection, expense আর SMS আলাদা আলাদা tool এ ভাগ করে রাখে। আমি যে client platform টা বানাচ্ছি, সেটা এগুলোকে একটা multi-tenant system এ নিয়ে আসে, যেখানে কোনো organisation কখনোই অন্য organisation এর data দেখতে বা বদলাতে পারবে না।",
+                "সবচেয়ে কঠিন integration ছিল attendance। Student আর teacher রা একই physical biometric device ব্যবহার করে, আর institute গুলো দুইটা vendor এর device চালায়, Steller আর Tipsoi, যাদের protocol আর data format আলাদা।"
+              ]
+            },
+            {
+              "id": "adapter",
+              "label": "Architecture",
+              "title": "একটা internal contract, প্রতি vendor এ একটা adapter",
+              "paragraphs": [
+                "Quick solution ছিল attendance code এ একটা if-else: vendor A এভাবে কাজ করে, vendor B ওভাবে। দুইটা vendor এর জন্য এটা চলে যেত। কিন্তু তৃতীয় vendor এলেই আবার attendance logic খুলতে হতো, আর সময়ের সাথে প্রতিটা vendor এর quirk core workflow এ ঢুকে পড়ত।",
+                "তার বদলে আমি একটা internal device contract define করেছি। Attendance workflow শুধু ওই contract টাই চেনে। প্রতিটা vendor এর জন্য একটা adapter আছে, যেটা তার protocol কে platform এর ভাষায় translate করে, আর নতুন vendor মানে নতুন একটা adapter, attendance rule এ কোনো change না।",
+                "Sensitive অংশগুলোও এই একই boundary তে থাকে: biometric device credential encrypted থাকে, আলাদা role এর মানুষদের জন্য একটা shared device-identity strategy আছে, আর polling প্রতি vendor এ আলাদা না হয়ে একটাই workflow তে handle হয়।"
+              ],
+              "callout": "Hardware বদলাবে, vendor ও বদলাবে। Business logic এর সেটা জানার দরকার থাকা উচিত না।"
+            },
+            {
+              "id": "tenancy",
+              "label": "Isolation",
+              "title": "প্রতিটা protected query তে organisation scope থাকে",
+              "paragraphs": [
+                "Tenant identity আর granular role check server boundary তে apply হয়, তাই client state কখনো academic বা financial record এর access বাড়াতে পারে না। Role গুলো আলাদা করে platform administration, organisation administration, finance আর academic coordination।",
+                "Initial data আর access boundary handle করে Server Components, আর high-interaction screen গুলোকে support দেয় TanStack Query, যাতে পুরো application টা client state হয়ে না যায়।"
+              ]
+            },
+            {
+              "id": "audit",
+              "label": "Records",
+              "title": "Critical record কখনো মুছে ফেলা হয় না",
+              "paragraphs": [
+                "Student, teacher, payment আর related record গুলোতে কারণ আর history সহ soft deletion ব্যবহার হয়। একটা financial correction কিছু মুছে না দিয়ে পেছনে evidence রেখে যায়, আর এর গুরুত্ব বোঝা যায় প্রথম যেদিন দুইজন মানুষ একটা payment দুইরকমভাবে মনে করে।",
+                "Attendance alert আর marketing message Bangla SMS হিসেবে যায়, একটা scheduling আর batch-delivery design এর মাধ্যমে, যেটা provider limit মেনে চলে আর delivery state track করে। Platform টা একটা private client SaaS, এখনো active development এ আছে।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -602,25 +2490,224 @@
       "title": "Patient Movement Capture Is a State Machine",
       "category": "Frontend architecture",
       "topic": "product",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/movement-state-ring.webp",
+        "alt": "Movement capture as a cycle of explicit states with a retake path"
+      },
+      "translations": {
+        "bn": {
+          "title": "Patient এর movement capture আসলে একটা state machine"
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-mmh-re-annotation",
+      "kind": "authored",
       "slug": "human-review-needs-a-geometry-domain",
+      "projectId": "project-mmh-re-annotation",
       "title": "Human Review of AI Measurements Needs a Geometry Domain",
+      "excerpt": "When AI places a clinical measurement on the wrong frame, a reviewer has to correct it precisely. That only became reliable once geometry, workflow and data validation stopped living inside the canvas.",
       "category": "Clinical systems",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/geometry-review.webp",
+        "alt": "A movement frame with measurement lines and an angle being corrected by hand"
+      },
+      "sections": [
+        {
+          "id": "ai-is-imperfect",
+          "label": "The real problem",
+          "title": "AI measurements need a human correction path",
+          "paragraphs": [
+            "At MyMedicalHub, automated movement analysis places lines and angles on recorded frames to measure range of motion. Sometimes it chooses an imperfect frame or a slightly wrong anatomical position. A clinical reviewer then has to pick the right frame, correct the lines and angles, compare against reference guidance, and save a revised measurement without losing the exercise context.",
+            "In the legacy tool, all of that lived inside the canvas. Points drifted when the media was scaled. Lines that should move along one axis moved freely. When upstream data was malformed, the canvas just failed, with nothing to tell the reviewer why."
+          ],
+          "callout": "If the tool for correcting AI is itself ambiguous, people end up trusting the AI more, not less."
+        },
+        {
+          "id": "geometry-domain",
+          "label": "Architecture",
+          "title": "Geometry became a domain, separate from rendering",
+          "paragraphs": [
+            "Coordinate and measurement calculations are now pure functions that can be tested without Konva. The canvas renders and handles interaction. The domain decides what is correct.",
+            "Measurement semantics stay explicit through load, edit, render and save: line type, direction, measurement type, left and right values and plumb-line relationships. A line restricted to one axis is restricted by the model, not by hoping the drag handler behaves."
+          ]
+        },
+        {
+          "id": "explicit-steps",
+          "label": "Workflow",
+          "title": "Review became a controlled sequence",
+          "paragraphs": [
+            "Frame selection, alignment and verification are explicit steps. Save cannot run against incomplete media or geometry, because the workflow does not reach a state where saving is possible until those steps are done.",
+            "Reviewers also get explicit unavailable, loading, validation, save, retake and completion states instead of a blank or half-initialised canvas."
+          ]
+        },
+        {
+          "id": "legacy-boundary",
+          "label": "Data boundary",
+          "title": "Legacy data is validated before it reaches the UI",
+          "paragraphs": [
+            "The review depends on several tenant-specific legacy APIs whose payloads can be missing, stale or inconsistent. Responses are parsed and mapped at the boundary, so a malformed contract becomes a diagnosable unavailable state rather than an exception deep in the canvas.",
+            "Large video frames and rendered images are validated and preloaded so processing does not freeze the interface. The rebuilt tool uses Next.js, React and TypeScript, with unit, integration and browser-oriented tests covering geometry, upstream mappings, API contracts and the critical review interactions, while the legacy services keep running."
+          ],
+          "callout": "Konva draws. The domain model decides what is true."
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "AI measurement এর human review এ দরকার geometry domain",
+          "excerpt": "AI যখন ভুল frame এ একটা clinical measurement বসিয়ে দেয়, reviewer কে সেটা নিখুঁতভাবে ঠিক করতে হয়। এটা reliable হয়েছে তখনই, যখন geometry, workflow আর data validation canvas এর ভেতর থেকে বের হয়ে এসেছে।",
+          "sections": [
+            {
+              "id": "ai-is-imperfect",
+              "label": "আসল সমস্যা",
+              "title": "AI measurement এর জন্য দরকার human correction path",
+              "paragraphs": [
+                "MyMedicalHub এ automated movement analysis recorded frame এর উপর line আর angle বসিয়ে range of motion মাপে। মাঝে মাঝে এটা একটা imperfect frame বেছে নেয়, বা anatomical position সামান্য ভুল ধরে। তখন একজন clinical reviewer কে ঠিক frame টা বাছতে হয়, line আর angle ঠিক করতে হয়, reference guidance এর সাথে মিলিয়ে দেখতে হয়, আর exercise এর context না হারিয়ে একটা revised measurement save করতে হয়।",
+                "Legacy tool এ এই সবকিছু canvas এর ভেতরেই ছিল। Media scale হলে point সরে যেত। যে line শুধু একটা axis বরাবর চলার কথা, সেটা যেদিকে খুশি চলত। Upstream data malformed হলে canvas সোজা fail করত, reviewer কে কারণটা জানানোর মতো কিছুই থাকত না।"
+              ],
+              "callout": "AI ঠিক করার tool টাই যদি ambiguous হয়, মানুষ শেষ পর্যন্ত AI কে কম না, বরং বেশি trust করে।"
+            },
+            {
+              "id": "geometry-domain",
+              "label": "Architecture",
+              "title": "Geometry এখন আলাদা domain, rendering থেকে বিচ্ছিন্ন",
+              "paragraphs": [
+                "Coordinate আর measurement calculation এখন pure function, যেগুলো Konva ছাড়াই test করা যায়। Canvas render করে আর interaction handle করে। কোনটা correct, সেটা ঠিক করে domain।",
+                "Load, edit, render আর save, পুরো পথে measurement semantics explicit থাকে: line type, direction, measurement type, left আর right value, আর plumb-line relationship। একটা axis এ সীমাবদ্ধ line কে সীমাবদ্ধ রাখে model, drag handler ঠিকঠাক behave করবে এই আশায় বসে থাকা হয় না।"
+              ]
+            },
+            {
+              "id": "explicit-steps",
+              "label": "Workflow",
+              "title": "Review এখন একটা controlled sequence",
+              "paragraphs": [
+                "Frame selection, alignment আর verification হলো explicit step। Incomplete media বা geometry এর উপর save চলতেই পারে না, কারণ এই step গুলো শেষ না হওয়া পর্যন্ত workflow এমন কোনো state এ পৌঁছায় না যেখানে save করা সম্ভব।",
+                "Blank বা আধা-initialise হওয়া canvas এর বদলে reviewer রা পায় explicit unavailable, loading, validation, save, retake আর completion state।"
+              ]
+            },
+            {
+              "id": "legacy-boundary",
+              "label": "Data boundary",
+              "title": "UI তে পৌঁছানোর আগেই legacy data validate হয়",
+              "paragraphs": [
+                "Review টা নির্ভর করে কয়েকটা tenant-specific legacy API র উপর, যাদের payload missing, stale বা inconsistent হতে পারে। Response গুলো boundary তেই parse আর map করা হয়, তাই একটা malformed contract canvas এর গভীরে exception না হয়ে diagnose করা যায় এমন একটা unavailable state হয়ে দাঁড়ায়।",
+                "বড় video frame আর rendered image আগে থেকেই validate আর preload করা হয়, যাতে processing এর সময় interface freeze না হয়। নতুন করে বানানো tool টা Next.js, React আর TypeScript এ লেখা, আর unit, integration ও browser-oriented test দিয়ে geometry, upstream mapping, API contract আর critical review interaction গুলো cover করা, এদিকে legacy service গুলো আগের মতোই চলতে থাকে।"
+              ],
+              "callout": "Konva আঁকে। কোনটা সত্য, সেটা ঠিক করে domain model।"
+            }
+          ]
+        }
+      }
     },
     {
-      "kind": "case-study-derived",
-      "projectId": "project-mmh-telemedicine",
+      "kind": "authored",
       "slug": "a-video-call-is-not-a-clinical-workflow",
+      "projectId": "project-mmh-telemedicine",
       "title": "A Video Call Is Not a Clinical Workflow",
+      "excerpt": "Remote movement assessment needs more than video. Exercise state, recordings and either participant leaving at any moment all have to be explicit product states, or patients end up stuck.",
       "category": "Real-time systems",
       "topic": "product",
-      "featured": false
+      "publishedAt": "2026-08-28",
+      "readingMinutes": 3,
+      "featured": false,
+      "image": {
+        "src": "/images/blog/clinical-workflow.webp",
+        "alt": "Two participant screens connected through a sequence of explicit session states"
+      },
+      "sections": [
+        {
+          "id": "more-than-video",
+          "label": "The real problem",
+          "title": "The video was the easy part",
+          "paragraphs": [
+            "At MyMedicalHub, patients do guided movement assessments with a provider over a live session. On the surface it looks like a video call. In practice, both sides must stay synchronised while exercises change, instructions play, recordings start and stop, pain or strength questions appear, network quality shifts, and either participant can leave at any moment.",
+            "Camera, microphone, permissions and WebRTC lifecycle events also behave differently across browsers and patient devices. A happy-path demo works on day one. The product is everything that happens around it."
+          ]
+        },
+        {
+          "id": "two-bugs",
+          "label": "What broke",
+          "title": "Two bugs with the same root cause",
+          "paragraphs": [
+            "Two defects taught me the most. In the first, a patient finished one exercise, moved to the next, and saw the previous exercise's recording preview again. In a clinical system, showing the wrong movement's video in the wrong task is not cosmetic.",
+            "In the second, when the provider left the session, the patient was left on a loading screen. Nothing was coming, and nothing told them so.",
+            "Both came from the same assumption: we had treated state as belonging to the call rather than to the clinical workflow."
+          ],
+          "callout": "If state belongs to the call, it leaks between tasks. If it belongs to the workflow, it has an owner and an end."
+        },
+        {
+          "id": "decisions",
+          "label": "Architecture",
+          "title": "Each real-time concern got an owner",
+          "paragraphs": [
+            "Socket, media, recording and error lifecycles now live in separate, focused React contexts. One high-frequency concern no longer owns every room transition, so a burst of socket events cannot accidentally reset recording state.",
+            "Exercise-owned media is reset whenever the selected exercise changes. Recorded previews, questions and movement state are cleared at that boundary, so stale clinical media cannot reappear in a new task.",
+            "Optional behaviour such as strength analysis is driven by tenant features. Controls appear and execute only when the current tenant's contract supports them, which let us add workflows without forking the telehealth application."
+          ]
+        },
+        {
+          "id": "failure-states",
+          "label": "Failure as product",
+          "title": "Leaving, disconnecting and failing became states",
+          "paragraphs": [
+            "Provider exit, peer disconnect, API failure and degraded network paths now transition to explicit messages and redirects instead of indefinite loading. Each has words a patient can understand and a next step.",
+            "The stack is Next.js and TypeScript, with WebRTC media hooks, Socket.IO room coordination and Redux for assessment state. None of that is unusual. What made the difference was deciding that \"someone left\" is a screen we design, not an error we hope never happens."
+          ],
+          "callout": "In real-time products, the exit paths are the product."
+        }
+      ],
+      "translations": {
+        "bn": {
+          "title": "Video call মানেই clinical workflow না",
+          "excerpt": "Remote movement assessment এ শুধু video দিয়ে কাজ চলে না। Exercise state, recording, আর যেকোনো মুহূর্তে যেকোনো participant এর চলে যাওয়া, এই সবকিছুকে explicit product state বানাতে হয়, নাহলে patient আটকে যান।",
+          "sections": [
+            {
+              "id": "more-than-video",
+              "label": "আসল সমস্যা",
+              "title": "Video টাই ছিল সবচেয়ে সহজ অংশ",
+              "paragraphs": [
+                "MyMedicalHub এ patient রা একটা live session এ provider এর সাথে guided movement assessment করেন। বাইরে থেকে দেখতে এটা একটা video call। বাস্তবে দুই পক্ষকেই sync এ থাকতে হয়, যখন exercise বদলাচ্ছে, instruction বাজছে, recording শুরু আর বন্ধ হচ্ছে, pain বা strength এর প্রশ্ন আসছে, network quality ওঠানামা করছে, আর যেকোনো মুহূর্তে যেকোনো participant চলে যেতে পারেন।",
+                "Camera, microphone, permission আর WebRTC lifecycle event গুলোও browser আর patient এর device ভেদে আলাদা আচরণ করে। Happy-path demo প্রথম দিনেই চলে যায়। Product হলো তার চারপাশে যা যা ঘটে, সেই সবকিছু।"
+              ]
+            },
+            {
+              "id": "two-bugs",
+              "label": "কী ভেঙেছিল",
+              "title": "দুটো bug, একই root cause",
+              "paragraphs": [
+                "দুটো defect থেকে আমি সবচেয়ে বেশি শিখেছি। প্রথমটায়, একজন patient একটা exercise শেষ করে পরেরটায় গেলেন, আর আবার আগের exercise এর recording preview দেখলেন। Clinical system এ ভুল task এ ভুল movement এর video দেখানো কোনো cosmetic সমস্যা না।",
+                "দ্বিতীয়টায়, provider session ছেড়ে চলে গেলে patient একটা loading screen এ আটকে থাকতেন। কিছুই আসছিল না, আর সেটা কেউ তাদের জানাচ্ছিলও না।",
+                "দুটোরই উৎস একই ধারণা: আমরা state কে clinical workflow এর অংশ না ভেবে call এর অংশ হিসেবে ধরে নিয়েছিলাম।"
+              ],
+              "callout": "State যদি call এর হয়, সেটা এক task থেকে আরেক task এ leak করে। যদি workflow এর হয়, তাহলে তার একজন owner থাকে, একটা শেষও থাকে।"
+            },
+            {
+              "id": "decisions",
+              "label": "Architecture",
+              "title": "প্রতিটা real-time concern এর একজন owner ঠিক করে দিলাম",
+              "paragraphs": [
+                "Socket, media, recording আর error lifecycle এখন আলাদা আলাদা focused React context এ থাকে। একটা high-frequency concern আর সব room transition এর মালিক না, তাই হঠাৎ একগাদা socket event এসে ভুল করে recording state reset করে দিতে পারে না।",
+                "Selected exercise বদলালেই exercise-owned media reset হয়ে যায়। Recorded preview, প্রশ্ন আর movement state ঠিক ওই boundary তে clear হয়, তাই পুরোনো clinical media নতুন task এ আর ফিরে আসতে পারে না।",
+                "Strength analysis এর মতো optional behaviour চলে tenant feature দিয়ে। Control গুলো তখনই দেখা যায় আর execute হয়, যখন current tenant এর contract সেটা support করে। এতে telehealth application fork না করেই আমরা নতুন workflow যোগ করতে পেরেছি।"
+              ]
+            },
+            {
+              "id": "failure-states",
+              "label": "Failure ও product",
+              "title": "চলে যাওয়া, disconnect হওয়া আর fail করা হয়ে উঠল state",
+              "paragraphs": [
+                "Provider exit, peer disconnect, API failure আর degraded network path এখন অনির্দিষ্ট loading এর বদলে explicit message আর redirect এ transition করে। প্রতিটার জন্য আছে patient বুঝতে পারেন এমন ভাষা আর পরবর্তী একটা step।",
+                "Stack টা Next.js আর TypeScript, সাথে WebRTC media hook, room coordination এর জন্য Socket.IO আর assessment state এর জন্য Redux। এর কোনোটাই অস্বাভাবিক কিছু না। পার্থক্য তৈরি করেছে একটা সিদ্ধান্ত: “কেউ চলে গেছে” এমন একটা screen যেটা আমরা design করি, এমন কোনো error না যেটা কখনো ঘটবে না বলে আশা করে বসে থাকি।"
+              ],
+              "callout": "Real-time product এ exit path গুলোই আসল product।"
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -629,7 +2716,16 @@
       "title": "Web-to-Android Parity Needs an Evidence Trail",
       "category": "Mobile engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/android-parity.webp",
+        "alt": "Web routes traced through a parity manifest to Android screens, with one deferred"
+      },
+      "translations": {
+        "bn": {
+          "title": "Web থেকে Android parity র জন্য evidence trail লাগে"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -638,7 +2734,16 @@
       "title": "Deploy the Artifact, Not the Repository",
       "category": "Platform engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/artifact-deploy.webp",
+        "alt": "Only the built dist folder passing a preflight check before deployment"
+      },
+      "translations": {
+        "bn": {
+          "title": "Repository না, artifact deploy করুন"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -647,7 +2752,16 @@
       "title": "A Support Widget Is Part of the Product Interface",
       "category": "Frontend architecture",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/support-widget.webp",
+        "alt": "One theme-matched support trigger on a website and in an extension panel"
+      },
+      "translations": {
+        "bn": {
+          "title": "Support widget ও product interface এর অংশ"
+        }
+      }
     },
     {
       "kind": "authored",
@@ -661,8 +2775,8 @@
       "readingMinutes": 3,
       "featured": false,
       "image": {
-        "src": "/images/projects/air-traffic-control-home.webp",
-        "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and Google Play, Microsoft Store, and Snap Store links"
+        "src": "/images/blog/flight-rules.webp",
+        "alt": "Aircraft colliding on their airframe outline, with simulation separated from rendering"
       },
       "sections": [
         {
@@ -701,7 +2815,51 @@
             "DOM menus support keyboard navigation while flight routing requires a pointer. Changes in screen size or orientation can require a restart. Real-device touch behavior and long-session difficulty balance still need broader playtesting; automated coverage does not replace that work."
           ]
         }
-      ]
+      ],
+      "translations": {
+        "bn": {
+          "title": "Air Traffic Control এ flight rule আর renderer আলাদা",
+          "excerpt": "Android, browser, Windows আর Linux এর একটা arcade game কীভাবে ছোট ছোট gameplay session জুড়ে simulation, চোখে দেখা collision geometry আর local progression আলাদা রাখে।",
+          "sections": [
+            {
+              "id": "simulation",
+              "label": "Simulation",
+              "title": "Renderer এর কাজ শুধু rule গুলো দেখানো",
+              "paragraphs": [
+                "Air Traffic Control এ player দের airliner, commuter aircraft আর helicopter এর জন্য route আঁকতে হয়। Interaction টা simple, কিন্তু visual এর নিচে traffic pacing, landing check আর collision এর জন্য একটা consistent model লাগে।",
+                "TypeScript simulation টা Phaser এর বাইরে থাকে। এটা fixed 1/60-second step এ এগোয় আর seeded traffic generation ব্যবহার করে। এই boundary র কারণে test গুলো কোনো rendering scene তৈরি না করেই gameplay rule exercise করতে পারে। Fixed timestep টা simulation কে describe করে, প্রতিটা device 60 frames per second এ render করে এমন কোনো দাবি না।"
+              ]
+            },
+            {
+              "id": "collision",
+              "label": "Visual agreement",
+              "title": "Warning ring মানে aircraft না",
+              "paragraphs": [
+                "Collision geometry aircraft এর outline আর heading অনুসরণ করে। Selection halo, shadow আর helicopter এর rotor blur fatal collision surface থেকে বাদ রাখা হয়েছে। এই details গুলো গুরুত্বপূর্ণ, কারণ player রা সিদ্ধান্ত নেয় যা চোখে দেখে তার উপর ভিত্তি করে।",
+                "Geometry আলাদা রাখায় route assignment, landing target আর collision test সবাই একটা common foundation পায়, rule গুলো drawing code জুড়ে ছড়িয়ে পড়ে না।"
+              ]
+            },
+            {
+              "id": "progress",
+              "label": "Local progression",
+              "title": "আগে shift শেষ, তারপর result record",
+              "paragraphs": [
+                "Game এ আছে ৯টা airfield, ৩টা difficulty, ৭টা career rank আর ৯টা achievement। Progress record হয় একটা shift শেষ হলে; practice, restart বা মাঝপথে shift ছেড়ে দিলে কোনো result যোগ হয় না।",
+                "Local progress আর settings store হয় IndexedDB তে। Score গুলো airfield, difficulty আর orientation অনুযায়ী আলাদা রাখা হয়। কোনো account বা cloud synchronization নেই, আর site data clear করলে save মুছে যেতে পারে। এই limit গুলো product behavior এরই অংশ।"
+              ]
+            },
+            {
+              "id": "delivery",
+              "label": "Delivery",
+              "title": "Browser আর desktop delivery, offline limit স্পষ্ট",
+              "paragraphs": [
+                "Browser build একবার online visit এর পর service worker দিয়ে asset cache করে। Game টা Android এ Google Play, Windows এ Microsoft Store আর Linux এ Snap Store থেকে পাওয়া যায়। Electron desktop build offline play এর জন্য game টা bundle করে রাখে। Browser আর desktop version একই core rule ব্যবহার করে, কিন্তু তাদের save আলাদা থাকে।",
+                "DOM menu গুলো keyboard navigation support করে, তবে flight routing এর জন্য pointer লাগে। Screen size বা orientation বদলালে restart লাগতে পারে। Real-device touch behavior আর long-session difficulty balance এর জন্য এখনো আরো বিস্তৃত playtesting দরকার; automated coverage সেই কাজের বিকল্প না।"
+              ]
+            }
+          ]
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -710,7 +2868,16 @@
       "title": "Structuring an MCQ Learning API Before Completing the Workflows",
       "category": "Backend engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/mcq-api.webp",
+        "alt": "A versioned API prefix routing to learning-domain modules with shared request controls"
+      },
+      "translations": {
+        "bn": {
+          "title": "Workflow শেষ করার আগেই MCQ learning API র কাঠামো"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -719,7 +2886,16 @@
       "title": "Organizing School Resources and Document Storage",
       "category": "Backend engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/school-resources.webp",
+        "alt": "School modules linking file metadata to Google Drive documents"
+      },
+      "translations": {
+        "bn": {
+          "title": "School এর resource আর document storage গোছানো"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -728,7 +2904,16 @@
       "title": "Prototyping a School Information Architecture with Next.js",
       "category": "Frontend engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/school-ia.webp",
+        "alt": "A school website map branching from home into its resource pages"
+      },
+      "translations": {
+        "bn": {
+          "title": "Next.js দিয়ে school website এর information architecture prototype"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -737,7 +2922,16 @@
       "title": "Separating Surveys from Completed Field Records",
       "category": "Backend engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/survey-records.webp",
+        "alt": "One survey template producing separate completed field records"
+      },
+      "translations": {
+        "bn": {
+          "title": "Survey আর সম্পূর্ণ field record আলাদা রাখা"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -746,7 +2940,16 @@
       "title": "Connecting Inventory Screens to a Separate API",
       "category": "Web development",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/inventory-client.webp",
+        "alt": "React inventory screens talking to a separate POSDash API through Firebase sign-in"
+      },
+      "translations": {
+        "bn": {
+          "title": "Inventory screen কে আলাদা API র সাথে যুক্ত করা"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -755,7 +2958,16 @@
       "title": "Organizing an Inventory API by Resource",
       "category": "Backend engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/inventory-api.webp",
+        "alt": "An Express app split into resource routers backed by MongoDB"
+      },
+      "translations": {
+        "bn": {
+          "title": "Resource ধরে inventory API সাজানো"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -764,7 +2976,16 @@
       "title": "Building a Catalog with Shared PHP Pages",
       "category": "Web development",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/php-catalog.webp",
+        "alt": "Catalog pages composed from shared PHP includes over a MariaDB database"
+      },
+      "translations": {
+        "bn": {
+          "title": "Shared PHP page দিয়ে একটা catalog"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -773,7 +2994,16 @@
       "title": "Organizing Team Work in a Project Dashboard",
       "category": "Frontend engineering",
       "topic": "tools",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/project-dashboard.webp",
+        "alt": "Task, bug and discussion columns above a project progress bar"
+      },
+      "translations": {
+        "bn": {
+          "title": "Project dashboard এ team এর কাজ গোছানো"
+        }
+      }
     },
     {
       "kind": "case-study-derived",
@@ -782,7 +3012,16 @@
       "title": "Messaging workflows in CLM API",
       "category": "Backend engineering",
       "topic": "product",
-      "featured": false
+      "featured": false,
+      "image": {
+        "src": "/images/blog/messaging-routing.webp",
+        "alt": "WhatsApp, Messenger and Instagram events deduplicated and routed to agents"
+      },
+      "translations": {
+        "bn": {
+          "title": "CLM API র messaging workflow"
+        }
+      }
     }
   ]
 }

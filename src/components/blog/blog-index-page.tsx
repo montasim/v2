@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
+import { CatalogPagination } from "@/components/shared/catalog-pagination"
 import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 import { ProjectPreviewUnavailable } from "@/components/portfolio/project-card"
 import { Button } from "@/components/ui/button"
@@ -32,12 +33,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { InputGroup } from "@/components/ui/input-group"
 import { Label } from "@/components/ui/label"
-import {
-  Pagination,
-  PaginationButton,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination"
 import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
 import { subscribeToNewsletter } from "@/features/newsletter/application/subscribe"
 import { getNewsletterSubscriptionError } from "@/features/newsletter/domain/subscriber"
@@ -317,7 +312,7 @@ function SubscriptionCard() {
   const [error, setError] = useState("")
 
   return (
-    <Card asChild className="mt-8 overflow-hidden rounded-2xl bg-background">
+    <Card asChild className="mt-10 overflow-hidden rounded-2xl bg-background">
       <aside aria-labelledby="blog-subscribe-heading">
         <header className="min-h-18 border-b px-4 py-4.5 sm:px-6">
           <h2
@@ -435,7 +430,7 @@ export function BlogIndexPage({
   )
 
   return (
-    <PageShell className="pt-10 pb-24">
+    <PageShell className="pt-10 pb-6">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -450,7 +445,7 @@ export function BlogIndexPage({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <header className="mt-8 border-b pb-8">
+      <header className="mt-8 border-b pb-10">
         <h1 className="text-xl leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground sm:text-3xl">
           Writing about software that has to work.
         </h1>
@@ -462,7 +457,7 @@ export function BlogIndexPage({
 
       <section
         aria-labelledby="featured-article-heading"
-        className="border-b pt-8 pb-12"
+        className="border-b py-10"
       >
         <FeaturedCarousel posts={blogCatalog.featuredPosts} />
       </section>
@@ -470,7 +465,7 @@ export function BlogIndexPage({
       <section
         id="browse-writing-section"
         aria-labelledby="browse-writing-heading"
-        className="scroll-mt-14 pt-13.5"
+        className="scroll-mt-14 pt-10"
       >
         <div className="mb-6 flex items-end justify-between gap-8 max-sm:flex-col max-sm:items-start max-sm:gap-2">
           <h2
@@ -559,101 +554,18 @@ export function BlogIndexPage({
       </section>
 
       {posts.length ? (
-        <BlogPagination
+        <CatalogPagination
           page={currentPage}
           pageCount={pageCount}
+          pageSize={ARTICLES_PER_PAGE}
           total={posts.length}
+          resultLabel="articles"
           onPageChange={onPageChange}
+          className="mt-10 pt-10"
         />
       ) : null}
 
       <SubscriptionCard />
     </PageShell>
-  )
-}
-
-function BlogPagination({
-  page,
-  pageCount,
-  total,
-  onPageChange,
-}: {
-  page: number
-  pageCount: number
-  total: number
-  onPageChange: (page: number) => void
-}) {
-  const first = (page - 1) * ARTICLES_PER_PAGE + 1
-  const last = Math.min(page * ARTICLES_PER_PAGE, total)
-
-  return (
-    <Pagination
-      className="mt-8 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center"
-      aria-label="Blog pagination"
-    >
-      <p className="text-xs text-muted-foreground" aria-live="polite">
-        Showing{" "}
-        <span className="font-medium text-strong-foreground tabular-nums">
-          {first}–{last}
-        </span>{" "}
-        of{" "}
-        <span className="font-medium text-strong-foreground tabular-nums">
-          {total}
-        </span>{" "}
-        articles
-      </p>
-
-      {pageCount > 1 ? (
-        <PaginationContent className="sm:ml-auto">
-          <PaginationItem>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="size-10 sm:size-8"
-              disabled={page === 1}
-              onClick={() => onPageChange(page - 1)}
-              aria-label="Previous articles page"
-            >
-              <ArrowLeftCompactIcon />
-            </Button>
-          </PaginationItem>
-
-          {Array.from({ length: pageCount }, (_, index) => index + 1).map(
-            (pageNumber) => (
-              <PaginationItem key={pageNumber}>
-                <PaginationButton
-                  type="button"
-                  isActive={pageNumber === page}
-                  className={cn(
-                    "size-10 shrink-0 text-xs tabular-nums sm:size-8",
-                    pageNumber === page &&
-                      "bg-emphasis-foreground text-background hover:bg-emphasis-foreground/85"
-                  )}
-                  onClick={() => onPageChange(pageNumber)}
-                  aria-label={`Page ${pageNumber}`}
-                >
-                  {pageNumber}
-                </PaginationButton>
-              </PaginationItem>
-            )
-          )}
-
-          <PaginationItem>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="size-10 sm:size-8"
-              disabled={page === pageCount}
-              onClick={() => onPageChange(page + 1)}
-              aria-label="Next articles page"
-            >
-              <ArrowRightCompactIcon />
-            </Button>
-          </PaginationItem>
-        </PaginationContent>
-      ) : null}
-    </Pagination>
   )
 }
