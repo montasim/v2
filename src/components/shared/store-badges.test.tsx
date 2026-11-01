@@ -14,7 +14,7 @@ it("offers GitHub releases when an extension has no Chrome listing", () => {
   expect(extensionReleaseUrl(extension)).toBe(extension.releaseUrl)
   expect(markup).toContain(`href="${extension.releaseUrl}"`)
   expect(markup).toContain("Download from GitHub")
-  expect(markup).not.toContain("data-store=")
+  expect(markup).not.toContain("<img")
 })
 
 it("prefers Chrome over GitHub releases for a published extension", () => {
@@ -24,8 +24,7 @@ it("prefers Chrome over GitHub releases for a published extension", () => {
   }
   const markup = renderToStaticMarkup(<StoreBadges project={project} />)
   expect(extensionReleaseUrl(project)).toBeUndefined()
-  expect(markup).toContain('data-store="chrome-web-store"')
-  expect(markup).toContain("Chrome Web Store")
+  expect(markup).toContain("chrome-web-store.png")
   expect(markup).not.toContain("Download from GitHub")
 })
 
@@ -39,10 +38,10 @@ it("lists Google Play before Microsoft and Snap for Air Traffic Control", () => 
   const markup = renderToStaticMarkup(<StoreBadges project={project} />)
   expect(markup).toContain(`href="${project.googlePlayUrl}"`)
   expect(markup).toContain("Get Air Traffic Control for Android on Google Play")
-  expect(markup.indexOf('data-store="google-play"')).toBeLessThan(
-    markup.indexOf('data-store="microsoft-store"')
+  expect(markup.indexOf("google-play.svg")).toBeLessThan(
+    markup.indexOf("microsoft-store.svg")
   )
-  expect(markup.indexOf('data-store="microsoft-store"')).toBeLessThan(
-    markup.indexOf('data-store="snap-store"')
+  expect(markup.indexOf("microsoft-store.svg")).toBeLessThan(
+    markup.indexOf("snap-store.svg")
   )
 })

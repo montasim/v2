@@ -130,11 +130,9 @@ describe("ContactPage", () => {
     ).toBe("/projects/example")
     expect(
       screen
-        .getByRole("link", {
-          name: "Get Example app from the Chrome Web Store",
-        })
-        .getAttribute("data-store")
-    ).toBe("chrome-web-store")
+        .getByRole("img", { name: "Get Example app from the Chrome Web Store" })
+        .getAttribute("src")
+    ).toBe("/images/store-badges/chrome-web-store.png")
     expect(screen.queryByRole("link", { name: "App Store" })).toBeNull()
   })
 

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="44" viewBox="0 0 150 44">
+  <rect width="150" height="44" rx="4" fill="#202020"/>
+  <text x="12" y="16" fill="#fff" font-family="Arial, sans-serif" font-size="10">Available on</text>
+  <g transform="translate(12 23) scale(.06)" fill="#CB3837">
+    <path d="M240,250h100v-50h100V0H240V250z M340,50h50v100h-50V50z M480,0v200h100V50h50v150h50V50h50v150h50V0H480z M0,200h100V50h50v150h50V0H0V200z"/>
+  </g>
+  <text x="70" y="33" fill="#fff" font-family="Arial, sans-serif" font-size="17">Packages</text>
+</svg>
