@@ -21,6 +21,7 @@ import {
   ArrowUpCompactIcon,
   ArrowUpRightIcon,
   BookOpenTextIcon,
+  CaretDownIcon,
   ChatCenteredDotsIcon,
   CheckIcon,
   CircleDashedIcon,
@@ -117,6 +118,18 @@ function BlogDiscussion({
   const getOwnerAuth = useServerFn(getPortfolioOwnerAuth)
   const [comments, setComments] = useState<BlogComment[]>([])
   const [replyTo, setReplyTo] = useState<BlogComment | null>(null)
+  // Most readers never comment, so the composer starts collapsed.
+  const [replyOpen, setReplyOpen] = useState(false)
+
+  // Following a link to the discussion (the header's comment count) opens it.
+  useEffect(() => {
+    const openFromHash = () => {
+      if (window.location.hash === "#discussion") setReplyOpen(true)
+    }
+    openFromHash()
+    window.addEventListener("hashchange", openFromHash)
+    return () => window.removeEventListener("hashchange", openFromHash)
+  }, [])
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
@@ -183,6 +196,7 @@ function BlogDiscussion({
 
   function focusComposer(comment: BlogComment) {
     setReplyTo(comment)
+    setReplyOpen(true)
     window.requestAnimationFrame(() => {
       document.getElementById(messageId)?.focus()
       document
@@ -376,19 +390,36 @@ function BlogDiscussion({
 
       <Card asChild className="overflow-hidden rounded-2xl bg-background">
         <section aria-labelledby="reply-heading">
-          <header className="min-h-18 border-b px-4 py-4.5 sm:px-6">
-            <h2
-              id="reply-heading"
-              className="text-sm font-semibold text-strong-foreground"
-            >
-              Leave a reply
+          <header className={cn(replyOpen && "border-b")}>
+            <h2 id="reply-heading">
+              <button
+                type="button"
+                aria-expanded={replyOpen}
+                aria-controls="reply-composer"
+                onClick={() => setReplyOpen((open) => !open)}
+                className="flex min-h-18 w-full items-center justify-between gap-4 px-4 py-4.5 text-left transition-colors hover:bg-muted/40 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:px-6"
+              >
+                <span>
+                  <span className="block text-sm font-semibold text-strong-foreground">
+                    Leave a reply
+                  </span>
+                  <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                    Respond to the article or continue the discussion.
+                  </span>
+                </span>
+                <CaretDownIcon
+                  aria-hidden="true"
+                  className={cn(
+                    "size-4 shrink-0 text-muted-foreground transition-transform motion-reduce:transition-none",
+                    replyOpen && "rotate-180"
+                  )}
+                />
+              </button>
             </h2>
-            <p className="mt-0.5 text-xs text-muted-foreground">
-              Respond to the article or continue the discussion.
-            </p>
           </header>
           <form
             id="reply-composer"
+            hidden={!replyOpen}
             aria-busy={isSubmitting}
             className="grid gap-4 px-4 pt-5 pb-6 sm:px-6"
             onSubmit={async (event) => {
