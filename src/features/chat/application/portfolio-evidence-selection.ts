@@ -7,6 +7,7 @@ import type {
 import type { PortfolioKnowledgeFactSource } from "@/features/chat/knowledge/portfolio-knowledge-types"
 
 export const PORTFOLIO_EVIDENCE_MAX_FACTS = 12
+export const PORTFOLIO_EVIDENCE_MAX_FACTS_PER_ARTICLE = 2
 
 export interface PortfolioEvidenceSelection {
   readonly facts: readonly PortfolioKnowledgeFact[]
@@ -194,9 +195,19 @@ export function selectPortfolioEvidence(
         right.score - left.score || left.fact.id.localeCompare(right.fact.id)
     )
 
+  // A long multi-section article must not crowd every other source out.
+  const factsPerRecord = new Map<string, number>()
   for (const candidate of ranked) {
     if (selected.size >= maximumFacts) break
     if (candidate.score <= 0) continue
+    const recordKey = `${candidate.fact.source}:${candidate.fact.recordId}`
+    const recordCount = factsPerRecord.get(recordKey) ?? 0
+    if (
+      candidate.fact.source === "blog" &&
+      recordCount >= PORTFOLIO_EVIDENCE_MAX_FACTS_PER_ARTICLE
+    ) {
+      continue
+    }
     if (
       desiredSources.size > 0 &&
       !desiredSources.has(candidate.fact.source) &&
@@ -213,6 +224,7 @@ export function selectPortfolioEvidence(
       continue
     }
     selected.set(candidate.fact.id, candidate.fact)
+    factsPerRecord.set(recordKey, recordCount + 1)
     strategies.add("lexical-ranking")
   }
 
@@ -450,6 +462,8 @@ function pinnedFactIds(query: string, knowledge: CompiledPortfolioKnowledge) {
         (entry) => entry.source === source
       )
       if (count) ids.add(count.factId)
+      // Blog totals read better with the written versus case-study split.
+      if (source === "blog") ids.add("derived:blog-content-distribution")
     }
   }
 

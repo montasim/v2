@@ -714,7 +714,7 @@ function buildIdentityAnswers(): readonly ExactAnswer[] {
     {
       id: "introduction",
       question: "How would you introduce Montasim to a hiring team?",
-      text: `Montasim is a Dhaka-based Senior Software Engineer with 3+ years of experience building real-time, AI-driven, multi-tenant SaaS with React, Next.js, Node.js, and TypeScript. After two promotions at MyMedicalHub, he now owns frontend architecture, leads PR reviews, and mentors engineers. His strongest results include 99.9% reliable AI analysis at 60 FPS, 40% better application performance, and 70% lower cloud cost—making him most relevant to teams that need senior product ownership as well as implementation depth.`,
+      text: `Montasim is a Dhaka-based Senior Software Engineer with 4+ years of experience building real-time, AI-driven, multi-tenant SaaS with React, Next.js, Node.js, and TypeScript. After two promotions at MyMedicalHub, he now owns frontend architecture, leads PR reviews, and mentors engineers. His strongest results include 99.9% reliable AI analysis at 60 FPS, 40% better application performance, and 70% lower cloud cost—making him most relevant to teams that need senior product ownership as well as implementation depth.`,
       evidence: [profileReference, current],
     },
     {
