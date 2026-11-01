@@ -18,6 +18,8 @@
 সব জায়গায় state machine লাগে না। কিন্তু যেখানে একটা state bug এর দাম কারো data, সেখানে "সম্ভবত ঠিক আছে" যথেষ্ট না।
 ```
 
+**Scheduled:** not scheduled (removed from LinkedIn)
+
 **First comment:** `পুরো লেখাটা, state chart আর detection bridge pattern সহ: https://montasim.dev/blog/from-useeffect-chaos-to-deterministic-systems?lang=bn`
 
 ---
@@ -29,6 +31,8 @@ Pull request merge হয়েছে মানে feature টা user এর �
 
 Merge, build, deploy আর production এ যাচাই, চারটা আলাদা ঘটনা। Ticket বন্ধ করার আগে শেষটা নিজের চোখে দেখে নিন।
 ```
+
+**Scheduled:** Mon, Nov 2, 2026, 9:00 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/a-merged-pull-request-is-not-a-deployed-feature?lang=bn`
 
@@ -52,6 +56,8 @@ Merge, build, deploy আর production এ যাচাই, চারটা আ�
 সবচেয়ে নিরাপদ data হলো যেটা কখনো আপনার server এ আসেনি।
 ```
 
+**Scheduled:** Tue, Nov 3, 2026, 9:00 AM (Bangladesh time)
+
 **First comment:** `কীভাবে sync engine আর Google mock বানিয়েছি: https://montasim.dev/blog/a-family-gift-ledger-that-lives-in-your-own-google-sheet?lang=bn`
 
 ---
@@ -74,6 +80,8 @@ Provider চলে যাওয়া, connection কেটে যাওয়�
 
 Real-time app এ happy path টা সহজ অংশ। আসল product টা হলো, কেউ চলে গেলে কী হয়।
 ```
+
+**Scheduled:** not scheduled (removed from LinkedIn)
 
 **First comment:** `https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn`
 
@@ -99,6 +107,8 @@ Page browser এ একদম ঠিক দেখাচ্ছে, কিন্�
 Browser যা দেখে, crawler তা দেখে না।
 ```
 
+**Scheduled:** Wed, Nov 4, 2026, 9:00 AM (Bangladesh time)
+
 **First comment:** `https://montasim.dev/blog/when-the-page-is-right-but-the-link-card-is-wrong?lang=bn`
 
 ---
@@ -120,6 +130,8 @@ Payment আর attendance command idempotent। Network খারাপ হয�
 
 Software এর কাজ বাস্তবতা ধরে রাখা। Calendar দিয়ে নতুন বাস্তবতা বানানো না।
 ```
+
+**Scheduled:** not scheduled (removed from LinkedIn)
 
 **First comment:** `https://montasim.dev/blog/gym-membership-debt-cannot-be-invented-by-a-calendar?lang=bn`
 
@@ -145,4 +157,6 @@ Software এর কাজ বাস্তবতা ধরে রাখা। Cal
 Review এর লক্ষ্য code টা ঠিক করা না। পরের PR টা আরো ভালো হওয়া।
 ```
 
-**First comment:** none (no blog post for this one)
+**Scheduled:** Thu, Nov 5, 2026, 9:00 AM (Bangladesh time)
+
+**First comment:** `Review এ যে প্রশ্নটা করি, সেটা একটা আসল bug থেকে এসেছিল: https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn`

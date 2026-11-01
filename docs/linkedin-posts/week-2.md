@@ -18,7 +18,9 @@
 Vendor বদলানোর আগে জিজ্ঞেস করুন, আমি কি bill টা কমাচ্ছি, নাকি সমস্যাটা নিজের ঘাড়ে নিচ্ছি? কখনো কখনো দুটোই ঠিক সিদ্ধান্ত।
 ```
 
-**First comment:** none. Optional: link your Experience section.
+**Scheduled:** not scheduled (removed from LinkedIn)
+
+**First comment:** `Telemedicine case study, WebRTC session আর failure recovery সহ: https://montasim.dev/case-studies/mmh-telemedicine?lang=bn`
 
 ---
 
@@ -29,6 +31,8 @@ README এ যে visitor counter দেখেন, ওটা মানুষ গ
 
 Bot, cache, GitHub এর image proxy, page refresh, সবই এক একটা "visitor"। নিজে একটা বানানোর পর থেকে ওটাকে আমি "request count" বলি।
 ```
+
+**Scheduled:** Fri, Nov 6, 2026, 10:30 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/a-readme-counter-measures-requests-not-people?lang=bn`
 
@@ -54,6 +58,8 @@ Automatic filter সব secret ধরতে পারে না। তাই শ
 Debugging tool এর প্রথম দায়িত্ব হলো নিজে একটা নতুন security bug না হওয়া।
 ```
 
+**Scheduled:** Sat, Nov 7, 2026, 10:30 AM (Bangladesh time)
+
 **First comment:** `Demo video আর design decision গুলো: https://montasim.dev/blog/reproducible-bug-reports-without-default-surveillance?lang=bn`
 
 ---
@@ -77,6 +83,8 @@ Konva এখন শুধু আঁকে। কোনটা সঠিক, স�
 
 AI এর ভুল ধরার tool যদি নিজেই অস্পষ্ট হয়, তাহলে মানুষ AI কে আরো বেশি বিশ্বাস করবে, কম না।
 ```
+
+**Scheduled:** Sun, Nov 8, 2026, 9:00 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/human-review-needs-a-geometry-domain?lang=bn`
 
@@ -102,6 +110,8 @@ Local এ npm run build পাস করেছে। Netlify তে deploy fail�
 Local build শুধু প্রমাণ করে code compile হয়। Deploy যোগ্য, সেটা প্রমাণ করে না।
 ```
 
+**Scheduled:** Mon, Nov 9, 2026, 9:00 AM (Bangladesh time)
+
 **First comment:** `https://montasim.dev/blog/local-build-does-not-prove-deployability?lang=bn`
 
 ---
@@ -123,6 +133,8 @@ Payment বা student record delete হয় না, soft-delete হয় ক
 
 Hardware বদলাবে, vendor বদলাবে। Business logic এর সেটা জানার দরকার নেই।
 ```
+
+**Scheduled:** Tue, Nov 10, 2026, 9:00 AM (Bangladesh time)
 
 **First comment:** `https://montasim.dev/blog/one-attendance-model-for-multiple-biometric-vendors?lang=bn`
 
@@ -146,4 +158,6 @@ Senior হিসেবে কাজ হলো architecture আর মানু�
 পরের title টা চাওয়ার আগে, পরের title এর কাজটা শুরু করুন।
 ```
 
-**First comment:** none
+**Scheduled:** not scheduled (removed from LinkedIn)
+
+**First comment:** `Strength assessment module এর case study, যেটা দিয়ে module এর মালিক হওয়া শুরু: https://montasim.dev/case-studies/mmh-telemedicine?lang=bn`

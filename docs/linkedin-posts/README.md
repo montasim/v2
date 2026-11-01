@@ -58,6 +58,44 @@ The difference: hrarfin writes mostly career advice. You write **real engineerin
 পুরো লেখাটা, architecture আর decision গুলো সহ: <link>
 ```
 
+## The posting schedule
+
+One post a day on LinkedIn, Mon, Nov 2 to Fri, Nov 20, 2026, at 9:00 AM Sunday to Thursday and 10:30 AM Friday and Saturday (Bangladesh time). LinkedIn can't schedule comments, so paste the first comment yourself within a few minutes of each post going live.
+
+| # | Date | Time | Post | First comment |
+|---|---|---|---|---|
+| 1 | Mon Nov 2 | 9:00 AM | [W1 D2](week-1.md) Short | `https://montasim.dev/blog/a-merged-pull-request-is-not-a-deployed-feature?lang=bn` |
+| 2 | Tue Nov 3 | 9:00 AM | [W1 D3](week-1.md) Side product · Giftbook | `কীভাবে sync engine আর Google mock বানিয়েছি: https://montasim.dev/blog/a-family-gift-ledger-that-lives-in-your-own-google-sheet?lang=bn` |
+| 3 | Wed Nov 4 | 9:00 AM | [W1 D5](week-1.md) Checklist · Link previews | `https://montasim.dev/blog/when-the-page-is-right-but-the-link-card-is-wrong?lang=bn` |
+| 4 | Thu Nov 5 | 9:00 AM | [W1 D7](week-1.md) Career · Code review | `Review এ যে প্রশ্নটা করি, সেটা একটা আসল bug থেকে এসেছিল: https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn` |
+| 5 | Fri Nov 6 | 10:30 AM | [W2 D2](week-2.md) Short | `https://montasim.dev/blog/a-readme-counter-measures-requests-not-people?lang=bn` |
+| 6 | Sat Nov 7 | 10:30 AM | [W2 D3](week-2.md) Side product · BugReceipt | `Demo video আর design decision গুলো: https://montasim.dev/blog/reproducible-bug-reports-without-default-surveillance?lang=bn` |
+| 7 | Sun Nov 8 | 9:00 AM | [W2 D4](week-2.md) Production lesson · Re-annotation | `https://montasim.dev/blog/human-review-needs-a-geometry-domain?lang=bn` |
+| 8 | Mon Nov 9 | 9:00 AM | [W2 D5](week-2.md) Checklist · Local build vs deploy | `https://montasim.dev/blog/local-build-does-not-prove-deployability?lang=bn` |
+| 9 | Tue Nov 10 | 9:00 AM | [W2 D6](week-2.md) Client work · Coaching Management | `https://montasim.dev/blog/one-attendance-model-for-multiple-biometric-vendors?lang=bn` |
+| 10 | Wed Nov 11 | 9:00 AM | [W3 D1](week-3.md) MyMedicalHub story · 70% cloud cost | `Experience আর বাকি কাজ: https://montasim.dev` (home page has no Bangla version) |
+| 11 | Thu Nov 12 | 9:00 AM | [W3 D2](week-3.md) Short | `https://montasim.dev/blog/prayer-time-software-needs-provenance?lang=bn` |
+| 12 | Fri Nov 13 | 10:30 AM | [W3 D3](week-3.md) Side product · Air Traffic Control | `Play Store, Microsoft Store, Snap Store আর browser link: https://montasim.dev/blog/separating-flight-rules-from-the-renderer?lang=bn` |
+| 13 | Sat Nov 14 | 10:30 AM | [W3 D5](week-3.md) Checklist · Making a repo public | `https://montasim.dev/blog/making-a-codebase-public-safely?lang=bn` |
+| 14 | Sun Nov 15 | 9:00 AM | [W3 D6](week-3.md) Client work · FormFlow | `https://montasim.dev/blog/version-the-workflow-not-just-the-form?lang=bn` |
+| 15 | Mon Nov 16 | 9:00 AM | [W3 D7](week-3.md) Reflection · AI-first engineering | `https://montasim.dev/blog/readme-generation-must-start-with-evidence?lang=bn` |
+| 16 | Tue Nov 17 | 9:00 AM | [W4 D2](week-4.md) Short | `https://montasim.dev/blog/designing-an-api-that-admits-user-agent-uncertainty?lang=bn` |
+| 17 | Wed Nov 18 | 9:00 AM | [W4 D3](week-4.md) Side product · Thoughtline | `https://montasim.dev/blog/the-linkedin-page-is-untrusted-input?lang=bn` |
+| 18 | Thu Nov 19 | 9:00 AM | [W4 D6](week-4.md) Side product · 1Snap | `https://montasim.dev/blog/full-page-screenshots-without-cloud-capture?lang=bn` |
+| 19 | Fri Nov 20 | 10:30 AM | [W4 D7](week-4.md) Reflection · What 50+ projects taught me | `৫৪টা case study, প্রতিটা বাংলাতেও পড়া যায়: https://montasim.dev/case-studies` |
+
+These 9 posts were removed from LinkedIn and are not scheduled. Their text is still in the week files if you want to use them later:
+
+- [W1 D1](week-1.md) MyMedicalHub story · Finite state machine
+- [W1 D4](week-1.md) Production lesson · Telemedicine
+- [W1 D6](week-1.md) Client work · Liftuno
+- [W2 D1](week-2.md) MyMedicalHub story · Replacing a video vendor
+- [W2 D7](week-2.md) Career · Junior to Senior
+- [W3 D4](week-3.md) Production lesson · TIN lookup
+- [W4 D1](week-4.md) MyMedicalHub story · MediaRecorder lifecycle
+- [W4 D4](week-4.md) Production lesson · Multi-tenancy
+- [W4 D5](week-4.md) Checklist · Is the release really done?
+
 ## The 4-week calendar
 
 | Week | File |
