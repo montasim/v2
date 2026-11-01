@@ -1,12 +1,24 @@
-import { GithubLogoIcon } from "@/components/ui/icons"
+import {
+  ChromeIcon,
+  GithubLogoIcon,
+  MicrosoftStoreIcon,
+  NpmIcon,
+  PackageIcon,
+  PlayStoreIcon,
+} from "@/components/ui/icons"
 import {
   ExternalAction,
   ExternalLink,
 } from "@/components/shared/navigation-action"
+import { Button } from "@/components/ui/button"
 import { extensionReleaseUrl } from "@/lib/content/projects"
 import type { Project } from "@/lib/content/projects"
 import { cn } from "@/lib/utils"
 
+/**
+ * Store links drawn as the site's own outline buttons, so they follow the
+ * theme instead of importing each store's badge artwork.
+ */
 export function StoreBadges({
   project,
   className,
@@ -26,41 +38,43 @@ export function StoreBadges({
 }) {
   const stores = [
     {
+      id: "google-play",
       href: project.googlePlayUrl,
-      image: "google-play.svg",
+      Icon: PlayStoreIcon,
+      name: "Google Play",
       label: `Get ${project.title} for Android on Google Play`,
-      width: 239,
-      height: 71,
     },
     {
+      id: "microsoft-store",
       href: project.microsoftStoreUrl,
-      image: "microsoft-store.svg",
+      Icon: MicrosoftStoreIcon,
+      name: "Microsoft Store",
       label: `Download ${project.title} for Windows from the Microsoft Store`,
-      width: 161,
-      height: 44,
     },
     {
+      id: "snap-store",
       href: project.snapcraftUrl,
-      image: "snap-store.svg",
+      Icon: PackageIcon,
+      name: "Snap Store",
       label: `Get ${project.title} for Linux from the Snap Store`,
-      width: 182,
-      height: 56,
     },
     {
+      id: "chrome-web-store",
       href: project.chromeWebStoreUrl,
-      image: "chrome-web-store.png",
+      Icon: ChromeIcon,
+      name: "Chrome Web Store",
       label: `Get ${project.title} from the Chrome Web Store`,
-      width: 206,
-      height: 58,
     },
     {
+      id: "npm",
       href: project.npmUrl,
-      image: "npm.svg",
+      Icon: NpmIcon,
+      name: "npm",
       label: `Get ${project.title} on npm`,
-      width: 150,
-      height: 44,
     },
-  ].filter((store) => store.href)
+  ].filter((store): store is typeof store & { href: string } =>
+    Boolean(store.href)
+  )
 
   const releaseUrl = extensionReleaseUrl(project)
   if (!stores.length && !releaseUrl) return null
@@ -69,22 +83,15 @@ export function StoreBadges({
     <div
       role="group"
       aria-label={`Download ${project.title}`}
-      className={cn("flex flex-wrap items-center gap-3", className)}
+      className={cn("flex flex-wrap items-center gap-2", className)}
     >
-      {stores.map((store) => (
-        <ExternalLink
-          key={store.image}
-          href={store.href}
-          className="shrink-0 rounded-sm outline-offset-4 hover:opacity-85 focus-visible:outline-2 focus-visible:outline-ring"
-        >
-          <img
-            src={`/images/store-badges/${store.image}`}
-            alt={store.label}
-            width={store.width}
-            height={store.height}
-            className="h-11 w-auto"
-          />
-        </ExternalLink>
+      {stores.map(({ id, href, Icon, name, label }) => (
+        <Button key={id} asChild variant="outline" size="lg">
+          <ExternalLink href={href} aria-label={label} data-store={id}>
+            <Icon />
+            {name}
+          </ExternalLink>
+        </Button>
       ))}
       {releaseUrl ? (
         <ExternalAction href={releaseUrl} variant="outline" size="lg">
