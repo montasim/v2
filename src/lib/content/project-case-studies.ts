@@ -1,5 +1,7 @@
 import { z } from "zod"
 import caseStudiesJson from "@/data/casestudy.json"
+import caseStudiesBnJson from "@/data/casestudy.bn.json"
+import type { ContentLanguage } from "@/lib/content/content-language"
 import { projectCatalog, githubHistoryStartedAt } from "@/lib/content/projects"
 import type { ProjectFilter } from "@/lib/content/projects"
 
@@ -81,6 +83,108 @@ records.sort((left, right) => {
 
 export type ProjectCaseStudy = (typeof records)[number]
 export type ProjectCaseStudyFilter = ProjectFilter
+
+const titledDetailsSchema = z.array(
+  z.object({ title: z.string().min(1), detail: z.string().min(1) }).strict()
+)
+
+const caseStudyTranslationSchema = z
+  .object({
+    summary: z.string().min(1),
+    role: z.string().min(1),
+    scope: z.string().min(1),
+    status: z.string().min(1),
+    problem: z.string().min(1),
+    constraints: z.array(z.string().min(1)).min(1),
+    architecture: z
+      .object({ summary: z.string().min(1), layers: titledDetailsSchema })
+      .strict(),
+    decisions: titledDetailsSchema,
+    contribution: z.array(z.string().min(1)).min(1),
+    outcomes: z.array(z.string().min(1)).min(1),
+    screenshot: z
+      .object({ alt: z.string().min(1), caption: z.string().min(1) })
+      .strict()
+      .optional(),
+  })
+  .strict()
+
+type CaseStudyText = z.infer<typeof caseStudyTranslationSchema>
+
+const caseStudyTranslations = new Map(
+  Object.entries(
+    z
+      .record(projectCaseStudySlugSchema, caseStudyTranslationSchema)
+      .parse(caseStudiesBnJson)
+  )
+)
+
+// A translation must mirror its English entry so every section lines up.
+for (const [slug, translation] of caseStudyTranslations) {
+  const source = records.find((record) => record.slug === slug)
+  if (!source) throw new Error(`Bangla case study has no source: ${slug}`)
+  const mismatched = (
+    [
+      ["constraints", source.constraints, translation.constraints],
+      [
+        "architecture.layers",
+        source.architecture.layers,
+        translation.architecture.layers,
+      ],
+      ["decisions", source.decisions, translation.decisions],
+      ["contribution", source.contribution, translation.contribution],
+      ["outcomes", source.outcomes, translation.outcomes],
+    ] as const
+  ).find(([, english, bangla]) => english.length !== bangla.length)
+  if (mismatched) {
+    throw new Error(`Bangla case study ${slug} differs in ${mismatched[0]}`)
+  }
+  if (Boolean(source.screenshot) !== Boolean(translation.screenshot)) {
+    throw new Error(`Bangla case study ${slug} differs in screenshot`)
+  }
+}
+
+/** Returns the case study's text in the requested language, falling back to English. */
+export function localizeCaseStudy(
+  caseStudy: ProjectCaseStudy,
+  language: ContentLanguage
+): CaseStudyText & { language: ContentLanguage } {
+  const translation =
+    language === "bn" ? caseStudyTranslations.get(caseStudy.slug) : undefined
+  if (translation) return { ...translation, language: "bn" }
+
+  const {
+    summary,
+    role,
+    scope,
+    status,
+    problem,
+    constraints,
+    architecture,
+    decisions,
+    contribution,
+    outcomes,
+    screenshot,
+  } = caseStudy
+  return {
+    summary,
+    role,
+    scope,
+    status,
+    problem,
+    constraints,
+    architecture,
+    decisions,
+    contribution,
+    outcomes,
+    screenshot,
+    language: "en",
+  }
+}
+
+export function hasCaseStudyTranslation(slug: string) {
+  return caseStudyTranslations.has(slug)
+}
 
 function searchableText(caseStudy: ProjectCaseStudy) {
   const { project } = caseStudy

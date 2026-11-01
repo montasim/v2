@@ -21,7 +21,6 @@ import {
   ExternalLink,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
-import { VisitorCountBadge } from "@/components/shared/visitor-count-badge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -41,20 +40,56 @@ import { useVisitorCount } from "@/features/visitor-count/use-visitor-count"
 import type { ProjectCaseStudy } from "@/lib/content/project-case-studies"
 import { cn } from "@/lib/utils"
 import { ContentMediaGallery } from "@/components/shared/content-media-gallery"
+import { ContentPreviewImage } from "@/components/shared/content-preview-image"
+import { blogCatalog } from "@/lib/content/blog"
 import { getProjectMedia } from "@/lib/content/project-media"
+import { LanguageSwitch } from "@/components/shared/language-switch"
+import type { ContentLanguage } from "@/lib/content/content-language"
+import {
+  hasCaseStudyTranslation,
+  localizeCaseStudy,
+} from "@/lib/content/project-case-studies"
 
-const coreSectionLinks = [
-  ["problem", "Problem"],
-  ["constraints", "Constraints"],
-  ["architecture", "Architecture"],
-  ["decisions", "Decisions"],
-  ["contribution", "Contribution"],
-  ["outcomes", "Outcomes"],
+const coreSectionIds = [
+  "problem",
+  "constraints",
+  "architecture",
+  "decisions",
+  "contribution",
+  "outcomes",
 ] as const
-const screenshotSectionLink = ["screenshots", "Screenshot"] as const
 
-type SectionId =
-  (typeof coreSectionLinks)[number][0] | (typeof screenshotSectionLink)[0]
+type SectionId = (typeof coreSectionIds)[number] | "screenshots"
+
+const caseStudyLabels = {
+  en: {
+    problem: "Problem",
+    constraints: "Constraints",
+    architecture: "Architecture",
+    decisions: "Decisions",
+    contribution: "Contribution",
+    outcomes: "Outcomes",
+    screenshots: "Screenshot",
+    role: "Role",
+    scope: "Scope",
+    status: "Status",
+  },
+  bn: {
+    problem: "সমস্যা",
+    constraints: "সীমাবদ্ধতা",
+    architecture: "Architecture",
+    decisions: "সিদ্ধান্ত",
+    contribution: "অবদান",
+    outcomes: "ফলাফল",
+    screenshots: "Screenshot",
+    role: "ভূমিকা",
+    scope: "পরিসর",
+    status: "অবস্থা",
+  },
+} as const satisfies Record<
+  ContentLanguage,
+  Record<SectionId | "role" | "scope" | "status", string>
+>
 
 function SectionHeading({
   id,
@@ -73,17 +108,11 @@ function SectionHeading({
   )
 }
 
-function githubRepositoryPath(githubUrl: string) {
-  return new URL(githubUrl).pathname
-    .replace(/^\/+|\/+$/g, "")
-    .replace(/\.git$/, "")
-}
-
 function CaseStudyFeedback({ slug }: { slug: string }) {
   return (
     <section
       aria-labelledby="case-study-feedback-heading"
-      className="mt-12 border-y py-8 sm:py-10"
+      className="border-y py-10"
     >
       <h2
         id="case-study-feedback-heading"
@@ -118,10 +147,16 @@ function CaseStudyFeedback({ slug }: { slug: string }) {
 export function ProjectCaseStudyPage({
   caseStudy,
   nextCaseStudy,
+  language = "en",
+  onLanguageChange,
 }: {
   caseStudy: ProjectCaseStudy
   nextCaseStudy: ProjectCaseStudy
+  language?: ContentLanguage
+  onLanguageChange?: (language: ContentLanguage) => void
 }) {
+  const content = localizeCaseStudy(caseStudy, language)
+  const labels = caseStudyLabels[content.language]
   const getViewCount = useServerFn(getProjectViewCount)
   const recordView = useServerFn(recordProjectView)
   const { project } = caseStudy
@@ -129,21 +164,19 @@ export function ProjectCaseStudyPage({
     !project.clientWork && !project.githubRepositoryPrivate
       ? project.githubUrl
       : undefined
-  const repositoryPath = publicGithubUrl
-    ? githubRepositoryPath(publicGithubUrl)
-    : undefined
-  const lastCommitBadgeUrl = `https://img.shields.io/github/last-commit/${repositoryPath}?style=flat&label=last%20commit`
-  const media = getProjectMedia(project, caseStudy.screenshot?.alt)
-  const hasMedia = Boolean(project.youtubeVideoId || media.length > 0)
-  const sectionLinks =
-    media.length > 0
-      ? [...coreSectionLinks, screenshotSectionLink]
-      : coreSectionLinks
+  const media = getProjectMedia(project, content.screenshot?.alt)
+  // Projects without a demo or screenshots fall back to their article illustration.
+  const illustration = blogCatalog.findByProjectId(project.id)?.image
+  const sectionLinks = [
+    ...coreSectionIds,
+    ...(media.length > 0 ? (["screenshots"] as const) : []),
+  ].map((id) => [id, labels[id]] as const)
   const commitUrl = `${project.githubUrl}/tree/${caseStudy.verifiedCommit}`
   const [activeSection, setActiveSection] = useState<SectionId>(
-    coreSectionLinks[0][0]
+    coreSectionIds[0]
   )
-  const viewCount = useVisitorCount({
+  // Views are still recorded for analytics; the count is no longer shown.
+  useVisitorCount({
     resourceKey: "project-case-study",
     slug: caseStudy.slug,
     getCount: getViewCount,
@@ -157,7 +190,7 @@ export function ProjectCaseStudyPage({
       window.cancelAnimationFrame(animationFrame)
       animationFrame = window.requestAnimationFrame(() => {
         const readingLine = window.innerWidth >= 1024 ? 112 : 96
-        let currentSection: SectionId = coreSectionLinks[0][0]
+        let currentSection: SectionId = coreSectionIds[0]
 
         for (const [sectionId] of sectionLinks) {
           const section = document.getElementById(sectionId)
@@ -178,7 +211,7 @@ export function ProjectCaseStudyPage({
       })
     }
 
-    setActiveSection(coreSectionLinks[0][0])
+    setActiveSection(coreSectionIds[0])
     updateActiveSection()
     window.addEventListener("scroll", updateActiveSection, { passive: true })
     window.addEventListener("resize", updateActiveSection)
@@ -191,7 +224,7 @@ export function ProjectCaseStudyPage({
   }, [caseStudy.slug, media.length])
 
   return (
-    <PageShell padded className="pb-20">
+    <PageShell className="pt-10 pb-6">
       <header>
         <Breadcrumb>
           <BreadcrumbList>
@@ -228,26 +261,21 @@ export function ProjectCaseStudyPage({
                 <ProjectTypeIcon type={project.type} className="size-[1em]" />
                 {project.type === "desktop" ? "desktop app" : project.type}
               </Badge>
-              <VisitorCountBadge count={viewCount} />
-              {publicGithubUrl ? (
-                <ExternalLink
-                  href={`${project.githubUrl}/commits/${caseStudy.verifiedBranch}`}
-                  aria-label={`View the latest commits for ${project.title}`}
-                  className="shrink-0 leading-none"
-                >
-                  <img
-                    src={lastCommitBadgeUrl}
-                    alt="Last commit"
-                    width="118"
-                    height="20"
-                    loading="lazy"
-                    className="h-5 w-auto"
+              {hasCaseStudyTranslation(caseStudy.slug) && onLanguageChange ? (
+                <div className="sm:ml-auto">
+                  <LanguageSwitch
+                    label="Case study language"
+                    language={content.language}
+                    onChange={onLanguageChange}
                   />
-                </ExternalLink>
+                </div>
               ) : null}
             </div>
-            <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg">
-              {caseStudy.summary}
+            <p
+              lang={content.language}
+              className="mt-4.5 text-base leading-7 text-muted-foreground sm:text-lg"
+            >
+              {content.summary}
             </p>
             <ProjectEngagement project={project} />
           </div>
@@ -282,11 +310,14 @@ export function ProjectCaseStudyPage({
           </div>
         </div>
 
-        <dl className="mt-10 grid border-y sm:grid-cols-3 sm:divide-x">
+        <dl
+          lang={content.language}
+          className="mt-10 grid border-y sm:grid-cols-3 sm:divide-x"
+        >
           {[
-            ["Role", caseStudy.role],
-            ["Scope", caseStudy.scope],
-            ["Status", caseStudy.status],
+            [labels.role, content.role],
+            [labels.scope, content.scope],
+            [labels.status, content.status],
           ].map(([label, value]) => (
             <div key={label} className="py-5 sm:px-5 sm:first:pl-0">
               <dt className="text-xs font-medium text-muted-foreground">
@@ -298,22 +329,7 @@ export function ProjectCaseStudyPage({
         </dl>
       </header>
 
-      {project.youtubeVideoId ? (
-        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
-          <YouTubeVideo
-            videoId={project.youtubeVideoId}
-            title={`${project.title} product demonstration`}
-            loading="eager"
-            className="rounded-lg"
-          />
-        </figure>
-      ) : media.length > 0 ? (
-        <figure className="mt-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
-          <ContentMediaGallery media={media} priority />
-        </figure>
-      ) : null}
-
-      <div className="mt-14 grid items-start gap-7 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">
+      <div className="mt-10 grid items-start gap-10 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-[clamp(2.5rem,5.5vw,4rem)]">
         <aside className="sticky top-14 z-30 flex items-center gap-2.5 overflow-x-auto rounded-xl border bg-background/95 px-2.5 py-2 backdrop-blur-sm lg:top-24 lg:grid lg:gap-0 lg:overflow-visible lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           <p className="mr-1 shrink-0 text-xs font-medium text-muted-foreground lg:mb-2.5">
             On this page
@@ -351,15 +367,40 @@ export function ProjectCaseStudyPage({
           ) : null}
         </aside>
 
-        <div className={cn("min-w-0", hasMedia && "border-t")}>
+        <div className="min-w-0" lang={content.language}>
+          {project.youtubeVideoId ? (
+            <figure className="mb-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+              <YouTubeVideo
+                videoId={project.youtubeVideoId}
+                title={`${project.title} product demonstration`}
+                loading="eager"
+                className="rounded-lg"
+              />
+            </figure>
+          ) : media.length > 0 ? (
+            <figure className="mb-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+              <ContentMediaGallery media={media} priority />
+            </figure>
+          ) : illustration ? (
+            <figure className="mb-10 overflow-hidden rounded-xl border bg-card p-2 sm:p-3">
+              <ContentPreviewImage
+                src={illustration.src}
+                alt={illustration.alt}
+                width="1600"
+                height="1000"
+                fetchPriority="high"
+                className="h-auto w-full rounded-lg border"
+              />
+            </figure>
+          ) : null}
           <section
             id="problem"
             aria-labelledby="problem-heading"
-            className="scroll-mt-24 py-10"
+            className="scroll-mt-24 pb-10"
           >
-            <SectionHeading id="problem">Problem</SectionHeading>
+            <SectionHeading id="problem">{labels.problem}</SectionHeading>
             <p className="mt-5 max-w-[68ch] text-base leading-7 text-muted-foreground">
-              {caseStudy.problem}
+              {content.problem}
             </p>
           </section>
 
@@ -368,9 +409,11 @@ export function ProjectCaseStudyPage({
             aria-labelledby="constraints-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="constraints">Constraints</SectionHeading>
+            <SectionHeading id="constraints">
+              {labels.constraints}
+            </SectionHeading>
             <ol className="mt-6 grid gap-px overflow-hidden rounded-lg border bg-background md:grid-cols-3">
-              {caseStudy.constraints.map((constraint, index) => (
+              {content.constraints.map((constraint, index) => (
                 <li key={constraint} className="bg-card p-5">
                   <span className="font-mono text-xs text-muted-foreground">
                     C{index + 1}
@@ -388,12 +431,14 @@ export function ProjectCaseStudyPage({
             aria-labelledby="architecture-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="architecture">Architecture</SectionHeading>
+            <SectionHeading id="architecture">
+              {labels.architecture}
+            </SectionHeading>
             <p className="mt-5 max-w-[68ch] text-base leading-7 text-muted-foreground">
-              {caseStudy.architecture.summary}
+              {content.architecture.summary}
             </p>
             <div className="mt-7 grid gap-3 md:grid-cols-2">
-              {caseStudy.architecture.layers.map((layer, index) => (
+              {content.architecture.layers.map((layer, index) => (
                 <div
                   key={layer.title}
                   className="relative rounded-lg border bg-card p-5"
@@ -408,7 +453,7 @@ export function ProjectCaseStudyPage({
                     {layer.detail}
                   </p>
                   {index % 2 === 0 &&
-                  index < caseStudy.architecture.layers.length - 1 ? (
+                  index < content.architecture.layers.length - 1 ? (
                     <ArrowRightIcon
                       className="absolute -right-2.5 bottom-5 z-10 hidden size-5 rounded-full border bg-background p-1 text-muted-foreground md:block"
                       aria-hidden
@@ -424,9 +469,9 @@ export function ProjectCaseStudyPage({
             aria-labelledby="decisions-heading"
             className="scroll-mt-24 border-t py-10"
           >
-            <SectionHeading id="decisions">Decisions</SectionHeading>
+            <SectionHeading id="decisions">{labels.decisions}</SectionHeading>
             <div className="mt-6 divide-y border-y">
-              {caseStudy.decisions.map((decision, index) => (
+              {content.decisions.map((decision, index) => (
                 <article
                   key={decision.title}
                   className="grid gap-2 py-5 sm:grid-cols-[2rem_15rem_minmax(0,1fr)] sm:gap-4"
@@ -451,9 +496,11 @@ export function ProjectCaseStudyPage({
               aria-labelledby="contribution-heading"
               className="scroll-mt-24 py-10 md:pr-8"
             >
-              <SectionHeading id="contribution">Contribution</SectionHeading>
+              <SectionHeading id="contribution">
+                {labels.contribution}
+              </SectionHeading>
               <ul className="mt-6 space-y-4">
-                {caseStudy.contribution.map((item) => (
+                {content.contribution.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-6">
                     <CheckCircleIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
                     <span>{item}</span>
@@ -466,9 +513,9 @@ export function ProjectCaseStudyPage({
               aria-labelledby="outcomes-heading"
               className="scroll-mt-24 border-t py-10 md:border-t-0 md:pl-8"
             >
-              <SectionHeading id="outcomes">Outcomes</SectionHeading>
+              <SectionHeading id="outcomes">{labels.outcomes}</SectionHeading>
               <ul className="mt-6 space-y-4">
-                {caseStudy.outcomes.map((item) => (
+                {content.outcomes.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-6">
                     <CheckCircleIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
                     <span>{item}</span>
@@ -478,21 +525,23 @@ export function ProjectCaseStudyPage({
             </section>
           </div>
 
-          {media.length > 0 && caseStudy.screenshot ? (
+          {media.length > 0 && content.screenshot ? (
             <section
               id="screenshots"
               aria-labelledby="screenshots-heading"
               className="scroll-mt-24 border-t py-10"
             >
               <SectionHeading id="screenshots">
-                Product {media.length > 1 ? "screenshots" : "screenshot"}
+                {content.language === "bn"
+                  ? "Product screenshot"
+                  : `Product ${media.length > 1 ? "screenshots" : "screenshot"}`}
               </SectionHeading>
               <figure className="mt-6">
                 <div className="overflow-hidden rounded-lg border bg-card p-2">
                   <ContentMediaGallery media={media} />
                 </div>
                 <figcaption className="mt-3 max-w-[68ch] text-sm leading-6 text-muted-foreground">
-                  {caseStudy.screenshot.caption}
+                  {content.screenshot.caption}
                 </figcaption>
               </figure>
             </section>
@@ -511,7 +560,7 @@ export function ProjectCaseStudyPage({
 
           <CaseStudyFeedback slug={caseStudy.slug} />
 
-          <footer className="mt-8 flex flex-wrap gap-3">
+          <footer className="mt-10 flex flex-wrap gap-3">
             <Button asChild variant="outline" size="lg" className="w-auto">
               <Link to="/case-studies" search={{ filter: "all", q: "" }}>
                 <ArrowLeftCompactIcon />
