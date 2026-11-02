@@ -97,7 +97,7 @@ describe("chat quality evaluation corpus", () => {
           .filter((entry) => entry.category === "project")
           .map((entry) => entityRoot(entry.referenceAnswerId))
       ).size
-    ).toBe(43)
+    ).toBe(47)
     expect(
       new Set(
         corpus

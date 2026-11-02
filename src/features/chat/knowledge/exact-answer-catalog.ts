@@ -7,7 +7,7 @@ export const exactAnswerCategoryTargets = {
   project: 110,
   "case-study": 162,
   blog: 55,
-  certification: 47,
+  certification: 24,
   experience: 28,
   skill: 11,
   recommendation: 16,
