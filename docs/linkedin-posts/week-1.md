@@ -20,7 +20,7 @@
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `পুরো লেখাটা, state chart আর detection bridge pattern সহ: https://montasim.dev/blog/from-useeffect-chaos-to-deterministic-systems?lang=bn`
+**First comment:** `৪০টা useEffect থেকে একটা state chart। আগের আর পরের code পাশাপাশি: https://montasim.dev/blog/from-useeffect-chaos-to-deterministic-systems?lang=bn`
 
 ---
 
@@ -34,7 +34,7 @@ Merge, build, deploy আর production এ যাচাই, চারটা আ�
 
 **Scheduled:** Mon, Nov 2, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/a-merged-pull-request-is-not-a-deployed-feature?lang=bn`
+**First comment:** `Merge থেকে production, চারটা ধাপ। কোনটা আমরা সবচেয়ে বেশি skip করি: https://montasim.dev/blog/a-merged-pull-request-is-not-a-deployed-feature?lang=bn`
 
 ---
 
@@ -58,7 +58,7 @@ Merge, build, deploy আর production এ যাচাই, চারটা আ�
 
 **Scheduled:** Tue, Nov 3, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `কীভাবে sync engine আর Google mock বানিয়েছি: https://montasim.dev/blog/a-family-gift-ledger-that-lives-in-your-own-google-sheet?lang=bn`
+**First comment:** `Server ছাড়া sync কীভাবে চলে, আর কেউ header বদলালে app কেন নিজেই থেমে যায়: https://montasim.dev/blog/a-family-gift-ledger-that-lives-in-your-own-google-sheet?lang=bn`
 
 ---
 
@@ -83,7 +83,7 @@ Real-time app এ happy path টা সহজ অংশ। আসল product ট
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn`
+**First comment:** `দুটো bug, একটাই ভুল ধারণা। Provider চলে গেলে patient আসলে কী দেখবে: https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn`
 
 ---
 
@@ -109,7 +109,7 @@ Browser যা দেখে, crawler তা দেখে না।
 
 **Scheduled:** Wed, Nov 4, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/when-the-page-is-right-but-the-link-card-is-wrong?lang=bn`
+**First comment:** `পাঁচটা কারণ, আর কোনটা আপনার code এর আর কোনটা platform এর, কীভাবে চিনবেন: https://montasim.dev/blog/when-the-page-is-right-but-the-link-card-is-wrong?lang=bn`
 
 ---
 
@@ -133,7 +133,7 @@ Software এর কাজ বাস্তবতা ধরে রাখা। Cal
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `https://montasim.dev/blog/gym-membership-debt-cannot-be-invented-by-a-calendar?lang=bn`
+**First comment:** `Calendar ছাড়া বকেয়া হিসাব, coverage model টা পুরোটা: https://montasim.dev/blog/gym-membership-debt-cannot-be-invented-by-a-calendar?lang=bn`
 
 ---
 
@@ -159,4 +159,4 @@ Review এর লক্ষ্য code টা ঠিক করা না। প�
 
 **Scheduled:** Thu, Nov 5, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `Review এ যে প্রশ্নটা করি, সেটা একটা আসল bug থেকে এসেছিল: https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn`
+**First comment:** `যে bug থেকে "provider চলে গেলে কী হবে?" প্রশ্নটা আমার review এর অংশ হয়ে গেল: https://montasim.dev/blog/a-video-call-is-not-a-clinical-workflow?lang=bn`

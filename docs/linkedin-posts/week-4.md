@@ -22,7 +22,7 @@ Camera, recorder, socket, timer, এগুলোর মালিক আপনি
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `Patient Portal case study, camera আর recording lifecycle সহ: https://montasim.dev/case-studies/mmh-patient-portal?lang=bn`
+**First comment:** `একটা generation counter, আর পুরনো callback আর কখনো নতুন recording ভাঙে না: https://montasim.dev/case-studies/mmh-patient-portal?lang=bn`
 
 ---
 
@@ -36,7 +36,7 @@ Analytics এর জন্য চলবে। Login, permission বা feature �
 
 **Scheduled:** Tue, Nov 17, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/designing-an-api-that-admits-user-agent-uncertainty?lang=bn`
+**First comment:** `User-Agent কখন বিশ্বাস করা যায়, আর কখন একদমই না: https://montasim.dev/blog/designing-an-api-that-admits-user-agent-uncertainty?lang=bn`
 
 ---
 
@@ -61,7 +61,7 @@ AI tool এর input যদি internet থেকে আসে, সেটা এ
 
 **Scheduled:** Wed, Nov 18, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/the-linkedin-page-is-untrusted-input?lang=bn`
+**First comment:** `একটা LinkedIn post কীভাবে AI tool কে hijack করতে পারে, আর Thoughtline কীভাবে আটকায়: https://montasim.dev/blog/the-linkedin-page-is-untrusted-input?lang=bn`
 
 ---
 
@@ -85,7 +85,7 @@ AI tool এর input যদি internet থেকে আসে, সেটা এ
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `Tenant configuration আর feature flag এর পুরো case study: https://montasim.dev/case-studies/mmh-patient-portal?lang=bn`
+**First comment:** `২৫০+ client, শূন্য fork। Feature flag আর theming কীভাবে সাজিয়েছি: https://montasim.dev/case-studies/mmh-patient-portal?lang=bn`
 
 ---
 
@@ -111,7 +111,7 @@ Release দেওয়ার পর একটা dashboard সবুজ দে�
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `https://montasim.dev/blog/one-green-dashboard-does-not-prove-a-release?lang=bn`
+**First comment:** `"Missing" আর "verify করা যায়নি" আলাদা রাখার পুরো checklist: https://montasim.dev/blog/one-green-dashboard-does-not-prove-a-release?lang=bn`
 
 ---
 
@@ -138,7 +138,7 @@ User এর page এ হাত দিলে, যেমন পেয়েছি�
 
 **Scheduled:** Thu, Nov 19, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/full-page-screenshots-without-cloud-capture?lang=bn`
+**First comment:** `Sticky header, lazy image, animation: full-page capture এর প্রতিটা ফাঁদ আর সমাধান: https://montasim.dev/blog/full-page-screenshots-without-cloud-capture?lang=bn`
 
 ---
 
@@ -162,4 +162,4 @@ Side project এ কেউ deadline দেয় না, কেউ review কর
 
 **Scheduled:** Fri, Nov 20, 2026, 10:30 AM (Bangladesh time)
 
-**First comment:** `৫৪টা case study, প্রতিটা বাংলাতেও পড়া যায়: https://montasim.dev/case-studies`
+**First comment:** `৫৪টা case study, প্রতিটা বাংলায়ও পড়া যায়: https://montasim.dev/case-studies`
