@@ -4,6 +4,7 @@ import { Card, cardInsetClassName } from "@/components/ui/card"
 import { BadgeList } from "@/components/shared/badge-list"
 import { EntityAvatar } from "@/components/shared/entity-avatar"
 import { RichText } from "@/components/shared/rich-text"
+import { CertificateIcon } from "@/components/ui/icons"
 import { experienceCatalog } from "@/lib/content/experience"
 import type { Experience } from "@/lib/content/experience"
 
@@ -77,30 +78,32 @@ function RoleDetails({
         className={technologiesClassName}
       />
       {role.registeredContribution ? (
+        // The full record, with registration number and certificate, lives in
+        // Awards & Recognition; here it is a one-line pointer.
         <aside
-          className="mt-4 grid gap-3 rounded-lg border bg-muted/30 p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
-          aria-label="Registered software contribution"
+          className="mt-4 flex flex-col gap-2 rounded-lg border bg-muted/40 px-3 py-2.5 sm:flex-row sm:items-center sm:gap-3"
+          aria-label="Award for this role"
         >
-          <div className="min-w-0">
-            <h4 className="text-sm font-semibold text-strong-foreground">
-              Co-author of copyright-registered software
-            </h4>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              {role.registeredContribution.description}
-            </p>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              Registration: {role.registeredContribution.registration} · Owner:{" "}
-              {role.registeredContribution.owner}
-            </p>
-          </div>
+          <span className="flex min-w-0 items-center gap-2.5">
+            <span
+              aria-hidden="true"
+              className="grid size-8 shrink-0 place-items-center rounded-md border bg-card text-strong-foreground"
+            >
+              <CertificateIcon className="size-4" />
+            </span>
+            <span className="text-sm leading-snug text-muted-foreground">
+              <span className="font-medium text-strong-foreground">
+                Co-author
+              </span>{" "}
+              of the copyright-registered AI musculoskeletal assessment
+              software (2024)
+            </span>
+          </span>
           <a
-            href={role.registeredContribution.certificateUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-9 w-fit items-center rounded-sm text-sm font-medium underline underline-offset-4 hover:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
+            href="/#awards"
+            className="ml-10 w-fit shrink-0 rounded-sm text-sm font-medium text-strong-foreground underline underline-offset-4 hover:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-4 sm:ml-auto"
           >
-            View certificate
-            <span className="sr-only"> (PDF, opens in a new tab)</span>
+            See award
           </a>
         </aside>
       ) : null}
