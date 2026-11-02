@@ -14,10 +14,10 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 11 }),
-      expect.objectContaining({ id: "projects", recordCount: 54 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 54 }),
-      expect.objectContaining({ id: "blog", recordCount: 55 }),
-      expect.objectContaining({ id: "certifications", recordCount: 47 }),
+      expect.objectContaining({ id: "projects", recordCount: 55 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 55 }),
+      expect.objectContaining({ id: "blog", recordCount: 56 }),
+      expect.objectContaining({ id: "certifications", recordCount: 24 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
       expect.objectContaining({ id: "organizations", recordCount: 3 }),
@@ -60,7 +60,7 @@ describe("PortfolioKnowledge", () => {
       knowledge.textForFact(
         "experience:experience-mymedicalhub-senior-software-engineer"
       )
-    ).toContain("99.9% reliability")
+    ).toContain("99.9%")
     expect(knowledge.findCitation(experience?.citationId ?? "")).toEqual({
       id: "experience:experience-mymedicalhub-senior-software-engineer",
       source: "experience",
@@ -235,13 +235,13 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-giftbook",
-      title: "Giftbook",
-      historyStartedAt: "2026-10-09T06:25:34Z",
+      recordId: "project-sigcraft",
+      title: "Sigcraft",
+      historyStartedAt: "2026-11-02T14:30:35Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
-      recordId: "a-family-gift-ledger-that-lives-in-your-own-google-sheet",
-      publishedAt: "2026-10-09",
+      recordId: "building-email-signatures-that-survive-gmail",
+      publishedAt: "2026-11-02",
       tieBreak: "catalog-order",
     })
     expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(1)
@@ -253,14 +253,14 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 55,
+      total: 56,
       authored: 23,
-      caseStudyDerived: 32,
+      caseStudyDerived: 33,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 54,
+      total: 55,
       byType: {
         api: 6,
         desktop: 1,
@@ -269,12 +269,12 @@ describe("PortfolioKnowledge", () => {
         package: 4,
         skill: 14,
         template: 1,
-        tool: 2,
+        tool: 3,
         website: 19,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({
-      count: 47,
+      count: 24,
       earliestYear: 2019,
       latestYear: 2026,
     })

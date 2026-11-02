@@ -9,15 +9,17 @@
     "location": "Mohakhali, Dhaka, Bangladesh",
     "period": "Oct 2025 - Present",
     "role": "Senior Software Engineer",
-    "description": "Architected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis. Optimized **AI pipelines** to support **60 FPS** pose estimation and real-time rep counting via adaptive frame rate logic. Led a full rewrite of the **medical assessment chatbot** with Redux Toolkit and refactored **54+ modules** into Presentational/Container pattern.",
+    "description": "Lead a team of **3 engineers** and own frontend architecture across **3 microservices** of a HIPAA-compliant telemedicine and biometric-assessment platform used by **1,000+ patients and clinicians**. Replaced fragile React-hook state with a deterministic **finite-state-machine** engine, so **99.9%** of assessment sessions complete without a crash or freeze, with **60 FPS** MediaPipe pose estimation and real-time rep counting. Built a **Konva.js** canvas engine for clinicians to correct range-of-motion measurements, moved MediaRecorder to imperative control to remove lifecycle bugs and memory leaks, led the **Redux Toolkit** rewrite of the medical-assessment chatbot, and refactored **54+ modules** into a presentational/container architecture. Introduced the team code-review process and mentor 3 engineers.",
     "technologies": [
+      "Next.js",
       "React.js",
-      "Tailwind CSS",
       "TypeScript",
       "Redux Toolkit",
       "MediaPipe",
-      "Microsoft Azure",
-      "Figma"
+      "WebRTC",
+      "Konva.js",
+      "Tailwind CSS",
+      "Microsoft Azure"
     ]
   },
   {
@@ -36,16 +38,17 @@
       "owner": "MyMedicalHUB International Ltd.",
       "certificateUrl": "/documents/mymedicalhub-copyright-registration.pdf"
     },
-    "description": "Boosted application performance by **40%** by stripping legacy UI libraries and optimizing React rendering cycles. Achieved **70% cloud infrastructure cost reduction** by migrating Azure VMs to App Service and automating CI/CD pipelines. Deployed a **HIPAA-compliant SSO system** with multi-role access, OAuth integration, and strict CSP headers.",
+    "description": "Owned the biometric strength-assessment module end to end and led cloud cost and infrastructure work across **4 environments**. Cut cloud hosting cost **70%** (about **$10K a year**) by moving from self-managed VMs to **Azure App Service** with GitHub Actions CI/CD, and improved application performance **40%** to **Lighthouse 90+** by replacing 5 legacy UI libraries. Designed a **feature-flag system** and API-driven theming that serve **250+ client configurations** from one codebase, and shipped **HIPAA-compliant SSO**, an automated clinical reporting engine and a session-recording pipeline to AWS S3. Named Employee of the Month in October 2023.",
     "technologies": [
       "React.js",
-      "Tailwind CSS",
+      "Next.js",
+      "TypeScript",
       "Node.js",
       "Microsoft Azure",
-      "Docker",
-      "CI/CD",
-      "Konva.js",
-      "Figma"
+      "GitHub Actions",
+      "AWS S3",
+      "OAuth",
+      "Tailwind CSS"
     ]
   },
   {
@@ -56,18 +59,18 @@
     "logo": "M",
     "logoUrl": "/images/organizations/mymedicalhub.png",
     "location": "Uttara, Dhaka, Bangladesh",
-    "period": "Sep 2022 - Sep 2023",
+    "period": "Nov 2022 - Oct 2023",
     "role": "Junior Software Engineer",
-    "description": "Reduced patient diagnosis time by **25%** and achieved **95% accuracy** by integrating **real-time AI analysis** and custom algorithms. Integrated a **WebRTC video pipeline** stabilizing remote consultations and reducing call latency. Developed a **JWT-based REST API client layer** with built-in XSS and CSRF protection.",
+    "description": "Built the real-time video consultation layer of a telemedicine platform for remote physical therapy. Added real-time AI analysis and joint-angle measurement to live sessions, making assessments **25% faster** than manual measurement with **95%+ accuracy** against expert clinicians. Replaced the third-party OpenTok service with a **WebRTC** pipeline on self-hosted STUN/TURN servers and Socket.IO, turning a usage-based bill (about **$3K a year**) into a fixed cost and reducing latency and dropped calls. Built the first canvas annotation tool, a **JWT-based API client** with XSS and CSRF protection, and CI/CD across 4 environments.",
     "technologies": [
       "React.js",
-      "Bootstrap",
-      "Sass",
       "WebRTC",
+      "Socket.IO",
       "Node.js",
       "Express.js",
-      "PostgreSQL",
-      "Responsive Web Design"
+      "JWT",
+      "Canvas API",
+      "CI/CD"
     ]
   },
   {
@@ -80,8 +83,14 @@
     "location": "Uttara, Dhaka, Bangladesh",
     "period": "Aug 2022 - Oct 2022",
     "role": "Junior Frontend Developer",
-    "description": "Built and maintained **UI components** for a telemedicine platform using React.js, JavaScript, HTML5, and CSS3, improving user experience across devices. Debugged and optimized front-end code, **reducing page load time** and enhancing performance stability.",
-    "technologies": ["React.js", "JavaScript", "HTML5", "CSS3", "jQuery"]
+    "description": "Frontend intern on a telemedicine platform and my first production React work. Built **responsive React components** used across desktop and mobile, fixed front-end performance and stability issues to **reduce page load time**, and delivered features in an Agile team with sprints, code review, documentation and Git.",
+    "technologies": [
+      "React.js",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Git"
+    ]
   },
   {
     "id": "experience-drra-mis-officer",
@@ -91,9 +100,9 @@
     "logo": "D",
     "logoUrl": "/images/organizations/drra.jpg",
     "location": "Ershadnagar, Tongi, Gazipur, Dhaka, Bangladesh",
-    "period": "Dec 2021 - Aug 2022",
+    "period": "Dec 2021 - Jul 2022",
     "role": "Management Information System Officer",
-    "description": "Maintained **IT operations and systems reliability** through software updates and hardware maintenance, **minimizing disruptions** to teaching and learning. Tracked program and **student-progress data** to support assessments, feedback, and organizational reporting. Supported curriculum delivery and ensured a stable, productive learning environment.",
+    "description": "Kept **IT systems running** for a rehabilitation and training centre, handling software updates, hardware maintenance and troubleshooting. Maintained program and **student-progress data** used for assessments and organisational reporting.",
     "technologies": [
       "IT Operations",
       "Microsoft Excel",
@@ -109,9 +118,9 @@
     "logo": "D",
     "logoUrl": "/images/organizations/drra.jpg",
     "location": "Ershadnagar, Tongi, Gazipur, Dhaka, Bangladesh",
-    "period": "Feb 2022 - Aug 2022",
+    "period": "Feb 2022 - Jul 2022",
     "role": "Computer Instructor",
-    "description": "Designed and delivered a **student-centered computer-skills curriculum** covering IT fundamentals, Microsoft Word, Excel, and PowerPoint, aligned with industry standards. Improved student proficiency and confidence through **hands-on instruction**, **fair assessment**, and progress tracking.",
+    "description": "Designed and taught a **computer-skills curriculum** (IT fundamentals, Word, Excel, PowerPoint) for around **25 students**, tracking each student with hands-on assessments. Early practice in explaining technical topics simply, which I now use when mentoring engineers.",
     "technologies": [
       "Microsoft Word",
       "Microsoft Excel",
@@ -126,11 +135,17 @@
     "companyUrl": "",
     "logo": "C",
     "logoUrl": "/images/organizations/codez.png",
-    "location": "North Badda, Dhaka, Bangladesh",
+    "location": "Badda, Dhaka, Bangladesh",
     "period": "May 2021 - Nov 2021",
     "role": "Web Developer",
-    "description": "Developed and maintained **web applications with PHP and JavaScript**. Analyzed **client needs** and developed appropriate functionality. Created and executed **test scenarios** to ensure quality deliverables.",
-    "technologies": ["PHP", "JavaScript", "HTML", "CSS"]
+    "description": "Built and maintained websites and web applications for **2 client projects** using **PHP, JavaScript and MySQL**. Turned client requirements into scoped features, and wrote and ran **test scenarios** before each release.",
+    "technologies": [
+      "PHP",
+      "JavaScript",
+      "MySQL",
+      "HTML",
+      "CSS"
+    ]
   },
   {
     "id": "experience-watheta-freelance-developer",

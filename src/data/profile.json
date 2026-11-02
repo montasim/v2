@@ -1,7 +1,8 @@
 {
   "name": "Mohammad Montasim Al Mamun Shuvo",
-  "title": "Senior Software Engineer | React, Next.js, Node.js, TypeScript | Real-Time & AI-Driven SaaS",
-  "tagline": "Building software around predictable behavior, scalable architecture, and performance that holds up in production.",
+  "title": "Senior Software Engineer | AI-first full-stack | Real-time, AI-driven SaaS | Next.js, Node.js, TypeScript",
+  "heroRole": "AI-First Full-Stack Engineer",
+  "tagline": "Designing, building and shipping scalable products from idea to production.",
   "avatarUrl": "/images/avatar.webp",
   "resumeUrl": "https://drive.google.com/file/d/1v0RP3PyBB6KdsfXhonIHJXU-wgAUSIRT/view?usp=sharing",
   "resumeDownloadUrl": "/api/resume",
@@ -10,15 +11,18 @@
   "email": "montasimmamun@gmail.com",
   "workPreferences": {
     "availability": "Actively looking",
-    "preferredRoles": ["Senior Software Engineer"],
+    "preferredRoles": [
+      "Senior Frontend Engineer",
+      "Senior Full-Stack Engineer"
+    ],
     "workArrangement": "Remote, on-site, or hybrid",
     "timeZone": "UTC+6",
     "timeZoneOverlap": null,
     "relocation": null,
     "visaStatus": null,
-    "earliestStartDate": "Immediately"
+    "earliestStartDate": "After notice period"
   },
-  "about": "I'm a **Senior Software Engineer** with **4+ years** of experience across frontend, full-stack product work, backend APIs, browser extensions, Windows and Android apps, AI workflows, and data tooling. I work across the stack with React, Next.js, Node.js, and TypeScript, connecting user-facing experiences with the services and data behind them. After two promotions at MyMedicalHub, I now own frontend architecture across a multi-service platform, lead PR reviews, and mentor fellow engineers.\n\nMy work has reduced cloud infrastructure costs by **70%** through Azure migration and automated CI/CD, improved application performance by **40%**, and achieved **Lighthouse 90+** scores. I've built a real-time **computer vision** pipeline with MediaPipe sustaining **60 FPS** at **99.9% reliability**, and a deterministic **finite-state-machine** engine that eliminated race conditions during live AI analysis.\n\nI pay particular attention to state transitions, asynchronous workflows, and resource lifecycles. Clear boundaries, predictable failure handling, and maintainable code guide how I design systems, integrate AI, shape datasets, and evolve products across platforms as their requirements grow.",
+  "about": "I started as a junior engineer at MyMedicalHub International, and **4+ years** later I lead a team of **3 engineers** building a HIPAA-compliant platform that **1,000+ patients and clinicians** rely on. I am proudest that **99.9%** of their AI assessment sessions now finish without a crash, and that we got there while cutting our cloud bill by **70%**.\n\nHealthcare is where I work, but it is not the only thing I build. I have also shipped **education**, **fitness**, **customer messaging** and **AI creator** platforms, and **Air Traffic Control**, a small game now on three app stores, often in both English and Bangla because that is how my users speak.\n\nWhat ties it together is how I like to work: plan for what can go wrong before it does, keep things simple enough for the next person to change, and share what I learn along the way. If you want the details, the **55 case studies** here walk through the decisions behind each project.",
   "socialLinks": [
     {
       "platform": "linkedin",

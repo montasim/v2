@@ -20,7 +20,7 @@ Cloud খরচ কমানোর প্রথম ধাপ সস্তা mac
 
 **Scheduled:** Wed, Nov 11, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `Experience আর বাকি কাজ: https://montasim.dev` (home page has no Bangla version)
+**First comment:** `VM থেকে managed platform, পুরো experience আর বাকি কাজ: https://montasim.dev` (home page has no Bangla version)
 
 ---
 
@@ -34,7 +34,7 @@ Ramadan Clock বানাতে গিয়ে শিখলাম, এক ম�
 
 **Scheduled:** Thu, Nov 12, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/prayer-time-software-needs-provenance?lang=bn`
+**First comment:** `একই জেলায় দুই app দুই সময় দেখায় কেন, আর আমি কোনটা দেখাই: https://montasim.dev/blog/prayer-time-software-needs-provenance?lang=bn`
 
 ---
 
@@ -56,7 +56,7 @@ Game এর নিয়ম যদি player যা দেখে তার স�
 
 **Scheduled:** Fri, Nov 13, 2026, 10:30 AM (Bangladesh time)
 
-**First comment:** `Play Store, Microsoft Store, Snap Store আর browser link: https://montasim.dev/blog/separating-flight-rules-from-the-renderer?lang=bn`
+**First comment:** `Shadow এর জন্য crash, আর নিয়মকে renderer থেকে আলাদা করার পুরো গল্প। Play Store, Microsoft Store, Snap Store link ও আছে: https://montasim.dev/blog/separating-flight-rules-from-the-renderer?lang=bn`
 
 ---
 
@@ -78,7 +78,7 @@ NBR এর risk-based audit selection হিসেবে একটা পুর�
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `https://montasim.dev/blog/keeping-tax-id-lookups-out-of-the-server?lang=bn`
+**First comment:** `আপনার TIN কেন আমার server এ আসে না, আর এর বিনিময়ে কী ছাড়তে হয়েছে: https://montasim.dev/blog/keeping-tax-id-lookups-out-of-the-server?lang=bn`
 
 ---
 
@@ -104,7 +104,7 @@ Code public করা একটা button না। এটা একটা secur
 
 **Scheduled:** Sat, Nov 14, 2026, 10:30 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/making-a-codebase-public-safely?lang=bn`
+**First comment:** `ছয়টা check এর বিস্তারিত। Repo public করার আগে একবার চোখ বুলিয়ে নিন: https://montasim.dev/blog/making-a-codebase-public-safely?lang=bn`
 
 ---
 
@@ -126,7 +126,7 @@ FormFlow বানাচ্ছি, institution গুলোর জন্য এ�
 
 **Scheduled:** Sun, Nov 15, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/version-the-workflow-not-just-the-form?lang=bn`
+**First comment:** `তিন মাস আগের submission নতুন form এ কেন ভাঙে না: https://montasim.dev/blog/version-the-workflow-not-just-the-form?lang=bn`
 
 ---
 
@@ -148,4 +148,4 @@ AI first মানে AI কে সব কিছু করতে দেওয়
 
 **Scheduled:** Mon, Nov 16, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/readme-generation-must-start-with-evidence?lang=bn`
+**First comment:** `Verified, inferred, unknown: AI কে বানিয়ে বলা থেকে থামানোর নিয়মগুলো: https://montasim.dev/blog/readme-generation-must-start-with-evidence?lang=bn`

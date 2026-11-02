@@ -20,7 +20,7 @@ Vendor বদলানোর আগে জিজ্ঞেস করুন, আ�
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `Telemedicine case study, WebRTC session আর failure recovery সহ: https://montasim.dev/case-studies/mmh-telemedicine?lang=bn`
+**First comment:** `বছরে প্রায় $3,000 vendor bill বনাম নিজের TURN server। কী পেলাম, কী দায় নিলাম: https://montasim.dev/case-studies/mmh-telemedicine?lang=bn`
 
 ---
 
@@ -34,7 +34,7 @@ Bot, cache, GitHub এর image proxy, page refresh, সবই এক একট�
 
 **Scheduled:** Fri, Nov 6, 2026, 10:30 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/a-readme-counter-measures-requests-not-people?lang=bn`
+**First comment:** `README counter আসলে কী গোনে, আর কেন আমি ওটাকে visitor বলা বন্ধ করেছি: https://montasim.dev/blog/a-readme-counter-measures-requests-not-people?lang=bn`
 
 ---
 
@@ -60,7 +60,7 @@ Debugging tool এর প্রথম দায়িত্ব হলো নি�
 
 **Scheduled:** Sat, Nov 7, 2026, 10:30 AM (Bangladesh time)
 
-**First comment:** `Demo video আর design decision গুলো: https://montasim.dev/blog/reproducible-bug-reports-without-default-surveillance?lang=bn`
+**First comment:** `BugReceipt কী ধরে, আর ইচ্ছা করে কী কখনোই ধরে না, পুরো list: https://montasim.dev/blog/reproducible-bug-reports-without-default-surveillance?lang=bn`
 
 ---
 
@@ -86,7 +86,7 @@ AI এর ভুল ধরার tool যদি নিজেই অস্পষ�
 
 **Scheduled:** Sun, Nov 8, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/human-review-needs-a-geometry-domain?lang=bn`
+**First comment:** `AI এর ভুল ঠিক করার tool যেন নিজে ভুল না করে। Geometry আর workflow কীভাবে আলাদা করলাম: https://montasim.dev/blog/human-review-needs-a-geometry-domain?lang=bn`
 
 ---
 
@@ -112,7 +112,7 @@ Local build শুধু প্রমাণ করে code compile হয়। 
 
 **Scheduled:** Mon, Nov 9, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/local-build-does-not-prove-deployability?lang=bn`
+**First comment:** `Static, SPA না SSR? Config লেখার আগে যে contract টা লিখে ফেলা দরকার: https://montasim.dev/blog/local-build-does-not-prove-deployability?lang=bn`
 
 ---
 
@@ -136,7 +136,7 @@ Hardware বদলাবে, vendor বদলাবে। Business logic এর 
 
 **Scheduled:** Tue, Nov 10, 2026, 9:00 AM (Bangladesh time)
 
-**First comment:** `https://montasim.dev/blog/one-attendance-model-for-multiple-biometric-vendors?lang=bn`
+**First comment:** `তৃতীয় vendor এলেও attendance code এ হাত না দেওয়ার design: https://montasim.dev/blog/one-attendance-model-for-multiple-biometric-vendors?lang=bn`
 
 ---
 
@@ -160,4 +160,4 @@ Senior হিসেবে কাজ হলো architecture আর মানু�
 
 **Scheduled:** not scheduled (removed from LinkedIn)
 
-**First comment:** `Strength assessment module এর case study, যেটা দিয়ে module এর মালিক হওয়া শুরু: https://montasim.dev/case-studies/mmh-telemedicine?lang=bn`
+**First comment:** `যে module দিয়ে "ticket শেষ করা" থেকে "module এর মালিক হওয়া" শুরু হয়েছিল: https://montasim.dev/case-studies/mmh-telemedicine?lang=bn`

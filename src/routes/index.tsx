@@ -29,7 +29,7 @@ import { RecommendationCarousel } from "@/components/portfolio/recommendations"
 import { SkillGroups } from "@/components/portfolio/skill-groups"
 import { contactHref } from "@/features/contact/domain/contact"
 import { affiliationCatalog } from "@/lib/content/affiliations"
-import { experienceCatalog } from "@/lib/content/experience"
+import { awardCatalog } from "@/lib/content/awards"
 import { profileCatalog } from "@/lib/content/profile"
 import { projectCatalog } from "@/lib/content/projects"
 import { createMeta, site } from "@/lib/site"
@@ -77,7 +77,7 @@ function OverviewPage() {
           </div>
           <div className="hero-copy min-w-0 text-center sm:order-1 sm:text-left">
             <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm font-medium text-strong-foreground sm:justify-start">
-              <span>{experienceCatalog.current.role}</span>
+              <span>{profile.heroRole}</span>
               <span
                 className="text-border dark:text-muted-foreground"
                 aria-hidden="true"
@@ -223,38 +223,54 @@ function OverviewPage() {
         headingId="awards-heading"
         title="Awards & Recognition"
       >
-        <article className="overflow-hidden rounded-xl border bg-card text-card-foreground">
-          <div className="grid sm:grid-cols-[10rem_minmax(0,1fr)]">
-            <div className="flex items-center justify-between border-b bg-muted/35 px-5 py-4 sm:block sm:border-r sm:border-b-0 sm:px-6 sm:py-7">
-              <p className="text-[0.6875rem] font-medium tracking-[0.14em] text-muted-foreground uppercase">
-                Recognized
-              </p>
-              <time
-                dateTime="2023-10"
-                className="flex items-baseline gap-2 sm:mt-3 sm:block"
-              >
-                <span className="text-3xl font-semibold tracking-tight text-strong-foreground">
-                  2023
-                </span>
-                <span className="text-xs text-muted-foreground sm:mt-1 sm:block">
-                  October
-                </span>
-              </time>
-            </div>
-            <div className="px-5 py-6 sm:px-7 sm:py-7">
-              <p className="text-xs font-medium text-muted-foreground">
-                MedicalHub International Ltd.
-              </p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-strong-foreground">
-                Employee of the Month
-              </h3>
-              <blockquote className="mt-5 max-w-[66ch] text-sm leading-relaxed text-muted-foreground">
-                Recognized for long-term commitment, hard work, and the
-                knowledge and experience contributed to the team.
-              </blockquote>
-            </div>
-          </div>
-        </article>
+        <div className="grid gap-4">
+          {awardCatalog.records.map((award) => (
+            <article
+              key={award.id}
+              className="overflow-hidden rounded-xl border bg-card text-card-foreground"
+            >
+              <div className="grid sm:grid-cols-[10rem_minmax(0,1fr)]">
+                <div className="flex items-center justify-between border-b bg-muted/35 px-5 py-4 sm:block sm:border-r sm:border-b-0 sm:px-6 sm:py-7">
+                  <p className="text-[0.6875rem] font-medium tracking-[0.14em] text-muted-foreground uppercase">
+                    {award.label}
+                  </p>
+                  <time
+                    dateTime={award.date}
+                    className="flex items-baseline gap-2 sm:mt-3 sm:block"
+                  >
+                    <span className="text-3xl font-semibold tracking-tight text-strong-foreground">
+                      {award.year}
+                    </span>
+                    <span className="text-xs text-muted-foreground sm:mt-1 sm:block">
+                      {award.month}
+                    </span>
+                  </time>
+                </div>
+                <div className="px-5 py-6 sm:px-7 sm:py-7">
+                  <p className="text-xs font-medium text-muted-foreground">
+                    {award.issuer}
+                  </p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-tight text-strong-foreground">
+                    {award.title}
+                  </h3>
+                  <blockquote className="mt-5 max-w-[66ch] text-sm leading-relaxed text-muted-foreground">
+                    {award.description}
+                  </blockquote>
+                  {award.documentUrl ? (
+                    <a
+                      href={award.documentUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-4 inline-flex text-sm font-medium text-strong-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    >
+                      {award.documentLabel ?? "View document"}
+                    </a>
+                  ) : null}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </PageSection>
       <PageSection
         id="volunteering"

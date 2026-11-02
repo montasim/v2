@@ -4,6 +4,7 @@ import profileJson from "@/data/profile.json"
 const profileSchema = z.object({
   name: z.string().min(1),
   title: z.string().min(1),
+  heroRole: z.string().min(1),
   tagline: z.string().min(1),
   location: z.string().min(1),
   email: z.email(),

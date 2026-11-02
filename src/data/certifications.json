@@ -52,19 +52,6 @@
     "url": "https://www.coursera.org/account/accomplishments/professional-cert/22YXRDKYEY7M"
   },
   {
-    "id": "certification-foundations-digital-marketing",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Google",
-    "image": "/images/certifications/foundations-digital-marketing.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/RYLW9WXZM6Y2",
-    "year": "2023",
-    "completedAt": "2023-11-13",
-    "title": "Foundations of Digital Marketing and E-commerce",
-    "description": "Course certificate · Grade 85.96%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/RYLW9WXZM6Y2"
-  },
-  {
     "id": "certification-microsoft-azure-fundamentals",
     "platform": "Coursera",
     "platformIcon": "/images/certifications/platforms/coursera.svg",
@@ -76,58 +63,6 @@
     "title": "Microsoft Azure Fundamentals AZ-900 Exam Prep",
     "description": "Specialization · 4 courses",
     "url": "https://www.coursera.org/account/accomplishments/specialization/UT9X7HR8UDZQ"
-  },
-  {
-    "id": "certification-az-900-exam-prep",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Microsoft",
-    "image": "/images/certifications/az-900-exam-prep.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/B8C8BR3TRLQ3",
-    "year": "2023",
-    "completedAt": "2023-10-26",
-    "title": "Preparing for the AZ-900 Microsoft Azure Fundamentals Exam",
-    "description": "Course certificate · Grade 94.15%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/B8C8BR3TRLQ3"
-  },
-  {
-    "id": "certification-azure-services-lifecycles",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Microsoft",
-    "image": "/images/certifications/azure-services-lifecycles.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/VJUM6GJS3GF9",
-    "year": "2023",
-    "completedAt": "2023-10-26",
-    "title": "Microsoft Azure Services and Lifecycles",
-    "description": "Course certificate · Grade 100%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/VJUM6GJS3GF9"
-  },
-  {
-    "id": "certification-azure-management-security",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Microsoft",
-    "image": "/images/certifications/azure-management-security.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/T9DVMEH695Q8",
-    "year": "2023",
-    "completedAt": "2023-10-26",
-    "title": "Microsoft Azure Management Tools and Security Solutions",
-    "description": "Course certificate · Grade 98.75%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/T9DVMEH695Q8"
-  },
-  {
-    "id": "certification-azure-cloud-services",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Microsoft",
-    "image": "/images/certifications/azure-cloud-services.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/DH33T4UACDYD",
-    "year": "2023",
-    "completedAt": "2023-10-25",
-    "title": "Introduction to Microsoft Azure Cloud Services",
-    "description": "Course certificate · Grade 97.91%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/DH33T4UACDYD"
   },
   {
     "id": "certification-meta-react-native",
@@ -167,19 +102,6 @@
     "title": "Google Project Management",
     "description": "Professional Certificate · 6 courses",
     "url": "https://www.coursera.org/account/accomplishments/professional-cert/AXDASTEQWFAT"
-  },
-  {
-    "id": "certification-foundations-ux-design",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Google",
-    "image": "/images/certifications/foundations-ux-design.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/MDP8ES7B5H9L",
-    "year": "2023",
-    "completedAt": "2023-10-12",
-    "title": "Foundations of User Experience (UX) Design",
-    "description": "Course certificate · Grade 90.83%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/MDP8ES7B5H9L"
   },
   {
     "id": "certification-meta-front-end-developer",
@@ -234,45 +156,6 @@
     "url": "https://www.coursera.org/account/accomplishments/verify/5XKX3V74MZA6"
   },
   {
-    "id": "certification-css-position-elements",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Coursera Project Network",
-    "image": "/images/certifications/css-position-elements.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/DKL6A3KTYL34",
-    "year": "2020",
-    "completedAt": "2020-08-24",
-    "title": "Position Elements on a Page with CSS",
-    "description": "Guided Project · Grade 100%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/DKL6A3KTYL34"
-  },
-  {
-    "id": "certification-resume-cover-letter",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Coursera Project Network",
-    "image": "/images/certifications/resume-cover-letter.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/WHYQWEQVH7XH",
-    "year": "2020",
-    "completedAt": "2020-08-24",
-    "title": "Create a Resume and Cover Letter with Google Docs",
-    "description": "Guided Project · Grade 100%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/WHYQWEQVH7XH"
-  },
-  {
-    "id": "certification-git-remote-repository",
-    "platform": "Coursera",
-    "platformIcon": "/images/certifications/platforms/coursera.svg",
-    "issuer": "Coursera Project Network",
-    "image": "/images/certifications/git-remote-repository.jpg",
-    "download": "https://www.coursera.org/account/accomplishments/certificate/HHS3XUAFQWZU",
-    "year": "2020",
-    "completedAt": "2020-08-23",
-    "title": "Use Commands and Create a Remote Git Repository",
-    "description": "Guided Project · Grade 100%",
-    "url": "https://www.coursera.org/account/accomplishments/verify/HHS3XUAFQWZU"
-  },
-  {
     "id": "certification-command-line-linux",
     "platform": "Coursera",
     "platformIcon": "/images/certifications/platforms/coursera.svg",
@@ -284,71 +167,6 @@
     "title": "Command Line in Linux",
     "description": "Guided Project · Grade 100%",
     "url": "https://www.coursera.org/account/accomplishments/verify/CC7F3ETBKK8U"
-  },
-  {
-    "id": "certification-udemy-342220",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Jed Guinto",
-    "image": "/images/certifications/udemy-342220.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-2ccd8e88-6566-41f4-9f50-739c6b713168.pdf",
-    "title": "Microsoft Word 2019 for All Levels + Job Guide",
-    "year": "2022",
-    "completedAt": "2022-08-08",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-2ccd8e88-6566-41f4-9f50-739c6b713168/"
-  },
-  {
-    "id": "certification-udemy-2605684",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Josh Werner",
-    "image": "/images/certifications/udemy-2605684.jpg",
-    "download": null,
-    "title": "Adobe XD Basics",
-    "year": "2023",
-    "completedAt": null,
-    "description": "Completed course · 100% progress",
-    "url": "https://www.udemy.com/course/draft/2605684/learn/"
-  },
-  {
-    "id": "certification-udemy-2554215",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Josh Werner",
-    "image": "/images/certifications/udemy-2554215.jpg",
-    "download": null,
-    "title": "JavaScript Basics",
-    "year": "2023",
-    "completedAt": null,
-    "description": "Completed course · 100% progress",
-    "url": "https://www.udemy.com/course/draft/2554215/learn/"
-  },
-  {
-    "id": "certification-udemy-2853150",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Josh Werner",
-    "image": "/images/certifications/udemy-2853150.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-91b6cfe1-6f98-40ec-a1b1-2f5a1714f637.pdf",
-    "title": "Windows Command Line Basics",
-    "year": "2020",
-    "completedAt": "2020-06-18",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-91b6cfe1-6f98-40ec-a1b1-2f5a1714f637/"
-  },
-  {
-    "id": "certification-udemy-51927",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Earners Classroom",
-    "image": "/images/certifications/udemy-51927.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-J5SKU2AK.pdf",
-    "title": "Windows 8 Crash Course with 50 Tips",
-    "year": "2019",
-    "completedAt": "2019-04-09",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-J5SKU2AK/"
   },
   {
     "id": "certification-udemy-3033196",
@@ -377,19 +195,6 @@
     "url": "https://www.udemy.com/certificate/UC-9SJEY17Z/"
   },
   {
-    "id": "certification-udemy-1162000",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Doedu education",
-    "image": "/images/certifications/udemy-1162000.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-5B07ZDJN.pdf",
-    "title": "Pointers in C programming",
-    "year": "2019",
-    "completedAt": "2019-03-15",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-5B07ZDJN/"
-  },
-  {
     "id": "certification-udemy-878230",
     "platform": "Udemy",
     "platformIcon": "/images/certifications/platforms/udemy.svg",
@@ -403,69 +208,17 @@
     "url": "https://www.udemy.com/certificate/UC-76d371fa-22a3-445c-8546-6b8ae7c922dc/"
   },
   {
-    "id": "certification-udemy-847782",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "David Murray",
-    "image": "/images/certifications/udemy-847782.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-O8BLSDIZ.pdf",
-    "title": "Windows 10 Foundation Level Training",
-    "year": "2019",
-    "completedAt": "2019-03-15",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-O8BLSDIZ/"
-  },
-  {
     "id": "certification-udemy-2971820",
     "platform": "Udemy",
     "platformIcon": "/images/certifications/platforms/udemy.svg",
     "issuer": "Josh Werner",
     "image": "/images/certifications/udemy-2971820.jpg",
     "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-f02a5a0b-f3ea-49bb-9951-dcbc6b9aa6e9.pdf",
-    "title": "Visual Studio Code Ultimate Guide",
+    "title": "Visual Studio Code Ultimate Guide 2022",
     "year": "2022",
     "completedAt": "2022-08-08",
     "description": "Course certificate",
     "url": "https://www.udemy.com/certificate/UC-f02a5a0b-f3ea-49bb-9951-dcbc6b9aa6e9/"
-  },
-  {
-    "id": "certification-udemy-881980",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Evan Kimbrell",
-    "image": "/images/certifications/udemy-881980.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-FBAGJ85J.pdf",
-    "title": "Pre-Programming: Everything you need to know before you code",
-    "year": "2019",
-    "completedAt": "2019-08-31",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-FBAGJ85J/"
-  },
-  {
-    "id": "certification-udemy-1934692",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Tanner \"WhiteLiqu0r\" Evans, Scott Alex",
-    "image": "/images/certifications/udemy-1934692.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-X33N0BFS.pdf",
-    "title": "PlayerUnknown's Battlegrounds (PUBG) For Beginner Gamers",
-    "year": "2019",
-    "completedAt": "2019-04-08",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-X33N0BFS/"
-  },
-  {
-    "id": "certification-udemy-1397484",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Miltiadis Saratzidis",
-    "image": "/images/certifications/udemy-1397484.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-57c8fb24-5d8a-450b-9001-76c2dfac993b.pdf",
-    "title": "Learn C++ Programming Mini Course - Power of Animation",
-    "year": "2020",
-    "completedAt": "2020-02-03",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-57c8fb24-5d8a-450b-9001-76c2dfac993b/"
   },
   {
     "id": "certification-udemy-2503042",
@@ -494,56 +247,17 @@
     "url": "https://www.udemy.com/certificate/UC-SF48M5NL/"
   },
   {
-    "id": "certification-udemy-2355846",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Hamza Sarih",
-    "image": "/images/certifications/udemy-2355846.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-23f07a27-808f-4f1b-adf7-5a1f2f6567a9.pdf",
-    "title": "Create a Blog or Website In less than 1 Hour using WordPress",
-    "year": "2022",
-    "completedAt": "2022-08-08",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-23f07a27-808f-4f1b-adf7-5a1f2f6567a9/"
-  },
-  {
     "id": "certification-udemy-2655532",
     "platform": "Udemy",
     "platformIcon": "/images/certifications/platforms/udemy.svg",
     "issuer": "Daniel Arzuaga",
     "image": "/images/certifications/udemy-2655532.jpg",
     "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-96cee3e4-f458-4cc6-95ef-045d158c361c.pdf",
-    "title": "[NEW] React + Firebase: For Beginners",
+    "title": "React + Firebase: For Beginners",
     "year": "2022",
     "completedAt": "2022-08-08",
     "description": "Course certificate",
     "url": "https://www.udemy.com/certificate/UC-96cee3e4-f458-4cc6-95ef-045d158c361c/"
-  },
-  {
-    "id": "certification-udemy-1528664",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "ZDResearch Training",
-    "image": "/images/certifications/udemy-1528664.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-324R064H.pdf",
-    "title": "How Do Hackers Hack",
-    "year": "2019",
-    "completedAt": "2019-03-15",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-324R064H/"
-  },
-  {
-    "id": "certification-udemy-832316",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Samy Mkacher",
-    "image": "/images/certifications/udemy-832316.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-FAMM35IA.pdf",
-    "title": "Google Advanced Search: Find Stuff Like a Boss",
-    "year": "2019",
-    "completedAt": "2019-04-08",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-FAMM35IA/"
   },
   {
     "id": "certification-udemy-2233498",
@@ -572,42 +286,29 @@
     "url": "https://www.udemy.com/certificate/UC-4c1e3560-c268-4c37-87c3-b3e1235b67f2/"
   },
   {
-    "id": "certification-udemy-787236",
+    "image": null,
+    "id": "certification-flowcharting",
     "platform": "Udemy",
     "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Irfan Dayan",
-    "image": "/images/certifications/udemy-787236.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-381b6029-d2a1-4600-98e1-42326f5eb8dc.pdf",
-    "title": "Build Responsive Website Using HTML5, CSS3, JS And Bootstrap",
+    "issuer": "Udemy",
+    "download": null,
+    "title": "Learn Flowcharting. Be a Professional programmer!",
+    "year": "2019",
+    "completedAt": null,
+    "description": "Course certificate",
+    "url": "https://www.udemy.com/certificate/UC-7QSQRBD3/"
+  },
+  {
+    "image": null,
+    "id": "certification-sass-beginner-expert",
+    "platform": "Udemy",
+    "platformIcon": "/images/certifications/platforms/udemy.svg",
+    "issuer": "Udemy",
+    "download": null,
+    "title": "SASS from Beginner to Expert",
     "year": "2022",
-    "completedAt": "2022-08-08",
+    "completedAt": null,
     "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-381b6029-d2a1-4600-98e1-42326f5eb8dc/"
-  },
-  {
-    "id": "certification-udemy-2112114",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Abhijit Jagadeesh",
-    "image": "/images/certifications/udemy-2112114.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-MCFQ597O.pdf",
-    "title": "Brief introduction to Atom Editor",
-    "year": "2019",
-    "completedAt": "2019-04-09",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-MCFQ597O/"
-  },
-  {
-    "id": "certification-udemy-2088476",
-    "platform": "Udemy",
-    "platformIcon": "/images/certifications/platforms/udemy.svg",
-    "issuer": "Prateek Chaplot",
-    "image": "/images/certifications/udemy-2088476.jpg",
-    "download": "https://udemy-certificate.s3.amazonaws.com/pdf/UC-P6XOGWBR.pdf",
-    "title": "10 Techniques to Master Learning",
-    "year": "2019",
-    "completedAt": "2019-04-08",
-    "description": "Course certificate",
-    "url": "https://www.udemy.com/certificate/UC-P6XOGWBR/"
+    "url": "https://www.udemy.com/certificate/UC-44fae431-fc7f-49e6-947c-3b653a09fed5/"
   }
 ]

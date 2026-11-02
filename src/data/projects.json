@@ -46,6 +46,41 @@
     "logoUrl": "https://giftbook.netlify.app/favicon.ico"
   },
   {
+    "id": "project-sigcraft",
+    "type": "tool",
+    "featured": false,
+    "title": "Sigcraft",
+    "description": "A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser.",
+    "technologies": [
+      "TanStack Start",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Radix UI",
+      "Hugeicons",
+      "Netlify",
+      "Vitest",
+      "GitHub Actions"
+    ],
+    "topics": [
+      "email-signature",
+      "gmail",
+      "html-email",
+      "signature-generator",
+      "email-templates",
+      "privacy",
+      "dark-mode"
+    ],
+    "imageUrl": "assets/projects/sigcraft.webp",
+    "liveUrl": "https://sigcraft.netlify.app",
+    "githubUrl": "https://github.com/montasim/sigcraft",
+    "githubRepositoryCreatedAt": "2026-11-02T14:41:04Z",
+    "githubInitialCommitAt": "2026-11-02T14:30:35Z",
+    "githubInitialCommitSha": "74987e62945bad6432dd3dc58bebdf685dc6c22b",
+    "logoUrl": "https://sigcraft.netlify.app/favicon.svg"
+  },
+  {
     "id": "project-rootstory",
     "type": "website",
     "featured": false,

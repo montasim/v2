@@ -135,7 +135,7 @@ describe("portfolio content", () => {
       "project-skillfoliox",
       "project-bangladesh-location-registry",
       "project-thoughtline",
-      "project-rootstory",
+      "project-sigcraft",
     ])
     expect(
       projectCatalog.records.slice(-14).map((project) => project.id)
@@ -168,7 +168,7 @@ describe("portfolio content", () => {
     const courseraCredentials = certificationCatalog.records.filter(
       (record) => record.platform === "Coursera"
     )
-    expect(courseraCredentials).toHaveLength(19)
+    expect(courseraCredentials).toHaveLength(10)
     expect(courseraCredentials.every((record) => record.image)).toBe(true)
     expect(
       courseraCredentials.every(
@@ -182,11 +182,11 @@ describe("portfolio content", () => {
     const udemyCompleted = certificationCatalog.records.filter((record) =>
       record.id.startsWith("certification-udemy-")
     )
-    expect(udemyCompleted).toHaveLength(25)
+    expect(udemyCompleted).toHaveLength(9)
     expect(udemyCompleted.every((record) => record.image)).toBe(true)
     expect(
       udemyCompleted.filter((record) => record.completedAt === null)
-    ).toHaveLength(2)
+    ).toHaveLength(0)
     expect(
       certificationCatalog.records.slice(0, 10).map((record) => record.id)
     ).toEqual([
@@ -199,7 +199,7 @@ describe("portfolio content", () => {
       "certification-meta-react-native",
       "certification-agile-atlassian-jira",
       "certification-google-project-management",
-      "certification-foundations-ux-design",
+      "certification-google-business-intelligence",
     ])
     expect(certificationCatalog.featured.map((record) => record.id)).toEqual([
       "certification-claude-101",
@@ -231,7 +231,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-giftbook")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-sigcraft")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)
