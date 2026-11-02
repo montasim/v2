@@ -83,6 +83,81 @@
     }
   },
   {
+    "slug": "sigcraft",
+    "projectId": "project-sigcraft",
+    "summary": "A Gmail-ready email signature generator that turns a four-step editor into email-safe HTML, serves icons in any colour as cacheable PNGs, and pairs the signature with ready-to-send email templates, all without an account.",
+    "role": "Product designer and full-stack engineer",
+    "scope": "Product design, email-safe HTML rendering, server-side icon rendering, editor experience, testing and deployment",
+    "status": "Publicly deployed at sigcraft.netlify.app (version 0.1.0); signature details stay in each visitor's browser",
+    "verifiedBranch": "main",
+    "verifiedCommit": "cc986ad2c3329453db8c216f67a3eaedebca8add",
+    "problem": "Most email signatures look right in a design tool and break in Gmail. Classes, style blocks, SVG icons and percentage widths get stripped, images stop loading, and the layout changes from one inbox to the next.",
+    "constraints": [
+      "Gmail strips classes, style blocks and SVG, so every signature has to be built from tables with inline styles and fixed pixel widths.",
+      "The photo and icons load from a public URL each time an email opens, so the image host must stay stable and cache-friendly.",
+      "Mail apps' dark modes recolour text but never images, so icons have to stay readable on light and dark backgrounds.",
+      "Gmail limits a signature to 10,000 characters, which every layout has to respect.",
+      "There are no accounts or server-side storage, so the editor keeps each visitor's details in their own browser."
+    ],
+    "architecture": {
+      "summary": "A TanStack Start app renders the editor and email templates, a pure builder turns editor state into email-safe HTML, and a server route draws icons as long-cached PNGs on Netlify.",
+      "layers": [
+        {
+          "title": "Editor",
+          "detail": "Four steps (Details, Images, Templates, Styles) drive a live preview inside a mail window, with the editor state kept in the browser's localStorage."
+        },
+        {
+          "title": "Signature builder",
+          "detail": "A pure function turns editor state into tables with inline styles only. The preview and the copy share that markup and differ only in where images load from."
+        },
+        {
+          "title": "Icon service",
+          "detail": "A versioned /api/icon route draws each Hugeicons glyph as a PNG at four times display size without image libraries. Each URL fully describes its image, so Netlify's CDN caches it for a year."
+        },
+        {
+          "title": "Email templates",
+          "detail": "Eight templates use the same editor layout. A field-driven form fills the subject and body as you type, highlights anything still empty, and carries shared details across templates."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Generate email markup, not web markup",
+        "detail": "Signatures use tables, inline styles and fixed pixel widths with no classes or SVG, because that is the markup Gmail keeps intact."
+      },
+      {
+        "title": "Draw icons on request as versioned URLs",
+        "detail": "Any colour and style becomes a PNG at a stable URL, so there is no sprite sheet to maintain, and older icon versions stay unchanged for emails already sent."
+      },
+      {
+        "title": "Design for mail apps' dark modes",
+        "detail": "Outline icons sit on a white rounded square, invisible on a white email and a light tile on a dark one, so they never disappear when a mail app recolours the text."
+      },
+      {
+        "title": "Keep every detail in the browser",
+        "detail": "There are no accounts or server storage. Details persist in localStorage, and the limitation that clearing site data starts fresh is documented."
+      }
+    ],
+    "contribution": [
+      "Designed the four-step editor and 26 named signature layouts, from photo-left and centred to banner, card, minimal, monogram and business-card styles.",
+      "Built the email-safe signature builder with rich HTML, raw HTML and plain-text copy, Gmail setup steps, and a character count against Gmail's 10,000-character limit.",
+      "Wrote the PNG icon renderer and the versioned, cache-friendly icon API route.",
+      "Built the email templates page for job search, client work and meetings, with field-driven forms and shared details across templates.",
+      "Set up CI for formatting, linting, type checking, tests and builds, added security headers, and deployed the server-rendered app to Netlify."
+    ],
+    "outcomes": [
+      "Signatures paste into Gmail and render as previewed, at the same size in any window.",
+      "Twenty-six signature layouts, nine colour presets or any custom hex, and eight email-safe fonts ship from one editor.",
+      "Icons in any colour are served as year-cached PNGs, and older icon versions remain available for emails already sent.",
+      "Thirty-one automated tests cover the signature builder, email fields and icon renderer, and CI runs format, lint, type check, test and build on every push.",
+      "Known limits are documented: images depend on the live site, Outlook on Windows shows round images as squares, and a content security policy is still to come."
+    ],
+    "screenshot": {
+      "alt": "Sigcraft signature editor with the details form beside a live Gmail-style preview of a finished signature",
+      "caption": "The deployed Sigcraft editor fills in details on the left and shows the finished signature inside a mail window, exactly as Gmail will receive it."
+    }
+  },
+  {
     "slug": "rootstory",
     "projectId": "project-rootstory",
     "summary": "A local-first family archive that combines a readable relationship graph with detailed profiles, timelines, recurring dates, version history, and complete backup restoration without requiring an account.",

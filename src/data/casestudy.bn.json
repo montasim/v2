@@ -78,6 +78,77 @@
       "caption": "Deploy করা Giftbook landing page একটা event ledger এর preview দেখায় এবং শুরুতেই প্রতিশ্রুতিটা বলে দেয়: data থাকবে আপনার নিজের Google Drive এ, free, আর offline এও কাজ করে।"
     }
   },
+  "sigcraft": {
+    "summary": "একটা Gmail-ready email signature generator, যেটা চার ধাপের editor কে email-safe HTML এ রূপ দেয়, যেকোনো রঙের icon cache করার মতো PNG হিসেবে দেয়, আর signature এর সাথে পাঠানোর মতো email template ও দেয়, কোনো account ছাড়াই।",
+    "role": "Product designer ও full-stack engineer",
+    "scope": "Product design, email-safe HTML rendering, server-side icon rendering, editor experience, testing এবং deployment",
+    "status": "sigcraft.netlify.app এ publicly deployed (version 0.1.0); signature এর তথ্য প্রতিটা visitor এর নিজের browser এ থাকে",
+    "problem": "বেশিরভাগ email signature design tool এ ঠিক দেখায়, কিন্তু Gmail এ ভেঙে যায়। Class, style block, SVG icon আর percentage width মুছে যায়, ছবি load হয় না, আর এক inbox থেকে আরেক inbox এ layout বদলে যায়।",
+    "constraints": [
+      "Gmail class, style block আর SVG মুছে দেয়, তাই প্রতিটা signature table, inline style আর নির্দিষ্ট pixel width দিয়ে বানাতে হয়।",
+      "প্রতিবার email খোলার সময় ছবি আর icon একটা public URL থেকে load হয়, তাই image host কে স্থির আর cache-friendly রাখতে হয়।",
+      "Mail app এর dark mode লেখার রঙ বদলায় কিন্তু ছবির না, তাই icon কে light আর dark দুই background এই পড়ার মতো রাখতে হয়।",
+      "Gmail একটা signature কে ১০,০০০ character এ সীমিত রাখে, প্রতিটা layout কে সেটা মানতে হয়।",
+      "কোনো account বা server-side storage নেই, তাই editor প্রতিটা visitor এর তথ্য তার নিজের browser এ রাখে।"
+    ],
+    "architecture": {
+      "summary": "একটা TanStack Start app editor আর email template render করে, একটা pure builder editor state কে email-safe HTML এ রূপ দেয়, আর একটা server route Netlify তে লম্বা সময় cache হওয়া PNG হিসেবে icon আঁকে।",
+      "layers": [
+        {
+          "title": "Editor",
+          "detail": "চারটা ধাপ (Details, Images, Templates, Styles) একটা mail window এর ভেতরে live preview চালায়, আর editor state browser এর localStorage এ থাকে।"
+        },
+        {
+          "title": "Signature builder",
+          "detail": "একটা pure function editor state কে শুধু inline style সহ table এ রূপ দেয়। Preview আর copy একই markup share করে, পার্থক্য শুধু ছবি কোথা থেকে load হয়।"
+        },
+        {
+          "title": "Icon service",
+          "detail": "একটা versioned /api/icon route কোনো image library ছাড়াই প্রতিটা Hugeicons glyph কে display size এর চার গুণে PNG হিসেবে আঁকে। প্রতিটা URL নিজের ছবি পুরোপুরি বর্ণনা করে, তাই Netlify এর CDN সেটা এক বছর cache রাখে।"
+        },
+        {
+          "title": "Email templates",
+          "detail": "আটটা template একই editor layout ব্যবহার করে। Field-driven form লেখার সাথে সাথে subject আর body ভরে দেয়, যা এখনো খালি সেটা highlight করে, আর shared তথ্য সব template এ বয়ে নেয়।"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Web markup না, email markup তৈরি করা",
+        "detail": "Signature table, inline style আর নির্দিষ্ট pixel width ব্যবহার করে, কোনো class বা SVG ছাড়া, কারণ Gmail এই markup টাই অক্ষত রাখে।"
+      },
+      {
+        "title": "Versioned URL হিসেবে চাহিদামতো icon আঁকা",
+        "detail": "যেকোনো রঙ আর style একটা স্থির URL এ PNG হয়ে যায়, তাই কোনো sprite sheet রাখতে হয় না, আর আগে পাঠানো email এর জন্য পুরনো icon version অপরিবর্তিত থাকে।"
+      },
+      {
+        "title": "Mail app এর dark mode মাথায় রেখে design",
+        "detail": "Outline icon একটা সাদা rounded square এর ওপর বসে, সাদা email এ অদৃশ্য আর dark email এ হালকা tile, তাই mail app লেখার রঙ বদলালেও icon হারিয়ে যায় না।"
+      },
+      {
+        "title": "সব তথ্য browser এই রাখা",
+        "detail": "কোনো account বা server storage নেই। তথ্য localStorage এ থাকে, আর site data মুছলে নতুন করে শুরু হয়, এই সীমাবদ্ধতাটা লিখে রাখা আছে।"
+      }
+    ],
+    "contribution": [
+      "চার ধাপের editor আর ২৬টা নাম দেওয়া signature layout design করেছি, photo-left আর centred থেকে banner, card, minimal, monogram আর business-card style পর্যন্ত।",
+      "Email-safe signature builder বানিয়েছি, যেখানে rich HTML, raw HTML আর plain-text copy, Gmail setup এর ধাপ, আর Gmail এর ১০,০০০ character সীমার বিপরীতে character count আছে।",
+      "PNG icon renderer আর versioned, cache-friendly icon API route লিখেছি।",
+      "Job search, client work আর meeting এর জন্য email templates page বানিয়েছি, field-driven form আর template গুলোর মধ্যে shared তথ্য সহ।",
+      "Formatting, linting, type checking, test আর build এর জন্য CI set up করেছি, security header যোগ করেছি, আর server-rendered app টা Netlify তে deploy করেছি।"
+    ],
+    "outcomes": [
+      "Signature Gmail এ paste করলে preview এর মতোই দেখায়, যেকোনো window তে একই size এ।",
+      "ছাব্বিশটা signature layout, নয়টা colour preset বা যেকোনো custom hex, আর আটটা email-safe font একটাই editor থেকে আসে।",
+      "যেকোনো রঙের icon এক বছর cache হওয়া PNG হিসেবে দেওয়া হয়, আর আগে পাঠানো email এর জন্য পুরনো icon version পাওয়া যায়।",
+      "একত্রিশটা automated test signature builder, email field আর icon renderer cover করে, আর প্রতিটা push এ CI format, lint, type check, test আর build চালায়।",
+      "জানা সীমাবদ্ধতা লিখে রাখা আছে: ছবি live site এর ওপর নির্ভর করে, Windows এর Outlook গোল ছবিকে চৌকো দেখায়, আর content security policy এখনো আসেনি।"
+    ],
+    "screenshot": {
+      "alt": "Sigcraft signature editor, যেখানে details form এর পাশে তৈরি signature এর একটা live Gmail-style preview দেখা যাচ্ছে",
+      "caption": "Deploy করা Sigcraft editor বাঁ দিকে তথ্য নেয় আর তৈরি signature টা একটা mail window এর ভেতরে দেখায়, ঠিক যেভাবে Gmail পাবে।"
+    }
+  },
   "rootstory": {
     "summary": "একটা local-first family archive, যেখানে পড়তে সহজ relationship graph এর সাথে আছে বিস্তারিত profile, timeline, বারবার আসা তারিখ, version history আর পূর্ণ backup restore, কোনো account ছাড়াই।",
     "role": "Product designer ও frontend engineer",

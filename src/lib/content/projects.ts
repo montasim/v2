@@ -97,6 +97,7 @@ const hiringPriority = [
   "project-skillfoliox",
   "project-bangladesh-location-registry",
   "project-thoughtline",
+  "project-sigcraft",
   "project-rootstory",
   "project-giftbook",
   "project-release-agent-skill",

@@ -2,6 +2,9 @@
   "project-giftbook": {
     "description": "পরিবারের অনুষ্ঠানে পাওয়া উপহারের হিসাব মালিকের নিজের Google Sheet এ রাখার জন্য একটা Bangla-first, offline-capable PWA; এতে আছে QR-based family sharing আর Excel export, কোনো application server নেই।"
   },
+  "project-sigcraft": {
+    "description": "একটা Gmail-ready email signature generator, যেখানে যেকোনো রঙে ২৬টা layout আর job search ও client work এর জন্য পাঠানোর মতো আটটা email template আছে, আর সব তথ্য শুধু visitor এর নিজের browser এ থাকে।"
+  },
   "project-rootstory": {
     "description": "সম্পর্কের map তৈরি, জীবনের খুঁটিনাটি আর ছবি সংরক্ষণ, এবং পুরো পারিবারিক ইতিহাস এক browser থেকে আরেক browser এ নিয়ে যাওয়ার জন্য একটা private, local-first family archive।"
   },
