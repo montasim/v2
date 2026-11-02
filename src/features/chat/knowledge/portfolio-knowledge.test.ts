@@ -17,7 +17,7 @@ describe("PortfolioKnowledge", () => {
       expect.objectContaining({ id: "projects", recordCount: 54 }),
       expect.objectContaining({ id: "casestudy", recordCount: 54 }),
       expect.objectContaining({ id: "blog", recordCount: 55 }),
-      expect.objectContaining({ id: "certifications", recordCount: 47 }),
+      expect.objectContaining({ id: "certifications", recordCount: 24 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
       expect.objectContaining({ id: "organizations", recordCount: 3 }),
@@ -60,7 +60,7 @@ describe("PortfolioKnowledge", () => {
       knowledge.textForFact(
         "experience:experience-mymedicalhub-senior-software-engineer"
       )
-    ).toContain("99.9% reliability")
+    ).toContain("99.9%")
     expect(knowledge.findCitation(experience?.citationId ?? "")).toEqual({
       id: "experience:experience-mymedicalhub-senior-software-engineer",
       source: "experience",
@@ -274,7 +274,7 @@ describe("PortfolioKnowledge", () => {
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({
-      count: 47,
+      count: 24,
       earliestYear: 2019,
       latestYear: 2026,
     })

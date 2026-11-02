@@ -28,7 +28,7 @@ import type { CompiledPortfolioKnowledge } from "@/features/chat/knowledge/portf
 const currentRoleFactId =
   "experience:experience-mymedicalhub-senior-software-engineer"
 const currentRoleExcerpt =
-  "Architected an **FSM-based biometric engine** replacing unstable React hooks with deterministic state transitions for **99.9% reliability** during AI analysis."
+  "Replaced fragile React-hook state with a deterministic **finite-state-machine** engine, so **99.9%** of assessment sessions complete without a crash or freeze, with **60 FPS** MediaPipe pose estimation and real-time rep counting."
 
 const validGeneratedDraft = JSON.stringify({
   interpretation:

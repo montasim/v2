@@ -8,8 +8,12 @@
     "logoUrl": "/images/organizations/baust.png",
     "degree": "Bachelor of Science in Computer Science and Engineering",
     "period": "Nov 2016 - Mar 2021",
-    "details": "Studied core computer science fundamentals including data structures, algorithms, software engineering, database systems, and web technologies.",
-    "highlights": []
+    "details": "Core coursework in data structures and algorithms, object-oriented programming (C++/Java), operating systems, database systems (SQL/MySQL), software engineering and web technologies.",
+    "highlights": [
+      "Competitive programming and algorithmic problem-solving with the BAUST Programming Club.",
+      "Team projects across the full software development lifecycle, using Agile and Waterfall.",
+      "Member of the BAUST Career Club."
+    ]
   },
   {
     "id": "education-carmichael-college",
@@ -20,7 +24,7 @@
     "logoUrl": "/images/organizations/carmichael-college.png",
     "degree": "Higher Secondary Certificate (HSC), Science Group",
     "period": "2014 - 2016",
-    "details": "Completed higher secondary education with a focus on science subjects including physics, chemistry, and mathematics.",
+    "details": "Science group: physics, chemistry and higher mathematics. Organised student events and started teaching myself web development (HTML/CSS) and writing a tech blog.",
     "highlights": []
   },
   {
