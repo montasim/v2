@@ -127,6 +127,25 @@
     },
     {
       "kind": "case-study-derived",
+      "projectId": "project-sigcraft",
+      "slug": "building-email-signatures-that-survive-gmail",
+      "title": "Building Email Signatures That Survive Gmail",
+      "category": "Product engineering",
+      "topic": "product",
+      "publishedAt": "2026-11-02",
+      "featured": false,
+      "image": {
+        "src": "/images/blog/email-signature.webp",
+        "alt": "An email signature built from tables and inline styles, with PNG icons in any colour flowing into it"
+      },
+      "translations": {
+        "bn": {
+          "title": "Gmail এ টিকে থাকে এমন email signature বানানো"
+        }
+      }
+    },
+    {
+      "kind": "case-study-derived",
       "projectId": "project-rootstory",
       "slug": "designing-a-local-first-family-tree-people-can-read",
       "title": "Designing a Local-First Family Tree People Can Read",
