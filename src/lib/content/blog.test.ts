@@ -7,9 +7,9 @@ import { createMeta, site } from "../site"
 
 describe("blog catalog", () => {
   it("loads authored and case-study-derived posts from one catalog", () => {
-    expect(blogCatalog.posts).toHaveLength(55)
+    expect(blogCatalog.posts).toHaveLength(56)
     expect(blogCatalog.authoredPosts).toHaveLength(23)
-    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(32)
+    expect(blogCatalog.caseStudyDerivedPosts).toHaveLength(33)
     expect(
       blogCatalog.authoredPosts.every((post) => Boolean(post.publishedAt))
     ).toBe(true)

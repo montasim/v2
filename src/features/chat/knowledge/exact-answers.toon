@@ -1,6 +1,6 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: 12088a0b3a21a10649a56132df57087ed9c6a45b09c06e9d15c531ca84fa8cae
-records[581]:
+knowledgeHash: b923b0936c7dac3d81b48c6435e46ae06a735a3674a9cec91bf6c71774e62dbc
+records[587]:
   - id: "project:project-postcraft:overview"
     category: project
     question: What is Montasim's PostCraft project?
@@ -109,6 +109,18 @@ records[581]:
     text: "Montasim built Thoughtline - LinkedIn Writing Assistant with WXT, React 19, TypeScript, Chrome Manifest V3, Chrome Extensions API, Tailwind CSS, Hugeicons, OpenRouter API, Gemini API, Groq API, Zod, Vitest, Playwright, React Testing Library, TanStack Start, GitHub Actions, CI/CD, Git, System Design. The product goal is clear: User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual. More importantly, the architecture is explicit: LinkedIn content scripts and a manual paste input feed React side-panel workflows. Typed drafting and source-research ports route requests through curated free OpenRouter models first, with Gemini and Groq as fallbacks, and encrypted browser storage handles credentials, history, migrations, and backups under Manifest V3 permissions. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-thoughtline","case-study:thoughtline:architecture"
     supportingExcerpts[2]: "User-controlled Chrome side-panel extension for drafting replies from pasted or selected LinkedIn posts, refining writing, and keeping every publish action manual.\n\nfalse\n2026-07-17T21:02:58Z\nb2085eead2f039535d2caf81c901d57c0028298a\n2026-07-17T20:56:56Z\nhttps://github.com/montasim/Thoughtline\nproject-thoughtline\nassets/projects/thoughtline.png\nhttps://thoughtline.netlify.app\nhttps://thoughtline.netlify.app/brand/thoughtline-mark.svg\n\nhttps://github.com/montasim/Thoughtline/releases/latest\nWXT\nReact","LinkedIn content scripts extract the visible conversation, and a bounded manual input accepts pasted posts.\nPage integration\nReact side-panel workflows cover replies, ideas, refinement, history, settings, and onboarding.\nExtension interface\nTyped drafting and source-research ports use curated free OpenRouter models first, apply bounded provider timeouts, and fall back to Gemini and Groq.\nProvider boundary\nEncrypted browser storage, migrations, and backup and export features sit behind Manifest V3"
+  - id: "project:project-sigcraft:overview"
+    category: project
+    question: What is Montasim's Sigcraft project?
+    text: "Montasim built Sigcraft, a tool project. A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser. His role covered product designer and full-stack engineer, with scope spanning product design, email-safe HTML rendering, server-side icon rendering, editor experience, testing and deployment. Signatures paste into Gmail and render as previewed, at the same size in any window. A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary."
+    factIds[3]: "project:project-sigcraft","case-study:sigcraft:problem","case-study:sigcraft:outcomes"
+    supportingExcerpts[3]: "A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser.\nfalse\n2026-11-02T14:30:35Z\n74987e62945bad6432dd3dc58bebdf685dc6c22b\n2026-11-02T14:41:04Z\nhttps://github.com/montasim/sigcraft\nproject-sigcraft\nassets/projects/sigcraft.webp\nhttps://sigcraft.netlify.app\nhttps://sigcraft.netlify.app/favicon.svg\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix","Most email signatures look right in a design tool and break in Gmail. Classes, style blocks, SVG icons and percentage widths get stripped, images stop loading, and the layout changes from one inbox to the next.\nGmail strips classes, style blocks and SVG, so every signature has to be built from tables with inline styles and fixed pixel widths.\nThe photo and icons load from a public URL each time an email opens, so the image host must stay stable and cache-friendly.\nMail apps' dark modes recolour text but never","Signatures paste into Gmail and render as previewed, at the same size in any window.\nTwenty-six signature layouts, nine colour presets or any custom hex, and eight email-safe fonts ship from one editor.\nIcons in any colour are served as year-cached PNGs, and older icon versions remain available for emails already sent.\nThirty-one automated tests cover the signature builder, email fields and icon renderer, and CI runs format, lint, type check, test and build on every push.\nKnown limits are documented: images depend"
+  - id: "project:project-sigcraft:technology"
+    category: project
+    question: Which technologies did Montasim use for Sigcraft?
+    text: "Montasim built Sigcraft with TanStack Start, React 19, TypeScript, Tailwind CSS, shadcn/ui, Radix UI, Hugeicons, Netlify, Vitest, GitHub Actions. The product goal is clear: A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser. More importantly, the architecture is explicit: A TanStack Start app renders the editor and email templates, a pure builder turns editor state into email-safe HTML, and a server route draws icons as long-cached PNGs on Netlify. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
+    factIds[2]: "project:project-sigcraft","case-study:sigcraft:architecture"
+    supportingExcerpts[2]: "A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser.\nfalse\n2026-11-02T14:30:35Z\n74987e62945bad6432dd3dc58bebdf685dc6c22b\n2026-11-02T14:41:04Z\nhttps://github.com/montasim/sigcraft\nproject-sigcraft\nassets/projects/sigcraft.webp\nhttps://sigcraft.netlify.app\nhttps://sigcraft.netlify.app/favicon.svg\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix","Four steps (Details, Images, Templates, Styles) drive a live preview inside a mail window, with the editor state kept in the browser's localStorage.\nEditor\nA pure function turns editor state into tables with inline styles only. The preview and the copy share that markup and differ only in where images load from.\nSignature builder\nA versioned /api/icon route draws each Hugeicons glyph as a PNG at four times display size without image libraries. Each URL fully describes its image, so Netlify's CDN caches it for a"
   - id: "project:project-rootstory:overview"
     category: project
     question: What is Montasim's Rootstory project?
@@ -661,6 +673,24 @@ records[581]:
     text: "Montasim built Project Management with JavaScript, React, Redux, Tailwind CSS, Node.js, Express.js, MongoDB, Mongoose. The product goal is clear: A collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces. More importantly, the architecture is explicit: React routes and Redux state connect project interfaces to an Express API. The repository also contains Mongoose project models and controllers for tasks, subtasks, bugs, discussions, and membership. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-project-management","case-study:project-management:architecture"
     supportingExcerpts[2]: "true\nA collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces.\nfalse\n2020-10-01T04:35:09Z\n77d8ead1a20cc7d2156d53673758efe0ef4c0abf\n2020-09-19T04:26:11Z\nfalse\nhttps://github.com/mdjahidhasan009/Project_Management\nproject-project-management\nnull\nJavaScript\nReact\nRedux\nTailwind CSS\nNode.js\nExpress.js\nMongoDB\nMongoose\nProject","React components separate overview, activities, discussions, tasks, bugs, and project-detail editing, with responsive Tailwind classes in the inspected overview.\nProject interface\nRedux actions call a shared HTTP helper for project updates, completion state, and membership operations, then refresh project data.\nState and requests\nExpress routes apply authentication middleware and dispatch to project controllers; Mongoose models hold project and related work records. These are shared application capabilities, not"
+  - id: "case-study:sigcraft:problem"
+    category: case-study
+    question: What problem did Montasim address in the Sigcraft case study?
+    text: "Most email signatures look right in a design tool and break in Gmail. Classes, style blocks, SVG icons and percentage widths get stripped, images stop loading, and the layout changes from one inbox to the next. Montasim owned product designer and full-stack engineer, covering product design, email-safe HTML rendering, server-side icon rendering, editor experience, testing and deployment. The solution also had to respect “Gmail strips classes, style blocks and SVG, so every signature has to be built from tables with inline styles and fixed pixel widths”; “The photo and icons load from a public URL each time an email opens, so the image host must stay stable and cache-friendly”. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request."
+    factIds[1]: "case-study:sigcraft:problem"
+    supportingExcerpts[1]: "Most email signatures look right in a design tool and break in Gmail. Classes, style blocks, SVG icons and percentage widths get stripped, images stop loading, and the layout changes from one inbox to the next.\nGmail strips classes, style blocks and SVG, so every signature has to be built from tables with inline styles and fixed pixel widths.\nThe photo and icons load from a public URL each time an email opens, so the image host must stay stable and cache-friendly.\nMail apps' dark modes recolour text but never"
+  - id: "case-study:sigcraft:architecture"
+    category: case-study
+    question: How did Montasim structure the Sigcraft solution?
+    text: "A TanStack Start app renders the editor and email templates, a pure builder turns editor state into email-safe HTML, and a server route draws icons as long-cached PNGs on Netlify. A representative decision was “Generate email markup, not web markup”: Signatures use tables, inline styles and fixed pixel widths with no classes or SVG, because that is the markup Gmail keeps intact. The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve."
+    factIds[1]: "case-study:sigcraft:architecture"
+    supportingExcerpts[1]: "Four steps (Details, Images, Templates, Styles) drive a live preview inside a mail window, with the editor state kept in the browser's localStorage.\nEditor\nA pure function turns editor state into tables with inline styles only. The preview and the copy share that markup and differ only in where images load from.\nSignature builder\nA versioned /api/icon route draws each Hugeicons glyph as a PNG at four times display size without image libraries. Each URL fully describes its image, so Netlify's CDN caches it for a"
+  - id: "case-study:sigcraft:delivery"
+    category: case-study
+    question: What did Montasim deliver and achieve with Sigcraft?
+    text: "Montasim designed the four-step editor and 26 named signature layouts, from photo-left and centred to banner, card, minimal, monogram and business-card styles. He built the email-safe signature builder with rich HTML, raw HTML and plain-text copy, Gmail setup steps, and a character count against Gmail's 10,000-character limit. He wrote the PNG icon renderer and the versioned, cache-friendly icon API route. He built the email templates page for job search, client work and meetings, with field-driven forms and shared details across templates. He set up CI for formatting, linting, type checking, tests and builds, added security headers, and deployed the server-rendered app to Netlify. The resulting capabilities and outcomes are “Signatures paste into Gmail and render as previewed, at the same size in any window”; “Twenty-six signature layouts, nine colour presets or any custom hex, and eight email-safe fonts ship from one editor”; “Icons in any colour are served as year-cached PNGs, and older icon versions remain available for emails already sent”; “Thirty-one automated tests cover the signature builder, email fields and icon renderer, and CI runs format, lint, type check, test and build on every push”; “Known limits are documented: images depend on the live site, Outlook on Windows shows round images as squares, and a content security policy is still to come”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
+    factIds[2]: "case-study:sigcraft:contribution","case-study:sigcraft:outcomes"
+    supportingExcerpts[2]: "Designed the four-step editor and 26 named signature layouts, from photo-left and centred to banner, card, minimal, monogram and business-card styles.\nBuilt the email-safe signature builder with rich HTML, raw HTML and plain-text copy, Gmail setup steps, and a character count against Gmail's 10,000-character limit.\nWrote the PNG icon renderer and the versioned, cache-friendly icon API route.\nBuilt the email templates page for job search, client work and meetings, with field-driven forms and shared details across","Signatures paste into Gmail and render as previewed, at the same size in any window.\nTwenty-six signature layouts, nine colour presets or any custom hex, and eight email-safe fonts ship from one editor.\nIcons in any colour are served as year-cached PNGs, and older icon versions remain available for emails already sent.\nThirty-one automated tests cover the signature builder, email fields and icon renderer, and CI runs format, lint, type check, test and build on every push.\nKnown limits are documented: images depend"
   - id: "case-study:giftbook:problem"
     category: case-study
     question: What problem did Montasim address in the Giftbook case study?
@@ -1633,6 +1663,12 @@ records[581]:
     text: "Montasim contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces. He refined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements. He implemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior. He added focused component and workflow tests while iterating on a large production React codebase shared by a multidisciplinary product team. The resulting capabilities and outcomes are “Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal”; “Movement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state”; “Feature configuration supports multiple healthcare programs while preserving a shared application foundation”; “Operational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
     factIds[2]: "case-study:mmh-patient-portal:contribution","case-study:mmh-patient-portal:outcomes"
     supportingExcerpts[2]: "Contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces.\nRefined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements.\nImplemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior.\nAdded focused component and workflow tests while","Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal.\nMovement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state.\nFeature configuration supports multiple healthcare programs while preserving a shared application foundation.\nOperational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows."
+  - id: "blog:building-email-signatures-that-survive-gmail"
+    category: blog
+    question: What engineering insight does Montasim share in “Building Email Signatures That Survive Gmail”?
+    text: "Montasim's opening insight in “Building Email Signatures That Survive Gmail” is framed as “Why it was needed”: Most email signatures look right in a design tool and break in Gmail. Classes, style blocks, SVG icons and percentage widths get stripped, images stop loading, and the layout changes from one inbox to the next. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
+    factIds[2]: "blog:building-email-signatures-that-survive-gmail","case-study:sigcraft:problem"
+    supportingExcerpts[2]: "Product engineering\nfalse\nAn email signature built from tables and inline styles, with PNG icons in any colour flowing into it\n/images/blog/email-signature.webp\ncase-study-derived\nproject-sigcraft\n2026-11-02\nbuilding-email-signatures-that-survive-gmail\nBuilding Email Signatures That Survive Gmail\nproduct","Most email signatures look right in a design tool and break in Gmail. Classes, style blocks, SVG icons and percentage widths get stripped, images stop loading, and the layout changes from one inbox to the next.\nGmail strips classes, style blocks and SVG, so every signature has to be built from tables with inline styles and fixed pixel widths.\nThe photo and icons load from a public URL each time an email opens, so the image host must stay stable and cache-friendly.\nMail apps' dark modes recolour text but never"
   - id: "blog:a-family-gift-ledger-that-lives-in-your-own-google-sheet"
     category: blog
     question: What engineering insight does Montasim share in “A Family Gift Ledger That Lives in Your Own Google Sheet”?
@@ -3238,21 +3274,21 @@ records[581]:
   - id: "catalog-chronology-comparison:project-count"
     category: catalog-chronology-comparison
     question: How many projects are published in Montasim's portfolio?
-    text: "The portfolio currently publishes 54 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
+    text: "The portfolio currently publishes 55 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
     factIds[1]: "derived:catalog-count:projects"
-    supportingExcerpts[1]: "projects\n54"
+    supportingExcerpts[1]: "projects\n55"
   - id: "catalog-chronology-comparison:case-study-count"
     category: catalog-chronology-comparison
     question: How many project case studies has Montasim documented?
-    text: "Montasim has 54 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
+    text: "Montasim has 55 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
     factIds[1]: "derived:catalog-count:casestudy"
-    supportingExcerpts[1]: "casestudy\n54"
+    supportingExcerpts[1]: "casestudy\n55"
   - id: "catalog-chronology-comparison:blog-count"
     category: catalog-chronology-comparison
     question: How many articles are in Montasim's blog catalog?
-    text: "The blog catalog contains 55 articles: 23 authored essays and 32 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
+    text: "The blog catalog contains 56 articles: 23 authored essays and 33 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "55\n23\n32"
+    supportingExcerpts[1]: "56\n23\n33"
   - id: "catalog-chronology-comparison:credential-count"
     category: catalog-chronology-comparison
     question: How many credentials does Montasim publish?
@@ -3298,15 +3334,15 @@ records[581]:
   - id: "catalog-chronology-comparison:newest-project"
     category: catalog-chronology-comparison
     question: Which project is newest by Montasim's GitHub history?
-    text: "Giftbook is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-10-09, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
-    factIds[2]: "derived:newest-project-by-github-history","project:project-giftbook"
-    supportingExcerpts[2]: "project-giftbook\nGiftbook\n2026-10-09T06:25:34Z\nearlier of repository creation and initial commit\nA Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application","A Bangla-first offline-capable PWA for recording family event gifts in the owner's own Google Sheet, with QR-based family sharing, Excel export, and no application server.\nfalse\n2026-10-09T06:25:34Z\n88022a4f297b1b53a040f7dfcab1bea55e93e55a\n2026-10-09T06:27:06Z\nhttps://github.com/montasim/giftbook\nproject-giftbook\nassets/projects/giftbook.webp\nhttps://giftbook.netlify.app\nhttps://giftbook.netlify.app/favicon.ico\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix UI\nTanStack"
+    text: "Sigcraft is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-11-02, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
+    factIds[2]: "derived:newest-project-by-github-history","project:project-sigcraft"
+    supportingExcerpts[2]: "project-sigcraft\nSigcraft\n2026-11-02T14:30:35Z\nearlier of repository creation and initial commit\nA Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's","A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser.\nfalse\n2026-11-02T14:30:35Z\n74987e62945bad6432dd3dc58bebdf685dc6c22b\n2026-11-02T14:41:04Z\nhttps://github.com/montasim/sigcraft\nproject-sigcraft\nassets/projects/sigcraft.webp\nhttps://sigcraft.netlify.app\nhttps://sigcraft.netlify.app/favicon.svg\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix"
   - id: "catalog-chronology-comparison:latest-blog"
     category: catalog-chronology-comparison
     question: Which article is treated as Montasim's latest dated blog entry?
-    text: "The derived chronology selects “A Family Gift Ledger That Lives in Your Own Google Sheet” at 2026-10-09. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
+    text: "The derived chronology selects “Building Email Signatures That Survive Gmail” at 2026-11-02. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
     factIds[1]: "derived:latest-dated-blog"
-    supportingExcerpts[1]: "a-family-gift-ledger-that-lives-in-your-own-google-sheet\nA Family Gift Ledger That Lives in Your Own Google Sheet\n2026-10-09\na-family-gift-ledger-that-lives-in-your-own-google-sheet\n1\ncatalog-order\nProduct engineering\nGiftbook records wedding, aqiqah and birthday gifts without a server. The ledger lives in the family's own Google Sheet, entries land offline first, and sync stops rather than corrupt a hand-edited sheet.\ntrue\nPhones writing gift entries to a local store that syncs into one shared"
+    supportingExcerpts[1]: "building-email-signatures-that-survive-gmail\nBuilding Email Signatures That Survive Gmail\n2026-11-02\nbuilding-email-signatures-that-survive-gmail\n1\ncatalog-order\nProduct engineering\nfalse\nAn email signature built from tables and inline styles, with PNG icons in any colour flowing into it\n/images/blog/email-signature.webp\ncase-study-derived\nproject-sigcraft\n2026-11-02\nbuilding-email-signatures-that-survive-gmail\nBuilding Email Signatures That Survive Gmail\nproduct"
   - id: "catalog-chronology-comparison:featured-projects"
     category: catalog-chronology-comparison
     question: How many projects are featured for recruiter review?
@@ -3316,15 +3352,15 @@ records[581]:
   - id: "catalog-chronology-comparison:project-type-distribution"
     category: catalog-chronology-comparison
     question: How is Montasim's project catalog distributed by type?
-    text: "The 54 projects are distributed as website: 19, extension: 5, tool: 2, skill: 14, dataset: 2, desktop: 1, package: 4, template: 1, API: 6. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
+    text: "The 55 projects are distributed as website: 19, extension: 5, tool: 3, skill: 14, dataset: 2, desktop: 1, package: 4, template: 1, API: 6. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
     factIds[1]: "derived:project-type-distribution"
-    supportingExcerpts[1]: "54\n6\n2\n1\n5\n4\n14\n1\n2\n19"
+    supportingExcerpts[1]: "55\n6\n2\n1\n5\n4\n14\n1\n3\n19"
   - id: "catalog-chronology-comparison:authored-versus-linked-writing"
     category: catalog-chronology-comparison
     question: How much of Montasim's writing is standalone versus project-linked?
-    text: "The blog contains 23 authored essays and 32 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
+    text: "The blog contains 23 authored essays and 33 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "55\n23\n32"
+    supportingExcerpts[1]: "56\n23\n33"
   - id: "catalog-chronology-comparison:mymedicalhub-role-count"
     category: catalog-chronology-comparison
     question: How many MyMedicalHub roles document Montasim's progression?
@@ -3334,9 +3370,9 @@ records[581]:
   - id: "catalog-chronology-comparison:project-case-study-coverage"
     category: catalog-chronology-comparison
     question: Does every published project have a corresponding case study?
-    text: "Yes. The validated catalogs contain 54 projects and 54 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
+    text: "Yes. The validated catalogs contain 55 projects and 55 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
     factIds[2]: "derived:catalog-count:projects","derived:catalog-count:casestudy"
-    supportingExcerpts[2]: "projects\n54","casestudy\n54"
+    supportingExcerpts[2]: "projects\n55","casestudy\n55"
   - id: "catalog-chronology-comparison:credential-year-range"
     category: catalog-chronology-comparison
     question: What years do Montasim's published credentials cover?
@@ -3346,9 +3382,9 @@ records[581]:
   - id: "catalog-chronology-comparison:catalog-breadth"
     category: catalog-chronology-comparison
     question: What kinds of evidence are available across Montasim's portfolio?
-    text: "The portfolio combines profile facts, 11 experience records, 54 projects, 54 case studies, 55 articles, 24 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
+    text: "The portfolio combines profile facts, 11 experience records, 55 projects, 55 case studies, 56 articles, 24 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
     factIds[6]: "derived:catalog-count:experience","derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:blog","derived:catalog-count:certifications","derived:catalog-count:recommendations"
-    supportingExcerpts[6]: "experience\n11\n7\n4","projects\n54","casestudy\n54","blog\n55","certifications\n24","recommendations\n16"
+    supportingExcerpts[6]: "experience\n11\n7\n4","projects\n55","casestudy\n55","blog\n56","certifications\n24","recommendations\n16"
   - id: "catalog-chronology-comparison:evidence-relationship"
     category: catalog-chronology-comparison
     question: "How do Montasim's projects, case studies, and blog articles relate?"
@@ -3442,9 +3478,9 @@ records[581]:
   - id: "client-delivery-product-thinking:proof-of-work"
     category: client-delivery-product-thinking
     question: What proof can a client review before contacting Montasim?
-    text: "Before making contact, a client can review 54 project records, 54 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
+    text: "Before making contact, a client can review 55 project records, 55 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
     factIds[3]: "derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:recommendations"
-    supportingExcerpts[3]: "projects\n54","casestudy\n54","recommendations\n16"
+    supportingExcerpts[3]: "projects\n55","casestudy\n55","recommendations\n16"
   - id: "contributions-learning:total"
     category: contributions-learning
     question: How much GitHub contribution activity does Montasim publish?
