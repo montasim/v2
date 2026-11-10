@@ -3001,8 +3001,8 @@
       "The product provides a Google Play installation path for Android, a browser entry point, a Microsoft Store installation path for Windows, and a Snap Store installation path for Linux."
     ],
     "screenshot": {
-      "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and Google Play, Microsoft Store, and Snap Store links",
-      "caption": "Air Traffic Control home screen showing flight setup and Android, Windows, and Linux download options."
+      "alt": "Air Traffic Control airfield with an airliner, a commuter aircraft, and a helicopter following drawn routes to their runways and helipad",
+      "caption": "Players draw a path for each aircraft type to its matching runway or helipad and keep the traffic apart."
     }
   },
   {

@@ -2817,8 +2817,8 @@
       "Product টা Android এর জন্য Google Play installation path, একটা browser entry point, Windows এর জন্য Microsoft Store installation path আর Linux এর জন্য Snap Store installation path দেয়।"
     ],
     "screenshot": {
-      "alt": "Air Traffic Control এর home screen, যেখানে Saltmarsh Gateway, difficulty selection, flight control আর Google Play, Microsoft Store ও Snap Store link দেখা যাচ্ছে",
-      "caption": "Air Traffic Control এর home screen এ flight setup আর Android, Windows ও Linux download option।"
+      "alt": "Air Traffic Control এর একটা airfield, যেখানে একটা airliner, একটা commuter aircraft আর একটা helicopter আঁকা route ধরে তাদের runway আর helipad এর দিকে যাচ্ছে",
+      "caption": "Player প্রতিটা aircraft type এর জন্য মিলে যাওয়া runway বা helipad পর্যন্ত path আঁকে আর traffic আলাদা রাখে।"
     }
   },
   "mcq-topper-backend": {
