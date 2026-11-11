@@ -1830,27 +1830,40 @@
     "githubRepositoryCreatedAt": "2026-09-29T10:11:38Z",
     "githubInitialCommitAt": "2026-09-01T12:31:21Z",
     "githubInitialCommitSha": "25a7fceed2b68c3f93e9727261980baf82486bef",
-    "imageUrl": "assets/projects/air-traffic-control-home.webp",
+    "imageUrl": "assets/projects/air-traffic-control-every-landing.webp",
+    "youtubeVideoId": "h434ZB-XRaw",
     "gallery": [
       {
-        "src": "/images/projects/air-traffic-control-home.webp",
-        "alt": "Air Traffic Control home screen with Saltmarsh Gateway, difficulty selection, flight controls, and Google Play, Microsoft Store, and Snap Store links"
+        "src": "/images/projects/air-traffic-control-every-landing.webp",
+        "alt": "Air Traffic Control airfield with an airliner, a commuter aircraft, and a helicopter following drawn routes to their runways and helipad"
       },
       {
-        "src": "/images/projects/air-traffic-control-airfields.webp",
-        "alt": "Air Traffic Control airfield selection showing unlocked locations and career progress"
+        "src": "/images/projects/air-traffic-control-draw-to-land.webp",
+        "alt": "Air Traffic Control tutorial showing an aircraft path drawn to Runway C, with colour-matched landing zones for each aircraft type"
       },
       {
-        "src": "/images/projects/air-traffic-control-how-to-play.webp",
-        "alt": "Air Traffic Control instructions explaining route drawing, landing zones, and collision avoidance"
+        "src": "/images/projects/air-traffic-control-tap-to-hold.webp",
+        "alt": "Air Traffic Control aircraft placed in a holding circle to keep it clear of another aircraft's approach"
       },
       {
-        "src": "/images/projects/air-traffic-control-saltmarsh.webp",
-        "alt": "Air Traffic Control gameplay at Saltmarsh Gateway with aircraft routes and landing zones"
+        "src": "/images/projects/air-traffic-control-reroute.webp",
+        "alt": "Air Traffic Control held aircraft given a new path to the L runway after the conflicting traffic clears"
       },
       {
-        "src": "/images/projects/air-traffic-control-river-bend.webp",
-        "alt": "Air Traffic Control gameplay at River Bend with multiple aircraft in the sector"
+        "src": "/images/projects/air-traffic-control-island-rescue.webp",
+        "alt": "Air Traffic Control Island Rescue airfield with two runways and offshore helipads"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-carrier-coast.webp",
+        "alt": "Air Traffic Control Carrier Coast airfield with a coastal runway, a helipad, and an aircraft carrier offshore"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-blue-water.webp",
+        "alt": "Air Traffic Control Blue Water airfield where aircraft and helicopters land on an aircraft carrier at sea"
+      },
+      {
+        "src": "/images/projects/air-traffic-control-night-shift.webp",
+        "alt": "Air Traffic Control night mode with runway lights, aircraft headlights, and routes drawn in the dark"
       }
     ],
     "topics": [
