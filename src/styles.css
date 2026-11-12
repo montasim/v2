@@ -668,3 +668,44 @@ article:lang(bn) p,
 article:lang(bn) blockquote {
   line-height: 1.85;
 }
+
+/* Paper grain: one fractal-noise tile over every page; the theme's base colour sets the mood. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* Behind content: grain over text, cards and photos reads as dirt. */
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px auto;
+  opacity: 0.3;
+}
+.dark body::after {
+  opacity: 0.12;
+}
+/* Dark portfolio cards: solid, no grain, one step above the grained page (~#181a1c) so they read raised, not sunken. */
+.dark #main-content {
+  --card: #1c1f24;
+}
+
+/* Dashboard is a work tool: no decorative grain or glow. */
+body:has(.dashboard-shell)::after {
+  display: none;
+}
+
+/* Soft tinted corners behind the top of the page (the hero area). */
+body {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgb(255 200 200 / 0.18), transparent 35rem),
+    radial-gradient(circle at 100% 0%, rgb(200 220 255 / 0.2), transparent 35rem);
+  background-repeat: no-repeat;
+}
+.dark body {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgb(120 168 248 / 0.08), transparent 35rem),
+    radial-gradient(circle at 100% 0%, rgb(198 144 67 / 0.07), transparent 35rem);
+}
+body:has(.dashboard-shell) {
+  background-image: none;
+}
