@@ -36,7 +36,7 @@ function Page() {
         })
       }
       page={page}
-      pageSize={5}
+      pageSize={7}
       resultsId="project-results"
       onPageChange={async (nextPage) => {
         await navigate({
