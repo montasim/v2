@@ -2073,8 +2073,8 @@
       "topic": "tools",
       "featured": false,
       "image": {
-        "src": "/images/blog/devtools-shell.webp",
-        "alt": "Fifty developer tools sharing one searchable shell"
+        "src": "/images/projects/devtools.webp",
+        "alt": "DevTools home page showing the searchable developer toolbox"
       },
       "translations": {
         "bn": {

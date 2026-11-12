@@ -1,5 +1,5 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: 558682ad3fe984f9879c8580210c17e74f69899f436f9804dc5054d09fc76238
+knowledgeHash: dee091f3457324d598aea69db38217602385c6179fc001914d91ba15d2256154
 records[587]:
   - id: "project:project-air-traffic-control:overview"
     category: project
@@ -1830,7 +1830,7 @@ records[587]:
     question: What engineering insight does Montasim share in “How I Scaled 50+ Developer Utilities Without 50 Architectures”?
     text: "Montasim's opening insight in “How I Scaled 50+ Developer Utilities Without 50 Architectures” is framed as “Why it was needed”: Small development tasks often send people across unrelated single-purpose websites. Each tool has a different interface, unclear privacy behavior, and no shared path for search, history, saved work, or reuse. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
     factIds[2]: "blog:fifty-developer-tools-without-fifty-architectures","case-study:devtools:problem"
-    supportingExcerpts[2]: "Frontend architecture\nfalse\nFifty developer tools sharing one searchable shell\n/images/blog/devtools-shell.webp\ncase-study-derived\nproject-devtools\nfifty-developer-tools-without-fifty-architectures\nHow I Scaled 50+ Developer Utilities Without 50 Architectures\ntools","Small development tasks often send people across unrelated single-purpose websites. Each tool has a different interface, unclear privacy behavior, and no shared path for search, history, saved work, or reuse.\nMany transformations should stay in the browser, while network diagnostics necessarily contact a target or server endpoint.\nA catalog with more than 50 workflows must remain quick to search, navigate, and extend without duplicating page infrastructure.\nSaved items, shares, webhooks, and short links introduce"
+    supportingExcerpts[2]: "Frontend architecture\nfalse\nDevTools home page showing the searchable developer toolbox\n/images/projects/devtools.webp\ncase-study-derived\nproject-devtools\nfifty-developer-tools-without-fifty-architectures\nHow I Scaled 50+ Developer Utilities Without 50 Architectures\ntools","Small development tasks often send people across unrelated single-purpose websites. Each tool has a different interface, unclear privacy behavior, and no shared path for search, history, saved work, or reuse.\nMany transformations should stay in the browser, while network diagnostics necessarily contact a target or server endpoint.\nA catalog with more than 50 workflows must remain quick to search, navigate, and extend without duplicating page infrastructure.\nSaved items, shares, webhooks, and short links introduce"
   - id: "blog:http-status-codes-are-data"
     category: blog
     question: "What engineering insight does Montasim share in “HTTP Status Codes Are Data, Not a Switch Statement”?"
