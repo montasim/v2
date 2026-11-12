@@ -1,6 +1,6 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: dee091f3457324d598aea69db38217602385c6179fc001914d91ba15d2256154
-records[587]:
+knowledgeHash: b489f76f9727befecb3381930a7da45c58be22391e29af95b91fc859c0c81dc7
+records[593]:
   - id: "project:project-air-traffic-control:overview"
     category: project
     question: What is Montasim's Air Traffic Control project?
@@ -97,6 +97,18 @@ records[587]:
     text: "Montasim built Sigcraft with TanStack Start, React 19, TypeScript, Tailwind CSS, shadcn/ui, Radix UI, Hugeicons, Netlify, Vitest, GitHub Actions. The product goal is clear: A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser. More importantly, the architecture is explicit: A TanStack Start app renders the editor and email templates, a pure builder turns editor state into email-safe HTML, and a server route draws icons as long-cached PNGs on Netlify. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-sigcraft","case-study:sigcraft:architecture"
     supportingExcerpts[2]: "A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser.\nfalse\n2026-11-02T14:30:35Z\n74987e62945bad6432dd3dc58bebdf685dc6c22b\n2026-11-02T14:41:04Z\nhttps://github.com/montasim/sigcraft\nproject-sigcraft\nassets/projects/sigcraft.webp\nhttps://sigcraft.netlify.app\nhttps://sigcraft.netlify.app/favicon.svg\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix","Four steps (Details, Images, Templates, Styles) drive a live preview inside a mail window, with the editor state kept in the browser's localStorage.\nEditor\nA pure function turns editor state into tables with inline styles only. The preview and the copy share that markup and differ only in where images load from.\nSignature builder\nA versioned /api/icon route draws each Hugeicons glyph as a PNG at four times display size without image libraries. Each URL fully describes its image, so Netlify's CDN caches it for a"
+  - id: "project:project-orbline:overview"
+    category: project
+    question: What is Montasim's Orbline project?
+    text: "Montasim built Orbline, a website project. An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server. His role covered game designer and full-stack engineer, with scope spanning game design, canvas game engine, procedural audio, game UI, leaderboard API and anti-cheat, PWA and deployment. The game opens straight to a playable title screen, and the installed app plays offline. A hiring manager, developer, or client can use the linked case study to review the constraints, architecture, Montasim's contribution, and the result—not just the project summary."
+    factIds[3]: "project:project-orbline","case-study:orbline:problem","case-study:orbline:outcomes"
+    supportingExcerpts[3]: "An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server.\nfalse\n2026-11-10T16:46:43Z\nc362f95ba97b9a81e9755526597cf82daaa5e78d\n2026-11-10T21:40:03Z\nhttps://github.com/montasim/orbline\nproject-orbline\nassets/projects/orbline.webp\nhttps://orbline.netlify.app\nhttps://orbline.netlify.app/icons/icon-192.png\nTanStack Start\nReact","Browser runner games are easy to start and easy to cheat. A public leaderboard that trusts the score a page sends fills with impossible numbers, while a game that needs an account or a network connection before it plays loses players before the first jump.\nThe game has to start instantly with no account, play offline once installed, and keep working when browser storage is unavailable.\nEvery score a page submits is untrusted, so the server must judge each run without replaying it.\nControls have to work with a","The game opens straight to a playable title screen, and the installed app plays offline.\nFive worlds, each with four stages and its own synthesised soundscape, ship without a single audio file.\nThe leaderboard never stores a score the client calculated, and rejected runs keep the reason they failed.\nNine automated tests cover the anti-cheat limits, score formula and name rules.\nKnown limit: a scripted client can still submit plausible numbers within the bounds, which would need server-side replay of recorded"
+  - id: "project:project-orbline:technology"
+    category: project
+    question: Which technologies did Montasim use for Orbline?
+    text: "Montasim built Orbline with TanStack Start, React 19, TypeScript, Canvas 2D, Web Audio API, Tailwind CSS, shadcn/ui, Hugeicons, Drizzle ORM, PostgreSQL, PGlite, Progressive Web App, Netlify. The product goal is clear: An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server. More importantly, the architecture is explicit: A TanStack Start app renders the game UI in React around a full-screen canvas engine, and TanStack Start server functions run the leaderboard against PostgreSQL through Drizzle. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
+    factIds[2]: "project:project-orbline","case-study:orbline:architecture"
+    supportingExcerpts[2]: "An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server.\nfalse\n2026-11-10T16:46:43Z\nc362f95ba97b9a81e9755526597cf82daaa5e78d\n2026-11-10T21:40:03Z\nhttps://github.com/montasim/orbline\nproject-orbline\nassets/projects/orbline.webp\nhttps://orbline.netlify.app\nhttps://orbline.netlify.app/icons/icon-192.png\nTanStack Start\nReact","A requestAnimationFrame loop with a capped time step drives separate modules for the player, obstacles, collisions, power-ups, particles, scoring and a layered parallax background on a 2D canvas.\nGame engine\nFive worlds (Northern Glacier, Bloom Meadow, Sunfall Dunes, Coral Deep and Cinder Caldera) each have four speed stages, alongside unlockable orbs, three power-ups, achievements and daily challenges defined as static data.\nWorlds and content\nWeb Audio synthesises wind, rain, bubbles, lava crackle and thunder"
   - id: "project:project-rootstory:overview"
     category: project
     question: What is Montasim's Rootstory project?
@@ -673,6 +685,24 @@ records[587]:
     text: "Montasim built Project Management with JavaScript, React, Redux, Tailwind CSS, Node.js, Express.js, MongoDB, Mongoose. The product goal is clear: A collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces. More importantly, the architecture is explicit: React routes and Redux state connect project interfaces to an Express API. The repository also contains Mongoose project models and controllers for tasks, subtasks, bugs, discussions, and membership. That gives technical reviewers a concrete system boundary to discuss instead of a list of framework keywords."
     factIds[2]: "project:project-project-management","case-study:project-management:architecture"
     supportingExcerpts[2]: "true\nA collaborative project-management application with React dashboards for tasks, subtasks, bugs, discussions, members, and project progress. Montasim contributed frontend development and responsive Tailwind CSS interfaces.\nfalse\n2020-10-01T04:35:09Z\n77d8ead1a20cc7d2156d53673758efe0ef4c0abf\n2020-09-19T04:26:11Z\nfalse\nhttps://github.com/mdjahidhasan009/Project_Management\nproject-project-management\nnull\nJavaScript\nReact\nRedux\nTailwind CSS\nNode.js\nExpress.js\nMongoDB\nMongoose\nProject","React components separate overview, activities, discussions, tasks, bugs, and project-detail editing, with responsive Tailwind classes in the inspected overview.\nProject interface\nRedux actions call a shared HTTP helper for project updates, completion state, and membership operations, then refresh project data.\nState and requests\nExpress routes apply authentication middleware and dispatch to project controllers; Mongoose models hold project and related work records. These are shared application capabilities, not"
+  - id: "case-study:orbline:problem"
+    category: case-study
+    question: What problem did Montasim address in the Orbline case study?
+    text: "Browser runner games are easy to start and easy to cheat. A public leaderboard that trusts the score a page sends fills with impossible numbers, while a game that needs an account or a network connection before it plays loses players before the first jump. Montasim owned game designer and full-stack engineer, covering game design, canvas game engine, procedural audio, game UI, leaderboard API and anti-cheat, PWA and deployment. The solution also had to respect “The game has to start instantly with no account, play offline once installed, and keep working when browser storage is unavailable”; “Every score a page submits is untrusted, so the server must judge each run without replaying it”. This case is useful to hiring teams and clients because it shows how he discovers the technical and product constraints behind an apparently simple request."
+    factIds[1]: "case-study:orbline:problem"
+    supportingExcerpts[1]: "Browser runner games are easy to start and easy to cheat. A public leaderboard that trusts the score a page sends fills with impossible numbers, while a game that needs an account or a network connection before it plays loses players before the first jump.\nThe game has to start instantly with no account, play offline once installed, and keep working when browser storage is unavailable.\nEvery score a page submits is untrusted, so the server must judge each run without replaying it.\nControls have to work with a"
+  - id: "case-study:orbline:architecture"
+    category: case-study
+    question: How did Montasim structure the Orbline solution?
+    text: "A TanStack Start app renders the game UI in React around a full-screen canvas engine, and TanStack Start server functions run the leaderboard against PostgreSQL through Drizzle. A representative decision was “Recompute and bound every score on the server”: The server ignores the client's score, recomputes it from distance and crystals, and rejects any distance or crystal count that the game's own speed rules could not reach in the time the server measured. The value of this architecture is the reasoning behind it—Montasim connects a real constraint to an explicit boundary that another developer can review, test, and evolve."
+    factIds[1]: "case-study:orbline:architecture"
+    supportingExcerpts[1]: "A requestAnimationFrame loop with a capped time step drives separate modules for the player, obstacles, collisions, power-ups, particles, scoring and a layered parallax background on a 2D canvas.\nGame engine\nFive worlds (Northern Glacier, Bloom Meadow, Sunfall Dunes, Coral Deep and Cinder Caldera) each have four speed stages, alongside unlockable orbs, three power-ups, achievements and daily challenges defined as static data.\nWorlds and content\nWeb Audio synthesises wind, rain, bubbles, lava crackle and thunder"
+  - id: "case-study:orbline:delivery"
+    category: case-study
+    question: What did Montasim deliver and achieve with Orbline?
+    text: "Montasim designed the game loop, five worlds with four stages each, four unlockable orbs, three power-ups (Frost Ward, Crystal Lure and Aurora Rush), achievements and daily challenges. He built the canvas engine for movement, double jumps, slides, fast-falls, collisions, particles and parallax scenery. He wrote the procedural nature soundscapes and kept sound working on iPhone. He built the shared leaderboard with run tickets, server-side score checks, per-IP rate limits, case-insensitive unique names and an audit trail of rejected runs. He designed a consistent arcade UI with touch controls on every device, and shipped it as an installable PWA on Netlify. The resulting capabilities and outcomes are “The game opens straight to a playable title screen, and the installed app plays offline”; “Five worlds, each with four stages and its own synthesised soundscape, ship without a single audio file”; “The leaderboard never stores a score the client calculated, and rejected runs keep the reason they failed”; “Nine automated tests cover the anti-cheat limits, score formula and name rules”; “Known limit: a scripted client can still submit plausible numbers within the bounds, which would need server-side replay of recorded inputs to close”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
+    factIds[2]: "case-study:orbline:contribution","case-study:orbline:outcomes"
+    supportingExcerpts[2]: "Designed the game loop, five worlds with four stages each, four unlockable orbs, three power-ups (Frost Ward, Crystal Lure and Aurora Rush), achievements and daily challenges.\nBuilt the canvas engine for movement, double jumps, slides, fast-falls, collisions, particles and parallax scenery.\nWrote the procedural nature soundscapes and kept sound working on iPhone.\nBuilt the shared leaderboard with run tickets, server-side score checks, per-IP rate limits, case-insensitive unique names and an audit trail of rejected","The game opens straight to a playable title screen, and the installed app plays offline.\nFive worlds, each with four stages and its own synthesised soundscape, ship without a single audio file.\nThe leaderboard never stores a score the client calculated, and rejected runs keep the reason they failed.\nNine automated tests cover the anti-cheat limits, score formula and name rules.\nKnown limit: a scripted client can still submit plausible numbers within the bounds, which would need server-side replay of recorded"
   - id: "case-study:sigcraft:problem"
     category: case-study
     question: What problem did Montasim address in the Sigcraft case study?
@@ -1663,6 +1693,12 @@ records[587]:
     text: "Montasim contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces. He refined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements. He implemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior. He added focused component and workflow tests while iterating on a large production React codebase shared by a multidisciplinary product team. The resulting capabilities and outcomes are “Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal”; “Movement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state”; “Feature configuration supports multiple healthcare programs while preserving a shared application foundation”; “Operational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows”. This gives a reviewer a traceable line from Montasim's implementation work to the product capabilities and limits that followed."
     factIds[2]: "case-study:mmh-patient-portal:contribution","case-study:mmh-patient-portal:outcomes"
     supportingExcerpts[2]: "Contributed extensively across movement assessment, reports, patient dashboards, authentication, payment, tenant-feature, chatbot, and remote-assistance surfaces.\nRefined camera and recording lifecycle behavior, including selection changes, completion guards, retake rules, audio shutdown, and person-in-frame requirements.\nImplemented and maintained tenant-aware UI, report interpretation, assessment history, payment continuation, and authenticated redirect behavior.\nAdded focused component and workflow tests while","Patients can move through onboarding, assessment, exercise, reporting, payment, and remote-care journeys in one tenant-aware portal.\nMovement capture handles more device, tenant, and lifecycle edge cases without silently recording invalid or stale state.\nFeature configuration supports multiple healthcare programs while preserving a shared application foundation.\nOperational warnings and recovery paths surface earlier, reducing avoidable failures during patient-facing clinical workflows."
+  - id: "blog:an-endless-runner-leaderboard-that-checks-every-score"
+    category: blog
+    question: What engineering insight does Montasim share in “An Endless Runner Leaderboard That Checks Every Score”?
+    text: "Montasim's opening insight in “An Endless Runner Leaderboard That Checks Every Score” is framed as “Why it was needed”: Browser runner games are easy to start and easy to cheat. A public leaderboard that trusts the score a page sends fills with impossible numbers, while a game that needs an account or a network connection before it plays loses players before the first jump. The useful hiring signal is not the feature itself, but his ability to explain the constraint, trade-off, and engineering judgment behind it in a form another developer can challenge or apply."
+    factIds[2]: "blog:an-endless-runner-leaderboard-that-checks-every-score","case-study:orbline:problem"
+    supportingExcerpts[2]: "Product engineering\nfalse\nOrbline title screen in the Northern Glacier world with the glowing orb logo, a Start Run button and a menu for orbs, daily challenges, trophies, ranks and settings\n/images/projects/orbline.webp\ncase-study-derived\nproject-orbline\n2026-11-11\nan-endless-runner-leaderboard-that-checks-every-score\nAn Endless Runner Leaderboard That Checks Every Score\nproduct","Browser runner games are easy to start and easy to cheat. A public leaderboard that trusts the score a page sends fills with impossible numbers, while a game that needs an account or a network connection before it plays loses players before the first jump.\nThe game has to start instantly with no account, play offline once installed, and keep working when browser storage is unavailable.\nEvery score a page submits is untrusted, so the server must judge each run without replaying it.\nControls have to work with a"
   - id: "blog:building-email-signatures-that-survive-gmail"
     category: blog
     question: What engineering insight does Montasim share in “Building Email Signatures That Survive Gmail”?
@@ -3274,21 +3310,21 @@ records[587]:
   - id: "catalog-chronology-comparison:project-count"
     category: catalog-chronology-comparison
     question: How many projects are published in Montasim's portfolio?
-    text: "The portfolio currently publishes 55 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
+    text: "The portfolio currently publishes 56 project records. They span web applications, browser extensions, packages, AI agent skills, datasets, developer tools, an API, and a template, so the count represents several forms of documented engineering work."
     factIds[1]: "derived:catalog-count:projects"
-    supportingExcerpts[1]: "projects\n55"
+    supportingExcerpts[1]: "projects\n56"
   - id: "catalog-chronology-comparison:case-study-count"
     category: catalog-chronology-comparison
     question: How many project case studies has Montasim documented?
-    text: "Montasim has 55 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
+    text: "Montasim has 56 project case studies. Each uses a structured record for problem, constraints, architecture, decisions, personal contribution, and outcomes, giving reviewers more depth than a project-card description alone."
     factIds[1]: "derived:catalog-count:casestudy"
-    supportingExcerpts[1]: "casestudy\n55"
+    supportingExcerpts[1]: "casestudy\n56"
   - id: "catalog-chronology-comparison:blog-count"
     category: catalog-chronology-comparison
     question: How many articles are in Montasim's blog catalog?
-    text: "The blog catalog contains 56 articles: 23 authored essays and 33 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
+    text: "The blog catalog contains 57 articles: 23 authored essays and 34 project-linked articles. The distinction matters because project-linked writing is another route into the same underlying case-study evidence, not a separate accomplishment."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "56\n23\n33"
+    supportingExcerpts[1]: "57\n23\n34"
   - id: "catalog-chronology-comparison:credential-count"
     category: catalog-chronology-comparison
     question: How many credentials does Montasim publish?
@@ -3334,15 +3370,15 @@ records[587]:
   - id: "catalog-chronology-comparison:newest-project"
     category: catalog-chronology-comparison
     question: Which project is newest by Montasim's GitHub history?
-    text: "Sigcraft is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-11-02, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
-    factIds[2]: "derived:newest-project-by-github-history","project:project-sigcraft"
-    supportingExcerpts[2]: "project-sigcraft\nSigcraft\n2026-11-02T14:30:35Z\nearlier of repository creation and initial commit\nA Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's","A Gmail-ready email signature generator with 26 layouts in any colour, plus eight ready-to-send email templates for job search and client work, with every detail saved only in the visitor's browser.\nfalse\n2026-11-02T14:30:35Z\n74987e62945bad6432dd3dc58bebdf685dc6c22b\n2026-11-02T14:41:04Z\nhttps://github.com/montasim/sigcraft\nproject-sigcraft\nassets/projects/sigcraft.webp\nhttps://sigcraft.netlify.app\nhttps://sigcraft.netlify.app/favicon.svg\nTanStack Start\nReact 19\nTypeScript\nTailwind CSS\nshadcn/ui\nRadix"
+    text: "Orbline is the newest project by the portfolio's GitHub-history rule. Its history begins on 2026-11-10, using the earlier of repository creation and initial commit; this identifies when repository history began, not a claimed public-release date."
+    factIds[2]: "derived:newest-project-by-github-history","project:project-orbline"
+    supportingExcerpts[2]: "project-orbline\nOrbline\n2026-11-10T16:46:43Z\nearlier of repository creation and initial commit\nAn endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the","An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server.\nfalse\n2026-11-10T16:46:43Z\nc362f95ba97b9a81e9755526597cf82daaa5e78d\n2026-11-10T21:40:03Z\nhttps://github.com/montasim/orbline\nproject-orbline\nassets/projects/orbline.webp\nhttps://orbline.netlify.app\nhttps://orbline.netlify.app/icons/icon-192.png\nTanStack Start\nReact"
   - id: "catalog-chronology-comparison:latest-blog"
     category: catalog-chronology-comparison
     question: Which article is treated as Montasim's latest dated blog entry?
-    text: "The derived chronology selects “Building Email Signatures That Survive Gmail” at 2026-11-02. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
+    text: "The derived chronology selects “An Endless Runner Leaderboard That Checks Every Score” at 2026-11-11. Several project-linked articles share that date, so the compiler uses catalog order as an explicit tie-break instead of pretending their publication times are known more precisely."
     factIds[1]: "derived:latest-dated-blog"
-    supportingExcerpts[1]: "building-email-signatures-that-survive-gmail\nBuilding Email Signatures That Survive Gmail\n2026-11-02\nbuilding-email-signatures-that-survive-gmail\n1\ncatalog-order\nProduct engineering\nfalse\nSigcraft signature editor with the details form beside a live Gmail-style preview of a finished signature\n/images/projects/sigcraft.webp\ncase-study-derived\nproject-sigcraft\n2026-11-02\nbuilding-email-signatures-that-survive-gmail\nBuilding Email Signatures That Survive Gmail\nproduct"
+    supportingExcerpts[1]: "an-endless-runner-leaderboard-that-checks-every-score\nAn Endless Runner Leaderboard That Checks Every Score\n2026-11-11\nan-endless-runner-leaderboard-that-checks-every-score\n1\ncatalog-order\nProduct engineering\nfalse\nOrbline title screen in the Northern Glacier world with the glowing orb logo, a Start Run button and a menu for orbs, daily challenges, trophies, ranks and settings\n/images/projects/orbline.webp\ncase-study-derived\nproject-orbline\n2026-11-11\nan-endless-runner-leaderboard-that-checks-every-score\nAn"
   - id: "catalog-chronology-comparison:featured-projects"
     category: catalog-chronology-comparison
     question: How many projects are featured for recruiter review?
@@ -3352,15 +3388,15 @@ records[587]:
   - id: "catalog-chronology-comparison:project-type-distribution"
     category: catalog-chronology-comparison
     question: How is Montasim's project catalog distributed by type?
-    text: "The 55 projects are distributed as desktop: 1, extension: 5, tool: 3, website: 19, package: 4, skill: 14, dataset: 2, template: 1, API: 6. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
+    text: "The 56 projects are distributed as desktop: 1, extension: 5, tool: 3, website: 20, package: 4, skill: 14, dataset: 2, template: 1, API: 6. This mix shows a catalog extending beyond web applications into reusable packages, agent workflows, extensions, data, developer tools, and API-oriented work."
     factIds[1]: "derived:project-type-distribution"
-    supportingExcerpts[1]: "55\n6\n2\n1\n5\n4\n14\n1\n3\n19"
+    supportingExcerpts[1]: "56\n6\n2\n1\n5\n4\n14\n1\n3\n20"
   - id: "catalog-chronology-comparison:authored-versus-linked-writing"
     category: catalog-chronology-comparison
     question: How much of Montasim's writing is standalone versus project-linked?
-    text: "The blog contains 23 authored essays and 33 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
+    text: "The blog contains 23 authored essays and 34 case-study-derived articles. The project-linked articles provide a reading route to existing case-study facts, while the authored essays contain separate long-form material."
     factIds[1]: "derived:blog-content-distribution"
-    supportingExcerpts[1]: "56\n23\n33"
+    supportingExcerpts[1]: "57\n23\n34"
   - id: "catalog-chronology-comparison:mymedicalhub-role-count"
     category: catalog-chronology-comparison
     question: How many MyMedicalHub roles document Montasim's progression?
@@ -3370,9 +3406,9 @@ records[587]:
   - id: "catalog-chronology-comparison:project-case-study-coverage"
     category: catalog-chronology-comparison
     question: Does every published project have a corresponding case study?
-    text: "Yes. The validated catalogs contain 55 projects and 55 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
+    text: "Yes. The validated catalogs contain 56 projects and 56 case studies, with one case study linked to every project record. That relationship lets visitors move from a concise project description to problem, architecture, contribution, and outcome evidence."
     factIds[2]: "derived:catalog-count:projects","derived:catalog-count:casestudy"
-    supportingExcerpts[2]: "projects\n55","casestudy\n55"
+    supportingExcerpts[2]: "projects\n56","casestudy\n56"
   - id: "catalog-chronology-comparison:credential-year-range"
     category: catalog-chronology-comparison
     question: What years do Montasim's published credentials cover?
@@ -3382,9 +3418,9 @@ records[587]:
   - id: "catalog-chronology-comparison:catalog-breadth"
     category: catalog-chronology-comparison
     question: What kinds of evidence are available across Montasim's portfolio?
-    text: "The portfolio combines profile facts, 11 experience records, 55 projects, 55 case studies, 56 articles, 24 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
+    text: "The portfolio combines profile facts, 11 experience records, 56 projects, 56 case studies, 57 articles, 24 credentials, 16 recommendations, skills, education, affiliations, volunteering, and contribution activity. Each source has a different evidentiary role."
     factIds[6]: "derived:catalog-count:experience","derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:blog","derived:catalog-count:certifications","derived:catalog-count:recommendations"
-    supportingExcerpts[6]: "experience\n11\n7\n4","projects\n55","casestudy\n55","blog\n56","certifications\n24","recommendations\n16"
+    supportingExcerpts[6]: "experience\n11\n7\n4","projects\n56","casestudy\n56","blog\n57","certifications\n24","recommendations\n16"
   - id: "catalog-chronology-comparison:evidence-relationship"
     category: catalog-chronology-comparison
     question: "How do Montasim's projects, case studies, and blog articles relate?"
@@ -3478,9 +3514,9 @@ records[587]:
   - id: "client-delivery-product-thinking:proof-of-work"
     category: client-delivery-product-thinking
     question: What proof can a client review before contacting Montasim?
-    text: "Before making contact, a client can review 55 project records, 55 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
+    text: "Before making contact, a client can review 56 project records, 56 structured case studies, repository links and verified commits, live or package links where published, technical articles, professional experience, credentials, and attributed recommendations. The most useful approach is to select the closest comparable case and ask Montasim what would transfer, what would change, and which risks he would validate first for the new project."
     factIds[3]: "derived:catalog-count:projects","derived:catalog-count:casestudy","derived:catalog-count:recommendations"
-    supportingExcerpts[3]: "projects\n55","casestudy\n55","recommendations\n16"
+    supportingExcerpts[3]: "projects\n56","casestudy\n56","recommendations\n16"
   - id: "contributions-learning:total"
     category: contributions-learning
     question: How much GitHub contribution activity does Montasim publish?

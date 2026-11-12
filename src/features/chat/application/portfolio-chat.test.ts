@@ -257,7 +257,7 @@ describe("PortfolioChat focused-evidence orchestration", () => {
       evidenceIds: ["derived:catalog-count:projects"],
       citations: [expect.objectContaining({ href: "/projects" })],
     })
-    expect(countReply.text).toContain("55 project records")
+    expect(countReply.text).toContain("56 project records")
     expect(openrouter.complete).not.toHaveBeenCalled()
     expect(limiter.consume).not.toHaveBeenCalled()
   })

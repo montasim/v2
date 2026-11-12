@@ -146,6 +146,25 @@
     },
     {
       "kind": "case-study-derived",
+      "projectId": "project-orbline",
+      "slug": "an-endless-runner-leaderboard-that-checks-every-score",
+      "title": "An Endless Runner Leaderboard That Checks Every Score",
+      "category": "Product engineering",
+      "topic": "product",
+      "publishedAt": "2026-11-11",
+      "featured": false,
+      "image": {
+        "src": "/images/projects/orbline.webp",
+        "alt": "Orbline title screen in the Northern Glacier world with the glowing orb logo, a Start Run button and a menu for orbs, daily challenges, trophies, ranks and settings"
+      },
+      "translations": {
+        "bn": {
+          "title": "একটা endless runner leaderboard যেটা প্রতিটা score যাচাই করে"
+        }
+      }
+    },
+    {
+      "kind": "case-study-derived",
       "projectId": "project-rootstory",
       "slug": "designing-a-local-first-family-tree-people-can-read",
       "title": "Designing a Local-First Family Tree People Can Read",

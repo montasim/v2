@@ -133,9 +133,9 @@ describe("portfolio content", () => {
       "project-liftuno",
       "project-coaching-management",
       "project-sigcraft",
+      "project-orbline",
       "project-rootstory",
       "project-giftbook",
-      "project-mulalens",
     ])
     expect(
       projectCatalog.records.slice(-14).map((project) => project.id)
@@ -231,7 +231,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-sigcraft")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-orbline")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)

@@ -158,6 +158,81 @@
     }
   },
   {
+    "slug": "orbline",
+    "projectId": "project-orbline",
+    "summary": "An endless orb-runner for the browser with five worlds, synthesised nature soundscapes and offline play, backed by a shared leaderboard that recomputes every score on the server and rejects runs that could not have happened.",
+    "role": "Game designer and full-stack engineer",
+    "scope": "Game design, canvas game engine, procedural audio, game UI, leaderboard API and anti-cheat, PWA and deployment",
+    "status": "Publicly deployed at orbline.netlify.app as an installable PWA; progress stays in each player's browser",
+    "verifiedBranch": "main",
+    "verifiedCommit": "cb8dc5ba8392cfbfad091e5988fbb93447ba26a7",
+    "problem": "Browser runner games are easy to start and easy to cheat. A public leaderboard that trusts the score a page sends fills with impossible numbers, while a game that needs an account or a network connection before it plays loses players before the first jump.",
+    "constraints": [
+      "The game has to start instantly with no account, play offline once installed, and keep working when browser storage is unavailable.",
+      "Every score a page submits is untrusted, so the server must judge each run without replaying it.",
+      "Controls have to work with a keyboard, a mouse and two thumbs on a phone, including holding a slide while jumping.",
+      "Five worlds need their own sound without shipping audio files that would slow the first load.",
+      "Saves from the game's earlier name had to survive the rename to Orbline."
+    ],
+    "architecture": {
+      "summary": "A TanStack Start app renders the game UI in React around a full-screen canvas engine, and TanStack Start server functions run the leaderboard against PostgreSQL through Drizzle.",
+      "layers": [
+        {
+          "title": "Game engine",
+          "detail": "A requestAnimationFrame loop with a capped time step drives separate modules for the player, obstacles, collisions, power-ups, particles, scoring and a layered parallax background on a 2D canvas."
+        },
+        {
+          "title": "Worlds and content",
+          "detail": "Five worlds (Northern Glacier, Bloom Meadow, Sunfall Dunes, Coral Deep and Cinder Caldera) each have four speed stages, alongside unlockable orbs, three power-ups, achievements and daily challenges defined as static data."
+        },
+        {
+          "title": "Sound",
+          "detail": "Web Audio synthesises wind, rain, bubbles, lava crackle and thunder from filtered noise, mixed per world and stage, with no audio files."
+        },
+        {
+          "title": "Leaderboard",
+          "detail": "Server functions issue a run ticket when a run starts, measure the time until the result arrives, recompute the score and store every accepted or rejected run with its reason."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Recompute and bound every score on the server",
+        "detail": "The server ignores the client's score, recomputes it from distance and crystals, and rejects any distance or crystal count that the game's own speed rules could not reach in the time the server measured."
+      },
+      {
+        "title": "Synthesise sound instead of shipping files",
+        "detail": "Each soundscape is a small recipe of noise filters, so all five worlds sound different without adding audio downloads."
+      },
+      {
+        "title": "Play first, never sign up",
+        "detail": "Progress, orbs and settings live in guarded localStorage, and a leaderboard name is the only thing a player registers, kept as a hashed token rather than an account."
+      },
+      {
+        "title": "Use the same database in development and production",
+        "detail": "Without a database URL in development, the app runs PGlite, PostgreSQL compiled to WebAssembly, and migrates it automatically, so local runs use the same queries as production PostgreSQL."
+      }
+    ],
+    "contribution": [
+      "Designed the game loop, five worlds with four stages each, four unlockable orbs, three power-ups (Frost Ward, Crystal Lure and Aurora Rush), achievements and daily challenges.",
+      "Built the canvas engine for movement, double jumps, slides, fast-falls, collisions, particles and parallax scenery.",
+      "Wrote the procedural nature soundscapes and kept sound working on iPhone.",
+      "Built the shared leaderboard with run tickets, server-side score checks, per-IP rate limits, case-insensitive unique names and an audit trail of rejected runs.",
+      "Designed a consistent arcade UI with touch controls on every device, and shipped it as an installable PWA on Netlify."
+    ],
+    "outcomes": [
+      "The game opens straight to a playable title screen, and the installed app plays offline.",
+      "Five worlds, each with four stages and its own synthesised soundscape, ship without a single audio file.",
+      "The leaderboard never stores a score the client calculated, and rejected runs keep the reason they failed.",
+      "Nine automated tests cover the anti-cheat limits, score formula and name rules.",
+      "Known limit: a scripted client can still submit plausible numbers within the bounds, which would need server-side replay of recorded inputs to close."
+    ],
+    "screenshot": {
+      "alt": "Orbline title screen in the Northern Glacier world with the glowing orb logo, a Start Run button and a menu for orbs, daily challenges, trophies, ranks and settings",
+      "caption": "The deployed Orbline title screen opens straight into the Northern Glacier world, one tap away from a run."
+    }
+  },
+  {
     "slug": "rootstory",
     "projectId": "project-rootstory",
     "summary": "A local-first family archive that combines a readable relationship graph with detailed profiles, timelines, recurring dates, version history, and complete backup restoration without requiring an account.",

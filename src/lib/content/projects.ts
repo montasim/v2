@@ -95,6 +95,7 @@ const hiringPriority = [
   "project-liftuno",
   "project-coaching-management",
   "project-sigcraft",
+  "project-orbline",
   "project-rootstory",
   "project-giftbook",
   "project-mulalens",

@@ -5,6 +5,9 @@
   "project-sigcraft": {
     "description": "একটা Gmail-ready email signature generator, যেখানে যেকোনো রঙে ২৬টা layout আর job search ও client work এর জন্য পাঠানোর মতো আটটা email template আছে, আর সব তথ্য শুধু visitor এর নিজের browser এ থাকে।"
   },
+  "project-orbline": {
+    "description": "Browser এর জন্য একটা endless orb-runner game, যেখানে পাঁচটা world, double jump, slide আর power-up, synthesised প্রাকৃতিক soundscape, installable PWA হিসেবে offline play, আর একটা shared leaderboard আছে, যেটা প্রতিটা score server এ নতুন করে হিসাব করে যাচাই করে।"
+  },
   "project-rootstory": {
     "description": "সম্পর্কের map তৈরি, জীবনের খুঁটিনাটি আর ছবি সংরক্ষণ, এবং পুরো পারিবারিক ইতিহাস এক browser থেকে আরেক browser এ নিয়ে যাওয়ার জন্য একটা private, local-first family archive।"
   },

@@ -82,6 +82,46 @@
     "logoUrl": "https://sigcraft.netlify.app/favicon.svg"
   },
   {
+    "id": "project-orbline",
+    "type": "website",
+    "featured": false,
+    "title": "Orbline",
+    "description": "An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server.",
+    "technologies": [
+      "TanStack Start",
+      "React 19",
+      "TypeScript",
+      "Canvas 2D",
+      "Web Audio API",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Hugeicons",
+      "Drizzle ORM",
+      "PostgreSQL",
+      "PGlite",
+      "Progressive Web App",
+      "Netlify"
+    ],
+    "topics": [
+      "arcade-game",
+      "endless-runner",
+      "browser-game",
+      "canvas",
+      "web-audio",
+      "pwa",
+      "leaderboard",
+      "game-development"
+    ],
+    "imageUrl": "assets/projects/orbline.webp",
+    "youtubeVideoId": "De5E9FUy4V4",
+    "liveUrl": "https://orbline.netlify.app",
+    "githubUrl": "https://github.com/montasim/orbline",
+    "githubRepositoryCreatedAt": "2026-11-10T21:40:03Z",
+    "githubInitialCommitAt": "2026-11-10T16:46:43Z",
+    "githubInitialCommitSha": "c362f95ba97b9a81e9755526597cf82daaa5e78d",
+    "logoUrl": "https://orbline.netlify.app/icons/icon-192.png"
+  },
+  {
     "id": "project-rootstory",
     "type": "website",
     "featured": false,

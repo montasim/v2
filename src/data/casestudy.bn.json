@@ -149,6 +149,77 @@
       "caption": "Deploy করা Sigcraft editor বাঁ দিকে তথ্য নেয় আর তৈরি signature টা একটা mail window এর ভেতরে দেখায়, ঠিক যেভাবে Gmail পাবে।"
     }
   },
+  "orbline": {
+    "summary": "Browser এর জন্য একটা endless orb-runner game, যেখানে পাঁচটা world, synthesised প্রাকৃতিক soundscape আর offline play আছে, আর একটা shared leaderboard প্রতিটা score server এ নতুন করে হিসাব করে এবং অসম্ভব run বাতিল করে।",
+    "role": "Game designer ও full-stack engineer",
+    "scope": "Game design, canvas game engine, procedural audio, game UI, leaderboard API ও anti-cheat, PWA এবং deployment",
+    "status": "orbline.netlify.app এ installable PWA হিসেবে publicly deployed; progress প্রতিটা player এর নিজের browser এ থাকে",
+    "problem": "Browser এর runner game শুরু করা যেমন সহজ, cheat করাও তেমন সহজ। Page যে score পাঠায় সেটা বিশ্বাস করা একটা public leaderboard অসম্ভব সংখ্যায় ভরে যায়, আর যে game খেলার আগে account বা network চায়, সেটা প্রথম jump এর আগেই player হারায়।",
+    "constraints": [
+      "Game টা কোনো account ছাড়াই সাথে সাথে শুরু হতে হবে, install করার পর offline চলতে হবে, আর browser storage না থাকলেও কাজ করতে হবে।",
+      "Page যে score পাঠায় সেটা বিশ্বাসযোগ্য না, তাই server কে run replay না করেই প্রতিটা run যাচাই করতে হয়।",
+      "Keyboard, mouse আর phone এ দুই আঙুল, সবগুলো দিয়েই control চলতে হবে, slide ধরে রেখে jump করা সহ।",
+      "পাঁচটা world এর প্রতিটার নিজস্ব শব্দ দরকার, কিন্তু audio file যোগ করলে প্রথম load ধীর হয়ে যেত।",
+      "Game এর আগের নামের save গুলো Orbline নামে বদলানোর পরও টিকে থাকতে হতো।"
+    ],
+    "architecture": {
+      "summary": "একটা TanStack Start app একটা full-screen canvas engine এর চারপাশে React দিয়ে game UI render করে, আর TanStack Start server function Drizzle এর মাধ্যমে PostgreSQL এর ওপর leaderboard চালায়।",
+      "layers": [
+        {
+          "title": "Game engine",
+          "detail": "নির্দিষ্ট সীমার time step সহ একটা requestAnimationFrame loop একটা 2D canvas এ player, obstacle, collision, power-up, particle, scoring আর layered parallax background এর আলাদা module চালায়।"
+        },
+        {
+          "title": "World ও content",
+          "detail": "পাঁচটা world (Northern Glacier, Bloom Meadow, Sunfall Dunes, Coral Deep আর Cinder Caldera) এর প্রতিটায় চারটা speed stage আছে, সাথে unlock করার মতো orb, তিনটা power-up, achievement আর daily challenge, সব static data হিসেবে।"
+        },
+        {
+          "title": "Sound",
+          "detail": "Web Audio filtered noise থেকে বাতাস, বৃষ্টি, বুদবুদ, lava এর চড়চড় শব্দ আর বজ্রপাত তৈরি করে, world আর stage অনুযায়ী mix করে, কোনো audio file ছাড়া।"
+        },
+        {
+          "title": "Leaderboard",
+          "detail": "Run শুরু হলে server function একটা run ticket দেয়, ফলাফল আসা পর্যন্ত সময় মাপে, score নতুন করে হিসাব করে, আর প্রতিটা গৃহীত বা বাতিল run কারণসহ সংরক্ষণ করে।"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "প্রতিটা score server এ নতুন করে হিসাব আর সীমা যাচাই",
+        "detail": "Server client এর score উপেক্ষা করে, distance আর crystal থেকে নতুন করে হিসাব করে, আর server এর মাপা সময়ে game এর নিজের speed নিয়মে যে distance বা crystal সংখ্যায় পৌঁছানো সম্ভব না, সেটা বাতিল করে।"
+      },
+      {
+        "title": "File না পাঠিয়ে শব্দ synthesise করা",
+        "detail": "প্রতিটা soundscape noise filter এর একটা ছোট recipe, তাই কোনো audio download ছাড়াই পাঁচটা world আলাদা শোনায়।"
+      },
+      {
+        "title": "আগে খেলা, sign up কখনো না",
+        "detail": "Progress, orb আর settings সুরক্ষিত localStorage এ থাকে, আর player শুধু একটা leaderboard নাম register করে, যেটা account না, hashed token হিসেবে রাখা হয়।"
+      },
+      {
+        "title": "Development আর production এ একই database",
+        "detail": "Development এ database URL না থাকলে app PGlite চালায়, WebAssembly তে compile করা PostgreSQL, আর নিজে থেকেই migrate করে, তাই local run production PostgreSQL এর মতো একই query ব্যবহার করে।"
+      }
+    ],
+    "contribution": [
+      "Game loop, চারটা করে stage সহ পাঁচটা world, unlock করার মতো চারটা orb, তিনটা power-up (Frost Ward, Crystal Lure আর Aurora Rush), achievement আর daily challenge design করেছি।",
+      "নড়াচড়া, double jump, slide, fast-fall, collision, particle আর parallax দৃশ্যের জন্য canvas engine বানিয়েছি।",
+      "Procedural প্রাকৃতিক soundscape লিখেছি আর iPhone এ শব্দ চালু রেখেছি।",
+      "Run ticket, server-side score যাচাই, IP প্রতি rate limit, case-insensitive unique নাম আর বাতিল run এর audit trail সহ shared leaderboard বানিয়েছি।",
+      "প্রতিটা device এ touch control সহ একটা সামঞ্জস্যপূর্ণ arcade UI design করেছি, আর Netlify তে installable PWA হিসেবে ship করেছি।"
+    ],
+    "outcomes": [
+      "Game সরাসরি খেলার মতো title screen এ খোলে, আর install করা app offline চলে।",
+      "চারটা stage আর নিজস্ব synthesised soundscape সহ পাঁচটা world, একটাও audio file ছাড়া ship হয়।",
+      "Leaderboard কখনো client এর হিসাব করা score রাখে না, আর বাতিল run তার ব্যর্থতার কারণ রেখে দেয়।",
+      "নয়টা automated test anti-cheat এর সীমা, score formula আর নামের নিয়ম cover করে।",
+      "জানা সীমাবদ্ধতা: একটা scripted client এখনো সীমার ভেতরে বিশ্বাসযোগ্য সংখ্যা পাঠাতে পারে, যেটা বন্ধ করতে রেকর্ড করা input এর server-side replay লাগবে।"
+    ],
+    "screenshot": {
+      "alt": "Northern Glacier world এ Orbline এর title screen, যেখানে জ্বলজ্বলে orb logo, একটা Start Run button আর orb, daily challenge, trophy, rank ও settings এর menu আছে",
+      "caption": "Deploy করা Orbline এর title screen সরাসরি Northern Glacier world এ খোলে, run শুরু করতে শুধু একটা tap।"
+    }
+  },
   "rootstory": {
     "summary": "একটা local-first family archive, যেখানে পড়তে সহজ relationship graph এর সাথে আছে বিস্তারিত profile, timeline, বারবার আসা তারিখ, version history আর পূর্ণ backup restore, কোনো account ছাড়াই।",
     "role": "Product designer ও frontend engineer",
