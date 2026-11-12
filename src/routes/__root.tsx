@@ -14,6 +14,7 @@ import { KonamiCommandCenter } from "@/components/portfolio/konami-command-cente
 import { AppContextMenu } from "@/components/shared/app-context-menu"
 import { CommandPalette } from "@/components/shared/command-palette"
 import { ConsoleBanner } from "@/components/shared/console-banner"
+import { CustomCursor } from "@/components/shared/custom-cursor"
 import { ErrorPage } from "@/components/shared/error-page"
 import { PortfolioKeyboardShortcuts } from "@/components/shared/portfolio-keyboard-shortcuts"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -85,6 +86,7 @@ export function ApplicationFrame({ children }: { children: React.ReactNode }) {
   return (
     <>
       <ConsoleBanner />
+      <CustomCursor />
       <CommandPalette />
       <PortfolioKeyboardShortcuts />
       <AppContextMenu>
