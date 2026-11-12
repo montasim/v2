@@ -64,6 +64,7 @@ export type ProjectFilter =
   | "client"
   | "collaborative"
   | "employment"
+  | "game"
   | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
@@ -210,6 +211,7 @@ const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "website", label: "Web apps" },
   { value: "android", label: "Android apps" },
   { value: "desktop", label: "Desktop apps" },
+  { value: "game", label: "Games" },
   { value: "extension", label: "Extensions" },
   { value: "package", label: "npm packages" },
   { value: "skill", label: "AI skills" },
@@ -243,6 +245,7 @@ export const projectCatalog = {
       "website",
       "android",
       "desktop",
+      "game",
       "extension",
       "package",
       "skill",
@@ -274,6 +277,7 @@ export const projectCatalog = {
     if (filter === "employment") return project.professionalWork === true
     if (filter === "android") return Boolean(project.googlePlayUrl)
     if (filter === "package") return Boolean(project.npmUrl)
+    if (filter === "game") return project.topics.includes("game-development")
     return project.type === filter
   },
 } as const
