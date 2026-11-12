@@ -747,7 +747,7 @@ export function BlogDetailPage({
     ? projectCatalog.records.find((project) => project.id === post.projectId)
     : undefined
   const projectMedia = relatedProject ? getProjectMedia(relatedProject) : []
-  // Article illustrations explain the post's idea, so they lead over product media.
+  // A project demo video leads; otherwise article illustrations lead over product screenshots.
   const illustration = post.image?.src.startsWith("/images/blog/")
     ? post.image
     : null
@@ -967,7 +967,14 @@ export function BlogDetailPage({
         <div className="min-w-0">
           {hasMedia ? (
             <figure className="mb-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
-              {illustration ? (
+              {relatedProject?.youtubeVideoId ? (
+                <YouTubeVideo
+                  videoId={relatedProject.youtubeVideoId}
+                  title={`${relatedProject.title} product demonstration`}
+                  loading="eager"
+                  className="rounded-lg"
+                />
+              ) : illustration ? (
                 <ContentPreviewImage
                   src={illustration.src}
                   alt={illustration.alt}
@@ -975,13 +982,6 @@ export function BlogDetailPage({
                   height="1000"
                   fetchPriority="high"
                   className="h-auto w-full rounded-lg border"
-                />
-              ) : relatedProject?.youtubeVideoId ? (
-                <YouTubeVideo
-                  videoId={relatedProject.youtubeVideoId}
-                  title={`${relatedProject.title} product demonstration`}
-                  loading="eager"
-                  className="rounded-lg"
                 />
               ) : projectMedia.length > 0 ? (
                 <ContentMediaGallery media={projectMedia} priority />

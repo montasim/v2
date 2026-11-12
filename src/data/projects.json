@@ -73,6 +73,7 @@
       "dark-mode"
     ],
     "imageUrl": "assets/projects/sigcraft.webp",
+    "youtubeVideoId": "ufB-uC1MPzE",
     "liveUrl": "https://sigcraft.netlify.app",
     "githubUrl": "https://github.com/montasim/sigcraft",
     "githubRepositoryCreatedAt": "2026-11-02T14:41:04Z",
@@ -109,6 +110,7 @@
       "responsive-design"
     ],
     "imageUrl": "assets/projects/rootstory.webp",
+    "youtubeVideoId": "i7XfLtHLxpo",
     "liveUrl": "https://therootstory.netlify.app",
     "githubUrl": "https://github.com/montasim/rootstory",
     "githubRepositoryCreatedAt": "2026-10-08T13:52:41Z",
@@ -321,7 +323,7 @@
     "npmUrl": "",
     "emoji": "",
     "imageUrl": "assets/projects/bugreceipt.png",
-    "youtubeVideoId": "KdrGAhvUyoY",
+    "youtubeVideoId": "QkJJBP71Ze0",
     "topics": [
       "browser-extension",
       "bug-reporting",
@@ -1379,7 +1381,7 @@
   {
     "id": "project-postcraft",
     "type": "website",
-    "featured": true,
+    "featured": false,
     "title": "PostCraft",
     "description": "A social media manager that generates, scores, previews and schedules posts for LinkedIn, X and Facebook, using Gemini and stored brand guardrails.",
     "technologies": [
@@ -1809,7 +1811,7 @@
   {
     "id": "project-air-traffic-control",
     "type": "desktop",
-    "featured": false,
+    "featured": true,
     "title": "Air Traffic Control",
     "description": "A flight-path drawing arcade game for Android, browsers, Windows, and Linux. Guide three aircraft types across varied airfields, avoid collisions, and build a local career with offline play.",
     "technologies": [
