@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { landingNavigation, landingSectionIds } from "@/lib/site"
+import {
+  getPageScrollOffset,
+  getPageScrollTop,
+  setPageScrollTop,
+} from "@/lib/page-scroll"
 
 const landingTopSectionId = landingNavigation[0].sectionId
 const scrollAnimationDurationMs = 700
 const instantScrollBehavior = "instant" as ScrollBehavior
 
 function setWindowScrollTop(top: number) {
-  window.scrollTo({ left: 0, top, behavior: instantScrollBehavior })
+  setPageScrollTop(top, instantScrollBehavior)
 }
 
 function getSectionScrollTop(section: HTMLElement) {
@@ -16,14 +21,15 @@ function getSectionScrollTop(section: HTMLElement) {
 
   return Math.max(
     0,
-    window.scrollY +
+    getPageScrollTop() +
       section.getBoundingClientRect().top -
+      getPageScrollOffset() -
       (Number.isNaN(scrollMarginTop) ? 0 : scrollMarginTop)
   )
 }
 
 function animateWindowScrollTo(targetY: number) {
-  const startY = window.scrollY
+  const startY = getPageScrollTop()
   const distance = targetY - startY
   const prefersReducedMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"

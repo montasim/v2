@@ -1,3 +1,7 @@
+import {
+  getPageScrollEventTarget,
+  isPageScrolledToEnd,
+} from "@/lib/page-scroll"
 import { ProjectEngagement } from "@/components/portfolio/project-engagement"
 import { StoreBadges } from "@/components/shared/store-badges"
 import { useEffect, useState } from "react"
@@ -201,8 +205,7 @@ export function ProjectCaseStudyPage({
         }
 
         if (
-          window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 2
+          isPageScrolledToEnd()
         ) {
           currentSection = sectionLinks.at(-1)?.[0] ?? currentSection
         }
@@ -213,12 +216,15 @@ export function ProjectCaseStudyPage({
 
     setActiveSection(coreSectionIds[0])
     updateActiveSection()
-    window.addEventListener("scroll", updateActiveSection, { passive: true })
+    const scrollTarget = getPageScrollEventTarget()
+    scrollTarget.addEventListener("scroll", updateActiveSection, {
+      passive: true,
+    })
     window.addEventListener("resize", updateActiveSection)
 
     return () => {
       window.cancelAnimationFrame(animationFrame)
-      window.removeEventListener("scroll", updateActiveSection)
+      scrollTarget.removeEventListener("scroll", updateActiveSection)
       window.removeEventListener("resize", updateActiveSection)
     }
   }, [caseStudy.slug, media.length])

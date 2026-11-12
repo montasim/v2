@@ -2,12 +2,15 @@ import {
   HeadContent,
   Scripts,
   createRootRoute,
+  useRouter,
   useRouterState,
 } from "@tanstack/react-router"
 import type { ErrorComponentProps } from "@tanstack/react-router"
 
+import { useEffect } from "react"
 import appCss from "../styles.css?url"
 import { SiteFooter } from "@/components/layout/site-footer"
+import { pageScrollId } from "@/lib/page-scroll"
 import { SiteHeader } from "@/components/layout/site-header"
 import { SideRails } from "@/components/layout/side-rails"
 import { KonamiCommandCenter } from "@/components/portfolio/konami-command-center"
@@ -81,6 +84,21 @@ export function ApplicationFrame({ children }: { children: React.ReactNode }) {
   })
   const isDashboard = pathname.startsWith("/dashboard")
 
+  const router = useRouter()
+  useEffect(() => {
+    // Space, Page Down and arrow keys scroll the focused area. Clicks inside #page-scroll focus it;
+    // after a page renders with nothing focused, hand it focus so keyboard scrolling still works.
+    const focusPageScroll = () => {
+      if (document.activeElement === document.body) {
+        document.getElementById(pageScrollId)?.focus({ preventScroll: true })
+      }
+    }
+    focusPageScroll()
+    return router.subscribe("onRendered", () =>
+      requestAnimationFrame(focusPageScroll)
+    )
+  }, [router])
+
   if (isDashboard) return children
 
   return (
@@ -96,12 +114,22 @@ export function ApplicationFrame({ children }: { children: React.ReactNode }) {
         >
           Skip to content
         </a>
-        <SiteHeader />
         <SideRails />
         <KonamiCommandCenter />
         <PortfolioAssistant />
-        {children}
-        <SiteFooter />
+        {/* Only the area under the header scrolls, so the scrollbar starts below the navbar. */}
+        <div className="page-frame flex h-[100dvh] flex-col">
+          <SiteHeader />
+          <div
+            id={pageScrollId}
+            data-scroll-restoration-id={pageScrollId}
+            tabIndex={-1}
+            className="page-scroll min-h-0 flex-1 overflow-y-auto outline-none"
+          >
+            {children}
+            <SiteFooter />
+          </div>
+        </div>
       </AppContextMenu>
     </>
   )

@@ -1,3 +1,7 @@
+import {
+  getPageScrollEventTarget,
+  isPageScrolledToEnd,
+} from "@/lib/page-scroll"
 import { StoreBadges } from "@/components/shared/store-badges"
 import { useEffect, useId, useMemo, useState } from "react"
 import { Link } from "@tanstack/react-router"
@@ -779,8 +783,7 @@ export function BlogDetailPage({
         }
 
         if (
-          window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 2
+          isPageScrolledToEnd()
         ) {
           currentSection = sectionLinks[sectionLinks.length - 1][0]
         }
@@ -791,12 +794,15 @@ export function BlogDetailPage({
 
     setActiveSection(sectionLinks[0][0])
     updateActiveSection()
-    window.addEventListener("scroll", updateActiveSection, { passive: true })
+    const scrollTarget = getPageScrollEventTarget()
+    scrollTarget.addEventListener("scroll", updateActiveSection, {
+      passive: true,
+    })
     window.addEventListener("resize", updateActiveSection)
 
     return () => {
       window.cancelAnimationFrame(animationFrame)
-      window.removeEventListener("scroll", updateActiveSection)
+      scrollTarget.removeEventListener("scroll", updateActiveSection)
       window.removeEventListener("resize", updateActiveSection)
     }
   }, [post.slug, sectionLinks])

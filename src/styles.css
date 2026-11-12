@@ -447,10 +447,32 @@
   }
 }
 
+/* A quiet page scrollbar: a soft ink-tinted thumb on a transparent track, so the paper background
+   (and its grain) shows through in both themes. */
+.page-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent)
+    transparent;
+}
+
+.page-scroll:hover {
+  scrollbar-color: color-mix(in oklch, var(--foreground) 38%, transparent)
+    transparent;
+}
+
 @supports (animation-timeline: scroll()) {
+  /* The page scrolls #page-scroll, a sibling of the header, so its timeline is shared up to the frame. */
+  .page-frame {
+    timeline-scope: --page-scroll;
+  }
+
+  .page-scroll {
+    scroll-timeline: --page-scroll block;
+  }
+
   .reading-progress {
     animation: reading-progress linear both;
-    animation-timeline: scroll(root block);
+    animation-timeline: --page-scroll;
   }
 }
 
