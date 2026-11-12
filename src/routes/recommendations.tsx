@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router"
 import { z } from "zod"
 import { ArrowUpRightIcon } from "@/components/ui/icons"
 
@@ -23,6 +23,7 @@ export const Route = createFileRoute("/recommendations")({
   validateSearch: z.object({
     filter: recommendationCatalog.filterSchema.catch("all").default("all"),
   }),
+  search: { middlewares: [stripSearchParams({ filter: "all" })] },
   component: Page,
 })
 

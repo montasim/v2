@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router"
 import { z } from "zod"
 
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
@@ -23,6 +23,11 @@ export const Route = createFileRoute("/dashboard/conversations")({
       .catch(CONVERSATION_MODEL_ALL)
       .default(CONVERSATION_MODEL_ALL),
   }),
+  search: {
+    middlewares: [
+      stripSearchParams({ page: 1, q: "", model: CONVERSATION_MODEL_ALL }),
+    ],
+  },
   loaderDeps: ({ search: { model, page, q } }) => ({
     model,
     page,

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router"
 import { z } from "zod"
 import { CatalogPage } from "@/components/shared/catalog-page"
 import { ProjectCard } from "@/components/portfolio/project-card"
@@ -13,6 +13,8 @@ export const Route = createFileRoute("/projects")({
     filter: projectCatalog.filterSchema.catch("all").default("all"),
     page: z.coerce.number().int().min(1).catch(1).default(1),
   }),
+  // Keep the URL as plain /projects until the visitor picks a filter or page.
+  search: { middlewares: [stripSearchParams({ filter: "all", page: 1 })] },
   component: Page,
 })
 function Page() {

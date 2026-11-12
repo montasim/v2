@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router"
 import { z } from "zod"
 
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
@@ -22,6 +22,11 @@ export const Route = createFileRoute("/dashboard/inquiries")({
     type: z.enum(inquiryTypeFilters).catch("all").default("all"),
     topic: z.enum(inquiryTopicFilters).catch("all").default("all"),
   }),
+  search: {
+    middlewares: [
+      stripSearchParams({ page: 1, q: "", type: "all", topic: "all" }),
+    ],
+  },
   loaderDeps: ({ search: { page, q, type, topic } }) => ({
     page,
     query: q,
