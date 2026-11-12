@@ -1,3 +1,4 @@
+import { pageScrollId } from "@/lib/page-scroll"
 import { createRouter as createTanStackRouter } from "@tanstack/react-router"
 import { routeTree } from "./routeTree.gen"
 
@@ -31,6 +32,8 @@ export function getRouter() {
     routeTree,
 
     scrollRestoration: createInitialScrollRestorationPolicy(),
+    // The public site scrolls #page-scroll, not the window; navigation resets it to the top.
+    scrollToTopSelectors: [`#${pageScrollId}`],
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
   })

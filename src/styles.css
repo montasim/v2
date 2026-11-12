@@ -124,7 +124,7 @@
 :root {
   --background: #f6f6f3;
   --foreground: #151614;
-  --card: #ffffff;
+  --card: #fbfbf8;
   --card-foreground: #151614;
   --popover: #ffffff;
   --popover-foreground: #151614;
@@ -447,10 +447,32 @@
   }
 }
 
+/* A quiet page scrollbar: a soft ink-tinted thumb on a transparent track, so the paper background
+   (and its grain) shows through in both themes. */
+.page-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--foreground) 22%, transparent)
+    transparent;
+}
+
+.page-scroll:hover {
+  scrollbar-color: color-mix(in oklch, var(--foreground) 38%, transparent)
+    transparent;
+}
+
 @supports (animation-timeline: scroll()) {
+  /* The page scrolls #page-scroll, a sibling of the header, so its timeline is shared up to the frame. */
+  .page-frame {
+    timeline-scope: --page-scroll;
+  }
+
+  .page-scroll {
+    scroll-timeline: --page-scroll block;
+  }
+
   .reading-progress {
     animation: reading-progress linear both;
-    animation-timeline: scroll(root block);
+    animation-timeline: --page-scroll;
   }
 }
 
@@ -667,4 +689,91 @@ body[data-scroll-locked="1"]:has([data-slot="select-content"]) {
 article:lang(bn) p,
 article:lang(bn) blockquote {
   line-height: 1.85;
+}
+
+/* Paper grain: one fractal-noise tile over every page; the theme's base colour sets the mood. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* Behind content: grain over text, cards and photos reads as dirt. */
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px auto;
+  opacity: 0.3;
+}
+/* Lower than light: the same grain reads much stronger on a dark background. */
+.dark body::after {
+  opacity: 0.06;
+}
+/* Dark portfolio cards: solid, no grain, one step above the grained page (~#181a1c) so they read raised, not sunken. */
+.dark #main-content {
+  --card: #1c1f24;
+}
+
+/* Dashboard is a work tool: no decorative grain or glow. */
+body:has(.dashboard-shell)::after {
+  display: none;
+}
+
+/* Soft tinted corners behind the top of the page (the hero area). */
+body {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgb(255 200 200 / 0.18), transparent 35rem),
+    radial-gradient(circle at 100% 0%, rgb(200 220 255 / 0.2), transparent 35rem);
+  background-repeat: no-repeat;
+}
+.dark body {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgb(120 168 248 / 0.08), transparent 35rem),
+    radial-gradient(circle at 100% 0%, rgb(198 144 67 / 0.07), transparent 35rem);
+}
+
+/* Custom cursor (enabled by <CustomCursor /> only for fine pointers). */
+/* Like the reference: hide the arrow on the page, but links and buttons keep their hand pointer. */
+html[data-custom-cursor] body {
+  cursor: none;
+}
+.custom-cursor-dot,
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events: none;
+  border-radius: 9999px;
+  translate: -50% -50%;
+  opacity: 0;
+  transition:
+    width 0.2s,
+    height 0.2s,
+    background-color 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+}
+.custom-cursor-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  background-color: var(--foreground);
+}
+.custom-cursor-ring {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1.5px solid color-mix(in oklab, var(--foreground) 30%, transparent);
+}
+html[data-custom-cursor="visible"] :is(.custom-cursor-dot, .custom-cursor-ring) {
+  opacity: 1;
+}
+html[data-cursor-hover] .custom-cursor-dot {
+  width: 0.875rem;
+  height: 0.875rem;
+  background-color: var(--ring);
+}
+html[data-cursor-hover] .custom-cursor-ring {
+  width: 3rem;
+  height: 3rem;
+}
+body:has(.dashboard-shell) {
+  background-image: none;
 }

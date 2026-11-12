@@ -119,32 +119,32 @@ describe("portfolio content", () => {
 
   it("owns classifications and featured records inside catalogs", () => {
     expect(projectCatalog.featured.map((project) => project.id)).toEqual([
-      "project-postcraft",
+      "project-air-traffic-control",
       "project-bugreceipt",
       "project-devtools",
     ])
     expect(
       projectCatalog.records.slice(0, 10).map((project) => project.id)
     ).toEqual([
-      "project-postcraft",
+      "project-air-traffic-control",
       "project-bugreceipt",
-      "project-mulalens",
-      "project-formflow",
-      "project-b4joinacompany",
       "project-devtools",
-      "project-skillfoliox",
-      "project-bangladesh-location-registry",
       "project-thoughtline",
+      "project-liftuno",
+      "project-coaching-management",
       "project-sigcraft",
+      "project-orbline",
+      "project-rootstory",
+      "project-giftbook",
     ])
     expect(
       projectCatalog.records.slice(-14).map((project) => project.id)
     ).toEqual([
+      "project-book-heaven",
+      "project-github-readme-counter",
       "project-mmh-patient-portal",
       "project-mmh-re-annotation",
       "project-mmh-telemedicine",
-      "project-liftuno",
-      "project-coaching-management",
       "project-clm-api",
       "project-mcq-topper-backend",
       "project-school-management-backend",
@@ -231,7 +231,7 @@ describe("portfolio content", () => {
   })
 
   it("derives project chronology from verified GitHub history", () => {
-    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-sigcraft")
+    expect(projectCatalog.newestByGitHubHistory.id).toBe("project-orbline")
     expect(
       projectCatalog.chronological.map((project) => project.id)
     ).toHaveLength(projectCatalog.records.length)
@@ -323,8 +323,8 @@ describe("portfolio content", () => {
         .slice(0, 4)
         .map((project) => project.id)
     ).toEqual([
-      "project-content-types-lite",
       "project-http-status-lite",
+      "project-content-types-lite",
       "project-client-parser",
       "project-mime-types-lite",
     ])

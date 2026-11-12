@@ -135,12 +135,31 @@
       "publishedAt": "2026-11-02",
       "featured": false,
       "image": {
-        "src": "/images/blog/email-signature.webp",
-        "alt": "An email signature built from tables and inline styles, with PNG icons in any colour flowing into it"
+        "src": "/images/projects/sigcraft.webp",
+        "alt": "Sigcraft signature editor with the details form beside a live Gmail-style preview of a finished signature"
       },
       "translations": {
         "bn": {
           "title": "Gmail এ টিকে থাকে এমন email signature বানানো"
+        }
+      }
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-orbline",
+      "slug": "an-endless-runner-leaderboard-that-checks-every-score",
+      "title": "An Endless Runner Leaderboard That Checks Every Score",
+      "category": "Product engineering",
+      "topic": "product",
+      "publishedAt": "2026-11-11",
+      "featured": false,
+      "image": {
+        "src": "/images/projects/orbline.webp",
+        "alt": "Orbline title screen in the Northern Glacier world with the glowing orb logo, a Start Run button and a menu for orbs, daily challenges, trophies, ranks and settings"
+      },
+      "translations": {
+        "bn": {
+          "title": "একটা endless runner leaderboard যেটা প্রতিটা score যাচাই করে"
         }
       }
     },
@@ -154,8 +173,8 @@
       "publishedAt": "2026-10-08",
       "featured": true,
       "image": {
-        "src": "/images/blog/family-tree.webp",
-        "alt": "A family tree with distinct parent, partner and sibling connections kept local to the browser"
+        "src": "/images/projects/rootstory.webp",
+        "alt": "Rootstory family tree workspace showing three generations and a selected profile"
       },
       "translations": {
         "bn": {
@@ -2073,8 +2092,8 @@
       "topic": "tools",
       "featured": false,
       "image": {
-        "src": "/images/blog/devtools-shell.webp",
-        "alt": "Fifty developer tools sharing one searchable shell"
+        "src": "/images/projects/devtools.webp",
+        "alt": "DevTools home page showing the searchable developer toolbox"
       },
       "translations": {
         "bn": {

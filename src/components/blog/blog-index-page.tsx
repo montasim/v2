@@ -41,7 +41,7 @@ import type { BlogPost, BlogTopic } from "@/lib/content/blog"
 import { projectCatalog } from "@/lib/content/projects"
 import { cn } from "@/lib/utils"
 
-const ARTICLES_PER_PAGE = 9
+const ARTICLES_PER_PAGE = 7
 
 function formatShortDate(date: string) {
   return new Intl.DateTimeFormat("en", {

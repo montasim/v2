@@ -1,4 +1,8 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router"
+import {
+  createFileRoute,
+  useRouter,
+  stripSearchParams,
+} from "@tanstack/react-router"
 import { z } from "zod"
 
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-page-state"
@@ -23,6 +27,11 @@ export const Route = createFileRoute("/dashboard/comments")({
       .catch(EMAIL_DOMAIN_ALL)
       .default(EMAIL_DOMAIN_ALL),
   }),
+  search: {
+    middlewares: [
+      stripSearchParams({ page: 1, q: "", domain: EMAIL_DOMAIN_ALL }),
+    ],
+  },
   loaderDeps: ({ search: { domain, page, q } }) => ({
     domain,
     page,

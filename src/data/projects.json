@@ -73,12 +73,53 @@
       "dark-mode"
     ],
     "imageUrl": "assets/projects/sigcraft.webp",
+    "youtubeVideoId": "ufB-uC1MPzE",
     "liveUrl": "https://sigcraft.netlify.app",
     "githubUrl": "https://github.com/montasim/sigcraft",
     "githubRepositoryCreatedAt": "2026-11-02T14:41:04Z",
     "githubInitialCommitAt": "2026-11-02T14:30:35Z",
     "githubInitialCommitSha": "74987e62945bad6432dd3dc58bebdf685dc6c22b",
     "logoUrl": "https://sigcraft.netlify.app/favicon.svg"
+  },
+  {
+    "id": "project-orbline",
+    "type": "website",
+    "featured": false,
+    "title": "Orbline",
+    "description": "An endless orb-runner game for the browser with five worlds, double jumps, slides and power-ups, synthesised nature soundscapes, offline play as an installable PWA, and a shared leaderboard that recomputes and checks every score on the server.",
+    "technologies": [
+      "TanStack Start",
+      "React 19",
+      "TypeScript",
+      "Canvas 2D",
+      "Web Audio API",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Hugeicons",
+      "Drizzle ORM",
+      "PostgreSQL",
+      "PGlite",
+      "Progressive Web App",
+      "Netlify"
+    ],
+    "topics": [
+      "arcade-game",
+      "endless-runner",
+      "browser-game",
+      "canvas",
+      "web-audio",
+      "pwa",
+      "leaderboard",
+      "game-development"
+    ],
+    "imageUrl": "assets/projects/orbline.webp",
+    "youtubeVideoId": "De5E9FUy4V4",
+    "liveUrl": "https://orbline.netlify.app",
+    "githubUrl": "https://github.com/montasim/orbline",
+    "githubRepositoryCreatedAt": "2026-11-10T21:40:03Z",
+    "githubInitialCommitAt": "2026-11-10T16:46:43Z",
+    "githubInitialCommitSha": "c362f95ba97b9a81e9755526597cf82daaa5e78d",
+    "logoUrl": "https://orbline.netlify.app/icons/icon-192.png"
   },
   {
     "id": "project-rootstory",
@@ -109,6 +150,7 @@
       "responsive-design"
     ],
     "imageUrl": "assets/projects/rootstory.webp",
+    "youtubeVideoId": "i7XfLtHLxpo",
     "liveUrl": "https://therootstory.netlify.app",
     "githubUrl": "https://github.com/montasim/rootstory",
     "githubRepositoryCreatedAt": "2026-10-08T13:52:41Z",
@@ -321,7 +363,7 @@
     "npmUrl": "",
     "emoji": "",
     "imageUrl": "assets/projects/bugreceipt.png",
-    "youtubeVideoId": "KdrGAhvUyoY",
+    "youtubeVideoId": "QkJJBP71Ze0",
     "topics": [
       "browser-extension",
       "bug-reporting",
@@ -1356,6 +1398,7 @@
     "npmUrl": "",
     "emoji": "",
     "imageUrl": "assets/projects/devtools.png",
+    "youtubeVideoId": "v76zGb57ybM",
     "topics": [
       "api-request-builder",
       "base64-encoder-decoder",
@@ -1379,7 +1422,7 @@
   {
     "id": "project-postcraft",
     "type": "website",
-    "featured": true,
+    "featured": false,
     "title": "PostCraft",
     "description": "A social media manager that generates, scores, previews and schedules posts for LinkedIn, X and Facebook, using Gemini and stored brand guardrails.",
     "technologies": [
@@ -1809,7 +1852,7 @@
   {
     "id": "project-air-traffic-control",
     "type": "desktop",
-    "featured": false,
+    "featured": true,
     "title": "Air Traffic Control",
     "description": "A flight-path drawing arcade game for Android, browsers, Windows, and Linux. Guide three aircraft types across varied airfields, avoid collisions, and build a local career with offline play.",
     "technologies": [

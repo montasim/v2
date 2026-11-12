@@ -181,8 +181,26 @@ export function ProjectCard({ project }: { project: Project }) {
               <ProjectTypeIcon type={project.type} className="size-[1em]" />
               {project.type === "desktop" ? "desktop app" : project.type}
             </p>
-            {project.liveUrl || publicGithubUrl ? (
+            {caseStudy || project.liveUrl || publicGithubUrl ? (
               <div className="flex shrink-0 items-center gap-1">
+                {caseStudy ? (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="icon"
+                    className="size-9 text-strong-foreground"
+                  >
+                    <Link
+                      to="/case-studies/$slug"
+                      params={{ slug: caseStudy.slug }}
+                      aria-label={`Read the ${project.title} case study`}
+                      title="Case study"
+                    >
+                      {/* The open-book glyph sits ~1px high in its 24px box. */}
+                      <BookOpenTextIcon className="translate-y-px" />
+                    </Link>
+                  </Button>
+                ) : null}
                 {publicGithubUrl ? (
                   <Button
                     asChild
@@ -237,22 +255,7 @@ export function ProjectCard({ project }: { project: Project }) {
             limit={5}
             className="mt-4"
           />
-          <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6">
-            {caseStudy ? (
-              <Button
-                asChild
-                variant="link"
-                className="h-auto p-0 font-bold text-strong-foreground"
-              >
-                <Link
-                  to="/case-studies/$slug"
-                  params={{ slug: caseStudy.slug }}
-                >
-                  <BookOpenTextIcon />
-                  Case study
-                </Link>
-              </Button>
-            ) : null}
+          <div className="mt-auto flex flex-wrap gap-x-5 gap-y-2 pt-6 empty:hidden">
             {primaryUrl && !primaryActionInHeading ? (
               <ExternalAction
                 href={primaryUrl}

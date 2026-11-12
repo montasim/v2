@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router"
 import { z } from "zod"
 
 import { BlogIndexPage } from "@/components/blog/blog-index-page"
@@ -15,6 +15,9 @@ export const Route = createFileRoute("/blog")({
     q: z.string().catch("").default(""),
     page: z.coerce.number().int().min(1).catch(1).default(1),
   }),
+  search: {
+    middlewares: [stripSearchParams({ topic: "all", q: "", page: 1 })],
+  },
   component: Page,
 })
 

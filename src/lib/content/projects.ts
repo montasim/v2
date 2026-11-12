@@ -64,6 +64,7 @@ export type ProjectFilter =
   | "client"
   | "collaborative"
   | "employment"
+  | "game"
   | z.infer<typeof projectTypeSchema>
 
 const parsedRecords = z.array(projectSchema).parse(projectsJson)
@@ -88,30 +89,33 @@ for (const project of parsedRecords) {
 // Newly documented professional and client work is appended afterward so those
 // additions do not reshuffle the existing portfolio. Filters preserve this order.
 const hiringPriority = [
-  "project-postcraft",
+  "project-air-traffic-control",
   "project-bugreceipt",
-  "project-mulalens",
-  "project-formflow",
-  "project-b4joinacompany",
   "project-devtools",
-  "project-skillfoliox",
-  "project-bangladesh-location-registry",
   "project-thoughtline",
+  "project-liftuno",
+  "project-coaching-management",
   "project-sigcraft",
+  "project-orbline",
   "project-rootstory",
   "project-giftbook",
-  "project-release-agent-skill",
+  "project-mulalens",
   "project-1snap",
+  "project-postcraft",
+  "project-b4joinacompany",
   "project-vidquery",
+  "project-http-status-lite",
+  "project-formflow",
+  "project-skillfoliox",
+  "project-bangladesh-location-registry",
+  "project-release-agent-skill",
   "project-shrnkly",
   "project-ramadan-clock",
-  "project-air-traffic-control",
   "project-foliofarer",
   "project-routempo",
   "project-markdown-typing-svg",
   "project-tin-audit-checker",
   "project-content-types-lite",
-  "project-http-status-lite",
   "project-client-parser",
   "project-mime-types-lite",
   "project-verify-github-npm-release",
@@ -132,8 +136,6 @@ const hiringPriority = [
   "project-mmh-patient-portal",
   "project-mmh-re-annotation",
   "project-mmh-telemedicine",
-  "project-liftuno",
-  "project-coaching-management",
 ] as const
 
 const hiringRank = new Map<string, number>(
@@ -209,6 +211,7 @@ const filters: readonly CatalogFilter<ProjectFilter>[] = [
   { value: "website", label: "Web apps" },
   { value: "android", label: "Android apps" },
   { value: "desktop", label: "Desktop apps" },
+  { value: "game", label: "Games" },
   { value: "extension", label: "Extensions" },
   { value: "package", label: "npm packages" },
   { value: "skill", label: "AI skills" },
@@ -242,6 +245,7 @@ export const projectCatalog = {
       "website",
       "android",
       "desktop",
+      "game",
       "extension",
       "package",
       "skill",
@@ -273,6 +277,7 @@ export const projectCatalog = {
     if (filter === "employment") return project.professionalWork === true
     if (filter === "android") return Boolean(project.googlePlayUrl)
     if (filter === "package") return Boolean(project.npmUrl)
+    if (filter === "game") return project.topics.includes("game-development")
     return project.type === filter
   },
 } as const

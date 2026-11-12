@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, stripSearchParams } from "@tanstack/react-router"
 import { z } from "zod"
 import { ExperienceList } from "@/components/portfolio/experience-list"
 import { CatalogPage } from "@/components/shared/catalog-page"
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/experience")({
       .catch("employment")
       .default("employment"),
   }),
+  search: { middlewares: [stripSearchParams({ filter: "employment" })] },
   component: Page,
 })
 function Page() {

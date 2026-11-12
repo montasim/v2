@@ -1,3 +1,7 @@
+import {
+  getPageScrollEventTarget,
+  isPageScrolledToEnd,
+} from "@/lib/page-scroll"
 import { StoreBadges } from "@/components/shared/store-badges"
 import { useEffect, useId, useMemo, useState } from "react"
 import { Link } from "@tanstack/react-router"
@@ -747,7 +751,7 @@ export function BlogDetailPage({
     ? projectCatalog.records.find((project) => project.id === post.projectId)
     : undefined
   const projectMedia = relatedProject ? getProjectMedia(relatedProject) : []
-  // Article illustrations explain the post's idea, so they lead over product media.
+  // A project demo video leads; otherwise article illustrations lead over product screenshots.
   const illustration = post.image?.src.startsWith("/images/blog/")
     ? post.image
     : null
@@ -779,8 +783,7 @@ export function BlogDetailPage({
         }
 
         if (
-          window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 2
+          isPageScrolledToEnd()
         ) {
           currentSection = sectionLinks[sectionLinks.length - 1][0]
         }
@@ -791,12 +794,15 @@ export function BlogDetailPage({
 
     setActiveSection(sectionLinks[0][0])
     updateActiveSection()
-    window.addEventListener("scroll", updateActiveSection, { passive: true })
+    const scrollTarget = getPageScrollEventTarget()
+    scrollTarget.addEventListener("scroll", updateActiveSection, {
+      passive: true,
+    })
     window.addEventListener("resize", updateActiveSection)
 
     return () => {
       window.cancelAnimationFrame(animationFrame)
-      window.removeEventListener("scroll", updateActiveSection)
+      scrollTarget.removeEventListener("scroll", updateActiveSection)
       window.removeEventListener("resize", updateActiveSection)
     }
   }, [post.slug, sectionLinks])
@@ -967,7 +973,14 @@ export function BlogDetailPage({
         <div className="min-w-0">
           {hasMedia ? (
             <figure className="mb-10 overflow-hidden rounded-xl border bg-card p-1.5 sm:p-3">
-              {illustration ? (
+              {relatedProject?.youtubeVideoId ? (
+                <YouTubeVideo
+                  videoId={relatedProject.youtubeVideoId}
+                  title={`${relatedProject.title} product demonstration`}
+                  loading="eager"
+                  className="rounded-lg"
+                />
+              ) : illustration ? (
                 <ContentPreviewImage
                   src={illustration.src}
                   alt={illustration.alt}
@@ -975,13 +988,6 @@ export function BlogDetailPage({
                   height="1000"
                   fetchPriority="high"
                   className="h-auto w-full rounded-lg border"
-                />
-              ) : relatedProject?.youtubeVideoId ? (
-                <YouTubeVideo
-                  videoId={relatedProject.youtubeVideoId}
-                  title={`${relatedProject.title} product demonstration`}
-                  loading="eager"
-                  className="rounded-lg"
                 />
               ) : projectMedia.length > 0 ? (
                 <ContentMediaGallery media={projectMedia} priority />

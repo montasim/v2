@@ -38,7 +38,7 @@ import type {
 import { cn } from "@/lib/utils"
 import { ContentPreviewImage } from "@/components/shared/content-preview-image"
 
-const CASE_STUDIES_PER_PAGE = 9
+const CASE_STUDIES_PER_PAGE = 7
 
 // Screenshots lead; projects without one fall back to their article illustration.
 function projectImage(caseStudy: ProjectCaseStudy) {
