@@ -681,8 +681,9 @@ body::after {
   background-size: 200px auto;
   opacity: 0.3;
 }
+/* Lower than light: the same grain reads much stronger on a dark background. */
 .dark body::after {
-  opacity: 0.12;
+  opacity: 0.06;
 }
 /* Dark portfolio cards: solid, no grain, one step above the grained page (~#181a1c) so they read raised, not sunken. */
 .dark #main-content {
