@@ -57,14 +57,16 @@ function OverviewPage() {
       >
         <div className="grid items-center gap-10 sm:grid-cols-[minmax(0,1fr)_12.5rem] sm:gap-12 lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-20">
           <div className="hero-portrait group/portrait relative mx-auto aspect-[10/11] w-[10.45rem] shrink-0 sm:order-2 sm:w-[95%]">
+            {/* The background-free cutout stands in front of a soft arch, its head rising above
+                the arch's top; the arch also keeps the dark suit visible on the dark theme. */}
             <span
-              className="pointer-events-none absolute inset-0 translate-x-3 translate-y-3 rounded-xl border-2 border-muted-foreground/80"
+              className="pointer-events-none absolute inset-x-0 top-[20%] bottom-0 rounded-t-full bg-linear-to-b from-muted-foreground/35 to-muted-foreground/5"
               aria-hidden="true"
             />
-            <Avatar className="relative h-full w-full rounded-xl border bg-card ring-2 ring-foreground/10">
+            <Avatar className="relative h-full w-full overflow-visible rounded-none">
               <AvatarFallback className="rounded-xl">MS</AvatarFallback>
               <AvatarImage
-                src={profile.avatarUrl}
+                src="/images/avatar-cutout.webp"
                 alt={profile.name}
                 width="224"
                 height="246"
