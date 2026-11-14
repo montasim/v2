@@ -528,6 +528,90 @@
     animation: fade-up 360ms var(--ease-out-quart) 520ms both;
   }
 
+  /* Desktop nav links drop in one after another, just behind the header itself. */
+  .nav-stagger > * {
+    animation: fade-down var(--motion-base) var(--ease-out-quart) both;
+  }
+  .nav-stagger > :nth-child(1) { animation-delay: 60ms; }
+  .nav-stagger > :nth-child(2) { animation-delay: 120ms; }
+  .nav-stagger > :nth-child(3) { animation-delay: 180ms; }
+  .nav-stagger > :nth-child(4) { animation-delay: 240ms; }
+  .nav-stagger > :nth-child(5) { animation-delay: 300ms; }
+  .nav-stagger > :nth-child(n + 6) { animation-delay: 360ms; }
+
+  .site-header {
+    transition:
+      margin-top var(--motion-base) var(--ease-out-quart),
+      box-shadow var(--motion-base) var(--ease-out-quart);
+  }
+
+  .side-rail a {
+    transition: transform var(--motion-fast) var(--ease-out-quart);
+  }
+
+  .side-rail a:hover,
+  .side-rail a:focus-visible {
+    transform: translateY(-0.1875rem);
+  }
+
+  /* Home-page loader: the frame draws itself, the logo settles in, then the mark shrinks away. */
+  html[data-loading] .site-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: var(--background);
+    animation: overlay-exit 300ms ease-in 1750ms both;
+  }
+
+  html[data-loading] .page-scroll {
+    overflow: hidden;
+  }
+
+  /* Hold every entrance until the loader lifts; removing data-loading restarts them. */
+  html[data-loading] :is(
+      .site-header-enter,
+      .nav-stagger > *,
+      .hero-copy > *,
+      .hero-portrait,
+      .side-rail,
+      .chat-launcher-enter
+    ) {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.site-loader {
+  display: none;
+}
+
+.site-loader-mark {
+  width: 6rem;
+  height: 6rem;
+  animation: loader-shrink 300ms ease-in 1650ms both;
+}
+
+/* Scrolling down tucks the header away; scrolling up returns it with a lifted shadow. */
+.site-header[data-nav="down"]:not(:focus-within) {
+  margin-top: calc(-3.5rem - 1px);
+}
+
+.site-header[data-nav="up"] {
+  box-shadow: 0 0.75rem 1.75rem -1.25rem
+    color-mix(in oklch, var(--foreground) 35%, transparent);
+}
+
+@keyframes loader-shrink {
+  to {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
   .motion-overlay[data-state="open"] {
     animation: overlay-enter var(--motion-fast) ease-out both;
   }

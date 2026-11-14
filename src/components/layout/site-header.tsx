@@ -14,6 +14,11 @@ import {
 import { useTheme } from "@/components/theme-provider"
 import { useLandingNavigation } from "@/components/layout/use-landing-navigation"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
+import {
+  getPageScrollEventTarget,
+  getPageScrollTop,
+  isPageScrolledToEnd,
+} from "@/lib/page-scroll"
 import { cn } from "@/lib/utils"
 
 function Brand({
@@ -45,11 +50,11 @@ function Brand({
     >
       <span className="relative shrink-0">
         <img
-          src="/images/logo.webp"
+          src="/images/logo-animated.svg"
           alt=""
           width="28"
           height="28"
-          className="size-7 rounded-sm"
+          className="size-7"
         />
         {isOwner ? (
           <span
@@ -74,6 +79,39 @@ function ScrollProgress() {
   )
 }
 
+const navHideOffset = 56
+const scrollJitter = 8
+
+// "down" slides the header away, "up" brings it back with a shadow, "top" is the resting state.
+function useNavScrollState() {
+  const [state, setState] = useState<"top" | "up" | "down">("top")
+
+  useEffect(() => {
+    const target = getPageScrollEventTarget()
+    let lastTop = getPageScrollTop()
+
+    const onScroll = () => {
+      const top = getPageScrollTop()
+      if (top < navHideOffset) {
+        setState("top")
+      } else if (Math.abs(top - lastTop) < scrollJitter) {
+        return
+      } else if (top > lastTop) {
+        setState("down")
+      } else if (!isPageScrolledToEnd()) {
+        // Hiding the header grows the scroller, which clamps scrollTop at the end; ignore that.
+        setState("up")
+      }
+      lastTop = top
+    }
+
+    target.addEventListener("scroll", onScroll, { passive: true })
+    return () => target.removeEventListener("scroll", onScroll)
+  }, [])
+
+  return state
+}
+
 export function SiteHeader() {
   const { theme, toggleTheme } = useTheme()
   const getOwnerAuth = useServerFn(getPortfolioOwnerAuth)
@@ -86,6 +124,7 @@ export function SiteHeader() {
   })
   const { activeSection, items, navigateToSection, navigateToTop } =
     useLandingNavigation(pathname, hash)
+  const navScrollState = useNavScrollState()
 
   useEffect(() => {
     let active = true
@@ -114,11 +153,13 @@ export function SiteHeader() {
     </Button>
   )
   return (
-    <header className="site-header site-header-enter sticky top-0 z-40 border-b bg-background/82 backdrop-blur-[20px]">
+    <header
+      data-nav={navScrollState}
+      className="site-header site-header-enter sticky top-0 z-40 border-b bg-background/82 backdrop-blur-[20px]">
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
           <Brand isOwner={isOwner} navigateToTop={navigateToTop} />
-          <div className="hidden items-center gap-1 lg:flex">
+          <div className="nav-stagger hidden items-center gap-1 lg:flex">
             {items.map((item) => {
               const isActive =
                 pathname === "/" && activeSection === item.sectionId
@@ -132,7 +173,7 @@ export function SiteHeader() {
                     event.preventDefault()
                   }}
                   className={cn(
-                    "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                    "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none",
                     isActive && "bg-foreground/10"
                   )}
                   aria-current={isActive ? "location" : undefined}
@@ -145,7 +186,7 @@ export function SiteHeader() {
               to="/blog"
               search={{ topic: "all", q: "" }}
               className={cn(
-                "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none",
                 pathname.startsWith("/blog") && "bg-foreground/10"
               )}
               aria-current={pathname.startsWith("/blog") ? "page" : undefined}
@@ -185,7 +226,7 @@ export function SiteHeader() {
                             event.preventDefault()
                           }}
                           className={cn(
-                            "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                            "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none",
                             isActive && "bg-foreground/10"
                           )}
                           aria-current={isActive ? "location" : undefined}
@@ -200,7 +241,7 @@ export function SiteHeader() {
                       to="/blog"
                       search={{ topic: "all", q: "" }}
                       className={cn(
-                        "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
+                        "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none",
                         pathname.startsWith("/blog") && "bg-foreground/10"
                       )}
                       aria-current={

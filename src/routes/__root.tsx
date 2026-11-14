@@ -13,6 +13,7 @@ import { SiteFooter } from "@/components/layout/site-footer"
 import { pageScrollId } from "@/lib/page-scroll"
 import { SiteHeader } from "@/components/layout/site-header"
 import { SideRails } from "@/components/layout/side-rails"
+import { SiteLoader } from "@/components/layout/site-loader"
 import { KonamiCommandCenter } from "@/components/portfolio/konami-command-center"
 import { AppContextMenu } from "@/components/shared/app-context-menu"
 import { CommandPalette } from "@/components/shared/command-palette"
@@ -103,6 +104,7 @@ export function ApplicationFrame({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <SiteLoader />
       <ConsoleBanner />
       <CustomCursor />
       <CommandPalette />

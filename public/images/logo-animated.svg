@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Montasim logo, switching on like a neon sign: the ring halves meet at the top, the
+       monogram traces in, the glass cores flicker alight and the glow blooms. Plays once and
+       holds the lit logo. -->
+  <defs>
+    <linearGradient id="neon" gradientUnits="userSpaceOnUse" x1="500" x2="700">
+      <stop offset="0" stop-color="#ec008c"/>
+      <stop offset="1" stop-color="#00bab5"/>
+    </linearGradient>
+    <filter id="bloom" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="soft" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+  <style>
+    .tube { stroke: url(#neon); stroke-dasharray: 1; stroke-dashoffset: 1; }
+    .ring { stroke-width: 45px; animation: draw 750ms cubic-bezier(0.65, 0, 0.35, 1) 100ms forwards; }
+    .mono { stroke-width: 46px; animation: draw 600ms cubic-bezier(0.65, 0, 0.35, 1) 450ms forwards; }
+    .late { animation-delay: 600ms; }
+    .bloom { stroke: url(#neon); opacity: 0; animation: bloom 500ms ease-out 1150ms forwards; }
+    .cores { stroke: #fff; stroke-width: 9px; opacity: 0; animation: flicker 450ms linear 1100ms forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes bloom { to { opacity: 0.7; } }
+    @keyframes flicker {
+      0%, 18%, 34% { opacity: 0; }
+      10%, 26%, 48% { opacity: 0.8; }
+      60% { opacity: 0.25; }
+      100% { opacity: 0.85; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tube, .bloom, .cores { animation: none; stroke-dashoffset: 0; }
+      .bloom { opacity: 0.7; }
+      .cores { opacity: 0.85; }
+    }
+  </style>
+  <g class="bloom" filter="url(#bloom)">
+    <circle cx="600" cy="600" r="437" stroke-width="60"/>
+    <path d="M556 562L412 418L412 793L787 418M543 793L787 549L787 793" stroke-width="60"/>
+  </g>
+  <path class="tube ring" pathLength="1" d="M600 1037A437 437 0 0 1 600 163"/>
+  <path class="tube ring" pathLength="1" d="M600 1037A437 437 0 0 0 600 163"/>
+  <path class="tube mono" pathLength="1" d="M556 562L412 418L412 793L787 418"/>
+  <path class="tube mono late" pathLength="1" d="M543 793L787 549L787 793"/>
+  <g class="cores" filter="url(#soft)">
+    <circle cx="600" cy="600" r="437"/>
+    <path d="M556 562L412 418L412 793L787 418M543 793L787 549L787 793"/>
+  </g>
+</svg>
