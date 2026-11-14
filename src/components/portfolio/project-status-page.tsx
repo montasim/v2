@@ -297,7 +297,7 @@ export function ProjectStatusPage({
           <Link
             to="/projects"
             search={{ filter: "all" }}
-            className="group/action inline-flex w-fit items-center gap-1.5 text-sm font-medium text-strong-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+            className="group/action inline-flex w-fit items-center gap-1.5 text-sm font-medium text-strong-foreground underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-offset-4"
           >
             Browse projects
             <ArrowRightCompactIcon className="size-4 group-hover/action:translate-x-0.5" />
@@ -458,7 +458,7 @@ export function ProjectStatusPage({
                           href={monitor.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex max-w-full items-center gap-1.5 font-semibold text-strong-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                          className="inline-flex max-w-full items-center gap-1.5 font-semibold text-strong-foreground underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-offset-4"
                         >
                           <span className="truncate">{monitor.name}</span>
                           <ArrowUpRightIcon className="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
@@ -522,7 +522,7 @@ export function ProjectStatusPage({
           href="https://uptimerobot.com"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+          className="inline-flex items-center gap-1 underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-offset-4"
         >
           Powered by UptimeRobot
           <ArrowUpRightIcon className="size-3.5" />

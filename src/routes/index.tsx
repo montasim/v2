@@ -264,7 +264,7 @@ function OverviewPage() {
                       href={award.documentUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-4 inline-flex text-sm font-medium text-strong-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      className="mt-4 inline-flex text-sm font-medium text-strong-foreground underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-offset-2"
                     >
                       {award.documentLabel ?? "View document"}
                     </a>

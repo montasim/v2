@@ -240,7 +240,7 @@ export function ProjectCard({ project }: { project: Project }) {
             <Link
               to="/projects/$slug"
               params={{ slug: project.id.replace(/^project-/, "") }}
-              className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="rounded-sm underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               {project.title}
             </Link>

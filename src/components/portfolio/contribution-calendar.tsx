@@ -197,7 +197,7 @@ function CalendarGrid({ data }: { data: GitHubContributions }) {
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
         <ExternalLink
           href={data.profileUrl}
-          className="rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground hover:underline hover:opacity-80 motion-reduce:transition-none"
+          className="rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-foreground link-underline underline-offset-4 hover:opacity-80 motion-reduce:transition-none"
         >
           {total} GitHub contributions {period}
         </ExternalLink>

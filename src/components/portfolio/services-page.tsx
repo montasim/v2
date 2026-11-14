@@ -120,7 +120,7 @@ export function ServicesPage() {
             </Button>
             <Link
               to="/projects"
-              className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium text-strong-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+              className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium text-strong-foreground underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-ring"
             >
               Browse the work
               <ArrowRightCompactIcon />
@@ -311,7 +311,7 @@ function CapabilityCard({
                   key={project.id}
                   to="/projects/$slug"
                   params={{ slug }}
-                  className="text-sm font-medium text-strong-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+                  className="text-sm font-medium text-strong-foreground underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-ring"
                 >
                   {project.title}
                 </Link>

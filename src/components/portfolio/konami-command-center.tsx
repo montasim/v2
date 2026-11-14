@@ -188,7 +188,7 @@ export function KonamiCommandCenter() {
             href={githubUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-strong-foreground hover:underline"
+            className="inline-flex items-center gap-1 font-medium text-strong-foreground link-underline underline-offset-4"
           >
             GitHub <ArrowUpRightIcon className="size-3" aria-hidden="true" />
           </a>

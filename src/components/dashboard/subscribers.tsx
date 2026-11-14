@@ -48,7 +48,7 @@ export function Subscribers({ data }: { data: OwnerSubscriberPage["items"] }) {
               <td className="px-4 py-3">
                 <a
                   href={`mailto:${subscriber.email}`}
-                  className="block w-fit max-w-full font-medium break-all text-strong-foreground underline-offset-4 hover:underline"
+                  className="block w-fit max-w-full font-medium break-all text-strong-foreground underline-offset-4 link-underline"
                 >
                   {subscriber.email}
                 </a>

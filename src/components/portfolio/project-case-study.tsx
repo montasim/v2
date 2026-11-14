@@ -364,7 +364,7 @@ export function ProjectCaseStudyPage({
           {publicGithubUrl ? (
             <ExternalLink
               href={commitUrl}
-              className="mt-6 hidden items-center gap-2 text-xs text-muted-foreground hover:text-foreground hover:underline lg:inline-flex"
+              className="mt-6 hidden items-center gap-2 text-xs text-muted-foreground hover:text-foreground link-underline underline-offset-4 lg:inline-flex"
             >
               <GitCommitIcon className="size-4" />
               {caseStudy.verifiedBranch} @{" "}

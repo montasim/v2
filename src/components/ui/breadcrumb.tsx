@@ -47,7 +47,7 @@ export function BreadcrumbLink({
     <Comp
       data-slot="breadcrumb-link"
       className={cn(
-        "rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:underline hover:opacity-75 motion-reduce:transition-none",
+        "rounded-sm transition-[color,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] link-underline underline-offset-4 hover:opacity-75 motion-reduce:transition-none",
         className
       )}
       {...props}

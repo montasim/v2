@@ -346,7 +346,7 @@ export function ContactPage({
                       <a
                         key={link.label}
                         href={link.href}
-                        className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+                        className="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-strong-foreground underline-offset-4 hover:text-emphasis-foreground link-underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
                       >
                         {link.label}
                         <ArrowUpRightIcon

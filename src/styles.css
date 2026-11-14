@@ -608,6 +608,40 @@
   animation: loader-shrink 300ms ease-in 1650ms both;
 }
 
+/* Hover underlines fade in and rise into place under the text. The underline is always drawn but
+   transparent at rest, so it can animate; at rest it sits lower, and on hover the element's own
+   underline-offset-* utility takes over. Unlayered on purpose: it must win over the transition
+   utilities, so it lists the properties those links already transition. */
+.link-underline {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  transition:
+    color 200ms var(--ease-out-quart),
+    background-color 200ms var(--ease-out-quart),
+    border-color 200ms var(--ease-out-quart),
+    opacity 200ms var(--ease-out-quart),
+    box-shadow 200ms var(--ease-out-quart),
+    transform 200ms var(--ease-out-quart),
+    translate 200ms var(--ease-out-quart),
+    text-decoration-color 250ms var(--ease-out-quart),
+    text-underline-offset 250ms var(--ease-out-quart);
+}
+
+.link-underline:not(:hover, :focus-visible) {
+  text-underline-offset: 0.6em;
+}
+
+.link-underline:hover,
+.link-underline:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-underline {
+    transition: none;
+  }
+}
+
 /* Scrolling down tucks the header away; scrolling up returns it with a lifted shadow. */
 .site-header[data-nav="down"]:not(:focus-within) {
   margin-top: calc(-3.5rem - 1px);

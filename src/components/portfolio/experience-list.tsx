@@ -27,7 +27,7 @@ function RoleDetails({
       </p>
       {role.summary ? (
         <details className="mt-3 text-sm text-muted-foreground">
-          <summary className="w-fit cursor-pointer rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4">
+          <summary className="w-fit cursor-pointer rounded-sm underline-offset-4 link-underline focus-visible:outline-2 focus-visible:outline-offset-4">
             More about this engagement
           </summary>
           <p className="mt-3 leading-relaxed">
@@ -52,7 +52,7 @@ function RoleDetails({
                   <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                     <a
                       href={`/projects/${slug}`}
-                      className="rounded-sm font-medium text-strong-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                      className="rounded-sm font-medium text-strong-foreground underline-offset-4 hover:text-foreground link-underline focus-visible:outline-2 focus-visible:outline-offset-4"
                     >
                       {project.title}
                     </a>
@@ -60,7 +60,7 @@ function RoleDetails({
                       <a
                         href={`/case-studies/${caseStudy.slug}`}
                         aria-label={`Read ${project.title} case study`}
-                        className="rounded-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+                        className="rounded-sm text-muted-foreground underline-offset-4 hover:text-foreground link-underline focus-visible:outline-2 focus-visible:outline-offset-4"
                       >
                         Read case study
                       </a>

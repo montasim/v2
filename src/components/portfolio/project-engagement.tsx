@@ -12,7 +12,7 @@ export function ProjectEngagement({ project }: { project: Project }) {
       <a
         href={`/experience?filter=client#${engagement.id}`}
         aria-label={`View client experience with ${engagement.company}`}
-        className="rounded-sm underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4"
+        className="rounded-sm underline-offset-4 hover:text-foreground link-underline focus-visible:outline-2 focus-visible:outline-offset-4"
       >
         View client experience
       </a>

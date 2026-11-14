@@ -247,13 +247,13 @@ function OwnerDashboardPage() {
               aria-label="Breadcrumb"
               className="flex min-w-0 items-center gap-2"
             >
-              <Link to="/dashboard" className="hover:underline">
+              <Link to="/dashboard" className="link-underline underline-offset-4">
                 Dashboard
               </Link>
               <span aria-hidden="true">/</span>
               {page.detail && (
                 <>
-                  <Link to={page.to} className="shrink-0 hover:underline">
+                  <Link to={page.to} className="shrink-0 link-underline underline-offset-4">
                     {page.label}
                   </Link>
                   <span aria-hidden="true">/</span>
