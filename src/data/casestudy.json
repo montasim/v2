@@ -158,6 +158,81 @@
     }
   },
   {
+    "slug": "bloop",
+    "projectId": "project-bloop",
+    "summary": "A browser physics platformer with 30 hand-built levels, where every level is proven finishable by an automated bot playthrough before it ships, and the whole game runs offline as an installable PWA.",
+    "role": "Game designer and front-end engineer",
+    "scope": "Game design, physics engine, level design and tooling, procedural audio, game UI, PWA and deployment",
+    "status": "Publicly deployed at playbloop.netlify.app as a static, installable PWA; progress and unlocks stay in each player's browser",
+    "verifiedBranch": "main",
+    "verifiedCommit": "f1c7a5029f71c8e6e3f9e7c1d7bcd58f418e8c09",
+    "problem": "A platformer lives or dies on its levels, and every new mechanic multiplies the ways a level can break: a jump that is a frame too tight, a crate pushed into a corner for good, or a respawn that drops the player straight back into a trap. Thirty levels of colour, gravity, crate and beetle puzzles are too many to keep finishable by replaying them by hand.",
+    "constraints": [
+      "Controls stay at roll and jump only, so every new idea has to come from the level, not from an extra key.",
+      "Every level has to stay finishable after any change to the physics, including from every lantern a player can respawn at.",
+      "A wrong crate push or colour choice must never trap the player without a way back or a reset.",
+      "Thirty themed levels with their own sound had to ship without audio files or a server.",
+      "The game has to start instantly, run offline once installed, and work with a keyboard or touch."
+    ],
+    "architecture": {
+      "summary": "A TanStack Start app prerenders to static HTML and wraps a canvas game engine in a React UI, while Node scripts drive the same engine headless to prove each level can be finished.",
+      "layers": [
+        {
+          "title": "Physics engine",
+          "detail": "A fixed 120 Hz step simulates the rolling wisp with bounce, coyote time, jump buffering and variable jump height, plus colour-solid blocks, gravity fields, pushable crates and patrolling beetles."
+        },
+        {
+          "title": "Levels and themes",
+          "detail": "Each of the 30 levels is one file built from tiles, with its own theme, lanterns as checkpoints and motes as optional score, growing from 74 to 456 tiles wide across six chapters."
+        },
+        {
+          "title": "Bot tooling",
+          "detail": "Headless scripts replay a recorded input route for every level, search for jump routes, measure the tightest jump window and sweep restarts from each lantern for soft-locks."
+        },
+        {
+          "title": "Game shell",
+          "detail": "A React UI adds level select with locked levels and stars, a shop of wisp skins bought with motes, touch controls, synthesised Web Audio sound, and a service worker for offline play."
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "Prove every level with a bot",
+        "detail": "A level is only finished when a scripted playthrough collects every mote and reaches the gate, so any physics change that breaks a route fails the check instead of reaching players."
+      },
+      {
+        "title": "Keep the controls to roll and jump",
+        "detail": "New mechanics arrive through the world, such as colour curtains, gravity fields, crates and beetles, so the game stays playable with two buttons on a phone."
+      },
+      {
+        "title": "Design puzzles that can always be undone",
+        "detail": "Crate puzzles are fenced by colour columns so a crate can always be pushed back, and every wrong push or order is tested to leave a route or a reachable reset."
+      },
+      {
+        "title": "Ship it as a static PWA",
+        "detail": "The game is all client-side, so it prerenders to static HTML on Netlify, saves progress in localStorage, and synthesises all sound with Web Audio instead of downloading files."
+      }
+    ],
+    "contribution": [
+      "Designed six chapters of levels that introduce one idea at a time: thorns, beetles, colours, gravity, crates and finally speed and precision.",
+      "Built the physics engine for rolling, bouncing, colour phases, gravity flips, crate pushing and stacking, and beetle stomps.",
+      "Wrote the bot tooling that replays, solves and stress-tests every level, including soft-lock sweeps from each lantern.",
+      "Built the game UI with level select, stars, a wisp skin shop, touch controls, fullscreen and an ending screen.",
+      "Wrote the synthesised night-garden ambience and sound effects, and shipped the game as an installable offline PWA on Netlify."
+    ],
+    "outcomes": [
+      "Thirty levels across six chapters, each with its own theme, ship from one engine.",
+      "Every level has a bot playthrough that collects all motes and reaches the gate.",
+      "Later levels were swept with thousands of restart runs, with zero soft-locks recorded in the level roadmap.",
+      "Physics fixes such as smoother bounces and safer corners each came with a regression check, and every level was re-proven afterwards.",
+      "The installed game plays offline with no account, and all sound is generated in the browser."
+    ],
+    "screenshot": {
+      "alt": "Bloop title screen over the first night-garden level, with roll, jump, sound and fullscreen controls and Play, Levels, Shop and Install buttons",
+      "caption": "The deployed Bloop title screen sits over the first level, with the two-button controls and the game's core ideas on one card."
+    }
+  },
+  {
     "slug": "orbline",
     "projectId": "project-orbline",
     "summary": "An endless orb-runner for the browser with five worlds, synthesised nature soundscapes and offline play, backed by a shared leaderboard that recomputes every score on the server and rejects runs that could not have happened.",

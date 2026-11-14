@@ -5,6 +5,9 @@
   "project-sigcraft": {
     "description": "একটা Gmail-ready email signature generator, যেখানে যেকোনো রঙে ২৬টা layout আর job search ও client work এর জন্য পাঠানোর মতো আটটা email template আছে, আর সব তথ্য শুধু visitor এর নিজের browser এ থাকে।"
   },
+  "project-bloop": {
+    "description": "Browser এর জন্য একটা physics platformer, যেখানে একটা জ্বলজ্বলে wisp হাতে বানানো ৩০টা night-garden level দিয়ে গড়িয়ে চলে, রঙ বদলায়, gravity উল্টায়, crate ঠেলে আর beetle এর ওপর লাফায়; সাথে synthesised শব্দ, installable PWA হিসেবে offline play, আর একটা bot যেটা প্রমাণ করে প্রতিটা level শেষ করা যায়।"
+  },
   "project-orbline": {
     "description": "Browser এর জন্য একটা endless orb-runner game, যেখানে পাঁচটা world, double jump, slide আর power-up, synthesised প্রাকৃতিক soundscape, installable PWA হিসেবে offline play, আর একটা shared leaderboard আছে, যেটা প্রতিটা score server এ নতুন করে হিসাব করে যাচাই করে।"
   },

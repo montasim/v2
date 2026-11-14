@@ -17,8 +17,8 @@
       "readingMinutes": 3,
       "featured": true,
       "image": {
-        "src": "/images/blog/giftbook-ledger.webp",
-        "alt": "Phones writing gift entries to a local store that syncs into one shared spreadsheet"
+        "src": "/images/projects/giftbook.webp",
+        "alt": "Giftbook gift ledger showing recorded family event gifts"
       },
       "sections": [
         {
@@ -141,6 +141,25 @@
       "translations": {
         "bn": {
           "title": "Gmail এ টিকে থাকে এমন email signature বানানো"
+        }
+      }
+    },
+    {
+      "kind": "case-study-derived",
+      "projectId": "project-bloop",
+      "slug": "thirty-platformer-levels-each-proven-by-a-bot",
+      "title": "Thirty Platformer Levels, Each Proven by a Bot",
+      "category": "Product engineering",
+      "topic": "product",
+      "publishedAt": "2026-11-13",
+      "featured": false,
+      "image": {
+        "src": "/images/projects/bloop.webp",
+        "alt": "Bloop title screen over the first night-garden level, with roll, jump, sound and fullscreen controls and Play, Levels, Shop and Install buttons"
+      },
+      "translations": {
+        "bn": {
+          "title": "ত্রিশটা platformer level, প্রতিটা একটা bot দিয়ে প্রমাণিত"
         }
       }
     },
@@ -1596,8 +1615,8 @@
       "topic": "tools",
       "featured": false,
       "image": {
-        "src": "/images/blog/http-status.webp",
-        "alt": "HTTP status codes laid out as data, with obsolete and unused codes marked"
+        "src": "/images/projects/http-status-lite.webp",
+        "alt": "http-status-lite documentation site listing HTTP status codes"
       },
       "translations": {
         "bn": {

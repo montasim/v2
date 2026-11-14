@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 11 }),
-      expect.objectContaining({ id: "projects", recordCount: 56 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 56 }),
-      expect.objectContaining({ id: "blog", recordCount: 57 }),
+      expect.objectContaining({ id: "projects", recordCount: 57 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 57 }),
+      expect.objectContaining({ id: "blog", recordCount: 58 }),
       expect.objectContaining({ id: "certifications", recordCount: 24 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -235,13 +235,13 @@ describe("PortfolioKnowledge", () => {
 
     expect(knowledge.derived.projectChronology[0]).toMatchObject({
       rank: 1,
-      recordId: "project-orbline",
-      title: "Orbline",
-      historyStartedAt: "2026-11-10T16:46:43Z",
+      recordId: "project-bloop",
+      title: "Bloop",
+      historyStartedAt: "2026-11-12T19:57:50Z",
     })
     expect(knowledge.derived.latestDatedBlog).toMatchObject({
-      recordId: "an-endless-runner-leaderboard-that-checks-every-score",
-      publishedAt: "2026-11-11",
+      recordId: "thirty-platformer-levels-each-proven-by-a-bot",
+      publishedAt: "2026-11-13",
       tieBreak: "catalog-order",
     })
     expect(knowledge.derived.latestDatedBlog.tiedRecordIds).toHaveLength(1)
@@ -253,14 +253,14 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 57,
+      total: 58,
       authored: 23,
-      caseStudyDerived: 34,
+      caseStudyDerived: 35,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 56,
+      total: 57,
       byType: {
         api: 6,
         desktop: 1,
@@ -270,7 +270,7 @@ describe("PortfolioKnowledge", () => {
         skill: 14,
         template: 1,
         tool: 3,
-        website: 20,
+        website: 21,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({
