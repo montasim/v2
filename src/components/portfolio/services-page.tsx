@@ -30,7 +30,7 @@ const capabilityGroups = [
       "A brittle API or integration slowing down the team",
       "A product that needs clearer data and service boundaries",
     ],
-    projects: ["clm-api", "github-readme-counter", "school-management-backend"],
+    projects: ["clm-api", "mcq-topper-backend", "http-status-lite"],
   },
   {
     eyebrow: "03 · AI, skills, and data",
