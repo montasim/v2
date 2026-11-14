@@ -341,8 +341,8 @@
       "readingMinutes": 8,
       "featured": true,
       "image": {
-        "src": "/images/blog/untrusted-envelope.webp",
-        "alt": "LinkedIn page content sealed in an untrusted, bounded envelope before four reply drafts"
+        "src": "/images/projects/thoughtline.webp",
+        "alt": "Thoughtline LinkedIn writing assistant drafting reply options beside a post"
       },
       "sections": [
         {
