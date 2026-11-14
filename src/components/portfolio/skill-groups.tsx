@@ -44,7 +44,9 @@ import {
   WrenchIcon,
 } from "@/components/ui/icons"
 import type { Icon } from "@/components/ui/icons"
+import type { CSSProperties } from "react"
 import { Link } from "@tanstack/react-router"
+import { MotionReveal } from "@/components/shared/motion-reveal"
 import { Badge } from "@/components/ui/badge"
 import { skillEvidenceCatalog } from "@/lib/content/skill-evidence"
 import type { SkillCategory } from "@/lib/content/skill-evidence"
@@ -131,24 +133,34 @@ export function SkillGroups({
         const GroupIcon = groupIcons[group.id] ?? CodeIcon
 
         return (
-          <section key={group.id} aria-labelledby={`${group.id}-heading`}>
-            <h2
-              id={`${group.id}-heading`}
-              className="mb-3 flex items-center gap-2 text-sm font-semibold text-strong-foreground"
-            >
-              <GroupIcon className="size-5 shrink-0" aria-hidden="true" />
-              {group.category}
-            </h2>
-            <ul className="flex flex-wrap gap-2">
-              {group.items.map((item) => {
-                return (
-                  <li key={item}>
-                    <SkillLink skill={item} selectedSkill={selectedSkill} />
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
+          <MotionReveal
+            asChild
+            key={group.id}
+            variant="subtle"
+            rootMargin="0px 0px -12%"
+          >
+            <section aria-labelledby={`${group.id}-heading`}>
+              <h2
+                id={`${group.id}-heading`}
+                className="mb-3 flex items-center gap-2 text-sm font-semibold text-strong-foreground"
+              >
+                <GroupIcon className="size-5 shrink-0" aria-hidden="true" />
+                {group.category}
+              </h2>
+              <ul className="skill-cascade flex flex-wrap gap-2">
+                {group.items.map((item, index) => {
+                  return (
+                    <li
+                      key={item}
+                      style={{ "--i": Math.min(index, 20) } as CSSProperties}
+                    >
+                      <SkillLink skill={item} selectedSkill={selectedSkill} />
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          </MotionReveal>
         )
       })}
     </div>

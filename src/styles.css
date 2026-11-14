@@ -642,6 +642,23 @@
   }
 }
 
+/* Skill chips pop in one after another once their group reveals; --i is the chip's position. */
+@media (prefers-reduced-motion: no-preference) {
+  .skill-cascade > li {
+    transition:
+      opacity 320ms var(--ease-out-quart),
+      transform 320ms var(--ease-out-quart);
+    transition-delay: calc(
+      var(--motion-reveal-delay, 0ms) + 120ms + var(--i, 0) * 25ms
+    );
+  }
+
+  .motion-reveal[data-motion-state="pending"] .skill-cascade > li {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.96);
+  }
+}
+
 /* Scrolling down tucks the header away; scrolling up returns it with a lifted shadow. */
 .site-header[data-nav="down"]:not(:focus-within) {
   margin-top: calc(-3.5rem - 1px);
