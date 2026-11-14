@@ -82,7 +82,9 @@ function replaceHash(sectionId: string) {
   const url = new URL(window.location.href)
   url.hash = sectionId
   window.history.replaceState(
-    window.history.state,
+    // The router sees this replace; without the flag it scrolls the section into view, snapping
+    // the page back while the reader is still scrolling.
+    { ...window.history.state, __hashScrollIntoViewOptions: false },
     "",
     `${url.pathname}${url.search}${url.hash}`
   )
