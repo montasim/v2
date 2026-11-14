@@ -29,7 +29,7 @@ describe("loadOwnerStaticAnswers", () => {
       catalog.records.find(
         (record) => record.id === "catalog-chronology-comparison:project-count"
       )?.text
-    ).toContain("57 project records")
+    ).toContain("42 project records")
     expect(
       catalog.records
         .filter(

@@ -48,12 +48,12 @@ describe("skill evidence catalog", () => {
       "MongoDB",
       "PostgreSQL",
       "Mongoose",
-      "Prisma",
       "Drizzle ORM",
+      "Prisma",
       "Redis",
+      "SQLite",
       "MariaDB",
       "MySQLi",
-      "SQLite",
       "PhpMyAdmin",
     ])
     expect(data.every((record) => record.groupId === "skills-databases")).toBe(
@@ -94,11 +94,6 @@ describe("skill evidence catalog", () => {
         .forSkill("Lighthouse")
         ?.projects.map((project) => project.title)
     ).toEqual([])
-    expect(
-      skillEvidenceCatalog
-        .forSkill("System Design")
-        ?.projects.map((project) => project.title)
-    ).toContain("Book Heaven")
     expect(skillEvidenceCatalog.forSkill("Scrum")?.projects).toHaveLength(0)
   })
 })
@@ -111,13 +106,6 @@ it("connects new client skills to their verified engagements and projects", () =
     ["Messenger API", "WaTheta", "project-clm-api"],
     ["Instagram API", "WaTheta", "project-clm-api"],
     ["Meta Conversions API", "WaTheta", "project-clm-api"],
-    ["Google Maps API", "TalendIT", "project-school-management"],
-    ["MariaDB", "TalendIT", "project-technofire"],
-    [
-      "Firebase Authentication",
-      "nDevers",
-      "project-warehouse-management-client",
-    ],
     ["Helmet", "Infomax", "project-mcq-topper-backend"],
   ]) {
     const evidence = skillEvidenceCatalog.forSkill(skill)

@@ -14,9 +14,9 @@ describe("PortfolioKnowledge", () => {
     expect(first.sourceManifest.sources).toEqual([
       expect.objectContaining({ id: "profile", recordCount: 1 }),
       expect.objectContaining({ id: "experience", recordCount: 11 }),
-      expect.objectContaining({ id: "projects", recordCount: 57 }),
-      expect.objectContaining({ id: "casestudy", recordCount: 57 }),
-      expect.objectContaining({ id: "blog", recordCount: 58 }),
+      expect.objectContaining({ id: "projects", recordCount: 42 }),
+      expect.objectContaining({ id: "casestudy", recordCount: 42 }),
+      expect.objectContaining({ id: "blog", recordCount: 43 }),
       expect.objectContaining({ id: "certifications", recordCount: 24 }),
       expect.objectContaining({ id: "contributions", recordCount: 1 }),
       expect.objectContaining({ id: "education", recordCount: 3 }),
@@ -253,24 +253,23 @@ describe("PortfolioKnowledge", () => {
     expect(
       knowledge.findFact("derived:blog-content-distribution")?.data
     ).toEqual({
-      total: 58,
-      authored: 23,
-      caseStudyDerived: 35,
+      total: 43,
+      authored: 18,
+      caseStudyDerived: 25,
     })
     expect(
       knowledge.findFact("derived:project-type-distribution")?.data
     ).toEqual({
-      total: 57,
+      total: 42,
       byType: {
-        api: 6,
+        api: 2,
         desktop: 1,
-        dataset: 2,
+        dataset: 1,
         extension: 5,
         package: 4,
         skill: 14,
-        template: 1,
-        tool: 3,
-        website: 21,
+        tool: 2,
+        website: 13,
       },
     })
     expect(knowledge.findFact("derived:credential-year-range")?.data).toEqual({
@@ -316,7 +315,7 @@ it("connects client projects to engagement evidence and filtered experience link
   const knowledge = getCompiledPortfolioKnowledge()
   expect(
     knowledge.relationships.filter((item) => item.kind === "delivered-for")
-  ).toHaveLength(8)
+  ).toHaveLength(2)
   expect(knowledge.relationships).toContainEqual({
     id: "relationship:project:project-mcq-topper-backend:delivered-for:experience-infomax-freelance-developer",
     fromRecordId: "projects:project-mcq-topper-backend",

@@ -17,9 +17,6 @@
   "project-routempo": {
     "description": "বারবার অনুসরণযোগ্য rhythm পরিকল্পনা, ফলাফল রেকর্ড করা আর বাস্তব আচরণ থেকে শেখার জন্য একটা timezone-aware routine planner।"
   },
-  "project-foliofarer": {
-    "description": "Next.js, React Three Fiber, Three.js আর TypeScript দিয়ে বানানো একটা interactive 3D developer portfolio, যেখানে আছে accessible career Atlas, local Passport progress আর adaptive WebGL rendering।"
-  },
   "project-vidquery": {
     "description": "একটা Chromium extension, যা Gemini দিয়ে YouTube video নিয়ে প্রশ্নের উত্তর দেয়; এর জন্য ব্যবহার করে video র visible metadata, transcript আর viewer এর নিজের API key।"
   },
@@ -71,9 +68,6 @@
   "project-bangladesh-location-registry": {
     "description": "সরকারি প্রকাশিত source থেকে নেওয়া census, postal, facility, ward আর infrastructure data সহ একটা versioned, provenance-rich Bangladesh location registry।"
   },
-  "project-educanvas": {
-    "description": "Next.js দিয়ে বানানো একটা theme-driven education website আর content-management starter।"
-  },
   "project-content-types-lite": {
     "description": "Parsing, formatting, matching আর validation এর জন্য ছোট, type-safe HTTP media type constant আর utility।"
   },
@@ -89,29 +83,11 @@
   "project-b4joinacompany": {
     "description": "একটা evidence-labeled company research tool, যা job seeker দের apply, interview বা offer accept করার আগে প্রস্তুতি নিতে সাহায্য করে।"
   },
-  "project-book-heaven": {
-    "description": "Shadcn আর Next.js দিয়ে বানানো Admin Dashboard UI।"
-  },
-  "project-markdown-typing-svg": {
-    "description": "GitHub profile, README file আর website এ ব্যবহারের জন্য customizable animated typing SVG র generator আর cacheable API।"
-  },
-  "project-shrnkly": {
-    "description": "URL shorten করা, text share করা, QR code generate করা আর basic usage analytics দেখার জন্য একটা multilingual Next.js application।"
-  },
-  "project-github-readme-counter": {
-    "description": "একটা Express service, যা file-backed counter বাড়ায় এবং বর্তমান মান customizable SVG image হিসেবে ফেরত দেয়।"
-  },
-  "project-ramadan-clock": {
-    "description": "বাংলাদেশের জন্য district-aware সেহরি ও ইফতারের সময়সূচি, সাথে PDF export আর timetable manage করার জন্য একটা authenticated area।"
-  },
   "project-devtools": {
     "description": "Data format, validate, generate আর transform করার জন্য ৫০টার বেশি free developer tool এর একটা suite, যেখানে local tool গুলো default ভাবে আপনার input browser এর মধ্যেই রাখে।"
   },
   "project-postcraft": {
     "description": "একটা social media manager, যা Gemini আর stored brand guardrail ব্যবহার করে LinkedIn, X আর Facebook এর জন্য post generate, score, preview আর schedule করে।"
-  },
-  "project-tin-audit-checker": {
-    "description": "একটা private, browser-only lookup, যা দিয়ে দেখা যায় কোনো Bangladesh TIN AY 2023-24 এর historical NBR risk-based audit selection list এ আছে কিনা; list টিতে ৭২,৩৪২টা return রয়েছে।"
   },
   "project-formflow": {
     "description": "Institution-owned form, versioned submission workflow, employee assignment, requester-visible progress, notification আর audit history র জন্য একটা bilingual, role-aware platform।"
@@ -148,26 +124,5 @@
   },
   "project-mcq-topper-backend": {
     "description": "একটা MCQ learning platform এর জন্য Express API foundation, যেখানে আছে versioned domain route, shared response handling, request middleware আর email error notification। Domain operation গুলো এখনো scaffold implementation পর্যায়ে।"
-  },
-  "project-school-management-backend": {
-    "description": "School administration আর website content এর জন্য একটা modular Express ও MongoDB prototype, যেখানে আছে admission resource, student record, academic download আর Google Drive file integration।"
-  },
-  "project-school-management": {
-    "description": "Notice, admission, routine, result, download, staff আর gallery র জন্য একটা responsive Next.js school website prototype, যা local sample content আর একটা demonstration admin interface ব্যবহার করে।"
-  },
-  "project-survey-module-backend": {
-    "description": "School-dropout research এর জন্য একটা Express ও Mongoose API prototype, যা user, role, permission আর authentication module এর পাশাপাশি survey, template আর completed survey record আলাদা রাখে।"
-  },
-  "project-warehouse-management-client": {
-    "description": "Firebase sign-in, item browsing, stock update ও delivery control, আর user-specific item page সহ একটা legacy React inventory client। Data workflow গুলো আলাদা একটা POSDash API র উপর নির্ভরশীল।"
-  },
-  "project-inventory-management-system-server": {
-    "description": "একটা legacy Express ও MongoDB API, যা pharmacy ও non-pharmacy product, order, return, customer, employee আর supplier record গুলোকে resource router এ সাজায়।"
-  },
-  "project-technofire": {
-    "description": "Database-backed product page, gallery, client content আর session-based administration area সহ একটা legacy PHP ও MariaDB fire-safety catalog prototype, যা Abid Hasan Piash এর সাথে যৌথভাবে তৈরি।"
-  },
-  "project-project-management": {
-    "description": "Task, subtask, bug, discussion, member আর project progress এর জন্য React dashboard সহ একটা collaborative project-management application। Montasim frontend development আর responsive Tailwind CSS interface এ কাজ করেছেন।"
   }
 }

@@ -22,7 +22,7 @@ it("renders freelance engagements with related work and accurate role labels", (
   expect(markup).not.toMatch(/<img|data-slot="avatar"|undefined| · <| · {2}· /)
 })
 
-it("links all eight client projects and their case studies from engagements", () => {
+it("links both client projects and their case studies from engagements", () => {
   const records = experienceCatalog.records.filter(
     (record) => record.category === "independent"
   )
@@ -30,12 +30,6 @@ it("links all eight client projects and their case studies from engagements", ()
   for (const slug of [
     "clm-api",
     "mcq-topper-backend",
-    "school-management-backend",
-    "school-management",
-    "survey-module-backend",
-    "technofire",
-    "warehouse-management-client",
-    "inventory-management-system-server",
   ]) {
     expect(markup).toContain(`href="/projects/${slug}"`)
     expect(markup).toContain(`href="/case-studies/${slug}"`)

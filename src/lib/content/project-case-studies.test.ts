@@ -73,16 +73,10 @@ describe("project case-study catalog", () => {
       [
         "project-clm-api",
         "project-mcq-topper-backend",
-        "project-school-management-backend",
-        "project-school-management",
-        "project-survey-module-backend",
-        "project-warehouse-management-client",
-        "project-inventory-management-system-server",
-        "project-technofire",
       ].sort()
     )
     expect(new Set(clientWork.map((record) => record.project.type))).toEqual(
-      new Set(["website", "api"])
+      new Set(["api"])
     )
   })
 
@@ -91,7 +85,6 @@ describe("project case-study catalog", () => {
     expect(projects.map((record) => record.project.id).sort()).toEqual([
       "project-coaching-management",
       "project-liftuno",
-      "project-project-management",
     ])
     expect(projects.every((record) => !record.project.clientWork)).toBe(true)
     const filters = projectCaseStudyCatalog.filters

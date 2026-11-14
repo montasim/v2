@@ -668,16 +668,10 @@ const thoughtline = requiredProject("project-thoughtline")
 const thoughtlineCaseStudy = requiredCaseStudy(thoughtline.id)
 const devtools = requiredProject("project-devtools")
 const devtoolsCaseStudy = requiredCaseStudy(devtools.id)
-const foliofarer = requiredProject("project-foliofarer")
-const foliofarerCaseStudy = requiredCaseStudy(foliofarer.id)
 const companyResearch = requiredProject("project-b4joinacompany")
 const companyResearchCaseStudy = requiredCaseStudy(companyResearch.id)
-const tinAuditChecker = requiredProject("project-tin-audit-checker")
-const tinAuditCaseStudy = requiredCaseStudy(tinAuditChecker.id)
 const locationRegistry = requiredProject("project-bangladesh-location-registry")
 const locationRegistryCaseStudy = requiredCaseStudy(locationRegistry.id)
-const educanvas = requiredProject("project-educanvas")
-const educanvasCaseStudy = requiredCaseStudy(educanvas.id)
 const frontendSkills = requiredSkill("skills-frontend")
 const backendSkills = requiredSkill("skills-backend-apis")
 const databaseSkills = requiredSkill("skills-databases")
@@ -1061,10 +1055,10 @@ function buildHiringFitAnswers(): readonly ExactAnswer[] {
       id: "product-engineering-fit",
       question:
         "Does Montasim show product thinking as well as technical depth?",
-      text: `Yes. His case studies frame problems in terms of user control, trust, privacy, operating constraints, and maintainability. Examples include keeping LinkedIn publishing manual in Thoughtline, keeping tax-ID lookup client-side, and designing scheduled publishing so delivery survives beyond an open browser request.`,
+      text: `Yes. His case studies frame problems in terms of user control, trust, privacy, operating constraints, and maintainability. Examples include keeping LinkedIn publishing manual in Thoughtline, labeling company-research evidence by provenance, and designing scheduled publishing so delivery survives beyond an open browser request.`,
       evidence: [
         caseStudyReference(thoughtlineCaseStudy, "problem"),
-        caseStudyReference(tinAuditCaseStudy, "architecture"),
+        caseStudyReference(companyResearchCaseStudy, "architecture"),
         caseStudyReference(postcraftCaseStudy, "architecture"),
       ],
     },
@@ -1544,11 +1538,10 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
     {
       id: "nextjs-depth",
       question: "How has Montasim used Next.js?",
-      text: `The project catalog documents Next.js across AI SaaS, research, publishing, education, multilingual sharing, developer tools, dynamic SVG APIs, and data lookup products. The evidence shows Next.js used with authentication, databases, APIs, background workflows, internationalization, and testing rather than as a single landing-page framework.`,
+      text: `The project catalog documents Next.js across AI SaaS, research, publishing, and developer tools. The evidence shows Next.js used with authentication, databases, APIs, background workflows, internationalization, and testing rather than as a single landing-page framework.`,
       evidence: [
         projectReference(postcraft),
         projectReference(devtools),
-        projectReference(educanvas),
         skillReference(frontendSkills),
       ],
     },
@@ -1681,10 +1674,9 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
       id: "accessible-design",
       question:
         "What evidence connects Montasim's frontend work to accessibility and design quality?",
-      text: `A senior product designer says Montasim preserves UX intent while translating complex design systems into scalable, accessible, responsive interfaces. Foliofarer's architecture reinforces that concern by ensuring core content and navigation do not depend on WebGL capability or motion tolerance.`,
+      text: `A senior product designer says Montasim preserves UX intent while translating complex design systems into scalable, accessible, responsive interfaces.`,
       evidence: [
         recommendationReference("Md. Tamim Tanvir, MBA"),
-        caseStudyReference(foliofarerCaseStudy, "architecture"),
         skillReference(designSkills),
       ],
     },
@@ -1715,13 +1707,12 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
         junior,
         skillReference(backendSkills),
         projectReference(postcraft),
-        projectReference(educanvas),
       ],
     },
     {
       id: "data-modeling",
       question: "What examples show Montasim's data-modeling judgment?",
-      text: `His case studies model routine plans separately from outcomes, keep company evidence labeled by provenance, retain location-source provenance, and unify sharing lifecycles without erasing differences between links, text, and QR data. These examples prioritize semantics and trust over convenient but misleading schemas.`,
+      text: `His case studies model routine plans separately from outcomes, keep company evidence labeled by provenance, and retain location-source provenance. These examples prioritize semantics and trust over convenient but misleading schemas.`,
       evidence: [
         caseStudyReference(
           requiredCaseStudy("project-routempo"),
@@ -1729,10 +1720,6 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
         ),
         caseStudyReference(companyResearchCaseStudy, "architecture"),
         caseStudyReference(locationRegistryCaseStudy, "architecture"),
-        caseStudyReference(
-          requiredCaseStudy("project-shrnkly"),
-          "architecture"
-        ),
       ],
     },
     {
@@ -1750,9 +1737,8 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
     {
       id: "privacy-boundaries",
       question: "How does Montasim handle privacy and trust boundaries?",
-      text: `Examples include keeping tax-ID lookup client-side, treating LinkedIn page content as untrusted input, storing user-supplied provider keys locally in extension scope, labeling company-research evidence by source, and retaining provenance in public datasets. Each design limits what the system is allowed to infer or transmit.`,
+      text: `Examples include treating LinkedIn page content as untrusted input, storing user-supplied provider keys locally in extension scope, labeling company-research evidence by source, and retaining provenance in public datasets. Each design limits what the system is allowed to infer or transmit.`,
       evidence: [
-        caseStudyReference(tinAuditCaseStudy, "architecture"),
         caseStudyReference(thoughtlineCaseStudy, "architecture"),
         caseStudyReference(companyResearchCaseStudy, "architecture"),
         caseStudyReference(locationRegistryCaseStudy, "architecture"),
@@ -1771,11 +1757,10 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
       id: "architecture-range",
       question:
         "Which projects best demonstrate Montasim's system-design range?",
-      text: `PostCraft demonstrates durable AI publishing, Thoughtline demonstrates browser and provider trust boundaries, Foliofarer separates content from rendering capability, DevTools manages dozens of workflows behind shared contracts, and the Bangladesh Location Registry preserves provenance across heterogeneous sources.`,
+      text: `PostCraft demonstrates durable AI publishing, Thoughtline demonstrates browser and provider trust boundaries, DevTools manages dozens of workflows behind shared contracts, and the Bangladesh Location Registry preserves provenance across heterogeneous sources.`,
       evidence: [
         caseStudyReference(postcraftCaseStudy, "architecture"),
         caseStudyReference(thoughtlineCaseStudy, "architecture"),
-        caseStudyReference(foliofarerCaseStudy, "architecture"),
         caseStudyReference(devtoolsCaseStudy, "architecture"),
         caseStudyReference(locationRegistryCaseStudy, "architecture"),
       ],
@@ -1784,12 +1769,10 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
       id: "deep-boundaries",
       question:
         "How does Montasim use module boundaries to control complexity?",
-      text: `His documented architectures isolate changing concerns: providers from product policy, browser content from trusted extension state, rendering from portfolio content, individual tools from shared execution contracts, and institution themes from core education workflows. The recurring goal is to keep one change from leaking across unrelated responsibilities.`,
+      text: `His documented architectures isolate changing concerns: providers from product policy, browser content from trusted extension state, and individual tools from shared execution contracts. The recurring goal is to keep one change from leaking across unrelated responsibilities.`,
       evidence: [
         caseStudyReference(thoughtlineCaseStudy, "architecture"),
-        caseStudyReference(foliofarerCaseStudy, "architecture"),
         caseStudyReference(devtoolsCaseStudy, "architecture"),
-        caseStudyReference(educanvasCaseStudy, "architecture"),
       ],
     },
     {
@@ -1819,11 +1802,10 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
     {
       id: "multi-tenant-saas",
       question: "What supports Montasim's multi-tenant SaaS experience?",
-      text: `His profile explicitly documents multi-tenant SaaS work and frontend ownership across a multi-service platform. Supporting records include multi-role SSO, OAuth, secure client boundaries, modular content management, authenticated publishing, scheduled jobs, and project architectures that separate tenant- or institution-specific policy from shared workflows.`,
+      text: `His profile explicitly documents multi-tenant SaaS work and frontend ownership across a multi-service platform. Supporting records include multi-role SSO, OAuth, secure client boundaries, modular content management, authenticated publishing, scheduled jobs.`,
       evidence: [
         profileReference,
         software,
-        caseStudyReference(educanvasCaseStudy, "architecture"),
         caseStudyReference(postcraftCaseStudy, "architecture"),
       ],
     },
@@ -1835,16 +1817,6 @@ function buildTechnicalDepthAnswers(): readonly ExactAnswer[] {
         senior,
         skillReference(realTimeSkills),
         recommendationReference("Abu Saleh Musa Miah"),
-      ],
-    },
-    {
-      id: "adaptive-webgl",
-      question:
-        "How did Montasim prevent Foliofarer's 3D interface from excluding users?",
-      text: `Foliofarer keeps core career content and navigation independent from WebGL, adds an accessible Atlas path, stores Passport progress locally, and adapts rendering to device capability and user preferences. The architecture treats 3D as an enhancement rather than the only route to the information.`,
-      evidence: [
-        projectReference(foliofarer),
-        caseStudyReference(foliofarerCaseStudy, "architecture"),
       ],
     },
     {
@@ -2143,17 +2115,6 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       ],
     },
     {
-      id: "privacy-product",
-      question:
-        "What client-side privacy decision did Montasim make for tax-ID lookup?",
-      text: `For TIN Audit Checker, Montasim kept the 72,342-record lookup in the browser so the queried identifier did not need to reach an application server. The case study scopes the product to a historical list and avoids implying that a match is a current legal determination.`,
-      evidence: [
-        projectReference(tinAuditChecker),
-        caseStudyReference(tinAuditCaseStudy, "architecture"),
-        caseStudyReference(tinAuditCaseStudy, "outcomes"),
-      ],
-    },
-    {
       id: "job-seeker-product",
       question:
         "How did Montasim design company research without unfair scoring?",
@@ -2161,17 +2122,6 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       evidence: [
         projectReference(companyResearch),
         caseStudyReference(companyResearchCaseStudy, "architecture"),
-      ],
-    },
-    {
-      id: "configurable-platform",
-      question:
-        "How did Montasim avoid separate codebases for different education sites?",
-      text: `EduCanvas separates institution theme and content configuration from shared publishing, identity, and delivery workflows. The result supports multiple institution types without maintaining a forked application for each client, reducing drift while preserving controlled variation.`,
-      evidence: [
-        projectReference(educanvas),
-        caseStudyReference(educanvasCaseStudy, "architecture"),
-        caseStudyReference(educanvasCaseStudy, "outcomes"),
       ],
     },
     {
@@ -2198,10 +2148,9 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       id: "bounded-delivery",
       question:
         "Can Montasim deliver a focused tool as well as a large platform?",
-      text: `Yes. His catalog ranges from narrow typed packages and single-purpose audit or SVG tools to multi-sided SaaS and healthcare platforms. The smaller case studies show deliberate scope control, while larger systems show authentication, persistence, scheduling, real-time behavior, and operational workflows.`,
+      text: `Yes. His catalog ranges from narrow typed packages and single-purpose developer tools to multi-sided SaaS and healthcare platforms. The smaller case studies show deliberate scope control, while larger systems show authentication, persistence, scheduling, real-time behavior, and operational workflows.`,
       evidence: [
         projectReference(requiredProject("project-content-types-lite")),
-        projectReference(tinAuditChecker),
         projectReference(postcraft),
         experienceReference(seniorExperience),
       ],
@@ -2214,27 +2163,24 @@ function buildClientDeliveryAnswers(): readonly ExactAnswer[] {
       evidence: [
         caseStudyReference(thoughtlineCaseStudy, "problem"),
         caseStudyReference(postcraftCaseStudy, "problem"),
-        caseStudyReference(foliofarerCaseStudy, "problem"),
       ],
     },
     {
       id: "business-economics",
       question: "What evidence shows Montasim considers project economics?",
-      text: `The clearest professional result is a 70% infrastructure-cost reduction from migrating Azure VMs to App Service and automating CI/CD. Product architectures such as shared EduCanvas workflows and common DevTools contracts also address duplication and maintenance cost, though those records do not publish monetary figures.`,
+      text: `The clearest professional result is a 70% infrastructure-cost reduction from migrating Azure VMs to App Service and automating CI/CD. Product architectures such as common DevTools contracts also address duplication and maintenance cost, though those records do not publish monetary figures.`,
       evidence: [
         experienceReference(softwareExperience),
-        caseStudyReference(educanvasCaseStudy, "architecture"),
         caseStudyReference(devtoolsCaseStudy, "architecture"),
       ],
     },
     {
       id: "data-trust",
       question: "How does Montasim make data-heavy products more trustworthy?",
-      text: `The Bangladesh Location Registry retains source provenance through normalization, while company research preserves evidence labels and the TIN checker keeps lookups private and historically scoped. Across these products, the design avoids presenting normalized data as more certain or current than its sources allow.`,
+      text: `The Bangladesh Location Registry retains source provenance through normalization, while company research preserves evidence labels. Across these products, the design avoids presenting normalized data as more certain or current than its sources allow.`,
       evidence: [
         caseStudyReference(locationRegistryCaseStudy, "architecture"),
         caseStudyReference(companyResearchCaseStudy, "architecture"),
-        caseStudyReference(tinAuditCaseStudy, "architecture"),
       ],
     },
     {

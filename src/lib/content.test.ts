@@ -138,22 +138,13 @@ describe("portfolio content", () => {
       "project-rootstory",
     ])
     expect(
-      projectCatalog.records.slice(-14).map((project) => project.id)
+      projectCatalog.records.slice(-5).map((project) => project.id)
     ).toEqual([
-      "project-book-heaven",
-      "project-github-readme-counter",
       "project-mmh-patient-portal",
       "project-mmh-re-annotation",
       "project-mmh-telemedicine",
       "project-clm-api",
       "project-mcq-topper-backend",
-      "project-school-management-backend",
-      "project-school-management",
-      "project-survey-module-backend",
-      "project-warehouse-management-client",
-      "project-inventory-management-system-server",
-      "project-technofire",
-      "project-project-management",
     ])
     expect(
       educationCatalog.records.every((record) =>
@@ -415,16 +406,6 @@ it("preserves filter values and maps client projects to the documented engagemen
   const expected = {
     watheta: ["project-clm-api"],
     infomax: ["project-mcq-topper-backend"],
-    talendit: [
-      "project-school-management-backend",
-      "project-school-management",
-      "project-survey-module-backend",
-      "project-technofire",
-    ],
-    ndevers: [
-      "project-warehouse-management-client",
-      "project-inventory-management-system-server",
-    ],
   }
   for (const [company, ids] of Object.entries(expected)) {
     const engagementId = `experience-${company}-freelance-developer`
@@ -439,5 +420,5 @@ it("preserves filter values and maps client projects to the documented engagemen
   }
   expect(
     projectCatalog.records.filter((project) => project.engagementId)
-  ).toHaveLength(8)
+  ).toHaveLength(2)
 })

@@ -74,7 +74,7 @@ const records = serviceSchema.array().parse([
       "A reviewable path from prototype behavior to production behavior",
     ],
     timeline: "Start with one workflow and expand only after it proves useful",
-    projectIds: ["project-postcraft", "project-educanvas", "project-mulalens"],
+    projectIds: ["project-postcraft", "project-thoughtline", "project-mulalens"],
   },
 ])
 
