@@ -114,7 +114,7 @@ export function SiteHeader() {
     </Button>
   )
   return (
-    <header className="site-header-enter sticky top-0 z-40 border-b bg-background/98">
+    <header className="site-header site-header-enter sticky top-0 z-40 border-b bg-background/82 backdrop-blur-[20px]">
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
           <Brand isOwner={isOwner} navigateToTop={navigateToTop} />
@@ -133,7 +133,7 @@ export function SiteHeader() {
                   }}
                   className={cn(
                     "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
-                    isActive && "bg-muted"
+                    isActive && "bg-foreground/10"
                   )}
                   aria-current={isActive ? "location" : undefined}
                 >
@@ -146,7 +146,7 @@ export function SiteHeader() {
               search={{ topic: "all", q: "" }}
               className={cn(
                 "rounded-md px-2.5 py-1.5 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
-                pathname.startsWith("/blog") && "bg-muted"
+                pathname.startsWith("/blog") && "bg-foreground/10"
               )}
               aria-current={pathname.startsWith("/blog") ? "page" : undefined}
             >
@@ -186,7 +186,7 @@ export function SiteHeader() {
                           }}
                           className={cn(
                             "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
-                            isActive && "bg-muted"
+                            isActive && "bg-foreground/10"
                           )}
                           aria-current={isActive ? "location" : undefined}
                         >
@@ -201,7 +201,7 @@ export function SiteHeader() {
                       search={{ topic: "all", q: "" }}
                       className={cn(
                         "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-muted active:scale-[0.98] motion-reduce:transition-none",
-                        pathname.startsWith("/blog") && "bg-muted"
+                        pathname.startsWith("/blog") && "bg-foreground/10"
                       )}
                       aria-current={
                         pathname.startsWith("/blog") ? "page" : undefined
