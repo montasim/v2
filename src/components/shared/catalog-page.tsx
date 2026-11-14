@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { FunnelSimpleIcon } from "@/components/ui/icons"
 import { DetailPage } from "@/components/shared/detail-page"
+import { MotionReveal } from "@/components/shared/motion-reveal"
 import { OverflowTabsList } from "@/components/ui/overflow-tabs-list"
 import { CatalogPagination } from "@/components/shared/catalog-pagination"
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs"
@@ -96,9 +97,15 @@ export function CatalogPage<TRecord, TFilter extends string | number>({
             ? emptyState
             : renderRecords
               ? renderRecords(visiblePage)
-              : visiblePage.map((record, index) =>
-                  renderRecord?.(record, firstRecordIndex + index)
-                )}
+              : visiblePage.map((record, index) => (
+                  // Each record slides in as it scrolls into view; the first few cascade on load.
+                  <MotionReveal
+                    key={firstRecordIndex + index}
+                    delay={index < 4 ? index * 80 : 0}
+                  >
+                    {renderRecord?.(record, firstRecordIndex + index)}
+                  </MotionReveal>
+                ))}
         </TabsContent>
 
         {paginationEnabled && visible.length ? (

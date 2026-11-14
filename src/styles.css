@@ -411,18 +411,33 @@
         var(--motion-reveal-delay, 0ms);
   }
 
-  .motion-reveal[data-motion-state="pending"] {
+  /* Before hydration (no data-motion-state yet) reveals stay hidden too, so content already on
+     screen fades in rather than sitting there; the delayed animation is a no-JS-hydration escape. */
+  .motion-reveal[data-motion-state="pending"],
+  html[data-motion] .motion-reveal:not([data-motion-state]) {
     opacity: 0;
     transform: translateY(1rem);
   }
 
-  .motion-reveal-subtle[data-motion-state="pending"] {
+  html[data-motion] .motion-reveal:not([data-motion-state]) {
+    animation: page-enter var(--motion-slow) var(--ease-out-quart) 4s forwards;
+  }
+
+  .motion-reveal-subtle[data-motion-state="pending"],
+  html[data-motion] .motion-reveal-subtle:not([data-motion-state]) {
     transform: translateY(0.375rem);
   }
 
   .motion-reveal[data-motion-state="revealed"] {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Behind the loader nothing reveals; when it lifts, the transition plays from hidden. */
+  html[data-loading] .motion-reveal[data-motion-state] {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: none;
   }
 
   .reading-progress {

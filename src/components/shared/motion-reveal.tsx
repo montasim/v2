@@ -3,6 +3,9 @@ import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+const initialViewWindowMs = 500
+const initialViewDelayMs = 400
+
 const useIsomorphicLayoutEffect =
   typeof window === "undefined" ? React.useEffect : React.useLayoutEffect
 
@@ -36,11 +39,19 @@ export function MotionReveal({
     }
 
     element.dataset.motionState = "pending"
+    const mountedAt = performance.now()
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return
 
+        // Already on screen when the page opened: wait for the hero/page entrance to lead.
+        if (performance.now() - mountedAt < initialViewWindowMs) {
+          element.style.setProperty(
+            "--motion-reveal-delay",
+            `${delay + initialViewDelayMs}ms`
+          )
+        }
         element.dataset.motionState = "revealed"
         observer.unobserve(element)
       },
@@ -66,7 +77,7 @@ export function MotionReveal({
       observer.disconnect()
       reducedMotion.removeEventListener("change", revealForReducedMotion)
     }
-  }, [rootMargin])
+  }, [delay, rootMargin])
 
   return (
     <Comp

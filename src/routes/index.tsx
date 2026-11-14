@@ -16,6 +16,7 @@ import {
   InternalAction,
   MailAction,
 } from "@/components/shared/navigation-action"
+import { MotionReveal } from "@/components/shared/motion-reveal"
 import { PageSection } from "@/components/shared/page-section"
 import { PageShell } from "@/components/shared/page-shell"
 import { RichText } from "@/components/shared/rich-text"
@@ -191,7 +192,9 @@ function OverviewPage() {
       >
         <div className="grid gap-5">
           {projectCatalog.featured.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <MotionReveal key={project.id}>
+              <ProjectCard project={project} />
+            </MotionReveal>
           ))}
         </div>
       </PageSection>
