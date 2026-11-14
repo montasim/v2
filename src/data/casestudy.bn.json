@@ -149,6 +149,77 @@
       "caption": "Deploy করা Sigcraft editor বাঁ দিকে তথ্য নেয় আর তৈরি signature টা একটা mail window এর ভেতরে দেখায়, ঠিক যেভাবে Gmail পাবে।"
     }
   },
+  "bloop": {
+    "summary": "Browser এর জন্য একটা physics platformer, যেখানে হাতে বানানো ৩০টা level আছে; প্রতিটা level ship করার আগে একটা automated bot playthrough প্রমাণ করে যে সেটা শেষ করা যায়, আর পুরো game installable PWA হিসেবে offline চলে।",
+    "role": "Game designer ও front-end engineer",
+    "scope": "Game design, physics engine, level design ও tooling, procedural audio, game UI, PWA এবং deployment",
+    "status": "playbloop.netlify.app এ static, installable PWA হিসেবে publicly deployed; progress আর unlock প্রতিটা player এর নিজের browser এ থাকে",
+    "problem": "একটা platformer এর সাফল্য নির্ভর করে তার level এর ওপর, আর প্রতিটা নতুন mechanic level ভাঙার পথ বাড়িয়ে দেয়: এক frame বেশি কঠিন একটা jump, কোণায় চিরতরে আটকে যাওয়া একটা crate, বা এমন respawn যেটা player কে আবার সোজা ফাঁদে ফেলে। রঙ, gravity, crate আর beetle puzzle এর ৩০টা level হাতে খেলে খেলে শেষ করার মতো রাখা সম্ভব না।",
+    "constraints": [
+      "Control শুধু roll আর jump, তাই প্রতিটা নতুন idea level থেকে আসতে হবে, নতুন key থেকে না।",
+      "Physics এ যেকোনো পরিবর্তনের পরও প্রতিটা level শেষ করার মতো থাকতে হবে, player যেকোনো lantern থেকে respawn করলেও।",
+      "ভুল crate push বা ভুল রঙ বেছে নিলেও player কে ফেরার পথ বা reset ছাড়া আটকে রাখা যাবে না।",
+      "নিজস্ব শব্দ সহ ৩০টা themed level, কোনো audio file বা server ছাড়া ship করতে হতো।",
+      "Game টা সাথে সাথে শুরু হতে হবে, install করার পর offline চলতে হবে, আর keyboard বা touch দুটো দিয়েই কাজ করতে হবে।"
+    ],
+    "architecture": {
+      "summary": "একটা TanStack Start app static HTML এ prerender হয় আর একটা canvas game engine কে React UI দিয়ে ঘিরে রাখে, আর Node script একই engine কে headless চালিয়ে প্রমাণ করে যে প্রতিটা level শেষ করা যায়।",
+      "layers": [
+        {
+          "title": "Physics engine",
+          "detail": "একটা নির্দিষ্ট 120 Hz step গড়িয়ে চলা wisp কে bounce, coyote time, jump buffering আর variable jump height সহ simulate করে, সাথে রঙ অনুযায়ী solid block, gravity field, ঠেলা যায় এমন crate আর টহল দেওয়া beetle।"
+        },
+        {
+          "title": "Level ও theme",
+          "detail": "৩০টা level এর প্রতিটা tile দিয়ে বানানো একটা file, নিজস্ব theme, checkpoint হিসেবে lantern আর ঐচ্ছিক score হিসেবে mote সহ, ছয়টা chapter জুড়ে ৭৪ থেকে ৪৫৬ tile চওড়া পর্যন্ত বাড়ে।"
+        },
+        {
+          "title": "Bot tooling",
+          "detail": "Headless script প্রতিটা level এর জন্য রেকর্ড করা input route আবার চালায়, jump route খোঁজে, সবচেয়ে কঠিন jump window মাপে, আর প্রতিটা lantern থেকে restart করে soft-lock খোঁজে।"
+        },
+        {
+          "title": "Game shell",
+          "detail": "একটা React UI যোগ করে locked level আর star সহ level select, mote দিয়ে কেনা wisp skin এর shop, touch control, synthesised Web Audio শব্দ, আর offline play এর জন্য service worker।"
+        }
+      ]
+    },
+    "decisions": [
+      {
+        "title": "প্রতিটা level bot দিয়ে প্রমাণ করা",
+        "detail": "একটা level তখনই শেষ ধরা হয় যখন একটা scripted playthrough সব mote সংগ্রহ করে gate এ পৌঁছায়, তাই physics এর কোনো পরিবর্তন route ভাঙলে সেটা player এর কাছে যাওয়ার আগেই check এ ধরা পড়ে।"
+      },
+      {
+        "title": "Control শুধু roll আর jump রাখা",
+        "detail": "নতুন mechanic আসে world থেকে, যেমন রঙের curtain, gravity field, crate আর beetle, তাই phone এ দুটো button দিয়েই game খেলা যায়।"
+      },
+      {
+        "title": "এমন puzzle যেটা সবসময় ফেরানো যায়",
+        "detail": "Crate puzzle রঙের column দিয়ে ঘেরা, তাই একটা crate সবসময় পেছনে ঠেলা যায়, আর প্রতিটা ভুল push বা ভুল ক্রম test করা হয় যাতে একটা পথ বা reachable reset থাকে।"
+      },
+      {
+        "title": "Static PWA হিসেবে ship করা",
+        "detail": "Game পুরোটা client-side, তাই Netlify তে static HTML এ prerender হয়, progress localStorage এ রাখে, আর file download না করে সব শব্দ Web Audio দিয়ে তৈরি করে।"
+      }
+    ],
+    "contribution": [
+      "ছয়টা chapter এর level design করেছি, যেগুলো একবারে একটা করে idea আনে: thorn, beetle, রঙ, gravity, crate, আর শেষে speed ও precision।",
+      "গড়ানো, bounce, রঙের phase, gravity flip, crate ঠেলা ও স্তূপ করা, আর beetle stomp এর জন্য physics engine বানিয়েছি।",
+      "প্রতিটা level replay, solve আর stress-test করার bot tooling লিখেছি, প্রতিটা lantern থেকে soft-lock sweep সহ।",
+      "Level select, star, wisp skin shop, touch control, fullscreen আর ending screen সহ game UI বানিয়েছি।",
+      "Synthesised night-garden ambience আর sound effect লিখেছি, আর game টা Netlify তে installable offline PWA হিসেবে ship করেছি।"
+    ],
+    "outcomes": [
+      "ছয়টা chapter জুড়ে ৩০টা level, প্রতিটা নিজস্ব theme সহ, একটা engine থেকে ship হয়।",
+      "প্রতিটা level এর একটা bot playthrough আছে যেটা সব mote সংগ্রহ করে gate এ পৌঁছায়।",
+      "পরের দিকের level গুলো হাজার হাজার restart run দিয়ে পরীক্ষা করা হয়েছে, আর level roadmap এ শূন্য soft-lock রেকর্ড করা আছে।",
+      "মসৃণ bounce আর নিরাপদ কোণার মতো physics fix প্রতিটার সাথে regression check এসেছে, আর পরে প্রতিটা level আবার প্রমাণ করা হয়েছে।",
+      "Install করা game কোনো account ছাড়াই offline চলে, আর সব শব্দ browser এই তৈরি হয়।"
+    ],
+    "screenshot": {
+      "alt": "প্রথম night-garden level এর ওপর Bloop এর title screen, যেখানে roll, jump, sound আর fullscreen control এবং Play, Levels, Shop ও Install button আছে",
+      "caption": "Deploy করা Bloop এর title screen প্রথম level এর ওপর বসে, দুই-button control আর game এর মূল idea গুলো একটা card এ।"
+    }
+  },
   "orbline": {
     "summary": "Browser এর জন্য একটা endless orb-runner game, যেখানে পাঁচটা world, synthesised প্রাকৃতিক soundscape আর offline play আছে, আর একটা shared leaderboard প্রতিটা score server এ নতুন করে হিসাব করে এবং অসম্ভব run বাতিল করে।",
     "role": "Game designer ও full-stack engineer",

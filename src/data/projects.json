@@ -38,6 +38,7 @@
       "data-ownership"
     ],
     "imageUrl": "assets/projects/giftbook.webp",
+    "youtubeVideoId": "zkMyirrU3TI",
     "liveUrl": "https://giftbook.netlify.app",
     "githubUrl": "https://github.com/montasim/giftbook",
     "githubRepositoryCreatedAt": "2026-10-09T06:27:06Z",
@@ -80,6 +81,43 @@
     "githubInitialCommitAt": "2026-11-02T14:30:35Z",
     "githubInitialCommitSha": "74987e62945bad6432dd3dc58bebdf685dc6c22b",
     "logoUrl": "https://sigcraft.netlify.app/favicon.svg"
+  },
+  {
+    "id": "project-bloop",
+    "type": "website",
+    "featured": false,
+    "title": "Bloop",
+    "description": "A physics platformer for the browser where a glowing wisp rolls through 30 hand-built night-garden levels, switching colours, flipping gravity, pushing crates and stomping beetles, with synthesised sound, offline play as an installable PWA, and a bot that proves every level can be finished.",
+    "technologies": [
+      "TanStack Start",
+      "React 19",
+      "TypeScript",
+      "Canvas 2D",
+      "Web Audio API",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Hugeicons",
+      "Progressive Web App",
+      "Netlify"
+    ],
+    "topics": [
+      "platformer",
+      "physics-game",
+      "browser-game",
+      "canvas",
+      "web-audio",
+      "pwa",
+      "level-design",
+      "game-development"
+    ],
+    "imageUrl": "assets/projects/bloop.webp",
+    "youtubeVideoId": "rYXNPmeEhzQ",
+    "liveUrl": "https://playbloop.netlify.app",
+    "githubUrl": "https://github.com/montasim/Bloop",
+    "githubRepositoryCreatedAt": "2026-11-12T19:57:50Z",
+    "githubInitialCommitAt": "2026-11-12T20:00:21Z",
+    "githubInitialCommitSha": "7e45dc62317f87999c5c94257d557ba5f625da32",
+    "logoUrl": "https://playbloop.netlify.app/pwa-192x192.png"
   },
   {
     "id": "project-orbline",
@@ -1021,6 +1059,7 @@
     "npmUrl": "https://www.npmjs.com/package/http-status-lite",
     "emoji": "",
     "imageUrl": "assets/projects/http-status-lite.png",
+    "youtubeVideoId": "zkMyirrU3TI",
     "topics": [
       "browser",
       "commonjs",
