@@ -935,6 +935,7 @@
     "npmUrl": "https://www.npmjs.com/package/content-types-lite",
     "emoji": "",
     "imageUrl": "assets/projects/content-types-lite.png",
+    "youtubeVideoId": "ZWaBBVR1-Bc",
     "topics": [
       "commonjs",
       "content-negotiation",
@@ -1031,6 +1032,7 @@
     "npmUrl": "https://www.npmjs.com/package/mime-types-lite",
     "emoji": "",
     "imageUrl": "assets/projects/mime-types-lite.png",
+    "youtubeVideoId": "_b64o3M4bFA",
     "topics": [
       "commonjs",
       "content-type",
@@ -1075,6 +1077,7 @@
     "npmUrl": "https://www.npmjs.com/package/client-parser",
     "emoji": "",
     "imageUrl": "assets/projects/client-parser.png",
+    "youtubeVideoId": "9fmnAHhYQ4c",
     "topics": [
       "bot-detection",
       "browser-detection",

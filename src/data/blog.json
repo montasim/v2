@@ -1451,8 +1451,8 @@
       "topic": "tools",
       "featured": false,
       "image": {
-        "src": "/images/blog/content-type.webp",
-        "alt": "A Content-Type header parsed into type, subtype and parameter with zero dependencies"
+        "src": "/images/projects/content-types-lite.webp",
+        "alt": "content-types-lite documentation site listing content types"
       },
       "translations": {
         "bn": {
@@ -1487,8 +1487,8 @@
       "topic": "tools",
       "featured": false,
       "image": {
-        "src": "/images/blog/mime-lookup.webp",
-        "alt": "Two PDF filenames mapped to the same MIME type while file bytes stay uninspected"
+        "src": "/images/projects/mime-types-lite.webp",
+        "alt": "mime-types-lite documentation site listing MIME types"
       },
       "translations": {
         "bn": {
@@ -1508,8 +1508,8 @@
       "readingMinutes": 2,
       "featured": false,
       "image": {
-        "src": "/images/blog/user-agent.webp",
-        "alt": "A spoofable user-agent string and client hints merged into one labelled best guess"
+        "src": "/images/projects/client-parser.webp",
+        "alt": "client-parser demo site parsing a browser user agent"
       },
       "sections": [
         {
