@@ -364,15 +364,15 @@ describe("portfolio content", () => {
 
     expect(metadata.meta).toContainEqual({
       property: "og:image",
-      content: `${site.url}/images/projects/thoughtline.png`,
+      content: `${site.url}/images/projects/thoughtline.jpg`,
     })
     expect(metadata.meta).toContainEqual({
       property: "og:image:type",
-      content: "image/png",
+      content: "image/jpeg",
     })
     expect(metadata.meta).toContainEqual({
       name: "twitter:image",
-      content: `${site.url}/images/projects/thoughtline.png`,
+      content: `${site.url}/images/projects/thoughtline.jpg`,
     })
   })
 

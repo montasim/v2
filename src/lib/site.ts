@@ -63,7 +63,8 @@ function socialImageUrl(imagePath: string) {
   const siteOrigin = new URL(site.url).origin
 
   if (imageUrl.origin === siteOrigin && /\.webp$/i.test(imageUrl.pathname)) {
-    imageUrl.pathname = imageUrl.pathname.replace(/\.webp$/i, ".png")
+    // Not every crawler reads WebP; each shown WebP keeps a small JPEG twin for previews.
+    imageUrl.pathname = imageUrl.pathname.replace(/\.webp$/i, ".jpg")
   }
 
   return imageUrl.toString()

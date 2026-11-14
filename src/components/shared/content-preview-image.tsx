@@ -12,6 +12,12 @@ export function ContentPreviewImage({
   ...props
 }: ContentPreviewImageProps) {
   return (
-    <img {...props} className={cn("bg-background object-contain", className)} />
+    // Lazy by default; pass loading="eager" for artwork at the very top of a page.
+    <img
+      loading="lazy"
+      decoding="async"
+      {...props}
+      className={cn("bg-background object-contain", className)}
+    />
   )
 }

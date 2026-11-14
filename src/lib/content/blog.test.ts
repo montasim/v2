@@ -129,7 +129,7 @@ describe("blog catalog", () => {
 
   it("builds article-specific social preview metadata", () => {
     const post = blogCatalog.authoredPosts[0]
-    const socialImage = post.image.src.replace(/\.webp$/i, ".png")
+    const socialImage = post.image.src.replace(/\.webp$/i, ".jpg")
     const metadata = createMeta(
       post.title,
       post.excerpt,
@@ -154,7 +154,7 @@ describe("blog catalog", () => {
     })
     expect(metadata.meta).toContainEqual({
       property: "og:image:type",
-      content: "image/png",
+      content: "image/jpeg",
     })
     expect(metadata.meta).toContainEqual({
       property: "article:published_time",

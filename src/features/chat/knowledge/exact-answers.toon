@@ -1,5 +1,5 @@
 schemaVersion: portfolio-exact-answers/v1
-knowledgeHash: 11692d8268b45951df4336ba0e09bca4206eddfb91d934306b70d53a24036d9a
+knowledgeHash: 187c076253d56466088f9d0b2c313011d883ffe4f8470155360f309f00d47141
 records[506]:
   - id: "project:project-air-traffic-control:overview"
     category: project
@@ -1536,85 +1536,85 @@ records[506]:
     question: What does Montasim's “Claude 101” credential document?
     text: "Montasim completed “Claude 101,” issued by Anthropic Education through Anthropic Academy in 2026. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-claude-101"
-    supportingExcerpts[1]: "2026-05-16\nCourse certificate\nhttps://verify.skilljar.com/c/r4jtg8jgebd4\ncertification-claude-101\n/images/certifications/claude-101.jpg\nAnthropic Education\nAnthropic Academy\n/images/certifications/platforms/anthropic.svg\nClaude 101\nhttps://verify.skilljar.com/c/r4jtg8jgebd4\n2026"
+    supportingExcerpts[1]: "2026-05-16\nCourse certificate\nhttps://verify.skilljar.com/c/r4jtg8jgebd4\ncertification-claude-101\n/images/certifications/claude-101.webp\nAnthropic Education\nAnthropic Academy\n/images/certifications/platforms/anthropic.svg\nClaude 101\nhttps://verify.skilljar.com/c/r4jtg8jgebd4\n2026"
   - id: "certification:certification-meta-front-end-developer"
     category: certification
     question: What does Montasim's “Meta Front-End Developer” credential document?
     text: "Montasim completed “Meta Front-End Developer,” issued by Meta through Coursera in 2023. Its stated focus was professional Certificate · 9 courses. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-meta-front-end-developer"
-    supportingExcerpts[1]: "2023-10-12\nProfessional Certificate · 9 courses\nhttps://www.coursera.org/account/accomplishments/professional-cert/certificate/8TE9CLHKPLL4\ncertification-meta-front-end-developer\n/images/certifications/meta-front-end.jpg\nMeta\nCoursera\n/images/certifications/platforms/coursera.svg\nMeta Front-End Developer\nhttps://www.coursera.org/account/accomplishments/professional-cert/8TE9CLHKPLL4\n2023"
+    supportingExcerpts[1]: "2023-10-12\nProfessional Certificate · 9 courses\nhttps://www.coursera.org/account/accomplishments/professional-cert/certificate/8TE9CLHKPLL4\ncertification-meta-front-end-developer\n/images/certifications/meta-front-end.webp\nMeta\nCoursera\n/images/certifications/platforms/coursera.svg\nMeta Front-End Developer\nhttps://www.coursera.org/account/accomplishments/professional-cert/8TE9CLHKPLL4\n2023"
   - id: "certification:certification-microsoft-azure-fundamentals"
     category: certification
     question: What does Montasim's “Microsoft Azure Fundamentals AZ-900 Exam Prep” credential document?
     text: "Montasim completed “Microsoft Azure Fundamentals AZ-900 Exam Prep,” issued by Microsoft through Coursera in 2023. Its stated focus was specialization · 4 courses. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-microsoft-azure-fundamentals"
-    supportingExcerpts[1]: "2023-10-26\nSpecialization · 4 courses\nhttps://www.coursera.org/account/accomplishments/specialization/certificate/UT9X7HR8UDZQ\ncertification-microsoft-azure-fundamentals\n/images/certifications/microsoft-azure-fundamentals.jpg\nMicrosoft\nCoursera\n/images/certifications/platforms/coursera.svg\nMicrosoft Azure Fundamentals AZ-900 Exam Prep\nhttps://www.coursera.org/account/accomplishments/specialization/UT9X7HR8UDZQ\n2023"
+    supportingExcerpts[1]: "2023-10-26\nSpecialization · 4 courses\nhttps://www.coursera.org/account/accomplishments/specialization/certificate/UT9X7HR8UDZQ\ncertification-microsoft-azure-fundamentals\n/images/certifications/microsoft-azure-fundamentals.webp\nMicrosoft\nCoursera\n/images/certifications/platforms/coursera.svg\nMicrosoft Azure Fundamentals AZ-900 Exam Prep\nhttps://www.coursera.org/account/accomplishments/specialization/UT9X7HR8UDZQ\n2023"
   - id: "certification:certification-postman-api-testing"
     category: certification
     question: What does Montasim's “Webservices API Testing with Postman - Complete Guide” credential document?
     text: "Montasim completed “Webservices API Testing with Postman - Complete Guide,” issued by Testing World Infotech through Udemy in 2023. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-postman-api-testing"
-    supportingExcerpts[1]: "2023-09-22\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-5feb9208-aa7d-4ff4-9556-af46e4fb90c8.pdf\ncertification-postman-api-testing\n/images/certifications/postman-api-testing.jpg\nTesting World Infotech\nUdemy\n/images/certifications/platforms/udemy.svg\nWebservices API Testing with Postman - Complete Guide\nhttps://www.udemy.com/certificate/UC-5feb9208-aa7d-4ff4-9556-af46e4fb90c8/\n2023"
+    supportingExcerpts[1]: "2023-09-22\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-5feb9208-aa7d-4ff4-9556-af46e4fb90c8.pdf\ncertification-postman-api-testing\n/images/certifications/postman-api-testing.webp\nTesting World Infotech\nUdemy\n/images/certifications/platforms/udemy.svg\nWebservices API Testing with Postman - Complete Guide\nhttps://www.udemy.com/certificate/UC-5feb9208-aa7d-4ff4-9556-af46e4fb90c8/\n2023"
   - id: "certification:certification-unit-testing-jest"
     category: certification
     question: What does Montasim's “Introduction to Unit Testing in Jest - The Fundamentals” credential document?
     text: "Montasim completed “Introduction to Unit Testing in Jest - The Fundamentals,” issued by Coursera Project Network through Coursera in 2023. Its stated focus was guided Project · Grade 100%. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-unit-testing-jest"
-    supportingExcerpts[1]: "2023-10-01\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/NBDCPNUYDDBY\ncertification-unit-testing-jest\n/images/certifications/unit-testing-jest.jpg\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nIntroduction to Unit Testing in Jest - The Fundamentals\nhttps://www.coursera.org/account/accomplishments/verify/NBDCPNUYDDBY\n2023"
+    supportingExcerpts[1]: "2023-10-01\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/NBDCPNUYDDBY\ncertification-unit-testing-jest\n/images/certifications/unit-testing-jest.webp\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nIntroduction to Unit Testing in Jest - The Fundamentals\nhttps://www.coursera.org/account/accomplishments/verify/NBDCPNUYDDBY\n2023"
   - id: "certification:certification-accessible-web-development"
     category: certification
     question: What does Montasim's “Introduction to Accessible Web Development” credential document?
     text: "Montasim completed “Introduction to Accessible Web Development,” issued by Coursera Project Network through Coursera in 2023. Its stated focus was guided Project · Grade 100%. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-accessible-web-development"
-    supportingExcerpts[1]: "2023-09-30\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/6XGX2GV2WUPC\ncertification-accessible-web-development\n/images/certifications/accessible-web-development.jpg\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nIntroduction to Accessible Web Development\nhttps://www.coursera.org/account/accomplishments/verify/6XGX2GV2WUPC\n2023"
+    supportingExcerpts[1]: "2023-09-30\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/6XGX2GV2WUPC\ncertification-accessible-web-development\n/images/certifications/accessible-web-development.webp\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nIntroduction to Accessible Web Development\nhttps://www.coursera.org/account/accomplishments/verify/6XGX2GV2WUPC\n2023"
   - id: "certification:certification-meta-react-native"
     category: certification
     question: What does Montasim's “Meta React Native” credential document?
     text: "Montasim completed “Meta React Native,” issued by Meta through Coursera in 2023. Its stated focus was professional Certificate · 8 courses. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-meta-react-native"
-    supportingExcerpts[1]: "2023-10-24\nProfessional Certificate · 8 courses\nhttps://www.coursera.org/account/accomplishments/specialization/certificate/KUUKAHJMJ4W5\ncertification-meta-react-native\n/images/certifications/meta-react-native.jpg\nMeta\nCoursera\n/images/certifications/platforms/coursera.svg\nMeta React Native\nhttps://www.coursera.org/account/accomplishments/specialization/KUUKAHJMJ4W5\n2023"
+    supportingExcerpts[1]: "2023-10-24\nProfessional Certificate · 8 courses\nhttps://www.coursera.org/account/accomplishments/specialization/certificate/KUUKAHJMJ4W5\ncertification-meta-react-native\n/images/certifications/meta-react-native.webp\nMeta\nCoursera\n/images/certifications/platforms/coursera.svg\nMeta React Native\nhttps://www.coursera.org/account/accomplishments/specialization/KUUKAHJMJ4W5\n2023"
   - id: "certification:certification-agile-atlassian-jira"
     category: certification
     question: What does Montasim's “Agile with Atlassian Jira” credential document?
     text: "Montasim completed “Agile with Atlassian Jira,” issued by Atlassian through Coursera in 2023. Its stated focus was course certificate · Grade 100%. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-agile-atlassian-jira"
-    supportingExcerpts[1]: "2023-10-22\nCourse certificate · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/QBU8UZSNNBKU\ncertification-agile-atlassian-jira\n/images/certifications/agile-atlassian-jira.jpg\nAtlassian\nCoursera\n/images/certifications/platforms/coursera.svg\nAgile with Atlassian Jira\nhttps://www.coursera.org/account/accomplishments/verify/QBU8UZSNNBKU\n2023"
+    supportingExcerpts[1]: "2023-10-22\nCourse certificate · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/QBU8UZSNNBKU\ncertification-agile-atlassian-jira\n/images/certifications/agile-atlassian-jira.webp\nAtlassian\nCoursera\n/images/certifications/platforms/coursera.svg\nAgile with Atlassian Jira\nhttps://www.coursera.org/account/accomplishments/verify/QBU8UZSNNBKU\n2023"
   - id: "certification:certification-google-project-management"
     category: certification
     question: What does Montasim's “Google Project Management” credential document?
     text: "Montasim completed “Google Project Management,” issued by Google through Coursera in 2023. Its stated focus was professional Certificate · 6 courses. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-google-project-management"
-    supportingExcerpts[1]: "2023-10-12\nProfessional Certificate · 6 courses\nhttps://www.coursera.org/account/accomplishments/professional-cert/certificate/AXDASTEQWFAT\ncertification-google-project-management\n/images/certifications/google-project-management.jpg\nGoogle\nCoursera\n/images/certifications/platforms/coursera.svg\nGoogle Project Management\nhttps://www.coursera.org/account/accomplishments/professional-cert/AXDASTEQWFAT\n2023"
+    supportingExcerpts[1]: "2023-10-12\nProfessional Certificate · 6 courses\nhttps://www.coursera.org/account/accomplishments/professional-cert/certificate/AXDASTEQWFAT\ncertification-google-project-management\n/images/certifications/google-project-management.webp\nGoogle\nCoursera\n/images/certifications/platforms/coursera.svg\nGoogle Project Management\nhttps://www.coursera.org/account/accomplishments/professional-cert/AXDASTEQWFAT\n2023"
   - id: "certification:certification-google-business-intelligence"
     category: certification
     question: What does Montasim's “Google Business Intelligence” credential document?
     text: "Montasim completed “Google Business Intelligence,” issued by Google through Coursera in 2023. Its stated focus was professional Certificate · 3 courses. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-google-business-intelligence"
-    supportingExcerpts[1]: "2023-11-14\nProfessional Certificate · 3 courses\nhttps://www.coursera.org/account/accomplishments/professional-cert/certificate/22YXRDKYEY7M\ncertification-google-business-intelligence\n/images/certifications/google-business-intelligence.jpg\nGoogle\nCoursera\n/images/certifications/platforms/coursera.svg\nGoogle Business Intelligence\nhttps://www.coursera.org/account/accomplishments/professional-cert/22YXRDKYEY7M\n2023"
+    supportingExcerpts[1]: "2023-11-14\nProfessional Certificate · 3 courses\nhttps://www.coursera.org/account/accomplishments/professional-cert/certificate/22YXRDKYEY7M\ncertification-google-business-intelligence\n/images/certifications/google-business-intelligence.webp\nGoogle\nCoursera\n/images/certifications/platforms/coursera.svg\nGoogle Business Intelligence\nhttps://www.coursera.org/account/accomplishments/professional-cert/22YXRDKYEY7M\n2023"
   - id: "certification:certification-udemy-2233498"
     category: certification
     question: What does Montasim's “Getting Started with React Hooks” credential document?
     text: "Montasim completed “Getting Started with React Hooks,” issued by Boris Paskhaver through Udemy in 2022. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-2233498"
-    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-81a2e505-c03f-4bc4-9bd6-d172cf94ae3d.pdf\ncertification-udemy-2233498\n/images/certifications/udemy-2233498.jpg\nBoris Paskhaver\nUdemy\n/images/certifications/platforms/udemy.svg\nGetting Started with React Hooks\nhttps://www.udemy.com/certificate/UC-81a2e505-c03f-4bc4-9bd6-d172cf94ae3d/\n2022"
+    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-81a2e505-c03f-4bc4-9bd6-d172cf94ae3d.pdf\ncertification-udemy-2233498\n/images/certifications/udemy-2233498.webp\nBoris Paskhaver\nUdemy\n/images/certifications/platforms/udemy.svg\nGetting Started with React Hooks\nhttps://www.udemy.com/certificate/UC-81a2e505-c03f-4bc4-9bd6-d172cf94ae3d/\n2022"
   - id: "certification:certification-udemy-3033196"
     category: certification
     question: What does Montasim's “The Complete ReactJs Course - Basics to Advanced” credential document?
     text: "Montasim completed “The Complete ReactJs Course - Basics to Advanced,” issued by EdYoda for Business, Qaifi Khan, Mavludin Abdulkadirov through Udemy in 2022. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-3033196"
-    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-0deacdeb-f121-496d-b9ea-b7d7e317c0a9.pdf\ncertification-udemy-3033196\n/images/certifications/udemy-3033196.jpg\nEdYoda for Business, Qaifi Khan, Mavludin Abdulkadirov\nUdemy\n/images/certifications/platforms/udemy.svg\nThe Complete ReactJs Course - Basics to Advanced\nhttps://www.udemy.com/certificate/UC-0deacdeb-f121-496d-b9ea-b7d7e317c0a9/\n2022"
+    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-0deacdeb-f121-496d-b9ea-b7d7e317c0a9.pdf\ncertification-udemy-3033196\n/images/certifications/udemy-3033196.webp\nEdYoda for Business, Qaifi Khan, Mavludin Abdulkadirov\nUdemy\n/images/certifications/platforms/udemy.svg\nThe Complete ReactJs Course - Basics to Advanced\nhttps://www.udemy.com/certificate/UC-0deacdeb-f121-496d-b9ea-b7d7e317c0a9/\n2022"
   - id: "certification:certification-udemy-2655532"
     category: certification
     question: "What does Montasim's “React + Firebase: For Beginners” credential document?"
     text: "Montasim completed “React + Firebase: For Beginners,” issued by Daniel Arzuaga through Udemy in 2022. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-2655532"
-    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-96cee3e4-f458-4cc6-95ef-045d158c361c.pdf\ncertification-udemy-2655532\n/images/certifications/udemy-2655532.jpg\nDaniel Arzuaga\nUdemy\n/images/certifications/platforms/udemy.svg\nReact + Firebase: For Beginners\nhttps://www.udemy.com/certificate/UC-96cee3e4-f458-4cc6-95ef-045d158c361c/\n2022"
+    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-96cee3e4-f458-4cc6-95ef-045d158c361c.pdf\ncertification-udemy-2655532\n/images/certifications/udemy-2655532.webp\nDaniel Arzuaga\nUdemy\n/images/certifications/platforms/udemy.svg\nReact + Firebase: For Beginners\nhttps://www.udemy.com/certificate/UC-96cee3e4-f458-4cc6-95ef-045d158c361c/\n2022"
   - id: "certification:certification-git-github-open-source"
     category: certification
     question: What does Montasim's “Git + GitHub for Open Source Collaboration” credential document?
     text: "Montasim completed “Git + GitHub for Open Source Collaboration,” issued by Coursera Project Network through Coursera in 2020. Its stated focus was guided Project · Grade 100%. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-git-github-open-source"
-    supportingExcerpts[1]: "2020-08-28\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/5XKX3V74MZA6\ncertification-git-github-open-source\n/images/certifications/git-github-open-source.jpg\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nGit + GitHub for Open Source Collaboration\nhttps://www.coursera.org/account/accomplishments/verify/5XKX3V74MZA6\n2020"
+    supportingExcerpts[1]: "2020-08-28\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/5XKX3V74MZA6\ncertification-git-github-open-source\n/images/certifications/git-github-open-source.webp\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nGit + GitHub for Open Source Collaboration\nhttps://www.coursera.org/account/accomplishments/verify/5XKX3V74MZA6\n2020"
   - id: "certification:certification-complete-web-development-course"
     category: certification
     question: What does Montasim's “Complete Web Development Course” credential document?
@@ -1626,43 +1626,43 @@ records[506]:
     question: What does Montasim's “Level Up Your CSS Animation Skills” credential document?
     text: "Montasim completed “Level Up Your CSS Animation Skills,” issued by Donovan Hutchinson through Udemy in 2022. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-878230"
-    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-76d371fa-22a3-445c-8546-6b8ae7c922dc.pdf\ncertification-udemy-878230\n/images/certifications/udemy-878230.jpg\nDonovan Hutchinson\nUdemy\n/images/certifications/platforms/udemy.svg\nLevel Up Your CSS Animation Skills\nhttps://www.udemy.com/certificate/UC-76d371fa-22a3-445c-8546-6b8ae7c922dc/\n2022"
+    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-76d371fa-22a3-445c-8546-6b8ae7c922dc.pdf\ncertification-udemy-878230\n/images/certifications/udemy-878230.webp\nDonovan Hutchinson\nUdemy\n/images/certifications/platforms/udemy.svg\nLevel Up Your CSS Animation Skills\nhttps://www.udemy.com/certificate/UC-76d371fa-22a3-445c-8546-6b8ae7c922dc/\n2022"
   - id: "certification:certification-udemy-2503042"
     category: certification
     question: What does Montasim's “HTML5 Coding from Scratch - Build Your Own Website” credential document?
     text: "Montasim completed “HTML5 Coding from Scratch - Build Your Own Website,” issued by Victor Gorinov through Udemy in 2019. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-2503042"
-    supportingExcerpts[1]: "2019-08-27\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-77OW1SDX.pdf\ncertification-udemy-2503042\n/images/certifications/udemy-2503042.jpg\nVictor Gorinov\nUdemy\n/images/certifications/platforms/udemy.svg\nHTML5 Coding from Scratch - Build Your Own Website\nhttps://www.udemy.com/certificate/UC-77OW1SDX/\n2019"
+    supportingExcerpts[1]: "2019-08-27\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-77OW1SDX.pdf\ncertification-udemy-2503042\n/images/certifications/udemy-2503042.webp\nVictor Gorinov\nUdemy\n/images/certifications/platforms/udemy.svg\nHTML5 Coding from Scratch - Build Your Own Website\nhttps://www.udemy.com/certificate/UC-77OW1SDX/\n2019"
   - id: "certification:certification-udemy-2971820"
     category: certification
     question: What does Montasim's “Visual Studio Code Ultimate Guide 2022” credential document?
     text: "Montasim completed “Visual Studio Code Ultimate Guide 2022,” issued by Josh Werner through Udemy in 2022. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-2971820"
-    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-f02a5a0b-f3ea-49bb-9951-dcbc6b9aa6e9.pdf\ncertification-udemy-2971820\n/images/certifications/udemy-2971820.jpg\nJosh Werner\nUdemy\n/images/certifications/platforms/udemy.svg\nVisual Studio Code Ultimate Guide 2022\nhttps://www.udemy.com/certificate/UC-f02a5a0b-f3ea-49bb-9951-dcbc6b9aa6e9/\n2022"
+    supportingExcerpts[1]: "2022-08-08\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-f02a5a0b-f3ea-49bb-9951-dcbc6b9aa6e9.pdf\ncertification-udemy-2971820\n/images/certifications/udemy-2971820.webp\nJosh Werner\nUdemy\n/images/certifications/platforms/udemy.svg\nVisual Studio Code Ultimate Guide 2022\nhttps://www.udemy.com/certificate/UC-f02a5a0b-f3ea-49bb-9951-dcbc6b9aa6e9/\n2022"
   - id: "certification:certification-command-line-linux"
     category: certification
     question: What does Montasim's “Command Line in Linux” credential document?
     text: "Montasim completed “Command Line in Linux,” issued by Coursera Project Network through Coursera in 2020. Its stated focus was guided Project · Grade 100%. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-command-line-linux"
-    supportingExcerpts[1]: "2020-08-23\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/CC7F3ETBKK8U\ncertification-command-line-linux\n/images/certifications/command-line-linux.jpg\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nCommand Line in Linux\nhttps://www.coursera.org/account/accomplishments/verify/CC7F3ETBKK8U\n2020"
+    supportingExcerpts[1]: "2020-08-23\nGuided Project · Grade 100%\nhttps://www.coursera.org/account/accomplishments/certificate/CC7F3ETBKK8U\ncertification-command-line-linux\n/images/certifications/command-line-linux.webp\nCoursera Project Network\nCoursera\n/images/certifications/platforms/coursera.svg\nCommand Line in Linux\nhttps://www.coursera.org/account/accomplishments/verify/CC7F3ETBKK8U\n2020"
   - id: "certification:certification-udemy-1297394"
     category: certification
     question: What does Montasim's “C++ Development Tutorial Series - The Complete Coding Guide” credential document?
     text: "Montasim completed “C++ Development Tutorial Series - The Complete Coding Guide,” issued by Frahaan Hussain through Udemy in 2020. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-1297394"
-    supportingExcerpts[1]: "2020-08-17\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-4c1e3560-c268-4c37-87c3-b3e1235b67f2.pdf\ncertification-udemy-1297394\n/images/certifications/udemy-1297394.jpg\nFrahaan Hussain\nUdemy\n/images/certifications/platforms/udemy.svg\nC++ Development Tutorial Series - The Complete Coding Guide\nhttps://www.udemy.com/certificate/UC-4c1e3560-c268-4c37-87c3-b3e1235b67f2/\n2020"
+    supportingExcerpts[1]: "2020-08-17\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-4c1e3560-c268-4c37-87c3-b3e1235b67f2.pdf\ncertification-udemy-1297394\n/images/certifications/udemy-1297394.webp\nFrahaan Hussain\nUdemy\n/images/certifications/platforms/udemy.svg\nC++ Development Tutorial Series - The Complete Coding Guide\nhttps://www.udemy.com/certificate/UC-4c1e3560-c268-4c37-87c3-b3e1235b67f2/\n2020"
   - id: "certification:certification-udemy-389302"
     category: certification
     question: What does Montasim's “The Complete C Programming Tutorial” credential document?
     text: "Montasim completed “The Complete C Programming Tutorial,” issued by Doedu education through Udemy in 2019. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-389302"
-    supportingExcerpts[1]: "2019-08-31\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-9SJEY17Z.pdf\ncertification-udemy-389302\n/images/certifications/udemy-389302.jpg\nDoedu education\nUdemy\n/images/certifications/platforms/udemy.svg\nThe Complete C Programming Tutorial\nhttps://www.udemy.com/certificate/UC-9SJEY17Z/\n2019"
+    supportingExcerpts[1]: "2019-08-31\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-9SJEY17Z.pdf\ncertification-udemy-389302\n/images/certifications/udemy-389302.webp\nDoedu education\nUdemy\n/images/certifications/platforms/udemy.svg\nThe Complete C Programming Tutorial\nhttps://www.udemy.com/certificate/UC-9SJEY17Z/\n2019"
   - id: "certification:certification-udemy-1119214"
     category: certification
     question: What does Montasim's “How to Create a Wordpress Website for Absolute Beginners” credential document?
     text: "Montasim completed “How to Create a Wordpress Website for Absolute Beginners,” issued by Jarrod Field, Skillcourse Inc through Udemy in 2019. Its stated focus was course certificate. For a hiring team, the credential demonstrates structured learning in that area; his experience, projects, and case studies remain the stronger evidence of applied ability."
     factIds[1]: "certification:certification-udemy-1119214"
-    supportingExcerpts[1]: "2019-04-11\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-SF48M5NL.pdf\ncertification-udemy-1119214\n/images/certifications/udemy-1119214.jpg\nJarrod Field, Skillcourse Inc\nUdemy\n/images/certifications/platforms/udemy.svg\nHow to Create a Wordpress Website for Absolute Beginners\nhttps://www.udemy.com/certificate/UC-SF48M5NL/\n2019"
+    supportingExcerpts[1]: "2019-04-11\nCourse certificate\nhttps://udemy-certificate.s3.amazonaws.com/pdf/UC-SF48M5NL.pdf\ncertification-udemy-1119214\n/images/certifications/udemy-1119214.webp\nJarrod Field, Skillcourse Inc\nUdemy\n/images/certifications/platforms/udemy.svg\nHow to Create a Wordpress Website for Absolute Beginners\nhttps://www.udemy.com/certificate/UC-SF48M5NL/\n2019"
   - id: "certification:certification-sass-beginner-expert"
     category: certification
     question: What does Montasim's “SASS from Beginner to Expert” credential document?
