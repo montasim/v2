@@ -92,16 +92,17 @@ export function DetailPage({
           className={actionClassName}
         >
           <ArrowLeftCompactIcon className="group-hover/action:-translate-x-0.5" />
-          Back to overview
+          Back<span className="hidden sm:inline"> to overview</span>
         </InternalAction>
         <DownloadAction
           href={profileCatalog.profile.resumeDownloadUrl}
           variant="outline"
           size="lg"
-          className={`${actionClassName} sm:ml-auto`}
+          className={`${actionClassName} ml-auto`}
         >
           <DownloadSimpleIcon />
-          Download resume
+          <span className="sm:hidden">Resume</span>
+          <span className="hidden sm:inline">Download resume</span>
         </DownloadAction>
       </footer>
     </PageShell>
