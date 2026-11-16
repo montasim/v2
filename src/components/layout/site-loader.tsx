@@ -7,6 +7,29 @@ const loaderDurationMs = 2100
 // once per tab session; while html[data-loading] is set, styles.css holds the entrances back.
 const loaderScript = `try{const d=document.documentElement;if(!matchMedia("(prefers-reduced-motion: reduce)").matches){d.dataset.motion="";if(location.pathname==="/"&&!sessionStorage.getItem("portfolio-loader")){sessionStorage.setItem("portfolio-loader","1");d.dataset.loading="";setTimeout(()=>{delete d.dataset.loading},${loaderDurationMs})}}}catch{}`
 
+let replayTimer: number | undefined
+
+// Shows the loader again on demand (the brand link). The SVG's own draw animation only runs
+// when the image loads, so the mark gets a fresh URL, and its CSS shrink is restarted too.
+export function replaySiteLoader() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return
+  const root = document.documentElement
+  const mark = document.querySelector<HTMLImageElement>(".site-loader-mark")
+  if (mark) {
+    mark.style.animation = "none"
+    void mark.offsetWidth
+    mark.style.animation = ""
+    mark.src = `/images/logo-animated.svg?replay=${Date.now()}`
+  }
+  delete root.dataset.loading
+  void root.offsetWidth
+  root.dataset.loading = ""
+  window.clearTimeout(replayTimer)
+  replayTimer = window.setTimeout(() => {
+    delete root.dataset.loading
+  }, loaderDurationMs)
+}
+
 export function SiteLoader() {
   return (
     <>

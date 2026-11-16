@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react"
 import { Link, useRouterState } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
-import { ListIcon, MoonIcon, SunIcon } from "@/components/ui/icons"
+import {
+  BookOpenTextIcon,
+  BriefcaseIcon,
+  CodeIcon,
+  EnvelopeSimpleIcon,
+  FilesIcon,
+  FolderIcon,
+  ListIcon,
+  MoonIcon,
+  SunIcon,
+  UserIcon,
+} from "@/components/ui/icons"
 import { Button } from "@/components/ui/button"
 import { SiteContainer } from "@/components/shared/site-container"
 import {
@@ -13,13 +24,30 @@ import {
 } from "@/components/ui/sheet"
 import { useTheme } from "@/components/theme-provider"
 import { useLandingNavigation } from "@/components/layout/use-landing-navigation"
+import { replaySiteLoader } from "@/components/layout/site-loader"
+import { NewsletterForm } from "@/features/newsletter/ui/newsletter-form"
 import { getPortfolioOwnerAuth } from "@/features/owner-auth/application/owner-auth"
 import {
   getPageScrollEventTarget,
   getPageScrollTop,
   isPageScrolledToEnd,
 } from "@/lib/page-scroll"
+import type { landingNavigation } from "@/lib/site"
 import { cn } from "@/lib/utils"
+
+// Keyed by the landing sections, so a new section without an icon fails to compile.
+const mobileMenuIcons: Record<
+  (typeof landingNavigation)[number]["sectionId"],
+  typeof UserIcon
+> = {
+  about: UserIcon,
+  experience: BriefcaseIcon,
+  projects: FolderIcon,
+  skills: CodeIcon,
+}
+
+const mobileMenuLinkClassName =
+  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none"
 
 function Brand({
   isOwner,
@@ -42,6 +70,7 @@ function Brand({
         ) {
           return
         }
+        replaySiteLoader()
         if (!navigateToTop()) return
         event.preventDefault()
       }}
@@ -155,7 +184,8 @@ export function SiteHeader() {
   return (
     <header
       data-nav={navScrollState}
-      className="site-header site-header-enter sticky top-0 z-40 border-b bg-background/82 backdrop-blur-[20px]">
+      className="site-header site-header-enter sticky top-0 z-40 border-b bg-background/82 backdrop-blur-[20px]"
+    >
       <SiteContainer asChild className="flex h-14 items-center justify-between">
         <nav aria-label="Primary navigation">
           <Brand isOwner={isOwner} navigateToTop={navigateToTop} />
@@ -208,7 +238,15 @@ export function SiteHeader() {
                   <ListIcon />
                 </Button>
               </SheetTrigger>
-              <SheetContent closeLabel="Close navigation">
+              <SheetContent
+                closeLabel="Close navigation"
+                // Radix skips links when auto-focusing, so it would land on the newsletter
+                // email field and pop the phone keyboard; focus the panel instead.
+                onOpenAutoFocus={(event) => {
+                  event.preventDefault()
+                  ;(event.currentTarget as HTMLElement).focus()
+                }}
+              >
                 <SheetTitle className="mb-6">
                   <Brand isOwner={isOwner} navigateToTop={navigateToTop} />
                 </SheetTitle>
@@ -216,6 +254,7 @@ export function SiteHeader() {
                   {items.map((item) => {
                     const isActive =
                       pathname === "/" && activeSection === item.sectionId
+                    const Icon = mobileMenuIcons[item.sectionId]
                     return (
                       <SheetClose key={item.sectionId} asChild>
                         <Link
@@ -226,11 +265,12 @@ export function SiteHeader() {
                             event.preventDefault()
                           }}
                           className={cn(
-                            "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none",
+                            mobileMenuLinkClassName,
                             isActive && "bg-foreground/10"
                           )}
                           aria-current={isActive ? "location" : undefined}
                         >
+                          <Icon className="size-4.5" aria-hidden="true" />
                           {item.label}
                         </Link>
                       </SheetClose>
@@ -238,20 +278,76 @@ export function SiteHeader() {
                   })}
                   <SheetClose asChild>
                     <Link
+                      to="/case-studies"
+                      className={cn(
+                        mobileMenuLinkClassName,
+                        pathname.startsWith("/case-studies") &&
+                          "bg-foreground/10"
+                      )}
+                      aria-current={
+                        pathname.startsWith("/case-studies")
+                          ? "page"
+                          : undefined
+                      }
+                    >
+                      <FilesIcon className="size-4.5" aria-hidden="true" />
+                      Case studies
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link
                       to="/blog"
                       search={{ topic: "all", q: "" }}
                       className={cn(
-                        "rounded-md px-3 py-2 text-sm font-medium text-strong-foreground transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-foreground/5 active:scale-[0.98] motion-reduce:transition-none",
+                        mobileMenuLinkClassName,
                         pathname.startsWith("/blog") && "bg-foreground/10"
                       )}
                       aria-current={
                         pathname.startsWith("/blog") ? "page" : undefined
                       }
                     >
+                      <BookOpenTextIcon
+                        className="size-4.5 translate-y-px"
+                        aria-hidden="true"
+                      />
                       Blog
                     </Link>
                   </SheetClose>
+                  <SheetClose asChild>
+                    <Link
+                      to="/contact"
+                      className={cn(
+                        mobileMenuLinkClassName,
+                        pathname === "/contact" && "bg-foreground/10"
+                      )}
+                      aria-current={
+                        pathname === "/contact" ? "page" : undefined
+                      }
+                    >
+                      <EnvelopeSimpleIcon
+                        className="size-4.5"
+                        aria-hidden="true"
+                      />
+                      Contact
+                    </Link>
+                  </SheetClose>
                 </nav>
+                <section
+                  aria-labelledby="mobile-newsletter-heading"
+                  className="mt-auto border-t pt-5"
+                >
+                  <h3
+                    id="mobile-newsletter-heading"
+                    className="text-sm font-semibold text-strong-foreground"
+                  >
+                    Subscribe to the newsletter
+                  </h3>
+                  <p className="mt-0.5 text-xs leading-[1.55] text-muted-foreground">
+                    Occasional engineering notes. A confirmation email will be
+                    sent after subscribing.
+                  </p>
+                  <NewsletterForm className="mt-4" />
+                </section>
               </SheetContent>
             </Sheet>
           </div>

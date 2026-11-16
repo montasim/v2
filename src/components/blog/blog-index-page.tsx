@@ -1,6 +1,5 @@
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "@tanstack/react-router"
-import { useServerFn } from "@tanstack/react-start"
 
 import { PageShell } from "@/components/shared/page-shell"
 import { CatalogPagination } from "@/components/shared/catalog-pagination"
@@ -25,17 +24,12 @@ import {
 import {
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
-  CheckIcon,
-  CircleDashedIcon,
   FunnelSimpleIcon,
   SearchIcon,
 } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
-import { InputGroup } from "@/components/ui/input-group"
 import { Label } from "@/components/ui/label"
-import { getEmailVerificationError } from "@/features/email-verification/domain/email-verification"
-import { subscribeToNewsletter } from "@/features/newsletter/application/subscribe"
-import { getNewsletterSubscriptionError } from "@/features/newsletter/domain/subscriber"
+import { NewsletterForm } from "@/features/newsletter/ui/newsletter-form"
 import { blogCatalog, blogTopicNavigation } from "@/lib/content/blog"
 import type { BlogPost, BlogTopic } from "@/lib/content/blog"
 import { projectCatalog } from "@/lib/content/projects"
@@ -132,7 +126,7 @@ function FeaturedArticle({ post }: { post: BlogPost }) {
               <p className="text-xs font-bold tracking-[0.06em] text-strong-foreground uppercase">
                 {post.category}
               </p>
-              <h2 className="mt-3.5 text-[1.625rem] leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground">
+              <h2 className="mt-3.5 text-xl leading-tight font-semibold tracking-[-0.025em] text-balance text-strong-foreground sm:text-2xl">
                 {post.title}
               </h2>
               <p className="mt-4 max-w-[38ch] text-sm leading-[1.65] text-muted-foreground">
@@ -147,7 +141,7 @@ function FeaturedArticle({ post }: { post: BlogPost }) {
                 · {post.readingMinutes} min
               </span>
               <span className="flex items-center gap-1.5 font-semibold text-strong-foreground">
-                Read article
+                Read
                 <ArrowRightCompactIcon />
               </span>
             </div>
@@ -304,13 +298,6 @@ function FeaturedCarousel({ posts }: { posts: BlogPost[] }) {
 }
 
 function SubscriptionCard() {
-  const fieldId = useId()
-  const subscribe = useServerFn(subscribeToNewsletter)
-  const [email, setEmail] = useState("")
-  const [saved, setSaved] = useState(false)
-  const [isChecking, setIsChecking] = useState(false)
-  const [error, setError] = useState("")
-
   return (
     <Card asChild className="mt-10 overflow-hidden rounded-2xl bg-background">
       <aside aria-labelledby="blog-subscribe-heading">
@@ -322,86 +309,11 @@ function SubscriptionCard() {
             Get new articles by email
           </h2>
           <p className="mt-0.5 max-w-[48ch] text-xs leading-[1.55] text-muted-foreground">
-            Occasional engineering notes. No tracking or filler.
+            Occasional engineering notes. A confirmation email will be sent
+            after subscribing.
           </p>
         </header>
-        <form
-          className="grid w-full max-w-180 gap-2.5 px-4 pt-5 pb-6 sm:px-6"
-          onSubmit={async (event) => {
-            event.preventDefault()
-            setError("")
-            setIsChecking(true)
-
-            try {
-              const website = String(
-                new FormData(event.currentTarget).get("website") ?? ""
-              )
-              await subscribe({ data: { email, website } })
-              setSaved(true)
-            } catch (verificationError) {
-              setError(
-                getEmailVerificationError(verificationError) ??
-                  getNewsletterSubscriptionError(verificationError) ??
-                  "The subscription could not be completed. Try again."
-              )
-            } finally {
-              setIsChecking(false)
-            }
-          }}
-        >
-          <Input
-            type="text"
-            name="website"
-            tabIndex={-1}
-            autoComplete="off"
-            className="hidden"
-            aria-hidden="true"
-          />
-          <Label htmlFor={fieldId} className="text-xs font-semibold">
-            Email address
-          </Label>
-          <InputGroup className="gap-1.5 p-1.5 max-sm:flex-col max-sm:items-stretch">
-            <Input
-              id={fieldId}
-              type="email"
-              autoComplete="email"
-              required
-              disabled={isChecking}
-              value={email}
-              onChange={(event) => {
-                setEmail(event.target.value)
-                setSaved(false)
-                setError("")
-              }}
-              placeholder="you@example.com"
-              className="min-h-9 min-w-0 flex-1 border-0 bg-transparent px-2 text-sm shadow-none focus-visible:ring-0 dark:bg-transparent"
-            />
-            <Button
-              type="submit"
-              disabled={isChecking}
-              className="min-h-9 bg-emphasis-foreground px-4.5 text-background"
-            >
-              {isChecking ? (
-                <CircleDashedIcon className="animate-spin motion-reduce:animate-none" />
-              ) : saved ? (
-                <CheckIcon />
-              ) : null}
-              {isChecking ? "Subscribing" : saved ? "Subscribed" : "Subscribe"}
-            </Button>
-          </InputGroup>
-          <p
-            className={cn(
-              "min-h-4.5 text-xs",
-              error ? "text-destructive" : "text-muted-foreground"
-            )}
-            role={error ? "alert" : "status"}
-          >
-            {error ||
-              (saved
-                ? "Subscription confirmed. Check your inbox for a welcome email."
-                : "A confirmation email will be sent after subscribing.")}
-          </p>
-        </form>
+        <NewsletterForm className="max-w-180 px-4 pt-5 pb-6 sm:px-6" />
       </aside>
     </Card>
   )
