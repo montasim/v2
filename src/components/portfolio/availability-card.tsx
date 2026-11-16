@@ -24,18 +24,17 @@ export function AvailabilityCard({
       icon: CalendarCheckIcon,
     },
     {
-      label: "Work setup",
+      label: "Work",
       value: settings.workSetup,
       icon: HouseLineIcon,
     },
     {
-      label: "Location and timezone",
+      label: "Location",
       value: `${settings.location} (${settings.timeZone})`,
-      detail: settings.timeZoneDetail,
       icon: ClockIcon,
     },
     {
-      label: "Relocation and visa",
+      label: "Relocation",
       value: settings.relocationVisa,
       icon: AirplaneTiltIcon,
     },
@@ -63,23 +62,18 @@ export function AvailabilityCard({
         </div>
 
         <dl className="grid sm:grid-cols-2 md:col-span-8 md:border-l">
-          {rows.map(({ detail, icon: Icon, label, value }) => (
+          {rows.map(({ icon: Icon, label, value }) => (
             <div
               key={label}
-              className="border-t p-5 first:border-t-0 sm:p-6 md:first:border-t-0 sm:[&:nth-child(2)]:border-t-0 md:[&:nth-child(2)]:border-t-0 sm:[&:nth-child(even)]:border-l"
+              className="flex flex-wrap items-center gap-x-2 gap-y-1 border-t p-5 first:border-t-0 sm:p-6 md:first:border-t-0 sm:[&:nth-child(2)]:border-t-0 md:[&:nth-child(2)]:border-t-0 sm:[&:nth-child(even)]:border-l"
             >
               <dt className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                 <Icon className="size-4" aria-hidden="true" />
                 {label}
               </dt>
-              <dd className="mt-2 text-sm font-semibold text-strong-foreground">
+              <dd className="ml-auto text-right text-sm font-semibold text-strong-foreground">
                 {value}
               </dd>
-              {detail ? (
-                <dd className="mt-1 text-xs leading-5 text-muted-foreground">
-                  {detail}
-                </dd>
-              ) : null}
             </div>
           ))}
         </dl>

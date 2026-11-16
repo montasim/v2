@@ -16,12 +16,12 @@ export function EntityAvatar({
   return (
     <Avatar
       className={cn(
-        "size-12 rounded-md border bg-background text-muted-foreground",
+        "size-12 rounded-md border text-muted-foreground",
         className
       )}
       aria-hidden="true"
     >
-      <AvatarFallback className="rounded-none bg-background">
+      <AvatarFallback className="rounded-none bg-transparent">
         {fallback}
       </AvatarFallback>
       <AvatarImage

@@ -28,9 +28,9 @@ describe("AvailabilityCard", () => {
 
     for (const label of [
       "Availability",
-      "Work setup",
-      "Location and timezone",
-      "Relocation and visa",
+      "Work",
+      "Location",
+      "Relocation",
     ]) {
       expect(screen.getByText(label)).not.toBeNull()
     }

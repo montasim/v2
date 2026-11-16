@@ -1,7 +1,6 @@
 import {
   ArrowRightCompactIcon,
   ArrowUpRightIcon,
-  CalendarBlankIcon,
   CertificateIcon,
   GraduationCapIcon,
 } from "@/components/ui/icons"
@@ -31,28 +30,27 @@ export function BackgroundSummary() {
           <h3>Education</h3>
         </div>
 
-        <div className="mt-6 flex flex-1 flex-col sm:flex-row sm:items-start sm:gap-6">
-          <EntityAvatar
-            src={summaryEducation.logoUrl}
-            fallback={summaryEducation.logo}
-            className="size-16 shrink-0 rounded-lg border-0 bg-card sm:size-20"
-            imageClassName="p-1.5"
-          />
-          <div className="mt-5 min-w-0 sm:mt-0">
-            <p className="max-w-lg text-xl leading-snug font-semibold tracking-tight text-strong-foreground sm:text-2xl">
-              {summaryEducation.degree.replace("Bachelor of Science", "BSc")}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
-              {summaryEducation.institution.replace(" (BAUST)", "")}
-            </p>
-            <p className="mt-4 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <CalendarBlankIcon className="size-4" aria-hidden="true" />
-              {yearRange(summaryEducation.period)}
-            </p>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              {summaryEducation.details}
-            </p>
+        <div className="mt-6 flex-1">
+          <div className="flex items-start gap-3">
+            <EntityAvatar
+              src={summaryEducation.logoUrl}
+              fallback={summaryEducation.logo}
+              className="mt-0.5 size-9 shrink-0 border-0"
+              imageClassName="object-contain"
+            />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-strong-foreground">
+                {summaryEducation.degree.replace("Bachelor of Science", "BSc")}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {summaryEducation.institution.replace(" (BAUST)", "")} ·{" "}
+                {yearRange(summaryEducation.period)}
+              </p>
+            </div>
           </div>
+          <p className="mt-4 ml-12 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            {summaryEducation.details}
+          </p>
         </div>
 
         <InternalAction

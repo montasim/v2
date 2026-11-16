@@ -126,7 +126,7 @@ function OverviewPage() {
                   className="size-11"
                 >
                   <span className="sr-only">LinkedIn profile</span>
-                  <LinkedinLogoIcon className="size-[18px]" />
+                  <LinkedinLogoIcon className="size-[21px]" />
                 </ExternalAction>
                 <ExternalAction
                   href={profileCatalog.socialUrl("github")}
@@ -135,7 +135,7 @@ function OverviewPage() {
                   className="size-11"
                 >
                   <span className="sr-only">GitHub profile</span>
-                  <GithubLogoIcon className="size-[18px]" />
+                  <GithubLogoIcon className="size-[21px]" />
                 </ExternalAction>
                 <MailAction
                   email={profile.email}
@@ -144,7 +144,7 @@ function OverviewPage() {
                   className="size-11"
                 >
                   <span className="sr-only">Send email</span>
-                  <EnvelopeSimpleIcon className="size-[18px]" />
+                  <EnvelopeSimpleIcon className="size-[21px]" />
                 </MailAction>
               </div>
             </div>
@@ -243,7 +243,7 @@ function OverviewPage() {
                     dateTime={award.date}
                     className="flex items-baseline gap-2 sm:mt-3 sm:block"
                   >
-                    <span className="text-3xl font-semibold tracking-tight text-strong-foreground">
+                    <span className="text-[25.5px]/[1.2] font-semibold tracking-tight text-strong-foreground">
                       {award.year}
                     </span>
                     <span className="text-xs text-muted-foreground sm:mt-1 sm:block">
@@ -255,7 +255,7 @@ function OverviewPage() {
                   <p className="text-xs font-medium text-muted-foreground">
                     {award.issuer}
                   </p>
-                  <h3 className="mt-2 text-2xl font-semibold tracking-tight text-strong-foreground">
+                  <h3 className="mt-2 text-lg leading-snug font-semibold tracking-tight text-strong-foreground">
                     {award.title}
                   </h3>
                   <blockquote className="mt-5 max-w-[66ch] text-sm leading-relaxed text-muted-foreground">
