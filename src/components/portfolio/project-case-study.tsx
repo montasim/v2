@@ -18,14 +18,12 @@ import {
   GitCommitIcon,
 } from "@/components/ui/icons"
 import { BadgeList } from "@/components/shared/badge-list"
-import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
 import { CaseStudySwitcher } from "@/components/portfolio/project-switcher"
 import {
   ExternalAction,
   ExternalLink,
 } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
@@ -263,10 +261,6 @@ export function ProjectCaseStudyPage({
               <h1 className="w-auto max-w-[80%] text-xl leading-tight font-bold tracking-tight text-balance text-strong-foreground sm:text-3xl">
                 {project.title}
               </h1>
-              <Badge variant="secondary" className="font-medium">
-                <ProjectTypeIcon type={project.type} className="size-[1em]" />
-                {project.type === "desktop" ? "desktop app" : project.type}
-              </Badge>
               {hasCaseStudyTranslation(caseStudy.slug) && onLanguageChange ? (
                 <div className="sm:ml-auto">
                   <LanguageSwitch

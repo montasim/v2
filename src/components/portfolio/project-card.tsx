@@ -176,11 +176,7 @@ export function ProjectCard({ project }: { project: Project }) {
           )}
         </div>
         <CardContent className="flex min-w-0 flex-col p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-2">
-            <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <ProjectTypeIcon type={project.type} className="size-[1em]" />
-              {project.type === "desktop" ? "desktop app" : project.type}
-            </p>
+          <div className="flex items-center justify-end gap-2">
             {caseStudy || project.liveUrl || publicGithubUrl ? (
               <div className="flex shrink-0 items-center gap-1">
                 {caseStudy ? (

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Link } from "@tanstack/react-router"
 
-import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
 import { PageShell } from "@/components/shared/page-shell"
 import { CatalogPagination } from "@/components/shared/catalog-pagination"
 import { Card } from "@/components/ui/card"
@@ -22,9 +21,13 @@ import {
 import {
   ArrowLeftCompactIcon,
   ArrowRightCompactIcon,
+  ArrowUpRightIcon,
+  BookOpenTextIcon,
   FunnelSimpleIcon,
+  GithubLogoIcon,
   SearchIcon,
 } from "@/components/ui/icons"
+import { ExternalLink } from "@/components/shared/navigation-action"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -48,19 +51,90 @@ function projectImage(caseStudy: ProjectCaseStudy) {
   return blogCatalog.findByProjectId(caseStudy.projectId)?.image?.src
 }
 
+const iconLinkClassName = "relative z-10 size-8 text-strong-foreground"
+
+// Sits above a card's full-card overlay link (z-10), so the links are never nested.
+function CaseStudyLinks({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
+  const { project } = caseStudy
+  const blogPost = blogCatalog.findByProjectId(project.id)
+  const publicGithubUrl =
+    project.clientWork || project.githubRepositoryPrivate
+      ? undefined
+      : project.githubUrl
+
+  if (!blogPost && !publicGithubUrl && !project.liveUrl) return null
+
+  return (
+    <div className="-mr-2 flex shrink-0 items-center gap-1">
+      {blogPost ? (
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className={iconLinkClassName}
+        >
+          <Link
+            to="/blog/$slug"
+            params={{ slug: blogPost.slug }}
+            aria-label={`Read the ${project.title} blog post`}
+            title="Blog post"
+          >
+            {/* The open-book glyph sits ~1px high in its 24px box. */}
+            <BookOpenTextIcon className="translate-y-px" />
+          </Link>
+        </Button>
+      ) : null}
+      {publicGithubUrl ? (
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className={iconLinkClassName}
+        >
+          <ExternalLink
+            href={publicGithubUrl}
+            aria-label={`View ${project.title} source on GitHub`}
+            title="GitHub source"
+          >
+            <GithubLogoIcon />
+          </ExternalLink>
+        </Button>
+      ) : null}
+      {project.liveUrl ? (
+        <Button
+          asChild
+          variant="ghost"
+          size="icon"
+          className={iconLinkClassName}
+        >
+          <ExternalLink
+            href={project.liveUrl}
+            aria-label={`Visit ${project.title} live site`}
+            title="Live site"
+          >
+            <ArrowUpRightIcon />
+          </ExternalLink>
+        </Button>
+      ) : null}
+    </div>
+  )
+}
+
 function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
   const { project } = caseStudy
   const image = projectImage(caseStudy)
 
   return (
     <Card asChild>
-      <article className="group flex min-w-0 flex-col overflow-hidden p-2 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-emphasis-foreground motion-reduce:transition-none">
+      <article className="group relative flex min-w-0 flex-col overflow-hidden p-2 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:border-emphasis-foreground motion-reduce:transition-none">
+        {/* Full-card overlay link, so the icon links below are not nested inside it. */}
         <Link
           to="/case-studies/$slug"
           params={{ slug: caseStudy.slug }}
           aria-label={`Read the ${project.title} case study`}
-          className="flex h-full flex-col focus-visible:outline-2 focus-visible:outline-offset-4"
-        >
+          className="absolute inset-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4"
+        />
+        <div className="flex h-full flex-col">
           {image ? (
             <ContentPreviewImage
               src={image}
@@ -73,19 +147,12 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
           ) : null}
 
           <div className="flex flex-1 flex-col px-2.5 pt-4 pb-3">
-            <div className="flex items-center justify-between gap-3 text-[0.6875rem]">
-              <p className="flex items-center gap-1.5 font-bold tracking-[0.06em] text-strong-foreground uppercase">
-                <ProjectTypeIcon type={project.type} className="size-[1em]" />
-                {project.type}
-              </p>
-              <span className="truncate text-muted-foreground">
-                {caseStudy.status}
-              </span>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="min-w-0 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-strong-foreground">
+                {project.title}
+              </h2>
+              <CaseStudyLinks caseStudy={caseStudy} />
             </div>
-
-            <h2 className="mt-3 text-lg leading-[1.375] font-semibold tracking-[-0.015em] text-balance text-strong-foreground">
-              {project.title}
-            </h2>
             <p className="mt-2 line-clamp-3 text-[0.8125rem] leading-[1.55] text-muted-foreground">
               {caseStudy.summary}
             </p>
@@ -105,7 +172,7 @@ function CaseStudyCard({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
               </span>
             </div>
           </div>
-        </Link>
+        </div>
       </article>
     </Card>
   )
@@ -117,69 +184,69 @@ function FeaturedCaseStudy({ caseStudy }: { caseStudy: ProjectCaseStudy }) {
 
   return (
     <article>
-      <Card asChild>
+      <Card
+        className={cn(
+          "group relative grid gap-0 overflow-hidden p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground motion-reduce:transition-none lg:p-2.5",
+          image && "lg:grid-cols-[13fr_7fr]"
+        )}
+      >
         <Link
           to="/case-studies/$slug"
           params={{ slug: caseStudy.slug }}
           aria-label={`Read the ${project.title} case study`}
-          className={cn(
-            "group grid gap-0 overflow-hidden p-1.5 transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-emphasis-foreground focus-visible:outline-2 focus-visible:outline-offset-4 motion-reduce:transition-none lg:p-2.5",
-            image && "lg:grid-cols-[13fr_7fr]"
-          )}
-        >
-          {image ? (
-            <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
-              <ContentPreviewImage
-                src={image}
-                alt={`${project.title} interface preview`}
-                width="1200"
-                height="900"
-                fetchPriority="high"
-                className="h-full w-full contrast-[1.02] grayscale transition-[filter] duration-300 group-hover:grayscale-0 motion-reduce:transition-none"
-              />
-            </div>
-          ) : null}
+          className="absolute inset-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4"
+        />
+        {image ? (
+          <div className="min-h-57.5 overflow-hidden rounded-lg border bg-muted/35 sm:min-h-85 lg:min-h-100">
+            <ContentPreviewImage
+              src={image}
+              alt={`${project.title} interface preview`}
+              width="1200"
+              height="900"
+              fetchPriority="high"
+              className="h-full w-full contrast-[1.02] grayscale transition-[filter] duration-300 group-hover:grayscale-0 motion-reduce:transition-none"
+            />
+          </div>
+        ) : null}
 
-          <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">
-            <div>
-              <p className="flex items-center gap-1.5 text-xs font-bold tracking-[0.06em] text-strong-foreground uppercase">
-                <ProjectTypeIcon type={project.type} className="size-[1em]" />
-                {project.type}
-              </p>
-              <h2 className="mt-3.5 text-[1.625rem] leading-tight font-bold tracking-[-0.025em] text-balance text-strong-foreground">
+        <div className="flex min-h-70 flex-col justify-between px-4.5 pt-6 pb-4.5 text-strong-foreground sm:p-6 lg:min-h-100 lg:p-8">
+          <div>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="min-w-0 text-xl leading-tight font-semibold tracking-[-0.025em] text-balance text-strong-foreground sm:text-2xl">
                 {project.title}
               </h2>
-              <p className="mt-4 max-w-[38ch] text-sm leading-[1.65] text-muted-foreground">
-                {caseStudy.summary}
-              </p>
+              <CaseStudyLinks caseStudy={caseStudy} />
             </div>
-
-            <div className="mt-8">
-              <dl className="grid grid-cols-2 gap-4 border-y py-4 text-xs">
-                <div>
-                  <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
-                    Role
-                  </dt>
-                  <dd className="mt-1.5 line-clamp-2 leading-5">
-                    {caseStudy.role}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
-                    Status
-                  </dt>
-                  <dd className="mt-1.5 line-clamp-2 leading-5">
-                    {caseStudy.status}
-                  </dd>
-                </div>
-              </dl>
-              <span className="mt-5 flex items-center justify-end gap-1.5 text-xs font-semibold text-strong-foreground">
-                Read case study
-                <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
-              </span>
-            </div>
+            <p className="mt-4 max-w-[38ch] text-sm leading-[1.65] text-muted-foreground">
+              {caseStudy.summary}
+            </p>
           </div>
-        </Link>
+
+          <div className="mt-8">
+            <dl className="grid grid-cols-2 gap-4 border-y py-4 text-xs">
+              <div>
+                <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
+                  Role
+                </dt>
+                <dd className="mt-1.5 line-clamp-2 leading-5">
+                  {caseStudy.role}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-bold tracking-[0.06em] text-muted-foreground uppercase">
+                  Status
+                </dt>
+                <dd className="mt-1.5 line-clamp-2 leading-5">
+                  {caseStudy.status}
+                </dd>
+              </div>
+            </dl>
+            <span className="mt-5 flex items-center justify-end gap-1.5 text-xs font-semibold text-strong-foreground">
+              Read
+              <ArrowRightCompactIcon className="transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none" />
+            </span>
+          </div>
+        </div>
       </Card>
     </article>
   )

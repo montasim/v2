@@ -13,10 +13,8 @@ import {
 import { BadgeList } from "@/components/shared/badge-list"
 import { ExternalAction } from "@/components/shared/navigation-action"
 import { PageShell } from "@/components/shared/page-shell"
-import { ProjectTypeIcon } from "@/components/portfolio/project-type-icon"
 import { ProjectSwitcher } from "@/components/portfolio/project-switcher"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -94,10 +92,6 @@ export function ProjectDetailPage({
               <h1 className="text-2xl font-bold tracking-tight text-strong-foreground sm:text-4xl">
                 {project.title}
               </h1>
-              <Badge variant="secondary" className="font-medium">
-                <ProjectTypeIcon type={project.type} className="size-[1em]" />
-                {project.type === "desktop" ? "desktop app" : project.type}
-              </Badge>
               {translated && onLanguageChange ? (
                 <div className="sm:ml-auto">
                   <LanguageSwitch
